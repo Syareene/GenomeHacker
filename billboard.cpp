@@ -118,34 +118,14 @@ void BillBoard::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
-	//XMMATRIX projection, view;
-
-	// ビューの逆行列(ビルボード描画のため)
-	XMMATRIX invView;
-	invView = XMMatrixInverse(nullptr, camera->GetViewMatrix());
-	invView.r[3].m128_f32[0] = 0.0f; // カメラの位置を無視
-	invView.r[3].m128_f32[1] = 0.0f;
-	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
-
-	XMMATRIX trans, world, rot, scale;
-	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
-	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
-	world = scale * invView * trans;
-	Renderer::SetWorldMatrix(world);
+	SetWorldMatrixOnDrawBillboard();
 
 	// マテリアル設定
-	MATERIAL material;
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.TextureEnable = true;
-	Renderer::SetMaterial(material);
+	SetMaterialOnDraw();
 
 
 	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	SetVertexBufferOnDraw();
 
 	// テクスチャ設定
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);

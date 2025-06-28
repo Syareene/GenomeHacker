@@ -39,7 +39,7 @@ void Field::Init()
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, GetVertexBufferPointer());
 
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\grass.jpg"));
@@ -49,8 +49,7 @@ void Field::Uninit()
 {
 	// 開放
 	TextureManager::UnloadTexture(GetTextureID());
-
-	m_VertexBuffer->Release();
+	UninitDrawMember();
 }
 
 void Field::Update()
@@ -68,23 +67,13 @@ void Field::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	XMMATRIX trans, world, rot, scale;
-	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
-	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
-	world = scale * rot * trans;
-	Renderer::SetWorldMatrix(world);
+	SetWorldMatrixOnDraw();
 
 	// マテリアル設定
-	MATERIAL material;
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.TextureEnable = true;
-	Renderer::SetMaterial(material);
+	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+	SetVertexBufferOnDraw();
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
@@ -96,49 +85,4 @@ void Field::Draw()
 
 	// 描画
 	Renderer::GetDeviceContext()->Draw(4, 0);
-
-	/*
-	// 入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(m_VertexLayout);
-
-	// シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(m_VertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(m_PixelShader, NULL, 0);
-
-	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-
-	// 描画位置諸々適応用
-
-	// プロジェクションマトリックス設定
-	XMMATRIX projection;
-	projection = XMMatrixOrthographicOffCenterLH(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	Renderer::SetProjectionMatrix(projection);
-
-	// ビューマトリックス設定
-	XMMATRIX view;
-	view = XMMatrixIdentity();
-	Renderer::SetViewMatrix(view);
-
-	// 移動、回転マトリックス設定
-	XMMATRIX trans, world, rot, scale;
-	trans = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	rot = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
-	scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	world = trans * rot * scale;
-	Renderer::SetWorldMatrix(world);
-
-
-
-	// テクスチャ設定
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &m_Texture);
-
-	// プリミティブトポロジ設定
-	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// 描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
-	*/
 }
