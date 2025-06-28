@@ -2,6 +2,7 @@
 
 #include "vector3.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
+#include "renderer.h"
 #include <string>
 
 class GameObject
@@ -13,6 +14,35 @@ private:
 	bool m_Destory = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
 	std::string m_Tag; // タグを設定してグループで判定できるように
+
+	// 描画系変数
+	ID3D11Buffer* m_VertexBuffer = nullptr;
+	ID3D11VertexShader* m_VertexShader = nullptr;
+	ID3D11PixelShader* m_PixelShader = nullptr;
+	ID3D11InputLayout* m_VertexLayout = nullptr;
+
+
+	// ここに描画系の簡易関数を作成する
+	// 後shaderのポインタも持ってていいね
+protected:
+	void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
+	ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
+	ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
+	void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
+	void SetPixelShader(ID3D11PixelShader* PixelShader) { m_PixelShader = PixelShader; }
+	void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
+	void UninitDrawMember();
+
+	// 頂点バッファをデフォルトの四角形に設定(テクスチャ座標もデフォ)
+	void SetDefaultVertex();
+
+	// 頂点バッファを描画時に設定する関数
+	void SetVertexBufferOnDraw() const;
+	void SetWorldMatrixOnDraw();
+	void SetWorldMatrixOnDrawBillboard(); // ビルボード用のワールドマトリックス設定
+	void SetProjectionMatrixOnDraw();
+	void SetViewMatrixOnDraw();
+	void SetMaterialOnDraw(XMFLOAT4 diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4 amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), bool texEnable = true);
 
 public:
 	virtual void Init() {};
@@ -44,40 +74,9 @@ public:
 		return false;
 	}
 
-	Vector3 GetRight()
-	{
-		// 回転行列から右方向のベクトルを取得
-		XMMATRIX matrix;
-		matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
-		// XMFLOAT3に変換してからVector3に変換
-		Vector3 right;
-		XMStoreFloat3((XMFLOAT3*)&right, matrix.r[0]);
-		return right;
-	}
-	Vector3 GetUp()
-	{
-		// 回転行列から上方向のベクトルを取得
-		XMMATRIX matrix;
-		matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
-		// XMFLOAT3に変換してからVector3に変換
-		Vector3 up;
-		XMStoreFloat3((XMFLOAT3*)&up, matrix.r[1]);
-		return up;
-	}
 
-	Vector3 GetForward()
-	{
-		// 回転行列から前方向のベクトルを取得
-		XMMATRIX matrix;
-		matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
-		// XMFLOAT3に変換してからVector3に変換
-		Vector3 forward;
-		XMStoreFloat3((XMFLOAT3*)&forward, matrix.r[2]);
-		return forward;
-	}
-
-	float GetDistance(Vector3 Position)
-	{
-		return (Position - m_Position).length();
-	}
+	Vector3 GetRight() const;
+	Vector3 GetUp() const;
+	Vector3 GetForward() const;
+	float GetDistance(Vector3 Position);
 };

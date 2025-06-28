@@ -206,6 +206,9 @@
     <ClCompile Include="shader_manager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\object\game_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\unlitTextureVS.hlsl">
