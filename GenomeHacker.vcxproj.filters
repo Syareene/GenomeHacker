@@ -144,6 +144,12 @@
     <ClInclude Include="shader_manager.h">
       <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\object\ui\button.h">
+      <Filter>ヘッダー ファイル\object\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="panel.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -208,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

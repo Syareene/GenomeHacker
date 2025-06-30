@@ -4,13 +4,16 @@
 #include "object/polygon.h"
 #include "input.h"
 #include "scene/game_scene.h"
+#include "object/ui/image.h"
 
 #include <memory>
 
 void TitleScene::Init()
 {
 	// タイトルシーンの初期化処理
-	AddGameObject<Polygon2D>(2); // タイトル画面のポリゴンを追加
+	
+	// タイトル
+	AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 }
 
 void TitleScene::Update()

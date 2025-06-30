@@ -12,6 +12,8 @@ void Polygon2D::Init()
 
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\grass.jpg"));
+
+	SetScale(Vector3(1.0f, 1.0f, 1.0f)); // スケールを設定
 }
 
 void Polygon2D::Uninit()
@@ -39,7 +41,7 @@ void Polygon2D::Draw()
 	// 頂点バッファ設定
 	SetVertexBufferOnDraw();
 	// プロジェクションマトリックス設定
-	SetWorldMatrixOnDraw();
+	SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定
 	SetViewMatrixOnDraw();
 	// 移動、回転マトリックス設定

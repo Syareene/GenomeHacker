@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "player.h"
 #include "object/polygon.h"
+#include "object/ui/image.h"
 #include "vector3.h"
 
 void GameScene::Init()
@@ -17,7 +18,8 @@ void GameScene::Init()
 	AddGameObject<Player>(0);
 
 
-	AddGameObject<Polygon2D>(2);
+	//AddGameObject<Polygon2D>(2);
+
 }
 
 void GameScene::Update()

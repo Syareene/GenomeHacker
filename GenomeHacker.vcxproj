@@ -32,6 +32,7 @@
     <ClInclude Include="hedder\object\field.h" />
     <ClInclude Include="hedder\object\gameObject.h" />
     <ClInclude Include="hedder\object\polygon.h" />
+    <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
     <ClInclude Include="hedder\object\ui\ui.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
@@ -42,6 +43,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="modelRenderer.h" />
+    <ClInclude Include="panel.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="shader_manager.h" />
@@ -51,6 +53,7 @@
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
