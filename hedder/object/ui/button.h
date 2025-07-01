@@ -11,4 +11,4 @@ public:
 	void Uninit() override; // ボタン終了処理
 	void Update() override; // ボタン更新処理
 	void Draw() override; // ボタン描画処理
-}
+};
