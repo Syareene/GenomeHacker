@@ -29,7 +29,7 @@ public:
 			// layerNumがコンテナのサイズ以上ならその数まで空の要素を追加する
 			for (int i = static_cast<int>(m_GameObjects.size()); i <= layerNum; i++)
 			{
-				// ここがだめだねぇ、ポインタ表記使ったらなんとかなったけどこれGameObjectの表記が被ってるからとかありそうなんだよね
+				// 追加
 				m_GameObjects.emplace_back(std::list<GameObject*>());
 			}
 		}

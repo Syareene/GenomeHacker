@@ -44,8 +44,11 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="modelRenderer.h" />
     <ClInclude Include="panel.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="result_scene.h" />
+    <ClInclude Include="score.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="vector3.h" />
@@ -68,11 +71,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="modelRenderer.cpp" />
+    <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="score.cpp" />
     <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="result_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
