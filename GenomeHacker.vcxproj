@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="bullet.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="default_vertex.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="hedder\collider\collider_base.h" />
@@ -63,6 +64,7 @@
     <ClCompile Include="cpp\scene\game_scene.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
+    <ClCompile Include="default_vertex.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="field.cpp" />

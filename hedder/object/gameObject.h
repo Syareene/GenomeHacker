@@ -35,6 +35,7 @@ protected:
 
 	// 頂点バッファをデフォルトの四角形に設定(テクスチャ座標もデフォ)
 	void SetDefaultVertex();
+	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 
 	// 頂点バッファを描画時に設定する関数
 	void SetVertexBufferOnDraw() const;

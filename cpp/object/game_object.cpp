@@ -1,6 +1,7 @@
 ﻿#include "object/gameObject.h"
 #include "manager.h"
 #include "object/camera.h"
+#include "default_vertex.h"
 
 
 void GameObject::UninitDrawMember()
@@ -16,6 +17,11 @@ void GameObject::UninitDrawMember()
 }
 
 void GameObject::SetDefaultVertex()
+{
+	m_VertexBuffer = DefaultVertex::GetBuffer();
+}
+
+void GameObject::SetCanChangeVertex()
 {
 	VERTEX_3D vertex[4];
 
@@ -41,10 +47,10 @@ void GameObject::SetDefaultVertex()
 
 	// 頂点バッファ生成
 	D3D11_BUFFER_DESC bd{};
-	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.Usage = D3D11_USAGE_DYNAMIC;
 	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = vertex;
