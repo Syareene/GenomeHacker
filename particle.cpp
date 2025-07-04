@@ -81,19 +81,19 @@ void Particle::Update()
 			); // ランダムな速度を設定
 			break; // 新しいパーティクルを生成したらループを抜ける
 		}
+	}
 
-		for (int i = 0; i < MaxParticles; i++)
+	for (int i = 0; i < MaxParticles; i++)
+	{
+		if (m_Particles[i].Enable)
 		{
-			if (m_Particles[i].Enable)
+			// 動かす
+			m_Particles[i].Velocity += Vector3(0.0f, -0.005f, 0.0f); // 重力の影響を受ける
+			m_Particles[i].Position += m_Particles[i].Velocity; // 位置を更新
+			m_Particles[i].LifeTime--; // 寿命を減らす
+			if (m_Particles[i].LifeTime <= 0)
 			{
-				// 動かす
-				m_Particles[i].Velocity += Vector3(0.0f, -0.005f, 0.0f); // 重力の影響を受ける
-				m_Particles[i].Position += m_Particles[i].Velocity; // 位置を更新
-				m_Particles[i].LifeTime--; // 寿命を減らす
-				if (m_Particles[i].LifeTime <= 0)
-				{
-					m_Particles[i].Enable = false; // 寿命が尽きたら無効化
-				}
+				m_Particles[i].Enable = false; // 寿命が尽きたら無効化
 			}
 		}
 	}

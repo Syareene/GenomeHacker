@@ -21,7 +21,7 @@ void GameScene::Init()
 	AddGameObject<Enemy>(0)->SetPosition({ 5.0f, 0.0f, 0.0f });
 	AddGameObject<Enemy>(0)->SetPosition({ 8.0f, 0.0f, 0.0f });
 	AddGameObject<Player>(0);
-	AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
+	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);
 
 

@@ -5,8 +5,8 @@
 class DefaultVertex
 {
 public:
-	void Init();
-	void Uninit();
+	static void Init();
+	static void Uninit();
 	static ID3D11Buffer* GetBuffer();
 private:
 	static ID3D11Buffer* m_VertexBuffer;

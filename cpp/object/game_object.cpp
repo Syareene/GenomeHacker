@@ -19,6 +19,7 @@ void GameObject::UninitDrawMember()
 void GameObject::SetDefaultVertex()
 {
 	m_VertexBuffer = DefaultVertex::GetBuffer();
+	// デフォルト頂点を使用しているフラグを立てる?
 }
 
 void GameObject::SetCanChangeVertex()

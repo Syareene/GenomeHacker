@@ -162,6 +162,9 @@
     <ClInclude Include="default_vertex.h">
       <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\lib\easing.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="default_vertex.cpp">
       <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\easing.cpp">
+      <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

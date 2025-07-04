@@ -10,6 +10,7 @@
 #include "textureManager.h"
 #include "scene/title_scene.h"
 #include "shader_manager.h"
+#include "default_vertex.h"
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
@@ -19,6 +20,7 @@ void Manager::Init()
 	Renderer::Init();
 	Input::Init();
 	ShaderManager::Init();
+	DefaultVertex::Init();
 
 	// 初期シーン設定
 	m_CurrentScene = std::make_unique<TitleScene>();
@@ -29,6 +31,7 @@ void Manager::Init()
 
 void Manager::Uninit()
 {
+	DefaultVertex::Uninit();
 	ShaderManager::Uninit();
 	Input::Uninit();
 	Renderer::Uninit();
