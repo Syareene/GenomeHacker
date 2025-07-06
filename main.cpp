@@ -128,6 +128,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+	// マウス検知追加
+	case WM_LBUTTONDOWN:
+		// 左クリック押された
+		break;
+	case WM_LBUTTONUP:
+		// 左クリック離された
+		break;
+	case WM_RBUTTONDOWN:
+		// 右クリック押された
+		break;
+	case WM_RBUTTONUP:
+		// 右クリック離された
+		break;
+	case WM_MOUSEMOVE:
+		// マウス動いた
+		break;
+	case WM_MOUSELEAVE:
+		// マウスがウィンドウから出た
+		break;
+	
 
 	default:
 		break;

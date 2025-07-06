@@ -36,7 +36,7 @@ public:
 		SetRotation(rot);
 		SetTextureID(TextureManager::LoadTexture(filePath));
 		SetNoUpdate(isNoUpdate);
-		SetDefaultVertex();
+		SetVertexBuffer(nullptr);
 		SetActive(true);
 		// アップデートしないが有効なら初期化処理へ(そこに描画を置く)
 		if (isNoUpdate)

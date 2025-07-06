@@ -16,12 +16,6 @@ void GameObject::UninitDrawMember()
 	m_VertexLayout = nullptr;
 }
 
-void GameObject::SetDefaultVertex()
-{
-	m_VertexBuffer = DefaultVertex::GetBuffer();
-	// デフォルト頂点を使用しているフラグを立てる?
-}
-
 void GameObject::SetCanChangeVertex()
 {
 	VERTEX_3D vertex[4];
@@ -57,6 +51,14 @@ void GameObject::SetCanChangeVertex()
 	sd.pSysMem = vertex;
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+}
+
+void GameObject::SetDefaultVertexBufferOnDraw() const
+{
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	ID3D11Buffer* defaultVertexBuffer = DefaultVertex::GetBuffer();
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &defaultVertexBuffer, &stride, &offset);
 }
 
 void GameObject::SetVertexBufferOnDraw() const

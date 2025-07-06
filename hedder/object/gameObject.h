@@ -33,11 +33,10 @@ protected:
 	void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
 	void UninitDrawMember();
 
-	// 頂点バッファをデフォルトの四角形に設定(テクスチャ座標もデフォ)
-	void SetDefaultVertex();
 	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 
 	// 頂点バッファを描画時に設定する関数
+	void SetDefaultVertexBufferOnDraw() const;
 	void SetVertexBufferOnDraw() const;
 	void SetWorldMatrixOnDraw();
 	void SetWorldMatrixOnDrawBillboard(); // ビルボード用のワールドマトリックス設定

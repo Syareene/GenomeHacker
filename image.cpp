@@ -65,7 +65,7 @@ void ImageDraw::Draw()
 	Renderer::SetWorldViewProjection2D();
 
 	// 頂点バッファ設定
-	SetVertexBufferOnDraw();
+	SetDefaultVertexBufferOnDraw();
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定
