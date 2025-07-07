@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <list>
-#include <vector>
+#include <memory>
 #include "object/gameObject.h"
 
 class Scene
@@ -15,10 +15,11 @@ public:
 	template <typename T>
 	T* AddGameObject(int layerNum)
 	{
-		T* GameObj = new T();
+		std::unique_ptr<T> GameObj = std::make_unique<T>();
 		// 初期化に引数ありの場合はreturnから実行する形にかな
 		GameObj->Init();
 
+		
 		// layerNumとコンテナのサイズを比べる
 		if (layerNum < 0)
 		{
@@ -30,17 +31,18 @@ public:
 			for (int i = static_cast<int>(m_GameObjects.size()); i <= layerNum; i++)
 			{
 				// 追加
-				m_GameObjects.emplace_back(std::list<GameObject*>());
+				m_GameObjects.emplace_back(std::list<std::unique_ptr<GameObject>>());
 			}
 		}
+		
 
 		// layerNum分iteratorを進める
 		auto it = m_GameObjects.begin();
 		std::advance(it, layerNum);
 		// layerNumの位置に追加
-		it->emplace_back(GameObj);
-
-		return GameObj;
+		it->push_back(std::unique_ptr<GameObject>(std::move(GameObj)));
+		// スマポで管理しつつも生ポインタで返すように
+		return static_cast<T*>(it->back().get());
 	}
 
 	template <typename T>
@@ -50,9 +52,9 @@ public:
 		{
 			for (auto& gameObject : gameObjects)
 			{
-				if (dynamic_cast<T*>(gameObject))
+				if (auto ptr = dynamic_cast<T*>(gameObject.get()))
 				{
-					return dynamic_cast<T*>(gameObject);
+					return ptr;
 				}
 			}
 		}
@@ -60,21 +62,21 @@ public:
 	}
 
 	template <typename T>
-	std::vector<T*> GetGameObjects()
+	std::list<T*> GetGameObjects()
 	{
-		std::vector<T*> objects;
+		std::list<T*> objects;
 		for (auto& gameObjects : m_GameObjects)
 		{
 			for (auto& gameObject : gameObjects)
 			{
-				if (dynamic_cast<T*>(gameObject))
+				if (auto ptr = dynamic_cast<T*>(gameObject.get()))
 				{
-					objects.emplace_back(dynamic_cast<T*>(gameObject));
+					objects.emplace_back(ptr);
 				}
 			}
 		}
 		return objects;
 	}
 private:
-	std::list<std::list<GameObject*> > m_GameObjects;
+	std::list<std::list<std::unique_ptr<GameObject>>> m_GameObjects;
 };

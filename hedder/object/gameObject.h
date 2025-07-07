@@ -68,7 +68,6 @@ public:
 		if (m_Destory)
 		{
 			Uninit();
-			delete this;
 			return true; // 削除予約フラグが立っていたらtrueを返す
 		}
 		return false;

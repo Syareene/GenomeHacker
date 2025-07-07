@@ -26,7 +26,8 @@ void Scene::Uninit()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->Uninit();
-			delete gameObject;
+			// smartptrに移行したので、deleteは不要
+			//delete gameObject;
 		}
 	}
 	m_GameObjects.clear();
@@ -39,7 +40,7 @@ void Scene::Update()
 		for (auto& gameObject : gameObjects)
 		{
 			// nullptrチェック
-			if (gameObject == nullptr)
+			if (gameObject.get() == nullptr)
 			{
 				continue;
 			}
@@ -51,7 +52,7 @@ void Scene::Update()
 	for (auto& gameObjects : m_GameObjects)
 	{
 		// 不要になった GameObject を削除
-		gameObjects.remove_if([](GameObject* obj)
+		gameObjects.remove_if([](const std::unique_ptr<GameObject>& obj)
 			{
 				if (obj && obj->Destory())
 				{
