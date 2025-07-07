@@ -5,17 +5,7 @@
 
 void Scene::Init()
 {
-	/*
-	AddGameObject<Camera>(0);
-	AddGameObject<Field>(0);
-	AddGameObject<Enemy>(0)->SetPosition({ 3.0f, 0.0f, 0.0f });
-	AddGameObject<Enemy>(0)->SetPosition({ 5.0f, 0.0f, 0.0f });
-	AddGameObject<Enemy>(0)->SetPosition({ 8.0f, 0.0f, 0.0f });
-	AddGameObject<Player>(0);
 
-
-	AddGameObject<Polygon2D>(2);
-	*/
 }
 
 
@@ -27,7 +17,7 @@ void Scene::Uninit()
 		{
 			gameObject->Uninit();
 			// smartptrに移行したので、deleteは不要
-			//delete gameObject;
+			// delete gameObject;
 		}
 	}
 	m_GameObjects.clear();

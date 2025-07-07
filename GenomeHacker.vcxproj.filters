@@ -264,5 +264,8 @@
     <None Include=".editorconfig">
       <Filter>リソース ファイル</Filter>
     </None>
+    <None Include=".github\copilot-instructions.md">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>
