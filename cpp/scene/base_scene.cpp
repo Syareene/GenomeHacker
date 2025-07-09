@@ -11,23 +11,37 @@ void Scene::Init()
 
 void Scene::Uninit()
 {
-	for (auto& gameObjects : m_GameObjects)
+	// 3dオブジェクトの解放
+	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : gameObjects)
+		for (auto& gameObject : objects3d)
 		{
 			gameObject->Uninit();
 			// smartptrに移行したので、deleteは不要
 			// delete gameObject;
 		}
 	}
-	m_GameObjects.clear();
+	m_Objects3D.clear();
+
+	// 2dオブジェクトの解放
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			gameObject->Uninit();
+			// smartptrに移行したので、deleteは不要
+			// delete gameObject;
+		}
+	}
+	m_Objects2D.clear();
 }
 
 void Scene::Update()
 {
-	for (auto& gameObjects : m_GameObjects)
+	// 3dオブジェクトの更新
+	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : gameObjects)
+		for (auto& gameObject : objects3d)
 		{
 			// nullptrチェック
 			if (gameObject.get() == nullptr)
@@ -38,11 +52,39 @@ void Scene::Update()
 		}
 	}
 
+	// 2dオブジェクトの更新
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			// nullptrチェック
+			if (gameObject.get() == nullptr)
+			{
+				continue;
+			}
+			gameObject->Update();
+		}
+	}
 
-	for (auto& gameObjects : m_GameObjects)
+	// 不要になった3dオブジェクトを削除
+	for (auto& objects3d : m_Objects3D)
 	{
 		// 不要になった GameObject を削除
-		gameObjects.remove_if([](const std::unique_ptr<GameObject>& obj)
+		objects3d.remove_if([](const std::unique_ptr<Object3D>& obj)
+			{
+				if (obj && obj->Destory())
+				{
+					return true;
+				}
+				return false;
+			});
+	}
+
+	// 不要になった2dオブジェクトを削除
+	for(auto& objects2d : m_Objects2D)
+	{
+		// 不要になった GameObject を削除
+		objects2d.remove_if([](const std::unique_ptr<Object2D>& obj)
 			{
 				if (obj && obj->Destory())
 				{
@@ -69,11 +111,28 @@ void Scene::Draw()
 	// 3dobjはカメラの位置を考慮し並び替える。
 	// ないしは2dと3dobjでそもそも格納する配列を分ける?
 
-	for (auto& gameObjects : m_GameObjects)
+	// 3dオブジェクトの描画
+	// 描画前にソートし、その後に描画するようにする
+	
+
+	// 3dオブジェクトの描画
+	for(auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : gameObjects)
+		// 3Dオブジェクトの描画
+		for (auto& gameObject : objects3d)
 		{
 			gameObject->Draw();
 		}
 	}
+
+	// 3dが描画し終わったので2dオブジェクトの描画
+	for (auto& objects2d : m_Objects2D)
+	{
+		// 2Dオブジェクトの描画
+		for (auto& gameObject : objects2d)
+		{
+			gameObject->Draw();
+		}
+	}
+	
 }

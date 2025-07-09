@@ -1,9 +1,8 @@
 ﻿#pragma once
 
-#include "textureManager.h"
-#include "object/gameObject.h"
+#include "object/2d_object.h"
 
-class Score : public GameObject
+class Score : public Object2D
 {
 public:
 	void Init() override; // 

@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "object/gameObject.h"
+#include "object/3d_object.h"
 
-class Enemy : public GameObject
+class Enemy : public Object3D
 {
 public:
 	void Init() override;

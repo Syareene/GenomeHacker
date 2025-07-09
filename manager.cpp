@@ -7,10 +7,11 @@
 #include "player.h"
 #include "input.h"
 #include "enemy.h"
-#include "textureManager.h"
+#include "texture_manager.h"
 #include "scene/title_scene.h"
 #include "shader_manager.h"
 #include "default_vertex.h"
+#include "lib/audio.h"
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
@@ -21,6 +22,7 @@ void Manager::Init()
 	Input::Init();
 	ShaderManager::Init();
 	DefaultVertex::Init();
+	Audio::InitMaster();
 
 	// 初期シーン設定
 	m_CurrentScene = std::make_unique<TitleScene>();
@@ -31,12 +33,16 @@ void Manager::Init()
 
 void Manager::Uninit()
 {
+	// 現在のシーンを解放
+	m_CurrentScene->Uninit();
+	m_CurrentScene = nullptr;
+
+	// その後各種の解放処理
+	Audio::UninitMaster();
 	DefaultVertex::Uninit();
 	ShaderManager::Uninit();
 	Input::Uninit();
 	Renderer::Uninit();
-	m_CurrentScene->Uninit();
-	m_CurrentScene = nullptr;
 }
 
 void Manager::Update()

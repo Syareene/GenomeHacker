@@ -3,7 +3,7 @@
 #include "explosion.h"
 #include "object/camera.h"
 #include "manager.h"
-#include "textureManager.h"
+#include "texture_manager.h"
 #include "shader_manager.h"
 
 

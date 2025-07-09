@@ -1,7 +1,9 @@
 ﻿#pragma once
 
-#include "object/gameObject.h"
+#include "object/game_object.h"
 
+
+// こーれパネルの使用どうしよ。2d限定とか?
 class Panel : public GameObject
 {
 private:

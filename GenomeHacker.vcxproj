@@ -28,11 +28,14 @@
     <ClInclude Include="hedder\collider\collision.h" />
     <ClInclude Include="hedder\collider\cube.h" />
     <ClInclude Include="hedder\collider\sphere.h" />
+    <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
+    <ClInclude Include="hedder\object\2d_object.h" />
+    <ClInclude Include="hedder\object\3d_object.h" />
     <ClInclude Include="hedder\object\billboard.h" />
     <ClInclude Include="hedder\object\camera.h" />
     <ClInclude Include="hedder\object\field.h" />
-    <ClInclude Include="hedder\object\gameObject.h" />
+    <ClInclude Include="hedder\object\game_object.h" />
     <ClInclude Include="hedder\object\polygon.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
@@ -52,7 +55,8 @@
     <ClInclude Include="result_scene.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="shader_manager.h" />
-    <ClInclude Include="textureManager.h" />
+    <ClInclude Include="skydome.h" />
+    <ClInclude Include="texture_manager.h" />
     <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +64,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cpp\lib\audio.cpp" />
     <ClCompile Include="cpp\lib\easing.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
@@ -81,7 +86,8 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="shader_manager.cpp" />
-    <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="skydome.cpp" />
+    <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="result_scene.cpp" />
   </ItemGroup>
   <ItemGroup>

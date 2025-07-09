@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "object/gameObject.h"
+#include "object/3d_object.h"
 
-class Particle : public GameObject
+class Particle : public Object3D
 {
 public:
 	void Init() override;

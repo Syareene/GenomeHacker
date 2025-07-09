@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "object/gameObject.h"
+#include "object/game_object.h"
 #include "scene/base_scene.h"
 #include <memory>
 

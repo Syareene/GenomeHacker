@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "ui.h"
-#include "textureManager.h"
+#include "texture_manager.h"
 
 class ImageDraw : public UI
 {

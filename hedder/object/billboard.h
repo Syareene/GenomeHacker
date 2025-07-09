@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
-#include "gameObject.h"
+#include "3d_object.h"
 
-class BillBoard : public GameObject
+class BillBoard : public Object3D
 {
 public:
 	void Init() override;
@@ -15,5 +15,5 @@ private:
 	ID3D11VertexShader* m_VertexShader = nullptr;
 	ID3D11PixelShader* m_PixelShader = nullptr;
 	ID3D11InputLayout* m_VertexLayout = nullptr;
-	int m_FrameCount = 0; // ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg
+	int m_FrameCount = 0; // ãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ãƒˆ
 };

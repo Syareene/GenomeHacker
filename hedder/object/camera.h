@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "gameObject.h"
+#include "3d_object.h"
 
-class Camera : public GameObject
+class Camera : public Object3D
 {
 private:
 	Vector3 m_Target{ 0.0f, 0.0f, 0.0f };

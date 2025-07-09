@@ -1,5 +1,6 @@
 ﻿#include "score.h"
 #include "shader_manager.h"
+#include "texture_manager.h"
 
 
 void Score::Init()
@@ -48,6 +49,7 @@ void Score::Init()
 
 	// 座標設定
 	SetPosition(Vector3(SCREEN_WIDTH - 100.0f, 50.0f, 0.0f)); // 画面右上に配置
+	SetScale(Vector3(100.0f, 50.0f, 1.0f)); // サイズを調整
 }
 
 void Score::Uninit()

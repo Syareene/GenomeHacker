@@ -114,7 +114,7 @@
     <ClInclude Include="explosion.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="textureManager.h">
+    <ClInclude Include="texture_manager.h">
       <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
@@ -129,7 +129,7 @@
     <ClInclude Include="hedder\object\field.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\object\gameObject.h">
+    <ClInclude Include="hedder\object\game_object.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="hedder\object\polygon.h">
@@ -164,6 +164,18 @@
     </ClInclude>
     <ClInclude Include="hedder\lib\easing.h">
       <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\audio.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\2d_object.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\3d_object.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="skydome.h">
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,7 +224,7 @@
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\player</Filter>
     </ClCompile>
-    <ClCompile Include="textureManager.cpp">
+    <ClCompile Include="texture_manager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
     <ClCompile Include="manager.cpp">
@@ -247,6 +259,12 @@
     </ClCompile>
     <ClCompile Include="cpp\lib\easing.cpp">
       <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\audio.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="skydome.cpp">
+      <Filter>ソース ファイル\object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

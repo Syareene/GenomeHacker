@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "object/gameObject.h"
+#include "object/2d_object.h"
 
-class UI : public GameObject
+class UI : public Object2D
 {
 	// 更新しなくて良いオブジェクトには更新しなくていいタグを付けてコストを下げる
 

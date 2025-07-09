@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "gameObject.h"
+#include "2d_object.h"
 
-class Polygon2D : public GameObject
+class Polygon2D : public Object2D
 {
 public:
 	void Init() override;

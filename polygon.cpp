@@ -2,7 +2,7 @@
 #include "renderer.h"
 #include "object/polygon.h"
 #include "manager.h"
-#include "textureManager.h"
+#include "texture_manager.h"
 #include "shader_manager.h"
 
 

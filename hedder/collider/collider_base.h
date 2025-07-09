@@ -1,41 +1,41 @@
-#pragma once
+ï»¿#pragma once
 
-#include "gameObject.h"
+#include "object/game_object.h"
 #include "vector3.h"
 #include <algorithm>
 
-// ‚±‚êA”»’è‚ğŒvZ‚·‚éƒNƒ‰ƒX‚¾‚¯‚Ç
-// ”»’è‚ÌƒvƒƒpƒeƒB‚ğİ’è‚Å‚«‚éƒNƒ‰ƒX‚àì‚ç‚È‚¢‚Æ‚©‚È‚Ÿ
-// •K‚¸‚µ‚àƒIƒuƒWƒFƒNƒg‚ÌƒTƒCƒY‚âêŠ‚ÆƒRƒ‰ƒCƒ_‚ÌˆÊ’u‚ªˆê’v‚·‚é‚Æ‚ÍŒÀ‚ç‚È‚¢‚µ‚¢‚­‚Â‚©¶‚¦‚Ä‚­‚é‚©‚à‚µ‚ê‚È‚¢‚©‚ç‚Ë
+// ã“ã‚Œã€åˆ¤å®šã‚’è¨ˆç®—ã™ã‚‹ã‚¯ãƒ©ã‚¹ã ã‘ã©
+// åˆ¤å®šã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¨­å®šã§ãã‚‹ã‚¯ãƒ©ã‚¹ã‚‚ä½œã‚‰ãªã„ã¨ã‹ãªã
+// å¿…ãšã—ã‚‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚µã‚¤ã‚ºã‚„å ´æ‰€ã¨ã‚³ãƒ©ã‚¤ãƒ€ã®ä½ç½®ãŒä¸€è‡´ã™ã‚‹ã¨ã¯é™ã‚‰ãªã„ã—ã„ãã¤ã‹ç”Ÿãˆã¦ãã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã‹ã‚‰ã­
 class ColliderBase
 {
 public:
-	// Õ“Ë”»’è‚Ìƒ`ƒFƒbƒN
+	// è¡çªåˆ¤å®šã®ãƒã‚§ãƒƒã‚¯
 	static bool CheckCollision(GameObject& obj1, GameObject& obj2)
 	{
-		// input‚³‚ê‚½‚Æ‚«‚Égameobject‚ÌŒ^‚ğŒ©‚ÄA“KØ‚ÈÕ“Ë”»’è‚ğŸè‚ÉŒÄ‚Ño‚·‚æ‚¤‚É‚·‚é
+		// inputã•ã‚ŒãŸã¨ãã«gameobjectã®å‹ã‚’è¦‹ã¦ã€é©åˆ‡ãªè¡çªåˆ¤å®šã‚’å‹æ‰‹ã«å‘¼ã³å‡ºã™ã‚ˆã†ã«ã™ã‚‹
 	}
 
-	// debug‚ÉÕ“Ë”»’è‚Ì‰Â‹‰»‚ğs‚¤
+	// debugæ™‚ã«è¡çªåˆ¤å®šã®å¯è¦–åŒ–ã‚’è¡Œã†
 
 private:
 
-	// AABB-AABB(‰ñ“]‚È‚µ‚Ìbox“–‚½‚è”»’è)
+	// AABB-AABB(å›è»¢ãªã—ã®boxå½“ãŸã‚Šåˆ¤å®š)
 	static bool CheckAABBAABB(GameObject& obj1, GameObject& obj2)
 	{
-		// ƒˆ‚Éxyz‚Ì”ÍˆÍ‚ğ”äŠr‚·‚é
+		// ç´”ç²‹ã«xyzã®ç¯„å›²ã‚’æ¯”è¼ƒã™ã‚‹
 		Vector3 pos1 = obj1.GetPosition();
 		Vector3 pos2 = obj2.GetPosition();
 
 		Vector3 scale1 = obj1.GetScale();
 		Vector3 scale2 = obj2.GetScale();
 
-		// AABB‚Ì”ÍˆÍ‚ğŒvZ
+		// AABBã®ç¯„å›²ã‚’è¨ˆç®—
 		Vector3 min1 = pos1 - scale1 * 0.5f;
 		Vector3 max1 = pos1 + scale1 * 0.5f;
 		Vector3 min2 = pos2 - scale2 * 0.5f;
 		Vector3 max2 = pos2 + scale2 * 0.5f;
-		// Õ“Ë”»’è
+		// è¡çªåˆ¤å®š
 		return (min1.x <= max2.x && max1.x >= min2.x) &&
 			   (min1.y <= max2.y && max1.y >= min2.y) &&
 			   (min1.z <= max2.z && max1.z >= min2.z);
@@ -43,24 +43,24 @@ private:
 	// AABB-Sphere
 	static bool CheckAABBSphere(GameObject& obj1, GameObject& obj2)
 	{
-		// AABB‚Ì’†SˆÊ’u‚Æ”¼Œa‚ğæ“¾
+		// AABBã®ä¸­å¿ƒä½ç½®ã¨åŠå¾„ã‚’å–å¾—
 		Vector3 pos1 = obj1.GetPosition();
 		Vector3 scale1 = obj1.GetScale();
 		Vector3 min1 = pos1 - scale1 * 0.5f;
 		Vector3 max1 = pos1 + scale1 * 0.5f;
 		Vector3 pos2 = obj2.GetPosition();
-		float radius2 = obj2.GetScale().x * 0.5f; // ”¼Œa‚ÍƒXƒP[ƒ‹‚Ìˆê•Ó‚Ì”¼•ª‚Æ‰¼’è
+		float radius2 = obj2.GetScale().x * 0.5f; // åŠå¾„ã¯ã‚¹ã‚±ãƒ¼ãƒ«ã®ä¸€è¾ºã®åŠåˆ†ã¨ä»®å®š
 
-		// AABB‚Ì’†S‚©‚çSphere‚Ì’†S‚Ü‚Å‚ÌÅ‹ß“_‚ğŒvZ
+		// AABBã®ä¸­å¿ƒã‹ã‚‰Sphereã®ä¸­å¿ƒã¾ã§ã®æœ€è¿‘ç‚¹ã‚’è¨ˆç®—
 		Vector3 closestPoint(
 			std::max(min1.x, std::min(pos2.x, max1.x)),
 			std::max(min1.y, std::min(pos2.y, max1.y)),
 			std::max(min1.z, std::min(pos2.z, max1.z))
 		);
-		// Å‹ß“_‚ÆSphere‚Ì’†S‚Æ‚Ì‹——£‚ğŒvZ
+		// æœ€è¿‘ç‚¹ã¨Sphereã®ä¸­å¿ƒã¨ã®è·é›¢ã‚’è¨ˆç®—
 		Vector3 diff = closestPoint - pos2;
 		float distanceSquared = diff.lengthSquared();
-		// Õ“Ë”»’è
+		// è¡çªåˆ¤å®š
 		return distanceSquared <= (radius2 * radius2);
 	}
 	// OBB-OBB
@@ -68,18 +68,18 @@ private:
 	// Sphere-Sphere
 	static bool CheckSphereSphere(GameObject& obj1, GameObject& obj2)
 	{
-		// Sphere‚Ì’†SˆÊ’u‚Æ”¼Œa‚ğæ“¾
+		// Sphereã®ä¸­å¿ƒä½ç½®ã¨åŠå¾„ã‚’å–å¾—
 		Vector3 pos1 = obj1.GetPosition();
 		Vector3 pos2 = obj2.GetPosition();
-		float radius1 = obj1.GetScale().x * 0.5f; // ”¼Œa‚ÍƒXƒP[ƒ‹‚Ìˆê•Ó‚Ì”¼•ª‚Æ‰¼’è
+		float radius1 = obj1.GetScale().x * 0.5f; // åŠå¾„ã¯ã‚¹ã‚±ãƒ¼ãƒ«ã®ä¸€è¾ºã®åŠåˆ†ã¨ä»®å®š
 		float radius2 = obj2.GetScale().x * 0.5f;
-		// ’†SŠÔ‚Ì‹——£‚ğŒvZ
+		// ä¸­å¿ƒé–“ã®è·é›¢ã‚’è¨ˆç®—
 		Vector3 diff = pos1 - pos2;
 		float distanceSquared = diff.lengthSquared();
-		// ”¼Œa‚Ì˜a‚ğŒvZ
+		// åŠå¾„ã®å’Œã‚’è¨ˆç®—
 		float radiusSum = radius1 + radius2;
 		
-		// Õ“Ë”»’è
+		// è¡çªåˆ¤å®š
 		return distanceSquared <= (radiusSum * radiusSum);
 	}
 };
