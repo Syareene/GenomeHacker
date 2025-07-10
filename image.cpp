@@ -10,12 +10,10 @@ void ImageDraw::Init()
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
 	// マトリクス設定
-	Renderer::SetWorldViewProjection2D();
+	SetProjectionMatrixOnDraw();
 
 	// 頂点バッファ設定
-	SetVertexBufferOnDraw();
-	// プロジェクションマトリックス設定
-	SetWorldMatrixOnDraw();
+	SetDefaultVertexBufferOnDraw();
 	// ビューマトリックス設定
 	SetViewMatrixOnDraw();
 	// 移動、回転マトリックス設定

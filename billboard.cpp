@@ -123,7 +123,6 @@ void BillBoard::Draw()
 	// マテリアル設定
 	SetMaterialOnDraw();
 
-
 	// 頂点バッファ設定
 	SetVertexBufferOnDraw();
 

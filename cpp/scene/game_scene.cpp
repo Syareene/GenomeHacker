@@ -23,7 +23,8 @@ void GameScene::Init()
 	AddGameObject<Enemy>(0)->SetPosition({ 8.0f, 0.0f, 0.0f });
 	AddGameObject<Player>(0);
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
-	AddGameObject<Score>(0);
+	AddGameObject<Score>(1);
+	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 
 
 	//AddGameObject<Polygon2D>(2);
