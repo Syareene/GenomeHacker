@@ -1,0 +1,31 @@
+name: タスク依頼
+title: "【ToDo】 "
+description: "やることを提示したい場合はこちら"
+labels: ⌚️ToDO
+#assignees: " "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## 下記を記入してください
+- type: textarea
+  id: feature
+  attributes:
+    label: タスク内容
+    description: タスクの内容を記載してください。詳細な部分も含めて記入してください。
+    placeholder: 数値等が決まっていない場合は決まっていないことも含めてください。誰がどう見ても同じ物を作れるように書くこと!!
+- type: textarea
+  id: problem
+  attributes:
+    label: 起こるであろう問題点
+    description: 作成中に起こるであろう問題点があらかじめわかっている場合は記載してください。 
+- type: dropdown
+  id: priority
+  attributes:
+    label: 優先度
+    description: この機能の実装優先度を選択してください。
+    options:
+      - 高(最優先、現在のバージョンで実装)
+      - 中(次のバージョン頃で実装予定)
+      - 低(完成版近くに実装できていればok)

@@ -1,0 +1,36 @@
+name: 既存仕様の追加提案
+title: "【改善】 "
+description: "既存の仕様を変更したり、追加したい場合はこちら"
+labels: 🔧要修正
+#assignees: " "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## 下記を記入してください
+- type: input
+  id: title
+  attributes:
+    label: 改善元の記載
+    description: 変える元となる要素を記載してください。
+    placeholder: issueのURLでも良いです
+- type: textarea
+  id: feature
+  attributes:
+    label: 内容
+    description: 変更/追加したい内容を記載してください。
+- type: input
+  id: description
+  attributes:
+    label: 説明
+    description: 変更/追加する理由を記載してください。
+- type: dropdown
+  id: priority
+  attributes:
+    label: 優先度
+    description: この機能の実装優先度を選択してください。
+    options:
+      - 高(最優先、現在のバージョンで実装)
+      - 中(次のバージョン頃で実装予定)
+      - 低(完成版近くに実装できていればok)

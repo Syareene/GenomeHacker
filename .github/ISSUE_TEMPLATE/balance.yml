@@ -1,0 +1,35 @@
+name: バランス調整の提案
+title: "【バランス調整】 "
+description: "ゲームバランスに関する提案がある場合はこちら"
+labels: 🚧バランス調整
+#assignees: " "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## 下記を記入してください
+- type: input
+  id: title
+  attributes:
+    label: 調節箇所
+    description: バランスを調整したい部分を記載してください。
+- type: textarea
+  id: feature
+  attributes:
+    label: 内容
+    description: 具体的な調整内容を記載してください。可能であれば数値を使うほうが好ましいです。
+- type: input
+  id: description
+  attributes:
+    label: 説明
+    description: 調整する理由を記載してください。
+- type: dropdown
+  id: priority
+  attributes:
+    label: 優先度
+    description: この調整の実装優先度を選択してください。
+    options:
+      - 高(最優先、現在のバージョンで実装)
+      - 中(次のバージョン頃で実装予定)
+      - 低(完成版近くに実装できていればok)
