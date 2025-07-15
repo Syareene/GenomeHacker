@@ -1,6 +1,6 @@
-name: タスク依頼
+name: タスク
 title: "【ToDo】 "
-description: "やることを提示したい場合はこちら"
+description: "やることリストに追加しよう"
 labels: ⌚️ToDO
 #assignees: " "
 
