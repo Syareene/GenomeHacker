@@ -30,6 +30,7 @@
     <ClInclude Include="hedder\collider\sphere.h" />
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
+    <ClInclude Include="hedder\lib\mouse.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
     <ClInclude Include="hedder\object\3d_object.h" />
     <ClInclude Include="hedder\object\billboard.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />
     <ClCompile Include="cpp\lib\easing.cpp" />
+    <ClCompile Include="cpp\lib\mouse.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />

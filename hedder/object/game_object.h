@@ -37,6 +37,7 @@ protected:
 
 	// 頂点バッファを描画時に設定する関数
 	void SetDefaultVertexBufferOnDraw() const;
+	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 	void SetVertexBufferOnDraw() const;
 	void SetWorldMatrixOnDraw();
 	void SetWorldMatrixOnDrawBillboard(); // ビルボード用のワールドマトリックス設定

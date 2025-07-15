@@ -177,6 +177,9 @@
     <ClInclude Include="skydome.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\lib\mouse.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="skydome.cpp">
       <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\mouse.cpp">
+      <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

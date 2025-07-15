@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "manager.h"
+#include "lib/mouse.h"
 #include <thread>
 
 
@@ -11,6 +12,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 
 HWND g_Window;
+RECT g_Rect;
+Mouse g_Mouse;
 
 HWND GetWindow()
 {
@@ -40,11 +43,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		RegisterClassEx(&wcex);
 
 
-		RECT rc = { 0, 0, (LONG)SCREEN_WIDTH, (LONG)SCREEN_HEIGHT };
-		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+		g_Rect = { 0, 0, (LONG)SCREEN_WIDTH, (LONG)SCREEN_HEIGHT };
+		AdjustWindowRect(&g_Rect, WS_OVERLAPPEDWINDOW, FALSE);
 
 		g_Window = CreateWindowEx(0, CLASS_NAME, WINDOW_NAME, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-			rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
+			g_Rect.right - g_Rect.left, g_Rect.bottom - g_Rect.top, nullptr, nullptr, hInstance, nullptr);
 	}
 
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
@@ -131,28 +134,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// マウス検知追加
 	case WM_LBUTTONDOWN:
 		// 左クリック押された
+		g_Mouse.SetLeftButtonDown(true);
 		break;
 	case WM_LBUTTONUP:
 		// 左クリック離された
+		g_Mouse.SetLeftButtonUp(true);
 		break;
 	case WM_RBUTTONDOWN:
 		// 右クリック押された
+		g_Mouse.SetRightButtonDown(true);
 		break;
 	case WM_RBUTTONUP:
 		// 右クリック離された
+		g_Mouse.SetRightButtonUp(true);
 		break;
 	case WM_MOUSEMOVE:
 		// マウス動いた
+		GetClientRect(hWnd, &g_Rect);
+		POINTS pt = MAKEPOINTS(lParam);
+		// pt.x, pt.y でマウスの位置を取得し代入
+		g_Mouse.SetPosition(Vector3(static_cast<float>(pt.x), static_cast<float>(pt.y), 0.0f));
 		break;
 	case WM_MOUSELEAVE:
 		// マウスがウィンドウから出た
 		break;
-	
-
+	case WM_MOUSEWHEEL:
+		// ホイールが回った
+		// wParamのHIWORDで回転量を取得できる
 	default:
 		break;
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
-

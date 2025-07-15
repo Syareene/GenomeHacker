@@ -1,6 +1,7 @@
 ﻿#include "score.h"
 #include "shader_manager.h"
 #include "texture_manager.h"
+//#include "lib/mouse.h"
 
 
 void Score::Init()
@@ -44,8 +45,8 @@ void Score::Init()
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\number.png"));
 
 	// 座標設定
-	SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f)); // 画面右上に配置
-	SetScale(Vector3(1000.0f, 500.0f, 1.0f)); // サイズを調整
+	SetPosition(Vector3(50.0f, 50.0f, 0.0f)); // 画面右上に配置
+	SetScale(Vector3(75.0f, 75.0f, 1.0f)); // サイズを調整
 }
 
 void Score::Uninit()
@@ -57,7 +58,11 @@ void Score::Uninit()
 
 void Score::Update()
 {
-	
+	// 仮用で毎fスコアをインクリメント
+	m_Score++;
+
+	// テスト用で座標をマウスに動かす
+	//SetPosition(Mouse::GetPosition());
 }
 
 void Score::Draw()
@@ -72,87 +77,74 @@ void Score::Draw()
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
-	//ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
-	//Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
-
-	// プリミティブトポロジ設定
-	//Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// 頂点バッファ設定
-	// (ここデフォルトなら描画できたわ)
-	SetVertexBufferOnDraw();
-	// ビューマトリックス設定
-	SetViewMatrixOnDraw();
-	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDraw();
-	// マテリアル設定
-	SetMaterialOnDraw();
-
-	// テクスチャ設定
-	// 一時変数に入れないと参照取得できないのでこうする
 	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// 描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
-
-
-	/*
-	for(int i = 0; i < ShowableDigits; i++)
+	// 徐々に表示するのでそのスコアを計算用として保存
+	int SingleScore = m_Score;
+	// スコアがShowableDigits以上の場合は、表示可能な桁数に制限
+	if(SingleScore >= static_cast<int>(pow(10, ShowableDigits) + 1))
 	{
-		// スコアの各桁を描画
-		// 今の形式だとマトリクスも変えないとダメだ～～～wなのでサイズを下にposも動かす感じかなぁ。
-		// 前のやつも結局都度頂点データ更新しているので、各種マトリックスの設定を呼びつつtexcoordだけvertexの設定を更新する?
-		// んでmatrixに対して計算+サイズ分の値を入れて上げる感じで
+		SingleScore = static_cast<int>(pow(10, ShowableDigits) - 1); // 最大値を制限
+	}
 
-
-		// 頂点バッファ設定
-		SetVertexBufferOnDraw();
-		// プロジェクションマトリックス設定
-		SetProjectionMatrixOnDraw();
-		// ビューマトリックス設定
-		SetViewMatrixOnDraw();
-		// 移動、回転マトリックス設定
-		SetWorldMatrixOnDraw();
-		
-		// 頂点データ書き換え
+	// 頂点データ書き換え
+	for (int i = 0; i < ShowableDigits; i++)
+	{
+		int show_num = SingleScore % 10; // 現在の桁の数字を取得
+		SingleScore /= 10; // 次の桁へ進む
+		// 頂点書き換え始め
 		D3D11_MAPPED_SUBRESOURCE msr;
 		Renderer::GetDeviceContext()->Map(GetVertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 
 		VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
 
-		float textureWidth = 1.0f / 5.0f; // テクスチャの横幅を5分割
-		float textureHeight = 1.0f / 5.0f; // テクスチャの縦幅を5分割
-		float offsetX = (m_Score % 5) * textureWidth; // フレームに応じたXオフセット
-		float offsetY = (m_Score / 5) * textureHeight; // フレームに応じたYオフセット
+		float texture_width = 1.0f / 5.0f; // テクスチャの横幅を5分割
+		float texture_height = 1.0f / 5.0f; // テクスチャの縦幅を5分割
+		float offset_x = (show_num % 5) * texture_width; // フレームに応じたXオフセット
+		float offset_y = (show_num / 5) * texture_height; // フレームに応じたYオフセット
 
-		vertex[0].Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
-		vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+		vertex[0].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+		vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		vertex[0].TexCoord = XMFLOAT2(offsetX, offsetY);
+		vertex[0].TexCoord = XMFLOAT2(offset_x, offset_y);
 
-		vertex[1].Position = XMFLOAT3(1.0f, 1.0f, 0.0f);
-		vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+		vertex[1].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
+		vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		vertex[1].TexCoord = XMFLOAT2(offsetX + textureWidth, offsetY);
+		vertex[1].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y);
 
-		vertex[2].Position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-		vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+		vertex[2].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
+		vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		vertex[2].TexCoord = XMFLOAT2(offsetX, offsetY + textureHeight);
+		vertex[2].TexCoord = XMFLOAT2(offset_x, offset_y + texture_height);
 
-		vertex[3].Position = XMFLOAT3(1.0f, -1.0f, 0.0f);
-		vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+		vertex[3].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
+		vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		vertex[3].TexCoord = XMFLOAT2(offsetX + textureWidth, offsetY + textureHeight);
-
+		vertex[3].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y + texture_height);
+		// 頂点書き換え終了
 		Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
+
+		// 頂点バッファ設定
+		SetVertexBufferOnDraw();
+		// ビューマトリックス設定
+		SetViewMatrixOnDraw();
+		// 移動、回転マトリックス設定
+		XMMATRIX trans, world, rot, scale;
+		// 桁に応じてXを調整(-1はiが0~4分布なので減算させる)
+		trans = XMMatrixTranslation(GetPosition().x + 50.0f * (ShowableDigits - i - 1), GetPosition().y, GetPosition().z);
+		rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+		scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+		world = scale * rot * trans;
+		Renderer::SetWorldMatrix(world);
+		// マテリアル設定
+		SetMaterialOnDraw();
 
 		// 描画
 		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
-	*/
 }

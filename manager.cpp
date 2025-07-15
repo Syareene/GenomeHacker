@@ -12,6 +12,7 @@
 #include "shader_manager.h"
 #include "default_vertex.h"
 #include "lib/audio.h"
+#include "lib/mouse.h"
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
@@ -47,6 +48,7 @@ void Manager::Uninit()
 
 void Manager::Update()
 {
+	Mouse::Update();
 	Input::Update();
 
 	m_CurrentScene->Update();
@@ -54,6 +56,7 @@ void Manager::Update()
 
 	// ガべコレ作動
 	TextureManager::GarbageCollection();
+	Mouse::UpdateFinal();
 }
 
 void Manager::Draw()

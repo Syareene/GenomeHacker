@@ -53,6 +53,44 @@ void GameObject::SetCanChangeVertex()
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 }
 
+void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget)
+{
+	// TexCoord以外は既存のデータから取得するように変えるべきかな。
+
+	// 頂点書き換え始め
+	D3D11_MAPPED_SUBRESOURCE msr;
+	Renderer::GetDeviceContext()->Map(GetVertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+
+	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
+
+	float texture_width = 1.0f / static_cast<float>(texWidthCount); // テクスチャの横幅を分割
+	float texture_height = 1.0f / static_cast<float>(texHeightCount); // テクスチャの縦幅を分割
+	float offset_x = widthTarget * texture_width; // フレームに応じたXオフセット
+	float offset_y = heightTarget * texture_height; // フレームに応じたYオフセット
+
+	vertex[0].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[0].TexCoord = XMFLOAT2(offset_x, offset_y);
+
+	vertex[1].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
+	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[1].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y);
+
+	vertex[2].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
+	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[2].TexCoord = XMFLOAT2(offset_x, offset_y + texture_height);
+
+	vertex[3].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
+	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	vertex[3].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y + texture_height);
+	// 頂点書き換え終了
+	Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
+}
+
 void GameObject::SetDefaultVertexBufferOnDraw() const
 {
 	UINT stride = sizeof(VERTEX_3D);

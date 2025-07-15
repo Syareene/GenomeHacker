@@ -9,6 +9,10 @@ class Audio : public Component
 // 音量周りいじりたいなら下記見たほうがいいかも
 // https://learn.microsoft.com/ja-jp/windows/win32/api/xaudio2/nn-xaudio2-ixaudio2voice
 
+// フェードイン・アウトを作りたいところではある。->キューをこっちに作成して、update時にtに応じてvolumeを更新するようにする
+// SEは保存時にstringでタグ保存して、そこから呼び出せるとかのがいいんだよねぇ、、
+// update実装するならついでにflyweightにして管理しやすくしたほうが良さそげ。->こっちはSEクラスにしてそっちだけflyweightとかでも
+
 private:
 	static IXAudio2*				m_Xaudio;
 	static IXAudio2MasteringVoice*	m_MasteringVoice;
