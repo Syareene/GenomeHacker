@@ -15,7 +15,7 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
-#include "vector3.h"
+#include "lib/vector3.h"
 
 #include "lib/DirectXTex.h"
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "object/game_object.h"
-#include "vector3.h"
+#include "lib/vector3.h"
 #include <algorithm>
 
 // これ、判定を計算するクラスだけど

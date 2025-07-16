@@ -1,17 +1,17 @@
-#pragma once
-#include "vector3.h"
+ï»¿#pragma once
+#include "lib/vector3.h"
 
 class Collision
 {
-	// Gameobject‚ÉƒAƒ^ƒbƒ`‚·‚é—p‚ÌƒvƒƒpƒeƒB
+	// Gameobjectã«ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ç”¨ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 public:
 
 private:
-	// Õ“Ë”»’è‚ÌƒvƒƒpƒeƒB
-	Vector3 m_Center; // ’†SˆÊ’u
-	Vector3 m_Size; // ƒTƒCƒY(AABB‚ÆOBB—p)
-	Vector3 m_Rotation; // ‰ñ“]’l(OBB—p)
-	float m_Radius; // Sphere‚Ì”¼Œa
+	// è¡çªåˆ¤å®šã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
+	Vector3 m_Center; // ä¸­å¿ƒä½ç½®
+	Vector3 m_Size; // ã‚µã‚¤ã‚º(AABBã¨OBBç”¨)
+	Vector3 m_Rotation; // å›è»¢å€¤(OBBç”¨)
+	float m_Radius; // Sphereã®åŠå¾„
 
-	// collisiontype‚ğ”»’è‚·‚é‚½‚ß‚É‚±‚ê‚ğoverride‚µ‚Äg‚Á‚½‚Ù‚¤‚ª‚¢‚¢‚©‚È‚Ÿ‚Á‚Ä‹C‚ª‚µ‚È‚­‚à‚È‚¢B
+	// collisiontypeã‚’åˆ¤å®šã™ã‚‹ãŸã‚ã«ã“ã‚Œã‚’overrideã—ã¦ä½¿ã£ãŸã»ã†ãŒã„ã„ã‹ãªãã£ã¦æ°—ãŒã—ãªãã‚‚ãªã„ã€‚
 };

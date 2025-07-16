@@ -153,7 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &g_Rect);
 		POINTS pt = MAKEPOINTS(lParam);
 		// pt.x, pt.y でマウスの位置を取得し代入
-		g_Mouse.SetPosition(Vector3(static_cast<float>(pt.x), static_cast<float>(pt.y), 0.0f));
+		g_Mouse.SetPosition(Vector2(static_cast<float>(pt.x), static_cast<float>(pt.y)));
 		break;
 	case WM_MOUSELEAVE:
 		// マウスがウィンドウから出た

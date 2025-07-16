@@ -174,4 +174,4 @@ inline float distance(const Vector3& v1, const Vector3& v2)
 }
 
 // グローバル変数
-extern const Vector3 g_ZeroVector; // ゼロベクトル
+extern const Vector3 g_ZeroVector3; // ゼロベクトル

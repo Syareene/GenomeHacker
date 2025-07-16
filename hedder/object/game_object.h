@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "vector3.h"
+#include "lib/vector3.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
 #include "renderer.h"
 #include <string>

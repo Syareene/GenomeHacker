@@ -5,7 +5,7 @@
 #include "player.h"
 #include "object/polygon.h"
 #include "object/ui/image.h"
-#include "vector3.h"
+#include "lib/vector3.h"
 #include "particle.h"
 #include "input.h"
 #include "result_scene.h"
@@ -25,7 +25,7 @@ void GameScene::Init()
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
-
+	AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 150.0f, 0.0f), Vector3(300.0f, 300.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\bomb.png", false);
 
 	//AddGameObject<Polygon2D>(2);
 	m_BGM = new Audio();

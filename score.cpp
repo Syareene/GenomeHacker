@@ -1,7 +1,7 @@
 ﻿#include "score.h"
 #include "shader_manager.h"
 #include "texture_manager.h"
-//#include "lib/mouse.h"
+#include "lib/mouse.h"
 
 
 void Score::Init()
@@ -59,10 +59,20 @@ void Score::Uninit()
 void Score::Update()
 {
 	// 仮用で毎fスコアをインクリメント
-	m_Score++;
+	//m_Score++;
 
 	// テスト用で座標をマウスに動かす
 	//SetPosition(Mouse::GetPosition());
+
+
+	// 一度仮置きなのでこちら側で判定を取る
+	// 指定したエリア内にマウスがいるかどうか(表示している爆弾のスプライトがこのサイズなので仮で此方側で判定を合わせる)
+	bool is_inside = Mouse::IsMouseInsideArea(Vector2(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 300.0f), Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+	if(is_inside && Mouse::IsLeftButtonTrigger())
+	{
+		// マウスがクリックされたらスコアを増やす
+		m_Score += 100; // クリックで100点加算
+	}
 }
 
 void Score::Draw()

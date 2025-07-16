@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "vector3.h"
+#include "lib/vector2.h"
 
 // もしかしたら後々rawinputに統合するかも
 class Mouse
@@ -11,7 +11,7 @@ public:
 	void SetRightButtonUp(bool up);
 	void SetLeftButtonDown(bool down);
 	void SetLeftButtonUp(bool up);
-	void SetPosition(Vector3 position);
+	void SetPosition(Vector2 position);
 	// update2種はmanager側から呼ぶ
 	static void Update();
 	static void UpdateFinal();
@@ -20,7 +20,8 @@ public:
 	static bool IsRightButtonTrigger() { return m_RightButtonTrigger; }
 	static bool IsLeftButtonDown() { return m_LeftButtonDown; }
 	static bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
-	static Vector3 GetPosition() { return m_Position; }
+	static Vector2 GetPosition() { return m_Position; }
+	static bool IsMouseInsideArea(Vector2 startPos, Vector2 endPos);
 private:
 	static bool m_RightButtonDown; // 右クリックが押されているかどうか
 	static bool m_RightButtonUp; // 右クリックが離されたかどうか
@@ -30,7 +31,7 @@ private:
 	static bool m_LeftButtonUp; // 左クリックが離されたかどうか
 	static bool m_LeftButtonDownOld; // 1f前の左クリック状態
 	static bool m_LeftButtonTrigger; // 左クリックが押されたかどうか(押され始めだけ)
-	static Vector3 m_Position; // マウスの位置
+	static Vector2 m_Position; // マウスの位置
 
 	// XBUTTON(サイドキー)は一旦後回し
 };

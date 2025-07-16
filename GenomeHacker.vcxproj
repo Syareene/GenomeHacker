@@ -31,6 +31,8 @@
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
+    <ClInclude Include="hedder\lib\vector2.h" />
+    <ClInclude Include="hedder\lib\vector3.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
     <ClInclude Include="hedder\object\3d_object.h" />
     <ClInclude Include="hedder\object\billboard.h" />
@@ -58,7 +60,6 @@
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="skydome.h" />
     <ClInclude Include="texture_manager.h" />
-    <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
