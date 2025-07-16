@@ -58,20 +58,15 @@ void Score::Uninit()
 
 void Score::Update()
 {
-	// 仮用で毎fスコアをインクリメント
-	//m_Score++;
-
-	// テスト用で座標をマウスに動かす
-	//SetPosition(Mouse::GetPosition());
-
-
 	// 一度仮置きなのでこちら側で判定を取る
 	// 指定したエリア内にマウスがいるかどうか(表示している爆弾のスプライトがこのサイズなので仮で此方側で判定を合わせる)
 	bool is_inside = Mouse::IsMouseInsideArea(Vector2(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 300.0f), Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+
+	// エリア内にいるかつクリックしたなら
 	if(is_inside && Mouse::IsLeftButtonTrigger())
 	{
-		// マウスがクリックされたらスコアを増やす
-		m_Score += 100; // クリックで100点加算
+		// スコアを加算
+		m_Score += 100;
 	}
 }
 

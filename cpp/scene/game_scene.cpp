@@ -30,7 +30,7 @@ void GameScene::Init()
 	//AddGameObject<Polygon2D>(2);
 	m_BGM = new Audio();
 	m_BGM->Load("asset\\audio\\bgm\\cafe_seaside.wav");
-	m_BGM->GetSourceVoice()->SetVolume(0.2f); // 音量を設定
+	m_BGM->GetSourceVoice()->SetVolume(0.15f); // 音量を設定
 	m_BGM->GetSourceVoice()->SetFrequencyRatio(1.0f); // 再生速度を設定
 	m_BGM->Play(true);
 }
