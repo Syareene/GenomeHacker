@@ -15,7 +15,7 @@ public:
 
 	// コピーコンストラクタ
 	Vector2(const Vector2& v) : x(v.x), y(v.y) {};
-	// 3つの値で作成する
+	// 2つの値で作成する
 	Vector2(float x, float y) : x(x), y(y) {};
 
 	// 代入

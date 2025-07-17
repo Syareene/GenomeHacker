@@ -21,6 +21,8 @@ public:
 	static bool IsLeftButtonDown() { return m_LeftButtonDown; }
 	static bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
 	static Vector2 GetPosition() { return m_Position; }
+	static Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
+	static void SetScreenMousePosition(Vector2 pos);
 	static bool IsMouseInsideArea(Vector2 startPos, Vector2 endPos);
 private:
 	static bool m_RightButtonDown; // 右クリックが押されているかどうか
@@ -31,6 +33,7 @@ private:
 	static bool m_LeftButtonUp; // 左クリックが離されたかどうか
 	static bool m_LeftButtonDownOld; // 1f前の左クリック状態
 	static bool m_LeftButtonTrigger; // 左クリックが押されたかどうか(押され始めだけ)
+	static Vector2 m_OldPosition; // 1f前のマウスの位置
 	static Vector2 m_Position; // マウスの位置
 
 	// XBUTTON(サイドキー)は一旦後回し

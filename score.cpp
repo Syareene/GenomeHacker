@@ -60,14 +60,14 @@ void Score::Update()
 {
 	// 一度仮置きなのでこちら側で判定を取る
 	// 指定したエリア内にマウスがいるかどうか(表示している爆弾のスプライトがこのサイズなので仮で此方側で判定を合わせる)
-	bool is_inside = Mouse::IsMouseInsideArea(Vector2(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 300.0f), Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
+	//bool is_inside = Mouse::IsMouseInsideArea(Vector2(SCREEN_WIDTH - 300.0f, SCREEN_HEIGHT - 300.0f), Vector2(SCREEN_WIDTH, SCREEN_HEIGHT));
 
 	// エリア内にいるかつクリックしたなら
-	if(is_inside && Mouse::IsLeftButtonTrigger())
-	{
+	//if(is_inside && Mouse::IsLeftButtonTrigger())
+	//{
 		// スコアを加算
-		m_Score += 100;
-	}
+	//	m_Score += 100;
+	//}
 }
 
 void Score::Draw()

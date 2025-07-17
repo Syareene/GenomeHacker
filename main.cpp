@@ -20,6 +20,13 @@ HWND GetWindow()
 	return g_Window;
 }
 
+RECT GetRect()
+{
+	// 更新する
+	GetWindowRect(g_Window, &g_Rect);
+	return g_Rect;
+}
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {

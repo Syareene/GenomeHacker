@@ -1,9 +1,24 @@
 ﻿#include "object/ui/button.h"
 #include "input.h"
+#include "lib/mouse.h"
+#include "texture_manager.h"
+#include "shader_manager.h"
+
+void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath)
+{
+	// ボタンの初期化処理
+	SetPosition(Vector3(pos.x, pos.y, 0.0f));
+	SetScale(Vector3(scale.x, scale.y, 1.0f));
+	SetRotation(Vector3(rot.x, rot.y, 0.0f));
+	SetTextureID(TextureManager::LoadTexture(filePath));
+	SetNoUpdate(true); // 更新しないが有効な状態にする
+	SetActive(true); // アクティブにする
+	TargetFunc = func; // コールバック関数を設定
+}
 
 void Button::Init()
 {
-
+	
 }
 
 void Button::Uninit()
@@ -17,10 +32,43 @@ void Button::Update()
 	// クリック検知などを行う
 
 	// 自身の描画範囲内にマウスカーソルがあるかどうかをチェック
-	// そもそもinputクラスにマウス入力の関数ないや
+	if (Mouse::IsMouseInsideArea(Vector2(GetPosition().x - (GetScale().x * 0.5f), GetPosition().y - (GetScale().y * 0.5f)),
+		Vector2(GetPosition().x + (GetScale().x * 0.5f), GetPosition().y + (GetScale().y * 0.5f))) && 
+		Mouse::IsLeftButtonTrigger())
+	{
+		OnClick(); // マウスがボタンの範囲内でクリックされた場合、OnClickを呼び出す
+	}
 }
 
 void Button::Draw()
 { 
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
+	// マトリクス設定
+	Renderer::SetWorldViewProjection2D();
 
+	// 頂点バッファ設定
+	SetDefaultVertexBufferOnDraw();
+	// プロジェクションマトリックス設定
+	//SetProjectionMatrixOnDraw();
+	// ビューマトリックス設定
+	SetViewMatrixOnDraw();
+	// 移動、回転マトリックス設定
+	SetWorldMatrixOnDraw();
+	// マテリアル設定
+	SetMaterialOnDraw();
+
+	// テクスチャ設定
+	// 一時変数に入れないと参照取得できないのでこうする
+	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+
+	// プリミティブトポロジ設定
+	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	// 描画
+	Renderer::GetDeviceContext()->Draw(4, 0);
 }

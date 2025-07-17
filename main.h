@@ -40,4 +40,5 @@ using namespace DirectX;
 HWND GetWindow();
 
 void Invoke(std::function<void()> Function, int Time);
+RECT GetRect();
 
