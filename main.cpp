@@ -168,6 +168,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:
 		// ホイールが回った
 		// wParamのHIWORDで回転量を取得できる
+		g_Mouse.SetWheelDiff(static_cast<int>(GET_WHEEL_DELTA_WPARAM(wParam)));
 	default:
 		break;
 	}

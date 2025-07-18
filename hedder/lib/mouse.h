@@ -12,6 +12,7 @@ public:
 	void SetLeftButtonDown(bool down);
 	void SetLeftButtonUp(bool up);
 	void SetPosition(Vector2 position);
+	void SetWheelDiff(int diff);
 	// update2種はmanager側から呼ぶ
 	static void Update();
 	static void UpdateFinal();
@@ -24,6 +25,7 @@ public:
 	static Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
 	static void SetScreenMousePosition(Vector2 pos);
 	static bool IsMouseInsideArea(Vector2 startPos, Vector2 endPos);
+	static int GetWheelDiff() { return m_WheelDiff; }
 private:
 	static bool m_RightButtonDown; // 右クリックが押されているかどうか
 	static bool m_RightButtonUp; // 右クリックが離されたかどうか
@@ -35,6 +37,7 @@ private:
 	static bool m_LeftButtonTrigger; // 左クリックが押されたかどうか(押され始めだけ)
 	static Vector2 m_OldPosition; // 1f前のマウスの位置
 	static Vector2 m_Position; // マウスの位置
+	static int m_WheelDiff; // ホイールの差分
 
 	// XBUTTON(サイドキー)は一旦後回し
 };

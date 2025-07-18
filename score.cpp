@@ -68,6 +68,8 @@ void Score::Update()
 		// スコアを加算
 	//	m_Score += 100;
 	//}
+
+	SetPosition(Vector3(GetPosition().x, GetPosition().y + (Mouse::GetWheelDiff() * -0.3f), GetPosition().z));
 }
 
 void Score::Draw()

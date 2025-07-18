@@ -98,6 +98,9 @@ void Audio::Load(const char *FileName)
 	// サウンドソース生成
 	m_Xaudio->CreateSourceVoice(&m_SourceVoice, &wfx);
 	assert(m_SourceVoice);
+
+
+	// m_SorruceVoiceをflyweightで管理すればok
 }
 
 

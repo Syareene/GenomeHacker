@@ -11,6 +11,7 @@ bool Mouse::m_LeftButtonDownOld = false; // 1f前の左クリック状態
 bool Mouse::m_LeftButtonTrigger = false; // 左クリックが押されたかどうか(押され始めだけ)
 Vector2 Mouse::m_OldPosition = Vector2(0.0f, 0.0f); // 1f前のマウスの位置
 Vector2 Mouse::m_Position = Vector2(0.0f, 0.0f); // マウスの位置
+int Mouse::m_WheelDiff = 0; // ホイールの差分
 
 
 void Mouse::SetRightButtonDown(bool down)
@@ -38,6 +39,12 @@ void Mouse::SetPosition(Vector2 position)
 {
 	m_OldPosition = m_Position; // 1f前の位置を保存
 	m_Position = position;
+}
+
+void Mouse::SetWheelDiff(int diff)
+{
+	// ホイールの差分を設定
+	m_WheelDiff = diff;
 }
 
 // 実際のマウスの座標を設定する関数
@@ -77,6 +84,9 @@ void Mouse::UpdateFinal()
 	m_LeftButtonUp = false;
 	m_RightButtonDown = false;
 	m_RightButtonUp = false;
+
+	// diffをリセット
+	m_WheelDiff = 0;
 }
 
 bool Mouse::IsMouseInsideArea(Vector2 startPos, Vector2 endPos)

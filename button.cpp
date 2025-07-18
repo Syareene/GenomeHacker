@@ -11,7 +11,7 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	SetScale(Vector3(scale.x, scale.y, 1.0f));
 	SetRotation(Vector3(rot.x, rot.y, 0.0f));
 	SetTextureID(TextureManager::LoadTexture(filePath));
-	SetNoUpdate(true); // 更新しないが有効な状態にする
+	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
 	TargetFunc = func; // コールバック関数を設定
 }

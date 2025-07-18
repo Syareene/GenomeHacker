@@ -32,6 +32,11 @@ void GameScene::Init()
 		GetGameObject<Score>()->AddScore(10);
 	}, Vector2(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 350.0f), Vector2(300.0f, 300.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
 
+	AddGameObject<Button>(2)->Register([]() {
+		// ボタンがクリックされた時の処理
+		Manager::SetScene(std::make_unique<ResultScene>());
+		}, Vector2(SCREEN_WIDTH - 150.0f, 50.0f), Vector2(300.0f, 100.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
+
 	//AddGameObject<Polygon2D>(2);
 	m_BGM = new Audio();
 	m_BGM->Load("asset\\audio\\bgm\\cafe_seaside.wav");

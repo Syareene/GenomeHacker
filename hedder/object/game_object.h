@@ -13,7 +13,9 @@ private:
 	Vector3 m_Scale{ 1.0f, 1.0f, 1.0f };
 	bool m_Destory = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
-	std::string m_Tag; // タグを設定してグループで判定できるように
+	std::string m_Tag; // タグを設定してグループで判定できるように->listにしても良い
+	// game_speed;->global版もほしい
+	// 
 
 	// 描画系変数
 	ID3D11Buffer* m_VertexBuffer = nullptr;
