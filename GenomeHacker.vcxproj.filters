@@ -58,6 +58,15 @@
     <Filter Include="ヘッダー ファイル\manager">
       <UniqueIdentifier>{57e6f74b-b236-4338-919d-46107479d2c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\node">
+      <UniqueIdentifier>{6292120a-12b6-44b8-b399-c1c09c40d017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\enemy\node_base">
+      <UniqueIdentifier>{0c3e364e-5560-495f-a30a-3cc3da9ee823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enemy\node_base">
+      <UniqueIdentifier>{62031bad-4ded-4086-ae21-b9b90e90d537}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="manager.h">
@@ -101,15 +110,6 @@
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>ヘッダー ファイル\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="bullet.h">
-      <Filter>ヘッダー ファイル\enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>ヘッダー ファイル\enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="explosion.h">
-      <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
     <ClInclude Include="texture_manager.h">
       <Filter>ヘッダー ファイル\manager</Filter>
@@ -183,6 +183,24 @@
     <ClInclude Include="hedder\lib\vector2.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\bullet.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\enemy.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\explosion.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_base\attack.h">
+      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_base\death.h">
+      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_base\movement.h">
+      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -205,15 +223,6 @@
     </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル\enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="explosion.cpp">
-      <Filter>ソース ファイル\enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="bullet.cpp">
-      <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
     <ClCompile Include="billboard.cpp">
       <Filter>ソース ファイル\object</Filter>
@@ -274,6 +283,24 @@
     </ClCompile>
     <ClCompile Include="cpp\lib\mouse.cpp">
       <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_base\movement.cpp">
+      <Filter>ソース ファイル\enemy\node_base</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_base\attack.cpp">
+      <Filter>ソース ファイル\enemy\node_base</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_base\death.cpp">
+      <Filter>ソース ファイル\enemy\node_base</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\bullet.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\enemy.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\explosion.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

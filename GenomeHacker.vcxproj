@@ -19,15 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bullet.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="default_vertex.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="explosion.h" />
     <ClInclude Include="hedder\collider\collider_base.h" />
     <ClInclude Include="hedder\collider\collision.h" />
     <ClInclude Include="hedder\collider\cube.h" />
     <ClInclude Include="hedder\collider\sphere.h" />
+    <ClInclude Include="hedder\enemy\bullet.h" />
+    <ClInclude Include="hedder\enemy\enemy.h" />
+    <ClInclude Include="hedder\enemy\explosion.h" />
+    <ClInclude Include="hedder\enemy\node_base\attack.h" />
+    <ClInclude Include="hedder\enemy\node_base\death.h" />
+    <ClInclude Include="hedder\enemy\node_base\movement.h" />
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
@@ -63,9 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
-    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cpp\enemy\bullet.cpp" />
+    <ClCompile Include="cpp\enemy\enemy.cpp" />
+    <ClCompile Include="cpp\enemy\explosion.cpp" />
+    <ClCompile Include="cpp\enemy\node_base\attack.cpp" />
+    <ClCompile Include="cpp\enemy\node_base\death.cpp" />
+    <ClCompile Include="cpp\enemy\node_base\movement.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />
     <ClCompile Include="cpp\lib\easing.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
@@ -75,8 +83,6 @@
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
     <ClCompile Include="default_vertex.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="explosion.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
@@ -224,7 +230,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -240,7 +246,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>

@@ -3,19 +3,20 @@
 #include "lib/vector3.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
 #include "renderer.h"
+#include "manager.h"
 #include <string>
 
 class GameObject
 {
 private:
 	Vector3 m_Position{ 0.0f, 0.0f, 0.0f };
+	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
 	Vector3 m_Rotation{ 0.0f, 0.0f, 0.0f };
 	Vector3 m_Scale{ 1.0f, 1.0f, 1.0f };
 	bool m_Destory = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
-	std::string m_Tag; // タグを設定してグループで判定できるように->listにしても良い
-	// game_speed;->global版もほしい
-	// 
+	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
+	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
 
 	// 描画系変数
 	ID3D11Buffer* m_VertexBuffer = nullptr;
@@ -53,17 +54,46 @@ public:
 	virtual void Update() {};
 	virtual void Draw() {};
 
+	void AddPosition(Vector3 Position, bool calcWorldSpeed = true)
+	{
+		if (calcWorldSpeed)
+		{
+			m_Position.x += Position.x * m_ObjSpeedMlt * Manager::GetGameSpeed();
+			m_Position.y += Position.y * m_ObjSpeedMlt * Manager::GetGameSpeed();
+			m_Position.z += Position.z * m_ObjSpeedMlt * Manager::GetGameSpeed();
+		}
+		else
+		{
+			m_Position.x += Position.x * m_ObjSpeedMlt;
+			m_Position.y += Position.y * m_ObjSpeedMlt;
+			m_Position.z += Position.z * m_ObjSpeedMlt;
+		}
+	}
 	Vector3& GetPosition() { return m_Position; }
 	void SetPosition(Vector3 Position) { m_Position = Position; }
+	Vector3& GetVelocity() { return m_Velocity; }
+	void SetVelocity(Vector3 Velocity) { m_Velocity = Velocity; }
 	Vector3& GetRotation() { return m_Rotation; }
 	void SetRotation(Vector3 Rotation) { m_Rotation = Rotation; }
 	Vector3& GetScale() { return m_Scale; }
 	void SetScale(Vector3 Scale) { m_Scale = Scale; }
 	int GetTextureID() const { return m_TextureID; }
 	void SetTextureID(int TextureID) { m_TextureID = TextureID; }
-	std::string GetTag() const { return m_Tag; }
-	void SetTag(const std::string& tag) { m_Tag = tag; }
-
+	std::list<std::string>& GetTagList() { return m_Tag; }
+	std::string GetTagByName(const std::string& tagName) const
+	{
+		for (const auto& tag : m_Tag)
+		{
+			if (tag == tagName)
+			{
+				return tag; // タグが見つかったら返す
+			}
+		}
+		return ""; // 見つからなかった場合は空文字を返す
+	}
+	void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
+	void SetObjectSpeedMlt(float speedMlt) { m_ObjSpeedMlt = speedMlt; }
+	float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
 	void SetDestory(bool Destory) { m_Destory = Destory; }
 	bool IsDestory() const { return m_Destory; }
 	bool Destory()

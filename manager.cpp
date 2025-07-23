@@ -6,7 +6,7 @@
 #include "object/camera.h"
 #include "player.h"
 #include "input.h"
-#include "enemy.h"
+#include "enemy/enemy.h"
 #include "texture_manager.h"
 #include "scene/title_scene.h"
 #include "shader_manager.h"
@@ -16,6 +16,7 @@
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
+float Manager::m_GameSpeed = 1.0f; // ゲームの速度
 
 void Manager::Init()
 {

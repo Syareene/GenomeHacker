@@ -5,7 +5,7 @@ class Collision
 {
 	// Gameobjectにアタッチする用のプロパティ
 public:
-
+	void DrawCollider() const; // デバッグ用の衝突判定の可視化
 private:
 	// 衝突判定のプロパティ
 	Vector3 m_Center; // 中心位置

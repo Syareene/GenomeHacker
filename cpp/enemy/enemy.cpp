@@ -1,6 +1,6 @@
 ﻿#include "main.h"
 #include "renderer.h"
-#include "enemy.h"
+#include "enemy/enemy.h"
 #include "modelRenderer.h"
 #include "input.h"
 #include "object/camera.h"

@@ -6,8 +6,8 @@
 class Object3D : public GameObject
 {
 public:
-	//void Init() override {};
-	//void Uninit() override {};
-	//void Update() override {};
-	//void Draw() override {};
+	void Init() override {};
+	void Uninit() override {};
+	void Update() override {};
+	void Draw() override {};
 };

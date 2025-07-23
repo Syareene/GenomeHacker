@@ -5,7 +5,7 @@
 #include "input.h"
 #include "object/camera.h"
 #include "manager.h"
-#include "bullet.h"
+#include "enemy/bullet.h"
 #include "shader_manager.h"
 
 void Player::Init()

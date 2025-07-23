@@ -22,7 +22,18 @@ public:
 	{
 		return m_CurrentScene;
 	}
+	static void SetGameSpeed(int speed)
+	{
+		m_GameSpeed = speed;
+	}
+
+	static int GetGameSpeed()
+	{
+		return m_GameSpeed;
+	}
+
 private:
 	static std::unique_ptr<Scene> m_CurrentScene; // 現在のシーン
 	static std::unique_ptr<Scene> m_NextScene; // 次のシーン
+	static float m_GameSpeed; // ゲームの速度
 };

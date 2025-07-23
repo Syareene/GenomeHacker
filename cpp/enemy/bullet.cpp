@@ -1,12 +1,12 @@
 ﻿#include "main.h"
 #include "renderer.h"
-#include "bullet.h"
+#include "enemy/bullet.h"
 #include "modelRenderer.h"
 #include "input.h"
 #include "object/camera.h"
 #include "manager.h"
-#include "enemy.h"
-#include "explosion.h"
+#include "enemy/enemy.h"
+#include "enemy/explosion.h"
 
 void Bullet::Init()
 {

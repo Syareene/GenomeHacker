@@ -1,7 +1,7 @@
 ﻿#include "scene/game_scene.h"
 #include "object/camera.h"
 #include "object/field.h"
-#include "enemy.h"
+#include "enemy/enemy.h"
 #include "player.h"
 #include "object/polygon.h"
 #include "object/ui/image.h"
@@ -36,6 +36,13 @@ void GameScene::Init()
 		// ボタンがクリックされた時の処理
 		Manager::SetScene(std::make_unique<ResultScene>());
 		}, Vector2(SCREEN_WIDTH - 150.0f, 50.0f), Vector2(300.0f, 100.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
+
+	/*
+	AddGameObject<Button>(2)->Register([this]() {
+		// ボタンがクリックされた時の処理
+		dynamic_cast<Button*>(GetGameObjectByTag("aiueo"))->GetDistance(Vector3(0.0f, 0.0f, 0.0f));
+		}, Vector2(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 200.0f), Vector2(300.0f, 100.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
+		*/
 
 	//AddGameObject<Polygon2D>(2);
 	m_BGM = new Audio();
