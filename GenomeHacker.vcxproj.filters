@@ -61,11 +61,17 @@
     <Filter Include="ソース ファイル\node">
       <UniqueIdentifier>{6292120a-12b6-44b8-b399-c1c09c40d017}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\enemy\node_base">
+    <Filter Include="ヘッダー ファイル\enemy\node_tab">
+      <UniqueIdentifier>{62031bad-4ded-4086-ae21-b9b90e90d537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\enemy\node_tab">
       <UniqueIdentifier>{0c3e364e-5560-495f-a30a-3cc3da9ee823}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\enemy\node_base">
-      <UniqueIdentifier>{62031bad-4ded-4086-ae21-b9b90e90d537}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\enemy\node">
+      <UniqueIdentifier>{df59b42c-f1ae-4e16-be1d-101c323faef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\enemy\node">
+      <UniqueIdentifier>{2528f44a-95c6-4352-9a27-44f7b42763d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,14 +198,17 @@
     <ClInclude Include="hedder\enemy\explosion.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node_base\attack.h">
-      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    <ClInclude Include="hedder\enemy\node_tab\attack.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node_base\death.h">
-      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    <ClInclude Include="hedder\enemy\node_tab\death.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node_base\movement.h">
-      <Filter>ヘッダー ファイル\enemy\node_base</Filter>
+    <ClInclude Include="hedder\enemy\node_tab\movement.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\base.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,15 +293,6 @@
     <ClCompile Include="cpp\lib\mouse.cpp">
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\enemy\node_base\movement.cpp">
-      <Filter>ソース ファイル\enemy\node_base</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\node_base\attack.cpp">
-      <Filter>ソース ファイル\enemy\node_base</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\node_base\death.cpp">
-      <Filter>ソース ファイル\enemy\node_base</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\enemy\bullet.cpp">
       <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
@@ -301,6 +301,18 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\explosion.cpp">
       <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\attack.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\death.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\movement.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\base.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
