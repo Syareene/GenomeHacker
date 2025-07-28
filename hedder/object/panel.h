@@ -9,4 +9,7 @@ class Panel : public GameObject
 private:
 	// 描画順だけどうするかだねぇ各オブジェクトの
 	std::list<GameObject> m_ChildObjects; // 子オブジェクトのリスト
+public:
+	std::list<GameObject>& GetChildObjects() { return m_ChildObjects; }
+	void AddChildObject(const GameObject child) { m_ChildObjects.push_back(child); }
 };

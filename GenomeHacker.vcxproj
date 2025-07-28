@@ -43,9 +43,11 @@
     <ClInclude Include="hedder\object\camera.h" />
     <ClInclude Include="hedder\object\field.h" />
     <ClInclude Include="hedder\object\game_object.h" />
+    <ClInclude Include="hedder\object\panel.h" />
     <ClInclude Include="hedder\object\polygon.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
+    <ClInclude Include="hedder\object\ui\in_game\enemy_node.h" />
     <ClInclude Include="hedder\object\ui\ui.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
     <ClInclude Include="hedder\scene\game_scene.h" />
@@ -55,7 +57,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="modelRenderer.h" />
-    <ClInclude Include="panel.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="renderer.h" />
@@ -67,7 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
-    <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\enemy.cpp" />
@@ -80,13 +80,15 @@
     <ClCompile Include="cpp\lib\easing.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
+    <ClCompile Include="cpp\object\ui\button.cpp" />
+    <ClCompile Include="cpp\object\ui\image.cpp" />
+    <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
     <ClCompile Include="default_vertex.cpp" />
     <ClCompile Include="field.cpp" />
-    <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />

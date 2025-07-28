@@ -3,8 +3,10 @@
 #include "lib/vector3.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
 #include "renderer.h"
-#include "manager.h"
+//#include "manager.h"
+// ->多分ここのせいでエラー出てる
 #include <string>
+#include <list>
 
 class GameObject
 {
@@ -13,6 +15,7 @@ private:
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
 	Vector3 m_Rotation{ 0.0f, 0.0f, 0.0f };
 	Vector3 m_Scale{ 1.0f, 1.0f, 1.0f };
+	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destory = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
 	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
@@ -24,7 +27,6 @@ private:
 	ID3D11PixelShader* m_PixelShader = nullptr;
 	ID3D11InputLayout* m_VertexLayout = nullptr;
 
-
 	// ここに描画系の簡易関数を作成する
 	// 後shaderのポインタも持ってていいね
 protected:
@@ -35,7 +37,6 @@ protected:
 	void SetPixelShader(ID3D11PixelShader* PixelShader) { m_PixelShader = PixelShader; }
 	void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
 	void UninitDrawMember();
-
 	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 
 	// 頂点バッファを描画時に設定する関数
@@ -54,21 +55,8 @@ public:
 	virtual void Update() {};
 	virtual void Draw() {};
 
-	void AddPosition(Vector3 Position, bool calcWorldSpeed = true)
-	{
-		if (calcWorldSpeed)
-		{
-			m_Position.x += Position.x * m_ObjSpeedMlt * Manager::GetGameSpeed();
-			m_Position.y += Position.y * m_ObjSpeedMlt * Manager::GetGameSpeed();
-			m_Position.z += Position.z * m_ObjSpeedMlt * Manager::GetGameSpeed();
-		}
-		else
-		{
-			m_Position.x += Position.x * m_ObjSpeedMlt;
-			m_Position.y += Position.y * m_ObjSpeedMlt;
-			m_Position.z += Position.z * m_ObjSpeedMlt;
-		}
-	}
+	
+	void AddPosition(Vector3 Position, bool calcWorldSpeed = true);
 	Vector3& GetPosition() { return m_Position; }
 	void SetPosition(Vector3 Position) { m_Position = Position; }
 	Vector3& GetVelocity() { return m_Velocity; }
@@ -80,20 +68,22 @@ public:
 	int GetTextureID() const { return m_TextureID; }
 	void SetTextureID(int TextureID) { m_TextureID = TextureID; }
 	std::list<std::string>& GetTagList() { return m_Tag; }
-	std::string GetTagByName(const std::string& tagName) const
+	bool IsTagAvailable(const std::string& tagName) const
 	{
 		for (const auto& tag : m_Tag)
 		{
 			if (tag == tagName)
 			{
-				return tag; // タグが見つかったら返す
+				return true; // タグが見つかったらtrueを返す
 			}
 		}
-		return ""; // 見つからなかった場合は空文字を返す
+		return false; // 見つからなかった場合
 	}
 	void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
 	void SetObjectSpeedMlt(float speedMlt) { m_ObjSpeedMlt = speedMlt; }
 	float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
+	bool IsActive() const { return m_IsActive; }
+	void SetActive(bool IsActive) { m_IsActive = IsActive; }
 	void SetDestory(bool Destory) { m_Destory = Destory; }
 	bool IsDestory() const { return m_Destory; }
 	bool Destory()
@@ -105,7 +95,6 @@ public:
 		}
 		return false;
 	}
-
 
 	Vector3 GetRight() const;
 	Vector3 GetUp() const;

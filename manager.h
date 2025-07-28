@@ -1,8 +1,10 @@
 ﻿#pragma once
 
-#include "object/game_object.h"
 #include "scene/base_scene.h"
 #include <memory>
+
+// エラー解消用に前方宣言
+//class Scene;
 
 class Manager
 {
@@ -22,12 +24,12 @@ public:
 	{
 		return m_CurrentScene;
 	}
-	static void SetGameSpeed(int speed)
+	static void SetGameSpeed(float speed)
 	{
 		m_GameSpeed = speed;
 	}
 
-	static int GetGameSpeed()
+	static float GetGameSpeed()
 	{
 		return m_GameSpeed;
 	}

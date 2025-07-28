@@ -35,11 +35,8 @@ class UI : public Object2D
 	// 各派生クラスを作る
 
 public:
-	void SetActive(bool isActive) { m_IsActive = isActive; }
-	bool GetIsActive() const { return m_IsActive; }
 	void SetNoUpdate(bool noUpdate) { m_NoUpdate = noUpdate; }
 	bool GetNoUpdate() const { return m_NoUpdate; }
 private:
-	bool m_IsActive; // UIがアクティブかどうか
 	bool m_NoUpdate = false; // 更新しないUIかどうか
 };

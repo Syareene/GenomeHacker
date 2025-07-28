@@ -26,7 +26,6 @@ void GameScene::Init()
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
-	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 150.0f, 0.0f), Vector3(300.0f, 300.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\bomb.png", false);
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Score>()->AddScore(10);
@@ -68,14 +67,44 @@ void GameScene::Uninit()
 void GameScene::Update()
 {
 	// ゲームシーンの更新処理
+	// 本来ならScene::Update()を呼べばいいが、stateによる管理をしたいので、、って感じ
+	// どのみち判別方法がタブならSceneの方に特定のタグが付いているobjectかどうかってのを比較してからupdateすれば、、、
+
+	// このシーンにおいてはscene内でのstateの情報と、すべてのgameobjのリストとは別に現在のstateで更新するオブジェクトのポインタを保持する配列が必要。
+	// その配列を使用しオブジェクトを更新する。もしstateの更新が入った場合はオブジェクトのポインタを保持する配列を、すべてのgameobjのリストから現在のstateに該当するものだけを抽出し、更新する。
+	// AddGameobj関数をoverrideし、追加する際にタグ等から現在のstateに対して追加してもいいかどうかを関数内で判断する(引数は変更できないから)処理を追加する必要あり。
+	// gameobjのタグに対してfieldobjとかsettingsobjとかのタグをもたせる感じかな、、、　更新はしないけど描画はするみたいな設定も欲しくはある。
+
+	// ゲーム時に使うobjectはInGameタグを付ける
+	// んで多分escメニューのときは更新切って描画だけ、dnaタブのときはどっちも切るみたいなことをするからそのときにどうするかみたいな話ではある。
+
+	switch (m_state)
+	{
+		// 特定のタグだけに対して更新処理を実行する関数を作ってもいいんだが、単一タグだけじゃない可能性があるのが
+		// 両方の関数作ればよいか、、
+
+		// 通常時処理
+		case State::NORMAL:
+			Scene::Update();
+			break;
+		// escメニュー出したとき(更新はせずobjの描画はする)
+		case State::ESC_MENU:
+			// Sceneのupdateとは別でシステム系のやつだけ更新をいれる
+			Scene::UpdateObjectByTag("system");
+			break;
+		// dnaタブのときやその他ウィンドウ系(更新も描画もしない)
+		case State::DNA_TAB:
+			// Sceneのupdateとは別で今このシーンで使うやつにのみupdateを入れる
+			Scene::UpdateObjectByTag("dna");
+			break;
+		default:
+			break;
+	}
 	
-	Scene::Update();
 
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
 		// Enterキーが押されたらリザルトシーンに遷移
 		Manager::SetScene(std::make_unique<ResultScene>());
 	}
-
-	// 
 }

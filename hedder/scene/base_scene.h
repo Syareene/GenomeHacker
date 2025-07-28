@@ -13,6 +13,8 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
+	virtual void UpdateObjectByTag(const std::string& tag);
+	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw();
 
 	template<typename T>
@@ -170,66 +172,13 @@ public:
 		return std::list<T*>(); // 見つからなかったら空のリストを返す
 	}
 
-	GameObject* GetGameObjectByTag(const std::string& tag)
-	{
-		// 3Dオブジェクトからタグを持つオブジェクトを探す
-		for (auto& objects3d : m_Objects3D)
-		{
-			for (auto& gameObject : objects3d)
-			{
-				if (gameObject->GetTagByName(tag) == tag)
-				{
-					return dynamic_cast<GameObject*>(gameObject.get()); // 見つかったらポインタを返す
-				}
-			}
-		}
-		// 2Dオブジェクトからタグを持つオブジェクトを探す
-		for (auto& objects2d : m_Objects2D)
-		{
-			for (auto& gameObject : objects2d)
-			{
-				if (gameObject->GetTagByName(tag) == tag)
-				{
-					return dynamic_cast<GameObject*>(gameObject.get()); // 見つかったらポインタを返す
-				}
-			}
-		}
-		return nullptr; // 見つからなかったらnullptrを返す
-	}
-
-	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag)
-	{
-		std::list<GameObject*> result;
-		// 3Dオブジェクトからタグを持つオブジェクトを探す
-		for (auto& objects3d : m_Objects3D)
-		{
-			for (auto& gameObject : objects3d)
-			{
-				if (gameObject->GetTagByName(tag) == tag)
-				{
-					result.push_back(dynamic_cast<GameObject*>(gameObject.get())); // 見つかったらリストに追加
-				}
-			}
-		}
-		// 2Dオブジェクトからタグを持つオブジェクトを探す
-		for (auto& objects2d : m_Objects2D)
-		{
-			for (auto& gameObject : objects2d)
-			{
-				if (auto ptr = dynamic_cast<GameObject*>(gameObject.get()))
-				{
-					// タグが一致するか確認
-					if (ptr->GetTagByName(tag) == tag)
-					{
-						result.push_back(ptr); // 見つかったらリストに追加
-					}
-				}
-			}
-		}
-		return result; // タグを持つオブジェクトのリストを返す
-	}
+	// タグを使ってGameObjectを取得
+	GameObject* GetGameObjectByTag(const std::string& tag);
+	// タグを使ってGameObjectのリストを取得
+	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag);
 
 private:
+	void DeleteGameObject();
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
 	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
 };

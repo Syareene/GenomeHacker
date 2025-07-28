@@ -73,6 +73,12 @@
     <Filter Include="ソース ファイル\enemy\node">
       <UniqueIdentifier>{2528f44a-95c6-4352-9a27-44f7b42763d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\object\ui\in_game">
+      <UniqueIdentifier>{a06acb10-4fdd-46bf-a01c-bccb0c4cf770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\ui\in_game">
+      <UniqueIdentifier>{5ede3536-d5e7-44d8-958e-ce5dbf5a932b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="manager.h">
@@ -150,9 +156,6 @@
     <ClInclude Include="hedder\object\ui\button.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
-    <ClInclude Include="panel.h">
-      <Filter>ヘッダー ファイル\object</Filter>
-    </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -210,6 +213,12 @@
     <ClInclude Include="hedder\enemy\node\base.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\object\panel.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\ui\in_game\enemy_node.h">
+      <Filter>ヘッダー ファイル\object\ui\in_game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -257,17 +266,11 @@
     <ClCompile Include="cpp\scene\base_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="image.cpp">
-      <Filter>ソース ファイル\object\ui</Filter>
-    </ClCompile>
     <ClCompile Include="shader_manager.cpp">
       <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="button.cpp">
-      <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
     <ClCompile Include="particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
@@ -313,6 +316,15 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\base.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp">
+      <Filter>ソース ファイル\object\ui\in_game</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\ui\button.cpp">
+      <Filter>ソース ファイル\object\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\ui\image.cpp">
+      <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

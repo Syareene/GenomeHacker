@@ -3,6 +3,38 @@
 #include "manager.h"
 #include "object/camera.h"
 
+
+void Scene::DeleteGameObject()
+{
+	// 不要になった3dオブジェクトを削除
+	for (auto& objects3d : m_Objects3D)
+	{
+		// 不要になった GameObject を削除
+		objects3d.remove_if([](const std::unique_ptr<Object3D>& obj)
+			{
+				if (obj && obj->Destory())
+				{
+					return true;
+				}
+				return false;
+			});
+	}
+
+	// 不要になった2dオブジェクトを削除
+	for (auto& objects2d : m_Objects2D)
+	{
+		// 不要になった GameObject を削除
+		objects2d.remove_if([](const std::unique_ptr<Object2D>& obj)
+			{
+				if (obj && obj->Destory())
+				{
+					return true;
+				}
+				return false;
+			});
+	}
+}
+
 void Scene::Init()
 {
 
@@ -65,34 +97,100 @@ void Scene::Update()
 			gameObject->Update();
 		}
 	}
+	// 不要なgameobjectの削除準備
+	DeleteGameObject();
+}
 
-	// 不要になった3dオブジェクトを削除
+void Scene::UpdateObjectByTag(const std::string& tag)
+{
+	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
-		// 不要になった GameObject を削除
-		objects3d.remove_if([](const std::unique_ptr<Object3D>& obj)
+		for (auto& gameObject : objects3d)
+		{
+			// nullptrチェック
+			if (gameObject.get() == nullptr)
 			{
-				if (obj && obj->Destory())
-				{
-					return true;
-				}
-				return false;
-			});
+				continue;
+			}
+			// タグチェック
+			if (!gameObject.get()->IsTagAvailable(tag))
+			{
+				continue; // 該当タグが見つからなかった場合はスルー
+			}
+			gameObject->Update();
+		}
 	}
 
-	// 不要になった2dオブジェクトを削除
-	for(auto& objects2d : m_Objects2D)
+	// 2dオブジェクトの更新
+	for (auto& objects2d : m_Objects2D)
 	{
-		// 不要になった GameObject を削除
-		objects2d.remove_if([](const std::unique_ptr<Object2D>& obj)
+		for (auto& gameObject : objects2d)
+		{
+			// nullptrチェック
+			if (gameObject.get() == nullptr)
 			{
-				if (obj && obj->Destory())
-				{
-					return true;
-				}
-				return false;
-			});
+				continue;
+			}
+			// タグチェック
+			if (!gameObject.get()->IsTagAvailable(tag))
+			{
+				continue; // 該当タグが見つからなかったらスルー
+			}
+			gameObject->Update();
+		}
 	}
+	// 不要なgameobjectの削除準備
+	DeleteGameObject();
+}
+
+void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
+{
+	// 3dオブジェクトの更新
+	for (auto& objects3d : m_Objects3D)
+	{
+		for (auto& gameObject : objects3d)
+		{
+			// nullptrチェック
+			if (gameObject.get() == nullptr)
+			{
+				continue;
+			}
+			// タグチェック
+			for (const auto& tag : tags)
+			{
+				if (gameObject.get()->IsTagAvailable(tag))
+				{
+					// 見つかったら実行しこのオブジェクトに対してのこれ以上の探索はしない
+					gameObject->Update();
+					break;
+				}
+			}
+		}
+	}
+	// 2dオブジェクトの更新
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			// nullptrチェック
+			if (gameObject.get() == nullptr)
+			{
+				continue;
+			}
+			// タグチェック
+			for (const auto& tag : tags)
+			{
+				if (gameObject.get()->IsTagAvailable(tag))
+				{
+					// 見つかったら実行しこのオブジェクトに対してのこれ以上の探索はしない
+					gameObject->Update();
+					break;
+				}
+			}
+		}
+	}
+	DeleteGameObject();
 }
 
 void Scene::Draw()
@@ -134,5 +232,63 @@ void Scene::Draw()
 			gameObject->Draw();
 		}
 	}
-	
+}
+
+GameObject* Scene::GetGameObjectByTag(const std::string& tag)
+{
+	// 3Dオブジェクトからタグを持つオブジェクトを探す
+	for (auto& objects3d : m_Objects3D)
+	{
+		for (auto& gameObject : objects3d)
+		{
+			if (gameObject->IsTagAvailable(tag))
+			{
+				return dynamic_cast<GameObject*>(gameObject.get()); // 見つかったらポインタを返す
+			}
+		}
+	}
+	// 2Dオブジェクトからタグを持つオブジェクトを探す
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			if (gameObject->IsTagAvailable(tag))
+			{
+				return dynamic_cast<GameObject*>(gameObject.get()); // 見つかったらポインタを返す
+			}
+		}
+	}
+	return nullptr; // 見つからなかったらnullptrを返す
+}
+
+std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
+{
+	std::list<GameObject*> result;
+	// 3Dオブジェクトからタグを持つオブジェクトを探す
+	for (auto& objects3d : m_Objects3D)
+	{
+		for (auto& gameObject : objects3d)
+		{
+			if (gameObject->IsTagAvailable(tag))
+			{
+				result.push_back(dynamic_cast<GameObject*>(gameObject.get())); // 見つかったらリストに追加
+			}
+		}
+	}
+	// 2Dオブジェクトからタグを持つオブジェクトを探す
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			if (auto ptr = dynamic_cast<GameObject*>(gameObject.get()))
+			{
+				// タグが一致するか確認
+				if (ptr->IsTagAvailable(tag))
+				{
+					result.push_back(ptr); // 見つかったらリストに追加
+				}
+			}
+		}
+	}
+	return result; // タグを持つオブジェクトのリストを返す
 }

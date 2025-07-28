@@ -4,6 +4,22 @@
 #include "default_vertex.h"
 
 
+void GameObject::AddPosition(Vector3 Position, bool calcWorldSpeed)
+{
+	if (calcWorldSpeed)
+	{
+		m_Position.x += Position.x * m_ObjSpeedMlt * Manager::GetGameSpeed();
+		m_Position.y += Position.y * m_ObjSpeedMlt * Manager::GetGameSpeed();
+		m_Position.z += Position.z * m_ObjSpeedMlt * Manager::GetGameSpeed();
+	}
+	else
+	{
+		m_Position.x += Position.x * m_ObjSpeedMlt;
+		m_Position.y += Position.y * m_ObjSpeedMlt;
+		m_Position.z += Position.z * m_ObjSpeedMlt;
+	}
+}
+
 void GameObject::UninitDrawMember()
 {
 	if (m_VertexBuffer) m_VertexBuffer->Release();
