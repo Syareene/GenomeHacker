@@ -13,6 +13,9 @@ void Player::Init()
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();
 	m_ModelRenderer->Load("asset\\model\\player.obj");
+
+	AddTag("InGame");
+	AddTag("Player");
 }
 
 void Player::Uninit()

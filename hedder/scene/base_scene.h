@@ -16,6 +16,8 @@ public:
 	virtual void UpdateObjectByTag(const std::string& tag);
 	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw();
+	virtual void DrawObjectByTag(const std::string& tag);
+	virtual void DrawObjectByTags(const std::list<std::string>& tags);
 
 	template<typename T>
 	T* AddGameObject(int layerNum)
@@ -169,7 +171,6 @@ public:
 			static_assert(false, "Unsupported GameObject type");
 			return std::list<T*>(); // 型が違う場合は空のリストを返す
 		}
-		return std::list<T*>(); // 見つからなかったら空のリストを返す
 	}
 
 	// タグを使ってGameObjectを取得

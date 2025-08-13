@@ -29,7 +29,7 @@ void GameScene::Init()
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Score>()->AddScore(10);
-	}, Vector2(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 350.0f), Vector2(300.0f, 300.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
+	}, Vector2(SCREEN_WIDTH - 150.0f, SCREEN_HEIGHT - 350.0f), Vector2(300.0f, 300.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png", L"asset\\texture\\test_frame.png");
 
 	AddGameObject<Button>(2)->Register([]() {
 		// ボタンがクリックされた時の処理
@@ -49,6 +49,8 @@ void GameScene::Init()
 	m_BGM->GetSourceVoice()->SetVolume(0.15f); // 音量を設定
 	m_BGM->GetSourceVoice()->SetFrequencyRatio(1.0f); // 再生速度を設定
 	m_BGM->Play(true);
+
+	m_State = State::NORMAL; // 初期状態をNORMALに設定
 }
 
 void GameScene::Uninit()
@@ -78,7 +80,7 @@ void GameScene::Update()
 	// ゲーム時に使うobjectはInGameタグを付ける
 	// んで多分escメニューのときは更新切って描画だけ、dnaタブのときはどっちも切るみたいなことをするからそのときにどうするかみたいな話ではある。
 
-	switch (m_state)
+	switch (m_State)
 	{
 		// 特定のタグだけに対して更新処理を実行する関数を作ってもいいんだが、単一タグだけじゃない可能性があるのが
 		// 両方の関数作ればよいか、、
@@ -90,12 +92,12 @@ void GameScene::Update()
 		// escメニュー出したとき(更新はせずobjの描画はする)
 		case State::ESC_MENU:
 			// Sceneのupdateとは別でシステム系のやつだけ更新をいれる
-			Scene::UpdateObjectByTag("system");
+			Scene::UpdateObjectByTag("System");
 			break;
 		// dnaタブのときやその他ウィンドウ系(更新も描画もしない)
 		case State::DNA_TAB:
 			// Sceneのupdateとは別で今このシーンで使うやつにのみupdateを入れる
-			Scene::UpdateObjectByTag("dna");
+			Scene::UpdateObjectByTag("Dna");
 			break;
 		default:
 			break;
@@ -106,5 +108,32 @@ void GameScene::Update()
 	{
 		// Enterキーが押されたらリザルトシーンに遷移
 		Manager::SetScene(std::make_unique<ResultScene>());
+	}
+}
+
+void GameScene::Draw()
+{
+	switch (m_State)
+	{
+		// 通常時処理
+	case State::NORMAL:
+		Scene::Draw();
+		break;
+		// escメニュー出したとき(更新はせずobjの描画はする)
+	case State::ESC_MENU:
+		Scene::DrawObjectByTags(std::list<std::string>({"InGame", "System"}));
+		break;
+		// dnaタブのときやその他ウィンドウ系(更新も描画もしない)
+	case State::DNA_TAB:
+		Scene::DrawObjectByTag("Dna");
+		break;
+	default:
+		break;
+	}
+
+	// ゲームシーン内の描画が終わったのでstate変更処理
+	if (m_WillState != m_State)
+	{
+		m_State = m_WillState;
 	}
 }

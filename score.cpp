@@ -39,7 +39,7 @@ void Score::Init()
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = vertex;
 
-	HRESULT hr = Renderer::GetDevice()->CreateBuffer(&bd, &sd, GetVertexBufferPointer());
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, GetVertexBufferPointer());
 
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\number.png"));

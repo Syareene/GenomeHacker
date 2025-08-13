@@ -52,6 +52,9 @@ void Explosion::Init()
 
 	// 変数初期化
 	m_FrameCount = 0;
+
+	AddTag("InGame");
+	AddTag("Particle");
 }
 
 void Explosion::Uninit()
