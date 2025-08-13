@@ -4,13 +4,22 @@
 #include "texture_manager.h"
 #include "shader_manager.h"
 
-void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath)
+void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath)
 {
 	// ボタンの初期化処理
 	SetPosition(Vector3(pos.x, pos.y, 0.0f));
 	SetScale(Vector3(scale.x, scale.y, 1.0f));
 	SetRotation(Vector3(rot.x, rot.y, 0.0f));
 	SetTextureID(TextureManager::LoadTexture(filePath));
+	if (!frameTexPath.empty())
+	{
+		// フレームテクスチャが指定されている場合、フレームテクスチャIDを設定
+		m_FrameTexID = TextureManager::LoadTexture(frameTexPath);
+	}
+	else
+	{
+		m_FrameTexID = -1; // フレームテクスチャがない場合は-1に設定
+	}
 	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
 	TargetFunc = func; // コールバック関数を設定
@@ -60,6 +69,22 @@ void Button::Draw()
 	SetWorldMatrixOnDraw();
 	// マテリアル設定
 	SetMaterialOnDraw();
+
+	// フレームテクスチャが設定されている場合、フレームテクスチャを設定
+	if (m_FrameTexID != -1)
+	{
+		// テクスチャ設定
+		// 一時変数に入れないと参照取得できないのでこうする
+		ID3D11ShaderResourceView* texture = TextureManager::GetTexture(m_FrameTexID);
+		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+
+		// プリミティブトポロジ設定
+		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+		// 描画
+		Renderer::GetDeviceContext()->Draw(4, 0);
+	}
+
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする

@@ -79,6 +79,12 @@
     <Filter Include="ソース ファイル\object\ui\in_game">
       <UniqueIdentifier>{5ede3536-d5e7-44d8-958e-ce5dbf5a932b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\enemy\base_data">
+      <UniqueIdentifier>{f8b5900f-88c0-4827-8442-e70c6805f90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enemy\base_data">
+      <UniqueIdentifier>{0c8a53d4-065b-4a59-8095-de3e7e3541b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="manager.h">
@@ -219,6 +225,21 @@
     <ClInclude Include="hedder\object\ui\in_game\enemy_node.h">
       <Filter>ヘッダー ファイル\object\ui\in_game</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\dna_screen_script.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\tab_base.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\field_enemy.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\enemy_base.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -325,6 +346,24 @@
     </ClCompile>
     <ClCompile Include="cpp\object\ui\image.cpp">
       <Filter>ソース ファイル\object\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\panel.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\dna_screen_script.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\dnatab_button.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\tab_base.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\field_enemy.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

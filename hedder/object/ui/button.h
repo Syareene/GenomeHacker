@@ -7,8 +7,9 @@ class Button : public UI
 {
 private:
 	std::function<void()> TargetFunc;
+	int m_FrameTexID = -1; // フレームテクスチャID
 public:
-	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath);
+	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath = L"");
 	void Init() override; // ボタン登録処理
 	// ボタンが押されたときに実行したいオブジェクト(コールバック登録)
 	template<typename... Args>
