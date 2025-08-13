@@ -169,6 +169,12 @@ public:
 
 		// テクスチャIDを生成
 		int textureID = m_TextureIDCounter++;
+        // 最大値なら0に戻す
+		if (m_TextureIDCounter >= INT_MAX)
+        {
+            m_TextureIDCounter = 0;
+		}
+
 		// m_TextureMapに追加
 		m_TextureMap[textureID].FilePath = filePath; // ファイルパスを保存
 		m_TextureMap[textureID].Texture = texture; // テクスチャデータを保存
