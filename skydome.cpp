@@ -15,6 +15,8 @@ void SkyDome::Init()
 	Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
 
 	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
+
+	AddTag("InGame");
 }
 
 void SkyDome::Uninit()
