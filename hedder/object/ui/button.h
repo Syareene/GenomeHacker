@@ -10,6 +10,7 @@ private:
 	int m_FrameTexID = -1; // フレームテクスチャID
 public:
 	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath = L"");
+	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath = L"");
 	void Init() override; // ボタン登録処理
 	// ボタンが押されたときに実行したいオブジェクト(コールバック登録)
 	template<typename... Args>

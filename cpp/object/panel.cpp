@@ -36,7 +36,7 @@ void Panel::Update()
 
 	// 不要な子オブジェクトの削除処理
 	m_ChildObjects.remove_if([](std::unique_ptr<GameObject>& obj) {
-		return obj && obj->Destory(); // 子オブジェクトが削除予約されている場合
+		return obj && obj->Destroy(); // 子オブジェクトが削除予約されている場合
 		});
 }
 

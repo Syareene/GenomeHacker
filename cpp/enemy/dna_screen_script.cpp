@@ -57,3 +57,15 @@ void DnaScreenScript::Draw()
 }
 
 // enemyのscriptからそれぞれのノードの処理を実行させる関数をここに追加する必要あり
+
+
+void DnaScreenScript::ShowDnaInfo()
+{
+	// DNA情報を表示する処理
+	// ここで必要な処理を追加
+}
+
+void DnaScreenScript::HideDnaInfo()
+{
+
+}

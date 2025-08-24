@@ -17,7 +17,7 @@ void Scene::DeleteGameObject()
 		// 不要になった GameObject を削除
 		objects3d.remove_if([](std::unique_ptr<Object3D>& obj)
 			{
-				if (obj && obj->Destory())
+				if (obj && obj->Destroy())
 				{
 					return true;
 				}
@@ -31,7 +31,7 @@ void Scene::DeleteGameObject()
 		// 不要になった GameObject を削除
 		objects2d.remove_if([](std::unique_ptr<Object2D>& obj)
 			{
-				if (obj && obj->Destory())
+				if (obj && obj->Destroy())
 				{
 					return true;
 				}

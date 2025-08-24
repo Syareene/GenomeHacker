@@ -25,6 +25,27 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	TargetFunc = func; // コールバック関数を設定
 }
 
+void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath)
+{
+	// ボタンの初期化処理
+	SetPosition(Vector3(pos.x, pos.y, 0.0f));
+	SetScale(Vector3(scale.x, scale.y, 1.0f));
+	SetRotation(Vector3(rot.x, rot.y, 0.0f));
+	SetTextureID(texID); // テクスチャIDを直接設定
+	if (!frameTexPath.empty())
+	{
+		// フレームテクスチャが指定されている場合、フレームテクスチャIDを設定
+		m_FrameTexID = TextureManager::LoadTexture(frameTexPath);
+	}
+	else
+	{
+		m_FrameTexID = -1; // フレームテクスチャがない場合は-1に設定
+	}
+	SetNoUpdate(false); // 更新しないが有効な状態にする
+	SetActive(true); // アクティブにする
+	TargetFunc = func; // コールバック関数を設定
+}
+
 void Button::Init()
 {
 	
@@ -60,7 +81,8 @@ void Button::Draw()
 	Renderer::SetWorldViewProjection2D();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw();
+	// SetDefaultVertexBufferOnDraw();->こっちだとuv変えるときに反映できないので下記に
+	SetVertexBufferOnDraw(); // ボタンの頂点バッファを設定
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定

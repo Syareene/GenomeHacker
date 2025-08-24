@@ -16,7 +16,7 @@ private:
 	Vector3 m_Rotation{ 0.0f, 0.0f, 0.0f };
 	Vector3 m_Scale{ 1.0f, 1.0f, 1.0f };
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
-	bool m_Destory = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
+	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
 	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
@@ -41,7 +41,6 @@ protected:
 
 	// 頂点バッファを描画時に設定する関数
 	void SetDefaultVertexBufferOnDraw() const;
-	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 	void SetVertexBufferOnDraw() const;
 	void SetWorldMatrixOnDraw();
 	void SetWorldMatrixOnDrawBillboard(); // ビルボード用のワールドマトリックス設定
@@ -54,6 +53,8 @@ public:
 	virtual void Uninit() {};
 	virtual void Update() {};
 	virtual void Draw() {};
+
+	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
 	
 	void AddPosition(Vector3 Position, bool calcWorldSpeed = true);
@@ -84,11 +85,11 @@ public:
 	float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
 	bool IsActive() const { return m_IsActive; }
 	void SetActive(bool IsActive) { m_IsActive = IsActive; }
-	void SetDestory(bool Destory) { m_Destory = Destory; }
-	bool IsDestory() const { return m_Destory; }
-	bool Destory()
+	void SetDestory(bool Destroy) { m_Destroy = Destroy; }
+	bool IsDestory() const { return m_Destroy; }
+	bool Destroy()
 	{ 
-		if (m_Destory)
+		if (m_Destroy)
 		{
 			Uninit();
 			return true; // 削除予約フラグが立っていたらtrueを返す
