@@ -115,6 +115,14 @@ void GameObject::SetDefaultVertexBufferOnDraw() const
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &defaultVertexBuffer, &stride, &offset);
 }
 
+void GameObject::SetDefaultVertexBufferBillboardOnDraw() const
+{
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	ID3D11Buffer* defaultBillboardVertexBuffer = DefaultVertex::GetBillboardBuffer();
+	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &defaultBillboardVertexBuffer, &stride, &offset);
+}
+
 void GameObject::SetVertexBufferOnDraw() const
 {
 	UINT stride = sizeof(VERTEX_3D);

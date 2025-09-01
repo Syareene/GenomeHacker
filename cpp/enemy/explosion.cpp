@@ -11,22 +11,22 @@ void Explosion::Init()
 {
 	VERTEX_3D vertex[4];
 
-	vertex[0].Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
+	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(1.0f, 1.0f, 0.0f);
+	vertex[1].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
+	vertex[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(1.0f, -1.0f, 0.0f);
+	vertex[3].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
@@ -47,8 +47,8 @@ void Explosion::Init()
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\explosion.png"));
 
 	// シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
+	//Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
+	//Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
 
 	// 変数初期化
 	m_FrameCount = 0;
@@ -86,22 +86,22 @@ void Explosion::Draw()
 	float offsetX = (m_FrameCount % 4) * textureWidth; // フレームに応じたXオフセット
 	float offsetY = (m_FrameCount / 4) * textureHeight; // フレームに応じたYオフセット
 
-	vertex[0].Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
+	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(offsetX, offsetY);
 
-	vertex[1].Position = XMFLOAT3(1.0f, 1.0f, 0.0f);
+	vertex[1].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(offsetX + textureWidth, offsetY);
 
-	vertex[2].Position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
+	vertex[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(offsetX, offsetY + textureHeight);
 
-	vertex[3].Position = XMFLOAT3(1.0f, -1.0f, 0.0f);
+	vertex[3].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(offsetX + textureWidth, offsetY + textureHeight);
