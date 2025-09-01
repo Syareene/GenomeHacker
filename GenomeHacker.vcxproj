@@ -29,6 +29,7 @@
     <ClInclude Include="hedder\enemy\bullet.h" />
     <ClInclude Include="hedder\enemy\dna_screen_script.h" />
     <ClInclude Include="hedder\enemy\enemy.h" />
+    <ClInclude Include="hedder\enemy\enemy_3d.h" />
     <ClInclude Include="hedder\enemy\explosion.h" />
     <ClInclude Include="hedder\enemy\field_enemy.h" />
     <ClInclude Include="hedder\enemy\node\base.h" />
@@ -78,6 +79,7 @@
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
     <ClCompile Include="cpp\enemy\enemy.cpp" />
+    <ClCompile Include="cpp\enemy\enemy_3d.cpp" />
     <ClCompile Include="cpp\enemy\explosion.cpp" />
     <ClCompile Include="cpp\enemy\field_enemy.cpp" />
     <ClCompile Include="cpp\enemy\node\base.cpp" />

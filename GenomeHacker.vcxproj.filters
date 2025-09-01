@@ -240,6 +240,9 @@
     <ClInclude Include="hedder\enemy\base_data\enemy_base.h">
       <Filter>ヘッダー ファイル\enemy\base_data</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\enemy_3d.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp">
       <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\enemy_3d.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
