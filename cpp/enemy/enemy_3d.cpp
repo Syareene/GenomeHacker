@@ -1,12 +1,12 @@
 ﻿#include "main.h"
 #include "renderer.h"
-#include "enemy/enemy.h"
+#include "enemy/enemy_3d.h"
 #include "modelRenderer.h"
 #include "input.h"
 #include "object/camera.h"
 #include "manager.h"
 
-void Enemy::Init()
+void Enemy3D::Init()
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();
@@ -20,7 +20,7 @@ void Enemy::Init()
 	AddTag("Enemy");
 }
 
-void Enemy::Uninit()
+void Enemy3D::Uninit()
 {
 	delete m_ModelRenderer;
 	m_VertexLayout->Release();
@@ -28,7 +28,7 @@ void Enemy::Uninit()
 	m_PixelShader->Release();
 }
 
-void Enemy::Update()
+void Enemy3D::Update()
 {
 	// vector3が間違ってる可能性とかもある?
 
@@ -39,7 +39,7 @@ void Enemy::Update()
 	//camera->SetTarget(GetPosition() + Vector3(0.0f, 1.5f, 0.0f));
 }
 
-void Enemy::Draw()
+void Enemy3D::Draw()
 {
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(m_VertexLayout);

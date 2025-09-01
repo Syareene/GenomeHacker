@@ -2,7 +2,7 @@
 
 #include "object/3d_object.h"
 
-class Enemy : public Object3D
+class Enemy3D : public Object3D
 {
 public:
 	void Init() override;
