@@ -14,7 +14,7 @@ void main(in PS_IN In, out float4 outDiffuse : SV_Target)
         outDiffuse = g_Texture.Sample(g_SamplerState, In.TexCoord);
         
         // alpha’l‚ª0.1–¢–ž‚È‚ç•`‰æ‚µ‚È‚¢‚æ‚¤‚É
-        if(outDiffuse.a < 0.1f)
+        if(outDiffuse.a <= 0.1f)
         {
             discard;
         }

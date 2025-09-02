@@ -13,8 +13,8 @@ void ShaderManager::Init()
 	Renderer::CreateVertexShader(&UnlitVertexShader, &UnlitVertexLayout, "shader\\unlitTextureVS.cso");
 	Renderer::CreatePixelShader(&UnlitPixelShader, "shader\\unlitTexturePS.cso");
 
-	Renderer::CreateVertexShader(&NoAlphaVertexShader, &NoAlphaVertexLayout, "shader\\unlitTextureWithNoAlphaTextureVS.cso");
-	Renderer::CreatePixelShader(&NoAlphaPixelShader, "shader\\unlitTextureWithNoAlphaTexturePS.cso");
+	Renderer::CreateVertexShader(&NoAlphaVertexShader, &NoAlphaVertexLayout, "shader\\unlitTextureWithNoAlphaVS.cso");
+	Renderer::CreatePixelShader(&NoAlphaPixelShader, "shader\\unlitTextureWithNoAlphaPS.cso");
 }
 
 void ShaderManager::Uninit()
