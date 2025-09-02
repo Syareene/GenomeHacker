@@ -243,6 +243,9 @@
     <ClInclude Include="hedder\enemy\enemy_3d.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\enemy_spawner.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -369,6 +372,9 @@
       <Filter>ソース ファイル\enemy\base_data</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\enemy_3d.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\enemy_spawner.cpp">
       <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
   </ItemGroup>

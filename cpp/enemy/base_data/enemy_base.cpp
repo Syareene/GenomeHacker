@@ -24,9 +24,12 @@ void EnemyBase::Register()
 
 	// テクスチャ生成
 	
-
+	m_TextureID = TextureManager::LoadTexture(L"asset\\texture\\");
 	
 	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
+	
+	// ポインタに対して初期ノードを追加する。
+	m_DnaScreen->GetAttackTab()->AddNode<NodeBase>(-1);
 }
 
 void EnemyBase::Unregister()
@@ -44,7 +47,7 @@ void EnemyBase::ExecuteAttack()
 	// 攻撃ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetAttackTab()->GetNodes())
 	{
-		node.NodeEffect(); // ノードの効果を実行
+		node->NodeEffect(); // ノードの効果を実行
 	}
 }
 
@@ -53,7 +56,7 @@ void EnemyBase::ExecuteMove()
 	// 移動ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetMoveTab()->GetNodes())
 	{
-		node.NodeEffect(); // ノードの効果を実行
+		node->NodeEffect(); // ノードの効果を実行
 	}
 }
 
@@ -62,7 +65,7 @@ bool EnemyBase::ExecuteDeath()
 	// 死亡ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetDeathTab()->GetNodes())
 	{
-		node.NodeEffect();
+		node->NodeEffect();
 	}
 	return true; // 実行終わったらtrueを返す
 }

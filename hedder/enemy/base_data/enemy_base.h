@@ -11,6 +11,7 @@ class EnemyBase
 public:
 	void Register(); // 登録処理
 	void Unregister(); // 登録解除処理
+	void Spawn(); // 敵出す
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)
 	void ExecuteAttack();
 	void ExecuteMove();

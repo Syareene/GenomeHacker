@@ -88,6 +88,45 @@ public:
 		return nullptr; // ここに来ることはないはず
 	}
 
+	// すでに生成されているunique_ptrをmoveして登録
+	GameObject* AddGameObject(std::unique_ptr<GameObject> gameObject, int layerNum)
+	{
+		// inputされたobjectが2dか3dかを判定
+		if (dynamic_cast<Object2D*>(gameObject.get()))
+		{
+			// 2Dオブジェクトの場合
+
+			// layerNumとコンテナのサイズを比べる
+			if (layerNum < 0)
+			{
+				// 
+			}
+			else if (layerNum >= static_cast<int>(m_Objects2D.size()))
+			{
+				// layerNumがコンテナのサイズ以上ならその数まで空の要素を追加する
+				for (int i = static_cast<int>(m_Objects2D.size()); i <= layerNum; i++)
+				{
+					// 追加
+					m_Objects2D.emplace_back(std::list<std::unique_ptr<Object2D>>());
+				}
+			}
+			// layerNum分iteratorを進める
+			auto it = m_Objects2D.begin();
+			std::advance(it, layerNum);
+			// layerNumの位置に追加
+			it->push_back(std::move(gameObject));
+			// スマポで管理しつつも生ポインタで返すように
+			return it->back().get();
+		}
+		else if (dynamic_cast<Object3D*>(gameObject.get()))
+		{
+		}
+		else
+		{
+			return nullptr; // 型が違う場合はnullptrを返す
+		}
+	}
+
 	template <typename T>
 	T* GetGameObject()
 	{

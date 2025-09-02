@@ -22,9 +22,16 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Clicked(); // クリックされたときの処理
-	std::list<NodeBase>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	template <typename T>
+	T* AddNode(int index) // ノードを追加
+	{
+		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
+
+		return nullptr;
+	};
 private:
-	std::list<NodeBase> m_Nodes; // 現在タブ内でくっついているノードのリスト
+	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
 	std::list<NodeBase> m_CanUseNodes; // タブ内で使用可能なノードのリスト(設置するための物、呼び出された際にプレイヤー側からソートしてここにいれる感じになるかな)
 	// あと上記変数のめんどいところはすでに使われているか否かをどうにかしないといけない
 	// プレイヤー側に実態は持っておいて、ここはあくまでポインタとして持っておき、実態にフラグ変数を設けることで管理しやすい、、、みたいな構造が望ましい。
