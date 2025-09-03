@@ -23,7 +23,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	void Clicked(); // クリックされたときの処理
+	virtual void Clicked(); // クリックされたときの処理
 	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	template <typename T>
 	T* AddNode(int index) // ノードを追加

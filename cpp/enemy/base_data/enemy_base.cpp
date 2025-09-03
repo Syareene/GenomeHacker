@@ -25,6 +25,7 @@ void EnemyBase::Register()
 	// テクスチャ生成
 	
 	m_TextureID = TextureManager::LoadTexture(L"asset\\texture\\");
+	// uvテクスチャの場合はuvのデータも変数に設定する。
 	
 	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
 	
