@@ -1,5 +1,11 @@
 ﻿#pragma once
 
+#include <list>
+#include <memory>
+
+class EnemyBase; // 前方宣言
+class FieldEnemy; // 前方宣言
+
 class EnemySpawner
 {
 	// 基本はgameSceneにおいて、呼び出したときにオブジェクトを生成するだけのクラス
@@ -11,7 +17,38 @@ public:
 	void Update();
 private:
 	EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
-	void SpawnEnemy();
+	template<typename T>
+	void SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
+	{
+		// 敵を出す処理
+
+		// objectをフィールドに追加
+		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0);
+
+
+		// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
+		for (const auto& base : m_EnemyBaseList)
+		{
+			if (dynamic_cast<T>(base.get()))
+			{
+				// 一致したのでデータをセットする
+
+				// fieldenemyに欲しいデータ上げておく
+				// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
+				// 後は変動するステータス: 現在HP
+
+				enemy->SetEnemyBase(base.get());
+				enemy->SetCurrentHP(base.get()->GetMaxHealth());
+
+				// スポーン時の座標だけセット
+				enemy->SetPosition(spawn_pos);
+
+				// データセットしたのでループから抜ける
+				break;
+			}
+		}
+	}
 	// 敵の元データを格納する変数
-	// ポインタを受け取って特定の敵の初期化情報をセットする関数
+	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
+	//void SetEnemyData(FieldEnemy* set_target, int target_id); // ポインタを受け取って特定の敵の初期化情報をセットする関数
 };

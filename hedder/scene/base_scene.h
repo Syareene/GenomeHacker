@@ -88,6 +88,8 @@ public:
 		return nullptr; // ここに来ることはないはず
 	}
 
+	// 戻ってきたポインタ使えばいいだけだし一旦コメントアウト
+	/*
 	// すでに生成されているunique_ptrをmoveして登録
 	GameObject* AddGameObject(std::unique_ptr<GameObject> gameObject, int layerNum)
 	{
@@ -126,6 +128,7 @@ public:
 			return nullptr; // 型が違う場合はnullptrを返す
 		}
 	}
+	*/
 
 	template <typename T>
 	T* GetGameObject()

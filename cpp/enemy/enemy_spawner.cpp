@@ -1,10 +1,14 @@
 ﻿#include "enemy/enemy_spawner.h"
 #include "manager.h"
 #include "enemy/field_enemy.h"
+#include "enemy/base_data/enemy_base.h"
 
 void EnemySpawner::Init()
 {
 	// 初期化処理
+
+	// このタイミングで敵の元データを全て登録
+	// 自動でしたいけど一旦手動かな～ファイル読み込みとかしない限り自動化できん
 }
 
 void EnemySpawner::Uninit()
@@ -17,16 +21,39 @@ void EnemySpawner::Update()
 	// 更新処理
 
 	// とりあえず一定frame事に敵を出す
-	SpawnEnemy();
+	SpawnEnemy<EnemyBase>();
 }
 
-void EnemySpawner::SpawnEnemy()
+
+// どのenemyを生成するかの指定方法をどうするかだよね。
+// indexからかな？とはいえwaveとかでやるなら話が異なってくる
+
+/*
+void EnemySpawner::SetEnemyData(FieldEnemy* set_target, int target_id)
 {
-	// 敵を出す処理
+	// ポインタを受け取って特定の敵の初期化情報をセットする関数
 
-	// ここのtemplateに指定するのはenemy_baseを継承したクラスではなく、field_enemyを継承したクラス?->しかしfield_enemyは派生クラスなしであくまでデータを受け取って適応させる型にしたい。
-	// でも今のaddgameobjectの仕様だと型から実体化しかできないので、enemy_baseの敵情報を何処かに保存し、
-	// そのデータをコピーして出せるようなAddGameObjectの関数を作る必要がある。
-	// かー、生成したらreturnでptr返ってくるから、そこに対してデータをセットするか。この場合はreturnで帰ってきたポインタを使って敵データをセットする関数を別途作った方が良い。
-	Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0);
+	// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
+	for(const auto& base : m_EnemyBaseList)
+	{
+		if (target_id == base.get()->GetEnemyID())
+		{
+			// 一致したのでデータをセットする
+
+			// fieldenemyに欲しいデータ上げておく
+			// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
+			// 後は変動するステータス: 現在HP
+
+			set_target->SetEnemyBase(base.get());
+			set_target->SetCurrentHP(base.get()->GetMaxHealth());
+
+			// スポーン時の座標だけセット
+			// んー、変動するだろうからほんちゃんは外のほうがいいかも
+			set_target->SetPosition({ 0.0f, 0.0f, 0.0f });
+
+			// データセットしたのでループから抜ける
+			break;
+		}
+	}
 }
+*/
