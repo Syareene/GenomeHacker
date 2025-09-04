@@ -46,7 +46,6 @@ void Bullet::Update()
 	{
 		// 画面外に出たら削除
 		SetDestory(true);
-		//Manager::RemoveGameObject(this);
 	}
 
 	// 敵との衝突判定
@@ -63,7 +62,6 @@ void Bullet::Update()
 
 			// 敵に当たったら削除
 			SetDestory(true);
-			//Manager::RemoveGameObject(this);
 			enemy->SetDestory(true); // 敵も削除
 		}
 	}

@@ -41,6 +41,9 @@ void EnemyBase::Unregister()
 		m_DnaScreen->Uninit(); // DNAスクリーンの終了処理
 		m_DnaScreen.reset(); // スクリーンのポインタを開放
 	}
+
+	// テクスチャ解放
+	TextureManager::UnloadTexture(GetEnemyTextureID());
 }
 
 void EnemyBase::ExecuteAttack()

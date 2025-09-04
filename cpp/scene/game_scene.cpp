@@ -21,7 +21,7 @@ void GameScene::Init()
 
 	AddGameObject<Camera>(0);
 	AddGameObject<Field>(0);
-	AddGameObject<Enemy>(0)->SetPosition({ 3.0f, 1.0f, 0.0f });
+	//AddGameObject<Enemy>(0)->SetPosition({ 3.0f, 1.0f, 0.0f });
 	//AddGameObject<Enemy>(0)->SetPosition({ 5.0f, 0.0f, 0.0f });
 	//AddGameObject<Enemy>(0)->SetPosition({ 8.0f, 0.0f, 0.0f });
 	AddGameObject<Player>(0);

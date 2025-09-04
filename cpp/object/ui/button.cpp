@@ -81,7 +81,7 @@ void Button::Draw()
 	Renderer::SetWorldViewProjection2D();
 
 	// 頂点バッファ設定
-	// SetDefaultVertexBufferOnDraw();->こっちだとuv変えるときに反映できないので下記に
+	//SetDefaultVertexBufferOnDraw(); //->こっちだとuv変えるときに反映できないので下記に
 	SetVertexBufferOnDraw(); // ボタンの頂点バッファを設定(こっちにすると描画されなくなるよーん、なのでデフォルトで頂点いれるように設定直さないといけない)
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
