@@ -15,4 +15,5 @@ private:
 	ID3D11InputLayout* m_VertexLayout = nullptr;
 
 	class ModelRenderer* m_ModelRenderer = nullptr;
+	class ColliderBase* m_Collider = nullptr; // 球か箱かのポインタを持つ。
 };

@@ -6,6 +6,7 @@
 
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
+#include "collider/sphere.h"
 
 class EnemySpawner
 {
@@ -44,6 +45,9 @@ private:
 				// スポーン時の座標及びテクスチャによるズレを補正
 				enemy->SetPosition(spawn_pos + base.get()->GetDrawPosDiff());
 				enemy->SetScale(enemy->GetScale().mul(base.get()->GetDrawScaleDiff()));
+
+				// コライダをセット
+
 
 				// データセットしたのでループから抜ける
 				break;
