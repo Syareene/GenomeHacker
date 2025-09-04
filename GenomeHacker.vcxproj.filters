@@ -246,6 +246,9 @@
     <ClInclude Include="hedder\enemy\enemy_spawner.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\slime.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -376,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\enemy_spawner.cpp">
       <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\slime.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

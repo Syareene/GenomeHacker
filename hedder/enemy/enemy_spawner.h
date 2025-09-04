@@ -2,9 +2,10 @@
 
 #include <list>
 #include <memory>
+#include "manager.h"
 
-class EnemyBase; // 前方宣言
-class FieldEnemy; // 前方宣言
+#include "enemy/field_enemy.h"
+#include "enemy/base_data/enemy_base.h"
 
 class EnemySpawner
 {
@@ -16,7 +17,7 @@ public:
 	void Uninit();
 	void Update();
 private:
-	EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
+	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>
 	void SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
 	{
@@ -29,7 +30,7 @@ private:
 		// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
 		for (const auto& base : m_EnemyBaseList)
 		{
-			if (dynamic_cast<T>(base.get()))
+			if (dynamic_cast<T*>(base.get()))
 			{
 				// 一致したのでデータをセットする
 
@@ -40,8 +41,9 @@ private:
 				enemy->SetEnemyBase(base.get());
 				enemy->SetCurrentHP(base.get()->GetMaxHealth());
 
-				// スポーン時の座標だけセット
-				enemy->SetPosition(spawn_pos);
+				// スポーン時の座標及びテクスチャによるズレを補正
+				enemy->SetPosition(spawn_pos + base.get()->GetDrawPosDiff());
+				enemy->SetScale(enemy->GetScale().mul(base.get()->GetDrawScaleDiff()));
 
 				// データセットしたのでループから抜ける
 				break;
@@ -50,5 +52,7 @@ private:
 	}
 	// 敵の元データを格納する変数
 	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
+	int m_SpawnTimer = 0; // 敵を出すタイマー
+	int m_SpawnCount = 0; // 出した敵の数(temp)
 	//void SetEnemyData(FieldEnemy* set_target, int target_id); // ポインタを受け取って特定の敵の初期化情報をセットする関数
 };

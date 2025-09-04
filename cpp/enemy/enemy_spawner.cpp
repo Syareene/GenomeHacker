@@ -3,17 +3,31 @@
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
 
+
+// enemyDataのhedder
+#include "enemy/base_data/slime.h"
+
 void EnemySpawner::Init()
 {
 	// 初期化処理
 
 	// このタイミングで敵の元データを全て登録
 	// 自動でしたいけど一旦手動かな～ファイル読み込みとかしない限り自動化できん
+
+	// 各種データを配列に追加し登録処理
+	m_EnemyBaseList.emplace_back(std::make_unique<Slime>())->Register();
 }
 
 void EnemySpawner::Uninit()
 {
 	// 終了処理
+
+	// 登録解除して中身を消す
+	for(auto& enemy : m_EnemyBaseList)
+	{
+		enemy->Unregister(); // 登録解除処理
+	}
+	m_EnemyBaseList.clear();
 }
 
 void EnemySpawner::Update()
@@ -21,7 +35,16 @@ void EnemySpawner::Update()
 	// 更新処理
 
 	// とりあえず一定frame事に敵を出す
-	SpawnEnemy<EnemyBase>();
+	if(m_SpawnTimer > 60)
+	{
+		m_SpawnTimer = 0;
+		// どの敵を出すかはとりあえず固定
+		// あとは敵のテクスチャによって座標変わるからそのズレとかをセットできるようにできればいいね
+		SpawnEnemy<Slime>({0.0f, 1.0f, static_cast<float>(m_SpawnCount) * 0.2f});
+		m_SpawnCount++;
+	}
+
+	m_SpawnTimer++;
 }
 
 

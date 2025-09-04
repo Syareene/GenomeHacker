@@ -29,3 +29,9 @@ void TabBase::Draw()
 
 	// 自身の描画
 }
+
+void TabBase::Clicked()
+{
+	// クリックされたときの処理
+	// 例えばタブの切り替えとか
+}

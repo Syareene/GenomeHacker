@@ -64,6 +64,12 @@ public:
 		return Vector3(x - v.x, y - v.y, z - v.z);
 	}
 
+	// ベクトル同士の要素ごとの乗算
+	Vector3 mul(const Vector3& v) const
+	{
+		return Vector3(x * v.x, y * v.y, z * v.z);
+	}
+
 	// スカラーによる乗算と除算
 	Vector3 operator*(float s) const
 	{

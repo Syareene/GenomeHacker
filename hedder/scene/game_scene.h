@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "base_scene.h"
+#include "enemy/enemy_spawner.h"
 
 class GameScene : public Scene
 {
@@ -15,7 +16,7 @@ private:
 	class Audio* m_BGM;
    State m_State = State::NORMAL; // 初期状態は通常時
    State m_WillState = State::NORMAL; // 次の状態を保持する変数(状態切り替え時に使用)
-
+   std::unique_ptr<EnemySpawner> m_EnemySpawner = nullptr; // 敵のスポーンを管理するクラス(gameObjectではないのでこっちで管理する)
 public:
 	void Init() override;
 	void Uninit() override;

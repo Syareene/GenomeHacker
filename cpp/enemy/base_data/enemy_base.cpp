@@ -73,6 +73,9 @@ bool EnemyBase::ExecuteDeath()
 
 int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget, std::pair<int, int> texCount)
 {
+	// 本来ならuv設定される場合があるのでuv設定されてなければデフォ頂点のptrコピーでいいが
+	// そうでない場合は新たに頂点作って格納しておかないと正常にテクスチャが描画されない。
+
 	// テクスチャIDを設定する関数
 	m_TextureID = TextureManager::LoadTexture(filePath);
 	if (m_TextureID == -1)

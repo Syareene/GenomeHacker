@@ -4,6 +4,7 @@
 #include <memory>
 #include "enemy/dna_screen_script.h"
 #include "object/ui/button.h"
+#include "lib/vector3.h"
 
 
 class EnemyBase
@@ -24,6 +25,8 @@ public:
 	// 一旦都度生成でいく
 
 	// DNAタブ関連の関数
+	void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
+	DnaScreenScript* GetDnaScreen() {return m_DnaScreen.get(); }
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
 
@@ -36,6 +39,11 @@ public:
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
 	void SetMaxHealth(float maxHealth) { m_MaxHealth = maxHealth; }
 	float GetMaxHealth() const { return m_MaxHealth; }
+
+	void SetDrawPosDiff(Vector3 posDiff) { m_PosDiff = posDiff; }
+	Vector3& GetDrawPosDiff() { return m_PosDiff; }
+	void SetDrawScaleDiff(Vector3 scaleDiff) {m_ScaleDiff = scaleDiff;}
+	Vector3& GetDrawScaleDiff() { return m_ScaleDiff; }
 private:
 	std::unique_ptr<DnaScreenScript> m_DnaScreen; // dnaタブをまとめているpanel->初期化時に自身のnodeを持つために作成する必要あり
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
@@ -45,6 +53,10 @@ private:
 	int m_EnemyID = -1; // 敵のID
 	std::pair<int, int> m_TextureTarget{ 0, 0 }; // 対象となるテクスチャの場所(幅、高さ)
 	std::pair<int, int> m_TextureCount{ 1, 1 }; // テクスチャの分割数(横、縦) -> これでuvを計算する
+
+	// 描画時にあらかじめいれるテクスチャ等による座標差分を保存
+	Vector3 m_PosDiff = { 0.0f, 0.0f, 0.0f }; // 描画時の位置の差分
+	Vector3 m_ScaleDiff = { 1.0f, 1.0f, 1.0f }; // 描画時のスケールの差分
 
 	// enemy共通で見るnode以外のステータスを格納する。
 	float m_MaxHealth; // 最大体力
