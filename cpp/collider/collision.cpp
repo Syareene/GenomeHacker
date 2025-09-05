@@ -1,6 +1,6 @@
 ﻿#include "collider/collision.h"
 
-void Collision::DrawCollider() const
+void Collision::DrawCollider()
 {
 	// デバッグ用の衝突判定の可視化
 	// ここで描画する

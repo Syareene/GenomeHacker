@@ -10,6 +10,11 @@ public:
 		Collision::SetAABBProperty(center, size);
 	}
 
+	void DrawCollider() const override
+	{
+		
+	}
+
 	// AABB-AABB
 	// AABB-OBB
 	// AABB-Sphere
@@ -23,6 +28,12 @@ public:
 		// 衝突判定のプロパティ設定
 		Collision::SetOBBProperty(center, size, rotation);
 	}
+
+	void DrawCollider() const override
+	{
+		
+	}
+
 	// OBB-OBB
 	// OBB-AABB
 	// OBB-Sphere

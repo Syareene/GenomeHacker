@@ -10,5 +10,5 @@ public:
 	void Update() override;
 	void Draw() override;
 private:
-	class ModelRenderer* m_ModelRenderer;
+	class ModelRenderer* m_ModelRenderer = nullptr;
 };

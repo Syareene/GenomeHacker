@@ -5,10 +5,23 @@
 #include "enemy/base_data/enemy_base.h"
 #include "shader_manager.h"
 #include "texture_manager.h"
+#include "collider/sphere.h"
 
 void FieldEnemy::Init()
 {
 	// 初期化処理
+	// コリジョンを有効化する
+	Sphere* collider = SetCollider<Sphere>();
+	collider->Init();
+
+	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 2.0f, 0.0f));
+
+	Vector3 self_pos = GetPosition(); //->sceneの配列で見る限りは座標大丈夫そうなのにここで取るとおかしいな
+	Vector3 collider_pos = GetCollider()->GetCenter();
+	return;
+
+
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
 }
@@ -27,6 +40,10 @@ void FieldEnemy::Update()
 	// 各敵のnodeを実行。
 	m_EnemyBase->ExecuteAttack();
 	m_EnemyBase->ExecuteMove();
+
+	// コライダの場所更新(これ自動更新になるように変えたいね～～)
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 2.0f, 0.0f));
+	
 
 	// 体力が0なら死亡ノードを実行。trueが帰ってきたら自身を削除。
 }
@@ -64,4 +81,9 @@ void FieldEnemy::Draw()
 
 	// 描画
 	Renderer::GetDeviceContext()->Draw(4, 0);
+
+	// コリジョン描画(デバッグ用)
+#ifdef _DEBUG
+	GetCollider()->DrawCollider();
+#endif
 }

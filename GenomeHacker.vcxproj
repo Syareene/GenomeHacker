@@ -78,6 +78,7 @@
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cpp\collider\collision.cpp" />
+    <ClCompile Include="cpp\collider\sphere.cpp" />
     <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp" />
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
