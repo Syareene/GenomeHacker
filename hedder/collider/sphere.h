@@ -21,7 +21,7 @@ public:
 
 	void DrawCollider() override;
 private:
-	constexpr static int m_CircleVertexCount = 24; // 円を描く頂点数
+	constexpr static int m_CircleVertexCount = 16; // 円を描く頂点数
 	void MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVertex);
 	static ID3D11Buffer* m_VertexBuffer; // 頂点バッファ
 

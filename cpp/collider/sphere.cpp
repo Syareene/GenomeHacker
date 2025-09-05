@@ -18,7 +18,7 @@ void Sphere::Init()
 	MakeCircleVertex(m_CircleVertexCount, circleVertex);
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(VERTEX_3D) * static_cast<UINT>(m_CircleVertexCount);
+	bd.ByteWidth = sizeof(VERTEX_3D) * static_cast<UINT>(m_CircleVertexCount + 1); // (+1は円閉じるための描画用)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -84,8 +84,8 @@ void Sphere::DrawCollider()
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
-	// 描画
-	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount, 0);
+	// 描画(+1は円閉じるための描画用)
+	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
 
 	// 縦には生成できたので回転し横向きにも描画
 	
@@ -99,8 +99,8 @@ void Sphere::DrawCollider()
 	// 頂点バッファ設定
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	// 他は再利用するのでそのまま描画
-	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount, 0);
+	// 他は再利用するのでそのまま描画(+1は円閉じるための描画用)
+	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
 }
 
 void Sphere::MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVertex)
@@ -123,4 +123,7 @@ void Sphere::MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVerte
 
 		outVertex.push_back(vertex);
 	}
+
+	// 最後に最初の頂点を追加して円を閉じる
+	outVertex.push_back(outVertex[0]);
 }
