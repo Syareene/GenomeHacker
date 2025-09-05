@@ -20,9 +20,12 @@ public:
 private:
 	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>
-	void SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
+	bool SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
 	{
 		// 敵を出す処理
+
+		// 一時的処理として30体以上でないようにする
+		if (m_SpawnCount >= 30) return false;
 
 		// objectをフィールドに追加
 		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0);
@@ -50,9 +53,12 @@ private:
 
 
 				// データセットしたのでループから抜ける
-				break;
+				return true;
 			}
 		}
+		// データが見つからなかった
+		assert(0 && "敵のデータが登録されておらず、インスタンス化できませんでした");
+		return false;
 	}
 	// 敵の元データを格納する変数
 	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
