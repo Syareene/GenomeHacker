@@ -45,15 +45,17 @@ void Sphere::Update()
 
 void Sphere::DrawCollider()
 {
+	// デバッグ時のみコライダを描画
+#ifdef _DEBUG
 	// 生成した頂点を使用し描画
 
 	// シェーダーは一旦セットしない。後々デバッグ用に色を変えるシェーダー作成する。
 
 	// 入力レイアウト設定(シェーダーのレイアウトなのでこれもシェーダー使用するときに用意)
-	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::DebugVertexLayout);
 	// シェーダー設定->とりあえずunlitだがデバッグ用のを後々用意。
-	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::DebugVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::DebugPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
 	XMMATRIX trans, world, rot, scale;
@@ -101,6 +103,7 @@ void Sphere::DrawCollider()
 
 	// 他は再利用するのでそのまま描画(+1は円閉じるための描画用)
 	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
+#endif
 }
 
 void Sphere::MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVertex)

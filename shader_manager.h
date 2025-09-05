@@ -14,6 +14,9 @@ public:
 	static ID3D11VertexShader* NoAlphaVertexShader;
 	static ID3D11PixelShader* NoAlphaPixelShader;
 	static ID3D11InputLayout* NoAlphaVertexLayout;
+	static ID3D11VertexShader* DebugVertexShader;
+	static ID3D11PixelShader* DebugPixelShader;
+	static ID3D11InputLayout* DebugVertexLayout;
 
 	static void Init();
 	static void Uninit();
