@@ -43,6 +43,7 @@
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
+    <ClInclude Include="hedder\lib\transform.h" />
     <ClInclude Include="hedder\lib\vector2.h" />
     <ClInclude Include="hedder\lib\vector3.h" />
     <ClInclude Include="hedder\object\2d_object.h" />

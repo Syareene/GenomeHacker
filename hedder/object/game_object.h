@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "lib/vector3.h"
+#include "lib/transform.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
 #include "renderer.h"
 //#include "manager.h"
@@ -11,10 +11,8 @@
 class GameObject
 {
 private:
-	Vector3 m_Position{ 0.0f, 0.0f, 0.0f };
+	Transform m_Transform = Transform();
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
-	Vector3 m_Rotation{ 0.0f, 0.0f, 0.0f };
-	Vector3 m_Scale{ 1.0f, 1.0f, 1.0f };
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
@@ -59,14 +57,16 @@ public:
 
 	
 	void AddPosition(Vector3 Position, bool calcWorldSpeed = true);
-	Vector3& GetPosition() { return m_Position; }
-	void SetPosition(Vector3 Position) { m_Position = Position; }
+	const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
+	void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
 	Vector3& GetVelocity() { return m_Velocity; }
 	void SetVelocity(Vector3 Velocity) { m_Velocity = Velocity; }
-	Vector3& GetRotation() { return m_Rotation; }
-	void SetRotation(Vector3 Rotation) { m_Rotation = Rotation; }
-	Vector3& GetScale() { return m_Scale; }
-	void SetScale(Vector3 Scale) { m_Scale = Scale; }
+	const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
+	void SetRotation(const Vector3& Rotation) { m_Transform.SetRotation(Rotation); }
+	const Vector3& GetScale() const { return m_Transform.GetScale(); }
+	void SetScale(const Vector3& Scale) { m_Transform.SetScale(Scale); }
+	const Transform& GetTransform() const { return m_Transform; }
+	void SetTransform(Transform Transform) { m_Transform = Transform; }
 	int GetTextureID() const { return m_TextureID; }
 	void SetTextureID(int TextureID) { m_TextureID = TextureID; }
 	std::list<std::string>& GetTagList() { return m_Tag; }

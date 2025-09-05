@@ -8,15 +8,15 @@ void GameObject::AddPosition(Vector3 Position, bool calcWorldSpeed)
 {
 	if (calcWorldSpeed)
 	{
-		m_Position.x += Position.x * m_ObjSpeedMlt * Manager::GetGameSpeed();
-		m_Position.y += Position.y * m_ObjSpeedMlt * Manager::GetGameSpeed();
-		m_Position.z += Position.z * m_ObjSpeedMlt * Manager::GetGameSpeed();
+		SetPosition(Vector3(GetPosition().x + Position.x * m_ObjSpeedMlt * Manager::GetGameSpeed(), 
+			GetPosition().y + Position.y * m_ObjSpeedMlt * Manager::GetGameSpeed(), 
+			GetPosition().z + Position.z * m_ObjSpeedMlt * Manager::GetGameSpeed()));
 	}
 	else
 	{
-		m_Position.x += Position.x * m_ObjSpeedMlt;
-		m_Position.y += Position.y * m_ObjSpeedMlt;
-		m_Position.z += Position.z * m_ObjSpeedMlt;
+		SetPosition(Vector3(GetPosition().x + Position.x * m_ObjSpeedMlt,
+			GetPosition().y + Position.y * m_ObjSpeedMlt,
+			GetPosition().z + Position.z * m_ObjSpeedMlt));
 	}
 }
 
@@ -190,7 +190,7 @@ Vector3 GameObject::GetRight() const
 {
 	// 回転行列から右方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 right;
 	XMStoreFloat3((XMFLOAT3*)&right, matrix.r[0]);
@@ -200,7 +200,7 @@ Vector3 GameObject::GetUp() const
 {
 	// 回転行列から上方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 up;
 	XMStoreFloat3((XMFLOAT3*)&up, matrix.r[1]);
@@ -211,7 +211,7 @@ Vector3 GameObject::GetForward() const
 {
 	// 回転行列から前方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 forward;
 	XMStoreFloat3((XMFLOAT3*)&forward, matrix.r[2]);
@@ -220,5 +220,5 @@ Vector3 GameObject::GetForward() const
 
 float GameObject::GetDistance(Vector3 Position)
 {
-	return (Position - m_Position).length();
+	return (Position - GetPosition()).length();
 }
