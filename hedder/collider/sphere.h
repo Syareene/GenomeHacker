@@ -21,8 +21,8 @@ public:
 
 	void DrawCollider() override;
 private:
-	constexpr static int m_CircleVertexCount = 16; // 円を描く頂点数
-	void MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVertex);
+	constexpr static int m_CircleVertexCount = 12; // 円を描く頂点数
+	void MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex);
 	static ID3D11Buffer* m_VertexBuffer; // 頂点バッファ
 
 	// 設定したいプロパティとかは基底クラスにあるから一旦形だけ?

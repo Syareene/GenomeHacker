@@ -69,3 +69,13 @@ struct PS_IN
 	float4 Diffuse		: COLOR0;
 	float2 TexCoord		: TEXCOORD0;
 };
+
+struct DEBUG_VSIN
+{
+    float4 Position : POSITION0;
+};
+
+struct DEBUG_PSIN
+{
+	float4 Position : SV_POSITION;
+};

@@ -2,7 +2,7 @@
 #include "common.hlsl"
 
 
-void main(in VS_IN In, out PS_IN Out)
+void main(in DEBUG_VSIN In, out DEBUG_PSIN Out)
 {
 
 	matrix wvp;
@@ -10,8 +10,5 @@ void main(in VS_IN In, out PS_IN Out)
 	wvp = mul(wvp, Projection);
 
 	Out.Position = mul(In.Position, wvp);
-	//Out.TexCoord = In.TexCoord;
-	//Out.Diffuse = In.Diffuse * Material.Diffuse;
-
 }
 

@@ -13,12 +13,12 @@ void Sphere::Init()
 		return;
 	}
 	// 頂点バッファ生成
-	// 頂点は24頂点で円を描く
-	std::vector<VERTEX_3D> circleVertex;
+	// 頂点は12頂点で円を描く
+	std::vector<Vector3> circleVertex;
 	MakeCircleVertex(m_CircleVertexCount, circleVertex);
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(VERTEX_3D) * static_cast<UINT>(m_CircleVertexCount + 1); // (+1は円閉じるための描画用)
+	bd.ByteWidth = sizeof(Vector3) * static_cast<UINT>(m_CircleVertexCount + 1); // (+1は円閉じるための描画用)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -74,7 +74,7 @@ void Sphere::DrawCollider()
 	Renderer::SetMaterial(material);
 
 	// 頂点バッファ設定
-	UINT stride = sizeof(VERTEX_3D);
+	UINT stride = sizeof(Vector3);
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
@@ -106,25 +106,20 @@ void Sphere::DrawCollider()
 #endif
 }
 
-void Sphere::MakeCircleVertex(int vertex_count, std::vector<VERTEX_3D>& outVertex)
+void Sphere::MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex)
 {
 	// Sphereの可視化
 	// デバッグ用に球を描画する
 
 	for (int i = 0; i <= vertex_count; i++)
 	{
-		VERTEX_3D vertex;
+		Vector3 vertex;
 
 		float theta = float(i) / float(vertex_count) * 2.0f * XM_PI;
 		float x = GetRadius() * cosf(theta);
 		float y = GetRadius() * sinf(theta);
 
-		vertex.Position = XMFLOAT3(x, y, 0.0f);
-		vertex.Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
-		vertex.Diffuse = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-		vertex.TexCoord = XMFLOAT2(0.0f, 0.0f);
-
-		outVertex.push_back(vertex);
+		outVertex.push_back(Vector3(x, y, 0.0f));
 	}
 
 	// 最後に最初の頂点を追加して円を閉じる
