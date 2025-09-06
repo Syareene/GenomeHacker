@@ -4,7 +4,7 @@
 #include <memory>
 #include "collider/collision.h"
 
-//class Collision;
+class Collision;
 
 // 識別用のクラスに一旦はなりそう
 class Object3D : public GameObject
@@ -18,13 +18,6 @@ public:
 	template <typename T>
 	T* SetCollider()
 	{
-		/*
-		if (std::is_base_of_v<Collision, T>)
-		{
-			m_Collider = std::make_unique<T>();
-		}
-		*/
-
 		m_Collider = std::make_unique<T>();
 		return dynamic_cast<T*>(m_Collider.get());
 	};

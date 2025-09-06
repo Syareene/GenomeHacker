@@ -15,7 +15,8 @@ void FieldEnemy::Init()
 	collider->Init();
 
 	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 2.0f, 0.0f));
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+	GetCollider()->SetScale(Vector3(2.0f, 2.0f, 1.0f));
 
 	Vector3 self_pos = GetPosition(); //->sceneの配列で見る限りは座標大丈夫そうなのにここで取るとおかしいな
 	Vector3 collider_pos = GetCollider()->GetCenter();
@@ -42,7 +43,7 @@ void FieldEnemy::Update()
 	m_EnemyBase->ExecuteMove();
 
 	// コライダの場所更新(これ自動更新になるように変えたいね～～)
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 2.0f, 0.0f));
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 	
 
 	// 体力が0なら死亡ノードを実行。trueが帰ってきたら自身を削除。

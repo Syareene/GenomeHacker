@@ -13,13 +13,18 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
-	void SetSphereProperty(const Vector3& center, float radius) override
+	void DrawCollider() override;
+	void SetSphereProperty(const Vector3& center, const Vector3& size) override
 	{
 		// 衝突判定のプロパティ設定
-		Collision::SetSphereProperty(center, radius);
+		Collision::SetSphereProperty(center, size);
 	}
 
-	void DrawCollider() override;
+	// コリジョン取得
+	bool CheckCollision(const Collision& other) const override;
+	bool CheckCollisionSphere(const Collision& other) const override;
+	bool CheckCollisionAABB(const Collision& other) const override;
+	bool CheckCollisionOBB(const Collision& other) const override;
 private:
 	constexpr static int m_CircleVertexCount = 12; // 円を描く頂点数
 	void MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex);

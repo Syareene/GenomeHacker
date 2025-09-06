@@ -4,7 +4,7 @@
 #include <memory>
 
 // エラー解消用に前方宣言
-//class Scene;
+class Scene;
 
 class Manager
 {

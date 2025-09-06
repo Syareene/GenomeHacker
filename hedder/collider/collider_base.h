@@ -1,6 +1,9 @@
 ﻿#pragma once
 
 #include "object/game_object.h"
+#include "manager.h"
+#include "collider/sphere.h"
+#include "collider/cube.h"
 #include "lib/vector3.h"
 #include <algorithm>
 
@@ -11,14 +14,44 @@ class ColliderBase
 {
 public:
 	// 衝突判定のチェック
-	static bool CheckCollision(GameObject& obj1, GameObject& obj2)
-	{
+	//static bool CheckCollision(GameObject& obj1, GameObject& obj2)
+	//{
 		// inputされたときにgameobjectの型を見て、適切な衝突判定を勝手に呼び出すようにする
+	//}
+
+	// 名前指定で指定した対象と衝突しているオブジェクトを取得
+	static std::list<GameObject*> GetHitObjects(std::string name, GameObject* target)
+	{
+		// 実装したいならsceneに名前指定でobjectを取得できる関数を作る
 	}
+
+	// タグ指定で指定した対象と衝突しているオブジェクトを取得
+	static std::list<GameObject*> GetHitObjectsByTag(std::string tag, GameObject* target)
+	{
+
+	}
+
+	// 型指定で対象と衝突しているオブジェクトを取得
+	template<typename T>
+	static std::list<GameObject*> GetHitObjectsByType(GameObject* target)
+	{
+		// sceneから取得
+		std::list<T*> objects = Manager::GetCurrentScene()->GetGameObjects<T>();
+
+		// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
+	}
+
+
+
+
 
 	// debug時に衝突判定の可視化を行う
 
 private:
+
+	static bool CheckCollisionType(GameObject& obj1, GameObject& obj2)
+	{
+	}
 
 	// AABB-AABB(回転なしのbox当たり判定)
 	static bool CheckAABBAABB(GameObject& obj1, GameObject& obj2)
@@ -43,6 +76,8 @@ private:
 	// AABB-Sphere
 	static bool CheckAABBSphere(GameObject& obj1, GameObject& obj2)
 	{
+		// collisionへ移行
+		/*
 		// AABBの中心位置と半径を取得
 		Vector3 pos1 = obj1.GetPosition();
 		Vector3 scale1 = obj1.GetScale();
@@ -62,15 +97,18 @@ private:
 		float distanceSquared = diff.lengthSquared();
 		// 衝突判定
 		return distanceSquared <= (radius2 * radius2);
+		*/
 	}
 	// OBB-OBB
 	// OBB-Sphere
 	// Sphere-Sphere
-	static bool CheckSphereSphere(GameObject& obj1, GameObject& obj2)
+	static bool CheckSphereSphere(Sphere& obj1, Sphere& obj2)
 	{
+		// collisionへ移行
+		/*
 		// Sphereの中心位置と半径を取得
-		Vector3 pos1 = obj1.GetPosition();
-		Vector3 pos2 = obj2.GetPosition();
+		Vector3 pos1 = obj1.GetCenter();
+		Vector3 pos2 = obj2.GetCenter();
 		float radius1 = obj1.GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
 		float radius2 = obj2.GetScale().x * 0.5f;
 		// 中心間の距離を計算
@@ -81,5 +119,6 @@ private:
 		
 		// 衝突判定
 		return distanceSquared <= (radiusSum * radiusSum);
+		*/
 	}
 };

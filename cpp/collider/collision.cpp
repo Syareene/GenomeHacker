@@ -9,24 +9,24 @@ void Collision::DrawCollider()
 	// OBBは回転が絡むからちょいめんどいし
 }
 
-void Collision::SetSphereProperty(const Vector3& center, float radius)
+void Collision::SetSphereProperty(const Vector3& center, const Vector3& size)
 {
 	// 衝突判定のプロパティ設定
 	m_Center = center;
-	m_Radius = radius;
+	m_Scale = size;
 }
 
 void Collision::SetAABBProperty(const Vector3& center, const Vector3& size)
 {
 	// 衝突判定のプロパティ設定
 	m_Center = center;
-	m_Size = size;
+	m_Scale = size;
 }
 
 void Collision::SetOBBProperty(const Vector3& center, const Vector3& size, const Vector3& rotation)
 {
 	// 衝突判定のプロパティ設定
 	m_Center = center;
-	m_Size = size;
+	m_Scale = size;
 	m_Rotation = rotation;
 }

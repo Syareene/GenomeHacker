@@ -7,6 +7,8 @@
 #include "object/3d_object.h"
 #include "object/2d_object.h"
 
+class Object3D;
+
 class Scene
 {
 public:

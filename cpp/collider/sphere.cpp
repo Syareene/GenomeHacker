@@ -61,7 +61,7 @@ void Sphere::DrawCollider()
 	XMMATRIX trans, world, rot, scale;
 	trans = XMMatrixTranslation(GetCenter().x, GetCenter().y, GetCenter().z);
 	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
-	scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, 1.0f);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
@@ -94,7 +94,7 @@ void Sphere::DrawCollider()
 	// 移動、回転マトリックス設定
 	trans = XMMatrixTranslation(GetCenter().x, GetCenter().y, GetCenter().z);
 	rot = XMMatrixRotationRollPitchYaw(GetRotation().x - 89.5f, GetRotation().y, GetRotation().z);
-	scale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, 1.0f);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
 
@@ -116,12 +116,65 @@ void Sphere::MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex)
 		Vector3 vertex;
 
 		float theta = float(i) / float(vertex_count) * 2.0f * XM_PI;
-		float x = GetRadius() * cosf(theta);
-		float y = GetRadius() * sinf(theta);
+		float x = 1.0f * cosf(theta);
+		float y = 1.0f * sinf(theta);
 
 		outVertex.push_back(Vector3(x, y, 0.0f));
 	}
 
 	// 最後に最初の頂点を追加して円を閉じる
 	outVertex.push_back(outVertex[0]);
+}
+
+bool Sphere::CheckCollision(const Collision& other) const
+{
+	// 相手の型に応じて処理を分岐
+	return other.CheckCollisionSphere(*this);
+}
+
+bool Sphere::CheckCollisionSphere(const Collision& other) const
+{
+	// Sphereの中心位置と半径を取得
+	Vector3 pos1 = GetCenter();
+	Vector3 pos2 = other.GetCenter();
+	float radius1 = GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
+	float radius2 = other.GetScale().x * 0.5f;
+	// 中心間の距離を計算
+	Vector3 diff = pos1 - pos2;
+	float distanceSquared = diff.lengthSquared();
+	// 半径の和を計算
+	float radiusSum = radius1 + radius2;
+
+	// 衝突判定
+	return distanceSquared <= (radiusSum * radiusSum);
+}
+
+bool Sphere::CheckCollisionAABB(const Collision& other) const
+{
+	// AABBの中心位置と半径を取得
+
+	// こっちはAABB
+	Vector3 pos1 = other.GetCenter();
+	Vector3 scale1 = other.GetScale();
+	Vector3 min1 = pos1 - scale1 * 0.5f;
+	Vector3 max1 = pos1 + scale1 * 0.5f;
+	Vector3 pos2 = GetCenter();
+	float radius2 = GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
+
+	// AABBの中心からSphereの中心までの最近点を計算
+	Vector3 closestPoint(
+		std::max(min1.x, std::min(pos2.x, max1.x)),
+		std::max(min1.y, std::min(pos2.y, max1.y)),
+		std::max(min1.z, std::min(pos2.z, max1.z))
+	);
+	// 最近点とSphereの中心との距離を計算
+	Vector3 diff = closestPoint - pos2;
+	float distanceSquared = diff.lengthSquared();
+	// 衝突判定
+	return distanceSquared <= (radius2 * radius2);
+}
+
+bool Sphere::CheckCollisionOBB(const Collision& other) const
+{
+	return false; // 未実装
 }
