@@ -4,6 +4,12 @@
 
 class UI : public Object2D
 {
+public:
+	virtual ~UI() { OutputDebugStringA("~UI\n"); }
+	void Init() override {}
+	void Uninit() override {}
+	void Update() override {}
+	void Draw() override {}
 	// 更新しなくて良いオブジェクトには更新しなくていいタグを付けてコストを下げる
 
 	// クリック検知

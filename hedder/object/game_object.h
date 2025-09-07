@@ -8,6 +8,8 @@
 #include <string>
 #include <list>
 
+#include <Windows.h>
+
 class GameObject
 {
 private:
@@ -48,7 +50,7 @@ protected:
 	void SetMaterialOnDraw(XMFLOAT4 diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4 amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), bool texEnable = true);
 
 public:
-	virtual ~GameObject() = default;
+	virtual ~GameObject() { OutputDebugStringA("~GameObject\n"); }
 	virtual void Init() {};
 	virtual void Uninit() {};
 	virtual void Update() {};

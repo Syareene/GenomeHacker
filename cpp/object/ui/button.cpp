@@ -22,7 +22,7 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	}
 	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
-	TargetFunc = func; // コールバック関数を設定
+	m_TargetFunc = func; // コールバック関数を設定
 }
 
 void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath)
@@ -43,7 +43,7 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	}
 	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
-	TargetFunc = func; // コールバック関数を設定
+	m_TargetFunc = func; // コールバック関数を設定
 }
 
 void Button::Init()
@@ -53,7 +53,7 @@ void Button::Init()
 
 void Button::Uninit()
 {
-
+	m_TargetFunc = nullptr; // コールバック関数をクリア
 }
 
 void Button::Update()
@@ -81,8 +81,8 @@ void Button::Draw()
 	Renderer::SetWorldViewProjection2D();
 
 	// 頂点バッファ設定
-	//SetDefaultVertexBufferOnDraw(); //->こっちだとuv変えるときに反映できないので下記に
-	SetVertexBufferOnDraw(); // ボタンの頂点バッファを設定(こっちにすると描画されなくなるよーん、なのでデフォルトで頂点いれるように設定直さないといけない)
+	SetDefaultVertexBufferOnDraw(); //->こっちだとuv変えるときに反映できないので下記に
+	//SetVertexBufferOnDraw(); // ボタンの頂点バッファを設定(こっちにすると描画されなくなるよーん、なのでデフォルトで頂点いれるように設定直さないといけない)
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定

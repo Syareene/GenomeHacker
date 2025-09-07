@@ -6,9 +6,10 @@
 class Button : public UI
 {
 private:
-	std::function<void()> TargetFunc;
+	std::function<void()> m_TargetFunc;
 	int m_FrameTexID = -1; // フレームテクスチャID
 public:
+	virtual ~Button() { OutputDebugStringA("~Button\n"); }
 	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath = L"");
 	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath = L"");
 	void Init() override; // ボタン登録処理
@@ -16,14 +17,14 @@ public:
 	template<typename... Args>
 	void SetOnClick(const std::function<void()>& func)
 	{
-		TargetFunc = func; // 関数を設定
+		m_TargetFunc = func; // 関数を設定
 	}
 	
 	void OnClick()
 	{
-		if(TargetFunc) // 関数が設定されている場合
+		if(m_TargetFunc) // 関数が設定されている場合
 		{
-			TargetFunc(); // 関数を実行
+			m_TargetFunc(); // 関数を実行
 		}
 	}
 	void Uninit() override; // ボタン終了処理
