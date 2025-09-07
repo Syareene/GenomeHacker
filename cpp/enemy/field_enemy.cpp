@@ -84,5 +84,9 @@ void FieldEnemy::Draw()
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 	// コリジョン描画(デバッグ用)
+	if(!GetCollider())
+	{
+		return;
+	}
 	GetCollider()->DrawCollider();
 }
