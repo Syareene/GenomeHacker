@@ -4,6 +4,7 @@
 
 void ImageDraw::Init(Transform trans)
 {
+	SetTransform(trans);
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
 	// シェーダー設定

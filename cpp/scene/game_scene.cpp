@@ -29,6 +29,9 @@ void GameScene::Init()
 	AddGameObject<Score>(1);
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 	
+
+	// 撮影用に一旦見せなくする
+	/*
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Score>()->AddScore(10);
@@ -38,6 +41,8 @@ void GameScene::Init()
 		// ボタンがクリックされた時の処理
 		Manager::SetScene(std::make_unique<ResultScene>());
 		}, Vector2(SCREEN_WIDTH - 150.0f, 50.0f), Vector2(300.0f, 100.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\bomb.png");
+	*/
+
 
 	/*
 	AddGameObject<Button>(2)->Register([this]() {

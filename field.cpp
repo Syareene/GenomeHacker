@@ -7,6 +7,8 @@
 
 void Field::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = XMFLOAT3(-10.0f, 0.0f, 10.0f);

@@ -9,6 +9,7 @@
 
 void Explosion::Init(Transform trans)
 {
+	SetTransform(trans);
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);

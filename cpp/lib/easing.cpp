@@ -238,7 +238,7 @@ float InOutBack(float t, float overshoot)
 // 弾性関数版
 
 // 最初は早いが徐々に減速
-float InElastic(float t, float overshoot, float freq)
+float InElastic(float t, float freq)
 {
 	if (t == 0.0f || t == 1.0f)
 	{
@@ -252,7 +252,7 @@ float InElastic(float t, float overshoot, float freq)
 }
 
 // 最初は遅いが徐々に加速
-float OutElastic(float t, float overshoot, float freq)
+float OutElastic(float t, float freq)
 {
 	if (t == 0.0f || t == 1.0f)
 	{
@@ -265,7 +265,7 @@ float OutElastic(float t, float overshoot, float freq)
 }
 
 // 最初と最後は早いが途中は遅い
-float InOutElastic(float t, float overshoot, float freq)
+float InOutElastic(float t, float freq)
 {
 	if (t == 0.0f || t == 1.0f)
 	{

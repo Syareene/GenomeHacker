@@ -8,6 +8,8 @@
 
 void Polygon2D::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	SetVertexBuffer(nullptr);
 
 	// テクスチャ読み込み

@@ -2,6 +2,7 @@
 
 void Panel::Init(Transform trans)
 {
+	SetTransform(trans);
 	// パネルの初期化処理
 	GameObject::Init();
 

@@ -99,11 +99,11 @@ float InOutBack(float t, float overshoot = 1.70158f);
 
 // Elastic(弾性)
 // 最初は早いが徐々に減速
-float InElastic(float t, float overshoot = 1.0f, float freq = 1.0f);
+float InElastic(float t, float freq = 1.0f);
 // 最初は遅いが徐々に加速
-float OutElastic(float t, float overshoot = 1.0f, float freq = 1.0f);
+float OutElastic(float t, float freq = 1.0f);
 // 最初と最後は早いが途中は遅い
-float InOutElastic(float t, float overshoot = 1.0f, float freq = 1.0f);
+float InOutElastic(float t, float freq = 1.0f);
 
 // Bounce(バウンド)
 // 最初は早いが徐々に減速

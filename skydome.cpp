@@ -8,6 +8,8 @@
 
 void SkyDome::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();
 	m_ModelRenderer->Load("asset\\model\\sky.obj");

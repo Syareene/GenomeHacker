@@ -6,6 +6,8 @@
 #include "object/camera.h"
 #include "manager.h"
 #include "enemy/enemy.h"
+#include "enemy/field_enemy.h"
+#include "collider/sphere.h"
 #include "enemy/explosion.h"
 
 void Bullet::Init(Transform trans)
@@ -20,6 +22,14 @@ void Bullet::Init(Transform trans)
 
 	AddTag("InGame");
 	AddTag("Bullet");
+
+	SetTransform(trans);
+
+	// コリジョンを有効化する
+	Sphere* collider = SetCollider<Sphere>();
+	collider->Init();
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+	GetCollider()->SetScale(Vector3(0.225f, 0.225f, 0.225f));
 }
 
 void Bullet::Uninit()
@@ -48,9 +58,36 @@ void Bullet::Update()
 		SetDestory(true);
 	}
 
-	// 敵との衝突判定
-	auto enemies = Manager::GetCurrentScene()->GetGameObjects<Enemy>();
+	// コライダの場所更新
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 
+	// 敵との衝突判定
+	std::list<FieldEnemy*> enemies = GetCollider()->GetHitObjectsByType<FieldEnemy>();
+
+	for(auto& enemy : enemies)
+	{
+		/*
+		Vector3 d = enemy->GetPosition() - GetPosition();
+		float length = d.length();
+		if (length < 1.0f)
+		{
+			// 爆発エフェクトを生成
+			Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+			// 敵に当たったら削除
+			SetDestory(true);
+			enemy->SetDestory(true); // 敵も削除
+			break; // 一つの敵に当たったらループを抜ける
+		}
+		*/
+		// 爆発エフェクトを生成
+		Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+		// 敵に当たったら削除
+		SetDestory(true);
+		enemy->SetDestory(true); // 敵も削除
+		break; // 一つの敵に当たったらループを抜ける
+	}
+
+	/*
 	for (auto& enemy : enemies)
 	{
 		Vector3 d = enemy->GetPosition() - GetPosition();
@@ -65,6 +102,7 @@ void Bullet::Update()
 			enemy->SetDestory(true); // 敵も削除
 		}
 	}
+	*/
 }
 
 void Bullet::Draw()
@@ -86,4 +124,11 @@ void Bullet::Draw()
 	Renderer::SetWorldMatrix(world);
 
 	m_ModelRenderer->Draw();
+
+	// コリジョン描画(デバッグ用)
+	if (!GetCollider())
+	{
+		return;
+	}
+	GetCollider()->DrawCollider();
 }

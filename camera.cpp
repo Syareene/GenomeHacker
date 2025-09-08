@@ -7,6 +7,8 @@
 
 void Camera::Init(Transform trans)
 {
+	SetTransform(trans);
+	// 初期位置は少し後ろに
 	SetPosition(Vector3(0.0f, 1.0f, -5.0f));
 }
 

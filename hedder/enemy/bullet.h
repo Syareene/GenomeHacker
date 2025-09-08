@@ -16,7 +16,7 @@ private:
 	ID3D11PixelShader* m_PixelShader = nullptr;
 	ID3D11InputLayout* m_VertexLayout = nullptr;
 
-	class ModelRenderer* m_ModelRenderer;
+	class ModelRenderer* m_ModelRenderer = nullptr;
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
 	int m_LifeTime = 120;
 };

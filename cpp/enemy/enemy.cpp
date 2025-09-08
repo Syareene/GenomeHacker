@@ -17,6 +17,7 @@
 
 void Enemy::Init(Transform trans)
 {
+	SetTransform(trans);
 	//Renderer::CreateVertexShader(&m_VertexShader, &m_VertexLayout, "shader\\unlitTextureVS.cso");
 	//Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 

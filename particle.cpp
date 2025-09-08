@@ -10,6 +10,8 @@
 
 void Particle::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	VERTEX_3D vertex[4];
 
 	vertex[0].Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);

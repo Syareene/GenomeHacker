@@ -3,6 +3,7 @@
 
 void EnemyNode::Init(Transform trans)
 {
+	SetTransform(trans);
 	// 置きたいオブジェクトを軒並みセットする
 	
 

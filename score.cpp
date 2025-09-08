@@ -6,6 +6,8 @@
 
 void Score::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	// 頂点データ
 	VERTEX_3D vertex[4];
 

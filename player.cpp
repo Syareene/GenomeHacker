@@ -11,6 +11,8 @@
 
 void Player::Init(Transform trans)
 {
+	SetTransform(trans);
+
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();
 	m_ModelRenderer->Load("asset\\model\\player.obj");
@@ -69,10 +71,13 @@ void Player::Update()
 
 	if (Input::GetKeyTrigger(VK_SPACE))
 	{
+		Transform trans = Transform();
+		trans.SetPosition(GetPosition() + Vector3(0.0f, 1.0f ,0.0f));
+
 		// 弾発射
-		Bullet* bullet = Manager::GetCurrentScene()->AddGameObject<Bullet>(0);
+		Bullet* bullet = Manager::GetCurrentScene()->AddGameObject<Bullet>(0, trans);
 		// 初期座標設定v
-		bullet->SetPosition(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+		//bullet->SetPosition(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 弾の速度を設定
 		bullet->SetVelocity(GetForward() * 0.2f);
 	}

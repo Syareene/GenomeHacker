@@ -2,6 +2,7 @@
 
 void TabBase::Init(Transform trans)
 {
+	SetTransform(trans);
 	// タブの初期化処理
 	Button::Init();
 	
