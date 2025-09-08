@@ -27,7 +27,7 @@ public:
 		// 中で型を比べる
 		if constexpr (!std::is_base_of_v<Object3D, T> && !std::is_base_of_v<Object2D, T>)
 		{
-			static_assert(false, "Unsupported GameObject type");
+			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
 			return nullptr; // 型が違う場合はnullptrを返す
 		}
 		// 初期化処理実行
@@ -167,7 +167,7 @@ public:
 		else
 		{
 			// 型が違う場合はエラーを出す
-			static_assert(false, "Unsupported GameObject type");
+			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
 			return nullptr; // 型が違う場合はnullptrを返す
 		}
 		return nullptr; // 見つからなかったらnullptrを返す
@@ -212,7 +212,7 @@ public:
 		else
 		{
 			// 型が違う場合はエラーを出す
-			static_assert(false, "Unsupported GameObject type");
+			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
 			return std::list<T*>(); // 型が違う場合は空のリストを返す
 		}
 	}

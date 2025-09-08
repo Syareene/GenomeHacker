@@ -3,8 +3,21 @@
 
 void main(in DEBUG_PSIN In, out float4 outDiffuse : SV_Target)
 {
-    // デバッグ用に緑を描画
-    outDiffuse.rb = 0.4f;
-    outDiffuse.g = 1.0f;
-    outDiffuse.a = 1.0f;
+    if(Parameter.x <= 0.1f)
+    {
+        // 当たってないのでそのまま描画
+
+        // デバッグ用に緑を描画
+        outDiffuse.rb = 0.4f;
+        outDiffuse.g = 1.0f;
+        outDiffuse.a = 1.0f;
+
+    }
+    else
+    {
+        // 当たっているので赤く描画
+        outDiffuse.r = 1.0f;
+        outDiffuse.gb = 0.4f;
+        outDiffuse.a = 1.0f;
+    }
 }

@@ -21,7 +21,7 @@ public:
 	}
 
 	// コリジョン取得
-	bool CheckCollision(const Collision& other) const override;
+	bool CheckCollision(const Collision& other) override;
 	bool CheckCollisionSphere(const Collision& other) const override;
 	bool CheckCollisionAABB(const Collision& other) const override;
 	bool CheckCollisionOBB(const Collision& other) const override;

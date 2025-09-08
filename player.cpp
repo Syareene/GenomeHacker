@@ -7,12 +7,21 @@
 #include "manager.h"
 #include "enemy/bullet.h"
 #include "shader_manager.h"
+#include "collider/sphere.h"
 
 void Player::Init()
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();
 	m_ModelRenderer->Load("asset\\model\\player.obj");
+
+	// コリジョンを有効化する
+	Sphere* collider = SetCollider<Sphere>();
+	collider->Init();
+
+	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 1.0f, 0.0f));
+	GetCollider()->SetScale(Vector3(1.0f, 1.0f, 1.0f));
 
 	AddTag("InGame");
 	AddTag("Player");
@@ -55,6 +64,9 @@ void Player::Update()
 		SetRotation(Vector3(GetRotation().x, rotation.y + XM_PIDIV2, GetRotation().z));
 	}
 
+	// コライダの場所更新(これ自動更新になるように変えたいね～～)
+	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 1.0f, 0.0f));
+
 	if (Input::GetKeyTrigger(VK_SPACE))
 	{
 		// 弾発射
@@ -85,4 +97,11 @@ void Player::Draw()
 	Renderer::SetWorldMatrix(world);
 
 	m_ModelRenderer->Draw();
+
+	// コリジョン描画(デバッグ用)
+	if (!GetCollider())
+	{
+		return;
+	}
+	GetCollider()->DrawCollider();
 }

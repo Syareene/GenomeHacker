@@ -31,40 +31,57 @@ public:
 		// コンパイル時に評価しObject2Dからの参照があった場合にはエラーを出す
 		if constexpr (!std::is_base_of_v<Object3D, T>)
 		{
-			static_assert(false, "GetHitObjectsByType: T must be derived from Object3D");
+			static_assert(std::is_base_of_v<Object3D, T>, "GetHitObjectsByType: T must be derived from Object3D");
 			//return std::list<T*>();
 		}
 		else
 		{
-			if (std::is_base_of_v<Object3D, T>)
-			{
-				// sceneから取得(上の条件が満たされているため安全にObject3Dとして扱える)
+			// sceneから取得(上の条件が満たされているため安全にObject3Dとして扱える)
 			// ここ、アロー演算子の後にtemplateをつけないとエラー出たけど原因がちゃんとわかってない
-				std::list<T*> objects = Manager::GetCurrentScene()->template GetGameObjects<T>();
-
-				// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
-				std::list<T*> result;
-				for (auto& obj : objects)
-				{
-					// コライダを持ってない(nullptr)場合はスキップ
-					if (!obj->GetCollider())
-					{
-						continue;
-					}
-					// 実行
-					if (this->CheckCollision(*obj->GetCollider()))
-					{
-						// obj=Tと確定してないことになっちゃってる
-						result.push_back(obj);
-					}
-				}
-				return result;
+			std::list<T*> objects = Manager::GetCurrentScene()->template GetGameObjects<T>();
+			std::list<Object3D*> cast_obj;
+			for (auto obj : objects)
+			{
+				// ここでT*にキャストできるかチェック
+				Object3D* casted = static_cast<T*>(obj);
+				// nullptr(castできなかったとしても)とりあえず詰める
+				cast_obj.push_back(casted);
 			}
+
+			// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
+			std::list<T*> result;
+			for (auto& obj : cast_obj)
+			{
+				// nullptrなら(取得したobjが3dobjでない)スキップ
+				if(!obj)
+				{
+					continue;
+				}
+
+				// コライダを持ってない(nullptr)場合はスキップ
+				if (!obj->GetCollider())
+				{
+					continue;
+				}
+				// 自分自身ならスキップ
+				if (obj->GetCollider() == this)
+				{
+					continue;
+				}
+
+				// 実行
+				if (this->CheckCollision(*obj->GetCollider()))
+				{
+					// obj=Tと確定してないことになっちゃってる
+					result.push_back(static_cast<T*>(obj));
+				}
+			}
+			return result;
 		}
 	};
 
 	// コリジョン取得(visitorパターン使用)
-	virtual bool CheckCollision(const Collision& other) const = 0;
+	virtual bool CheckCollision(const Collision& other) = 0;
 	virtual bool CheckCollisionSphere(const Collision& other) const = 0;
 	virtual bool CheckCollisionAABB(const Collision& other) const = 0;
 	virtual bool CheckCollisionOBB(const Collision& other) const = 0;
@@ -73,11 +90,13 @@ public:
 	Vector3 GetCenter() const { return m_Center; }
 	Vector3 GetScale() const { return m_Scale; }
 	Vector3 GetRotation() const { return m_Rotation; }
+	bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
 	//float GetRadius() const { return m_Radius; } // Sphere用
 	// データセット
 	void SetCenter(const Vector3& center) { m_Center = center; }
 	void SetScale(const Vector3& size) { m_Scale = size; }
 	void SetRotation(const Vector3& rotation) { m_Rotation = rotation; }
+	void SetIsHit(bool isHit) {m_IsHit = isHit;}
 	//void SetRadius(float radius) { m_Radius = radius; } // Sphere
 protected:
 	virtual void SetSphereProperty(const Vector3& center, const Vector3& size);
@@ -88,6 +107,7 @@ private:
 	Vector3 m_Center = { 0.0f, 0.0f, 0.0f }; // 中心位置
 	Vector3 m_Scale = { 1.0f, 1.0f, 1.0f }; // サイズ(AABBとOBB用)
 	Vector3 m_Rotation = { 0.0f, 0.0f, 0.0f }; // 回転値(OBB用)
+	bool m_IsHit = false; // 当たっているかどうか(当たっている間はtrue)
 	//float m_Radius = 1.0f; // Sphereの半径->scaleに統合しても良くないか?
 
 	// collisiontypeを判定するためにこれをoverrideして使ったほうがいいかなぁって気がしなくもない。

@@ -17,6 +17,7 @@ public:
 	void SetCurrentHP(float hp) { m_CurrentHP = hp; }
 	float GetCurrentHP() const { return m_CurrentHP; }
 private:
+	bool m_IsHit = false; // 当たったかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 自身の元データへのポインタ
 	float m_CurrentHP = 0.0f; // 現在のHP
 };

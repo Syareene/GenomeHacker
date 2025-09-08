@@ -50,6 +50,11 @@ cbuffer LightBuffer : register(b4)
 	LIGHT Light;
 }
 
+cbuffer ParameterBuffer : register(b5)
+{
+    float4 Parameter;
+};
+
 
 
 

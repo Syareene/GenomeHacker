@@ -78,10 +78,15 @@ void Sphere::DrawCollider()
 	UINT offset = 0;
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
-	// テクスチャ設定
-	// 一時変数に入れないと参照取得できないのでこうする
-	//ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
-	//Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+	// 当たってるならparameterをtrueにする(別に本来はmaterialに対して色変えるでいいんだけどね)
+	if (GetIsHit())
+	{
+		Renderer::SetParameter(XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f)); // true
+	}
+	else
+	{
+		Renderer::SetParameter(XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f)); // false
+	}
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
@@ -103,6 +108,9 @@ void Sphere::DrawCollider()
 
 	// 他は再利用するのでそのまま描画(+1は円閉じるための描画用)
 	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
+
+	// hitリセット
+	SetIsHit(false);
 #endif
 }
 
@@ -126,10 +134,20 @@ void Sphere::MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex)
 	outVertex.push_back(outVertex[0]);
 }
 
-bool Sphere::CheckCollision(const Collision& other) const
+bool Sphere::CheckCollision(const Collision& other)
 {
+	// ここ、IsHit既にtrueならfalseにならないように変えないとダメそう
+	bool temp = other.CheckCollisionSphere(*this);
+	// 既にどれかのオブジェクトには当たっているが、今回の相手にあたっていない場合は
+	// 当たった変数自体はfalseにしてほしくないので変える前に値を返す
+	if (GetIsHit() && !temp)
+	{
+		return temp;
+	}
+
 	// 相手の型に応じて処理を分岐
-	return other.CheckCollisionSphere(*this);
+	SetIsHit(temp);
+	return temp;
 }
 
 bool Sphere::CheckCollisionSphere(const Collision& other) const
