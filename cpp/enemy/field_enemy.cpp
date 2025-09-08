@@ -44,6 +44,19 @@ void FieldEnemy::Update()
 
 	// コライダの場所更新(これ自動更新になるように変えたいね～～)
 	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+
+	// 当たってるコライダがあるかチェック
+	std::list<FieldEnemy*> hit = GetCollider()->GetHitObjectsByType<FieldEnemy>();
+	for (auto& h : hit)
+	{
+		// 自分自身はスルー
+		if(h == this)
+		{
+			continue;
+		}
+		// とりあえずここでブレークポイント設定
+		continue;
+	}
 	
 
 	// 体力が0なら死亡ノードを実行。trueが帰ってきたら自身を削除。

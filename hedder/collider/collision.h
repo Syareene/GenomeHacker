@@ -2,6 +2,7 @@
 #include "lib/vector3.h"
 #include <list>
 #include <string>
+#include <type_traits>
 #include "manager.h"
 #include "object/game_object.h"
 #include "object/3d_object.h"
@@ -28,34 +29,37 @@ public:
 	{
 		// Collisionクラス自体がObject3Dクラスにしかないが、それをこっちから確認する方法がないため
 		// コンパイル時に評価しObject2Dからの参照があった場合にはエラーを出す
-		if constexpr (!std::is_base_of_v<T, Object3D>)
+		if constexpr (!std::is_base_of_v<Object3D, T>)
 		{
 			static_assert(false, "GetHitObjectsByType: T must be derived from Object3D");
 			//return std::list<T*>();
 		}
 		else
 		{
-			// sceneから取得(上の条件が満たされているため安全にObject3Dとして扱える)
-			// ここ、アロー演算子の後にtemplateをつけないとエラー出たけど原因がちゃんとわかってない
-			std::list<Object3D*> objects = Manager::GetCurrentScene()->template GetGameObjects<T>();
-			
-			// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
-			std::list<T*> result;
-			for (auto& obj : objects)
+			if (std::is_base_of_v<Object3D, T>)
 			{
-				// コライダを持ってない(nullptr)場合はスキップ
-				if (!obj->GetCollider())
+				// sceneから取得(上の条件が満たされているため安全にObject3Dとして扱える)
+			// ここ、アロー演算子の後にtemplateをつけないとエラー出たけど原因がちゃんとわかってない
+				std::list<T*> objects = Manager::GetCurrentScene()->template GetGameObjects<T>();
+
+				// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
+				std::list<T*> result;
+				for (auto& obj : objects)
 				{
-					continue;
+					// コライダを持ってない(nullptr)場合はスキップ
+					if (!obj->GetCollider())
+					{
+						continue;
+					}
+					// 実行
+					if (this->CheckCollision(*obj->GetCollider()))
+					{
+						// obj=Tと確定してないことになっちゃってる
+						result.push_back(obj);
+					}
 				}
-				// 実行
-				if (this->CheckCollision(*obj->GetCollider()))
-				{
-					// obj=Tと確定してないことになっちゃってる
-					result.push_back(obj);
-				}
+				return result;
 			}
-			return result;
 		}
 	};
 
