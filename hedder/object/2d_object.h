@@ -7,7 +7,7 @@
 class Object2D : public GameObject
 {
 public:
-	virtual ~Object2D() { OutputDebugStringA("~Object2D\n"); }
+	virtual ~Object2D() {}
 	// エラー解消用にコメントアウト
 	void Init(Transform trans = Transform()) override
 	{

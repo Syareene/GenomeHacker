@@ -5,7 +5,7 @@
 class UI : public Object2D
 {
 public:
-	virtual ~UI() { OutputDebugStringA("~UI\n"); }
+	virtual ~UI() {}
 	void Init(Transform trans = Transform()) override 
 	{
 		SetTransform(trans);

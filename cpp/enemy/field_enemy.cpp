@@ -22,7 +22,7 @@ void FieldEnemy::Init(Transform trans)
 
 	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
 	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
-	GetCollider()->SetScale(Vector3(0.20f, 0.20f, 0.20f));
+	GetCollider()->SetScale(Vector3(0.30f, 0.30f, 0.30f));
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない

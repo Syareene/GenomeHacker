@@ -35,12 +35,12 @@ void EnemySpawner::Update()
 	// 更新処理
 
 	// とりあえず一定frame事に敵を出す
-	if(m_SpawnTimer > 120)
+	if(m_SpawnTimer > 90)
 	{
 		m_SpawnTimer = 0;
 		// どの敵を出すかはとりあえず固定
 		// あとは敵のテクスチャによって座標変わるからそのズレとかをセットできるようにできればいいね
-		SpawnEnemy<Slime>({0.0f, 1.0f, static_cast<float>(m_SpawnCount) * 0.5f});
+		SpawnEnemy<Slime>({0.0f, 1.0f, static_cast<float>(m_SpawnCount) * 0.75f});
 		m_SpawnCount++;
 	}
 

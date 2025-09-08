@@ -9,7 +9,7 @@ private:
 	std::function<void()> m_TargetFunc;
 	int m_FrameTexID = -1; // フレームテクスチャID
 public:
-	virtual ~Button() { OutputDebugStringA("~Button\n"); }
+	virtual ~Button() {}
 	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath = L"");
 	void Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath = L"");
 	void Init(Transform trans = Transform()) override; // ボタン登録処理

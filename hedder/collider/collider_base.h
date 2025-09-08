@@ -101,24 +101,4 @@ private:
 	}
 	// OBB-OBB
 	// OBB-Sphere
-	// Sphere-Sphere
-	static bool CheckSphereSphere(Sphere& obj1, Sphere& obj2)
-	{
-		// collisionへ移行
-		/*
-		// Sphereの中心位置と半径を取得
-		Vector3 pos1 = obj1.GetCenter();
-		Vector3 pos2 = obj2.GetCenter();
-		float radius1 = obj1.GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
-		float radius2 = obj2.GetScale().x * 0.5f;
-		// 中心間の距離を計算
-		Vector3 diff = pos1 - pos2;
-		float distanceSquared = diff.lengthSquared();
-		// 半径の和を計算
-		float radiusSum = radius1 + radius2;
-		
-		// 衝突判定
-		return distanceSquared <= (radiusSum * radiusSum);
-		*/
-	}
 };
