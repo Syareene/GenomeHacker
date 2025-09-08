@@ -8,7 +8,7 @@
 #include "shader_manager.h"
 
 
-void Particle::Init()
+void Particle::Init(Transform trans)
 {
 	VERTEX_3D vertex[4];
 

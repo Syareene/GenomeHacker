@@ -9,7 +9,7 @@
 #include "shader_manager.h"
 #include "collider/sphere.h"
 
-void Player::Init()
+void Player::Init(Transform trans)
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();

@@ -1,6 +1,6 @@
 ﻿#include "object/panel.h"
 
-void Panel::Init()
+void Panel::Init(Transform trans)
 {
 	// パネルの初期化処理
 	GameObject::Init();

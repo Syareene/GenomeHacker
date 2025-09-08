@@ -5,7 +5,7 @@
 #include "shader_manager.h"
 
 
-void Field::Init()
+void Field::Init(Transform trans)
 {
 	VERTEX_3D vertex[4];
 

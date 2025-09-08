@@ -2,7 +2,7 @@
 #include "shader_manager.h"
 
 
-void ImageDraw::Init()
+void ImageDraw::Init(Transform trans)
 {
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);

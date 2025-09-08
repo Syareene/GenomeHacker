@@ -22,7 +22,7 @@ public:
 	virtual void DrawObjectByTags(const std::list<std::string>& tags);
 
 	template<typename T>
-	T* AddGameObject(int layerNum)
+	T* AddGameObject(int layerNum, Transform trans = Transform())
 	{
 		// 中で型を比べる
 		if constexpr (!std::is_base_of_v<Object3D, T> && !std::is_base_of_v<Object2D, T>)
@@ -33,7 +33,7 @@ public:
 		// 初期化処理実行
 		std::unique_ptr<T> game_obj = std::make_unique<T>();
 		// 初期化に引数ありの場合はreturnから実行する形にかな
-		game_obj->Init();
+		game_obj->Init(trans);
 
 		if constexpr (std::is_base_of_v<Object2D, T>)
 		{

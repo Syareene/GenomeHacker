@@ -1,7 +1,7 @@
 ﻿#include "object/ui/in_game/enemy_node.h"
 #include "object/game_object.h"
 
-void EnemyNode::Init()
+void EnemyNode::Init(Transform trans)
 {
 	// 置きたいオブジェクトを軒並みセットする
 	

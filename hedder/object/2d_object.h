@@ -9,7 +9,10 @@ class Object2D : public GameObject
 public:
 	virtual ~Object2D() { OutputDebugStringA("~Object2D\n"); }
 	// エラー解消用にコメントアウト
-	void Init() override {}
+	void Init(Transform trans = Transform()) override
+	{
+		SetTransform(trans);
+	};
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}

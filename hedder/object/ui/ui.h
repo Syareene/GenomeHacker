@@ -6,7 +6,10 @@ class UI : public Object2D
 {
 public:
 	virtual ~UI() { OutputDebugStringA("~UI\n"); }
-	void Init() override {}
+	void Init(Transform trans = Transform()) override 
+	{
+		SetTransform(trans);
+	}
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}

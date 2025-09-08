@@ -46,7 +46,7 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	m_TargetFunc = func; // コールバック関数を設定
 }
 
-void Button::Init()
+void Button::Init(Transform trans)
 {
 	
 }

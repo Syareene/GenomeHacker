@@ -8,7 +8,7 @@
 #include "enemy/enemy.h"
 #include "enemy/explosion.h"
 
-void Bullet::Init()
+void Bullet::Init(Transform trans)
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();

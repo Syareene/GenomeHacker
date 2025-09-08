@@ -44,7 +44,7 @@ public:
 			Init();
 		}
 	}
-	void Init() override; // 画像登録処理
+	void Init(Transform trans = Transform()) override; // 画像登録処理
 	void Uninit() override; // 画像終了処理
 	void Update() override; // 動かすなら、、というか動く系のUIを作る場合は別途overrideかな？
 	// moveuiみたいなクラス作ってあげればa->bに動かすとかできるねぇ、でもその場合はunityと同様に独自でクラス(script)作れば良い気が

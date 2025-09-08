@@ -10,7 +10,7 @@ class DeathTab;
 class DnaScreenScript : public Panel
 {
 public:
-	void Init() override;
+	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

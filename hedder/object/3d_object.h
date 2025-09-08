@@ -11,7 +11,10 @@ class Object3D : public GameObject
 {
 public:
 	// エラー解消用にコメントアウト
-	void Init() override {}
+	void Init(Transform trans = Transform()) override
+	{
+		SetTransform(trans);
+	};
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}

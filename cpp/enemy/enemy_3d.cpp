@@ -6,7 +6,7 @@
 #include "object/camera.h"
 #include "manager.h"
 
-void Enemy3D::Init()
+void Enemy3D::Init(Transform trans)
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();

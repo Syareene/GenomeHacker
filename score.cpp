@@ -4,7 +4,7 @@
 #include "lib/mouse.h"
 
 
-void Score::Init()
+void Score::Init(Transform trans)
 {
 	// 頂点データ
 	VERTEX_3D vertex[4];

@@ -7,7 +7,7 @@
 #include "shader_manager.h"
 
 
-void Explosion::Init()
+void Explosion::Init(Transform trans)
 {
 	VERTEX_3D vertex[4];
 

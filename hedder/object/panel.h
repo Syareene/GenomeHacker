@@ -13,7 +13,7 @@ private:
 	std::list<std::unique_ptr<GameObject>> m_ChildObjects; // 子オブジェクトのリスト
 	// このとき子オブジェクトからdestoryとかが呼ばれた際にこのリストからちゃんと消えるか問題はあるよねぇ、、->updateのところに消す処理書いたけどunique_ptrにしてないので変える必要あり
 public:
-	void Init() override;
+	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

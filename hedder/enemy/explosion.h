@@ -5,7 +5,7 @@
 class Explosion : public Object3D
 {
 public:
-	void Init() override;
+	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

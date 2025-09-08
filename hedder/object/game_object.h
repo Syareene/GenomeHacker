@@ -51,7 +51,10 @@ protected:
 
 public:
 	virtual ~GameObject() { OutputDebugStringA("~GameObject\n"); }
-	virtual void Init() {};
+	virtual void Init(Transform trans = Transform()) 
+	{
+		SetTransform(trans);
+	};
 	virtual void Uninit() {};
 	virtual void Update() {};
 	virtual void Draw() {};

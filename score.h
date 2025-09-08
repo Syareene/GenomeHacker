@@ -5,7 +5,7 @@
 class Score : public Object2D
 {
 public:
-	void Init() override; // 
+	void Init(Transform trans = Transform()) override; // 
 	void Uninit() override; // 
 	void Update() override; // 
 	void Draw() override; // 

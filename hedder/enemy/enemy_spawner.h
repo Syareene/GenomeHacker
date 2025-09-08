@@ -28,7 +28,12 @@ private:
 		if (m_SpawnCount >= 30) return false;
 
 		// objectをフィールドに追加
-		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0);
+		Transform trans;
+		trans.SetPosition(spawn_pos);
+		trans.SetRotation({ 0.0f, 0.0f, 0.0f });
+		trans.SetScale({ 1.0f, 1.0f, 1.0f });
+
+		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0, trans);
 
 
 		// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
@@ -45,8 +50,8 @@ private:
 				enemy->SetEnemyBase(base.get());
 				enemy->SetCurrentHP(base.get()->GetMaxHealth());
 
-				// スポーン時の座標及びテクスチャによるズレを補正
-				enemy->SetPosition(spawn_pos + base.get()->GetDrawPosDiff());
+				// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形で
+				//enemy->SetPosition(base.get()->GetDrawPosDiff());
 				enemy->SetScale(enemy->GetScale().mul(base.get()->GetDrawScaleDiff()));
 
 				// コライダをセット

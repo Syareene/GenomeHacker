@@ -5,7 +5,7 @@
 #include "player.h"
 #include "input.h"
 
-void Camera::Init()
+void Camera::Init(Transform trans)
 {
 	SetPosition(Vector3(0.0f, 1.0f, -5.0f));
 }

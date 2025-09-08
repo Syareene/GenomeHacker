@@ -6,7 +6,7 @@
 #include "object/camera.h"
 #include "manager.h"
 
-void SkyDome::Init()
+void SkyDome::Init(Transform trans)
 {
 	// モデル読み込み
 	m_ModelRenderer = new ModelRenderer();

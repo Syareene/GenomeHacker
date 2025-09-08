@@ -8,8 +8,13 @@
 #include "collider/sphere.h"
 #include "player.h"
 
-void FieldEnemy::Init()
+void FieldEnemy::Init(Transform trans)
 {
+	// 初期座標で設定する
+	SetPosition(trans.GetPosition());
+	SetRotation(trans.GetRotation());
+	SetScale(trans.GetScale());
+
 	// 初期化処理
 	// コリジョンを有効化する
 	Sphere* collider = SetCollider<Sphere>();
@@ -17,7 +22,7 @@ void FieldEnemy::Init()
 
 	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
 	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
-	GetCollider()->SetScale(Vector3(0.150f, 0.150f, 0.150f));
+	GetCollider()->SetScale(Vector3(0.20f, 0.20f, 0.20f));
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない

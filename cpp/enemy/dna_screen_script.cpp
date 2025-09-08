@@ -12,7 +12,7 @@
 // 初期化時に属するクラスを勝手に登録する形に
 // あとは全体を管理するスクリプトを記載。
 
-void DnaScreenScript::Init()
+void DnaScreenScript::Init(Transform trans)
 {
 	// 一括管理するために下位オブジェクトを生成
 

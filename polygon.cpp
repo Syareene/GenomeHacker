@@ -6,7 +6,7 @@
 #include "shader_manager.h"
 
 
-void Polygon2D::Init()
+void Polygon2D::Init(Transform trans)
 {
 	SetVertexBuffer(nullptr);
 

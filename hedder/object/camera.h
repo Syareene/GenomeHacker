@@ -13,7 +13,7 @@ private:
 	float m_FieldOfViewY = 0.0f;
 	float m_AspectRatio = 0.0f;
 public:
-	void Init() override;
+	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

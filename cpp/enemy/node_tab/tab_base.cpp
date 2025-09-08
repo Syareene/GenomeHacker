@@ -1,6 +1,6 @@
 ﻿#include "enemy/node_tab/tab_base.h"
 
-void TabBase::Init()
+void TabBase::Init(Transform trans)
 {
 	// タブの初期化処理
 	Button::Init();

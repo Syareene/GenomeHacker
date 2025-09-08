@@ -8,7 +8,7 @@ class EnemyNode : public Panel
 {
 	// 内包するオブジェクトはinit時に代入する感じに。
 public:
-	void Init() override;
+	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override; // 描画処理

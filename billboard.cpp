@@ -12,7 +12,7 @@
 
 // textureとshaderはflyweightにしないとね
 
-void BillBoard::Init()
+void BillBoard::Init(Transform trans)
 {
 	VERTEX_3D vertex[4];
 
@@ -57,6 +57,7 @@ void BillBoard::Init()
 
 	// 変数初期化
 	m_FrameCount = 0;
+	SetTransform(trans);
 }
 
 void BillBoard::Uninit()
