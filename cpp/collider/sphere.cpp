@@ -155,8 +155,8 @@ bool Sphere::CheckCollisionSphere(const Collision& other) const
 	// Sphereの中心位置と半径を取得
 	Vector3 pos1 = GetCenter();
 	Vector3 pos2 = other.GetCenter();
-	float radius1 = GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
-	float radius2 = other.GetScale().x * 0.5f;
+	float radius1 = GetScale().x * 1.0f; // 半径はスケールの値
+	float radius2 = other.GetScale().x * 1.0f;
 	// 中心間の距離を計算
 	Vector3 diff = pos1 - pos2;
 	float distanceSquared = diff.lengthSquared();
@@ -177,7 +177,7 @@ bool Sphere::CheckCollisionAABB(const Collision& other) const
 	Vector3 min1 = pos1 - scale1 * 0.5f;
 	Vector3 max1 = pos1 + scale1 * 0.5f;
 	Vector3 pos2 = GetCenter();
-	float radius2 = GetScale().x * 0.5f; // 半径はスケールの一辺の半分と仮定
+	float radius2 = GetScale().x * 1.0f; // 半径はスケールの値
 
 	// AABBの中心からSphereの中心までの最近点を計算
 	Vector3 closestPoint(
