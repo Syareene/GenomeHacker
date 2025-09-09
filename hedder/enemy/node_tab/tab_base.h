@@ -26,7 +26,7 @@ public:
 	virtual void Clicked(); // クリックされたときの処理
 	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	template <typename T>
-	T* AddNode(int index) // ノードを追加
+	T* AddNode(const int& index) // ノードを追加
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
 

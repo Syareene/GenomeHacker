@@ -24,12 +24,12 @@ public:
 	{
 		return m_CurrentScene;
 	}
-	static void SetGameSpeed(float speed)
+	static void SetGameSpeed(const float& speed)
 	{
 		m_GameSpeed = speed;
 	}
 
-	static float GetGameSpeed()
+	const static float GetGameSpeed()
 	{
 		return m_GameSpeed;
 	}

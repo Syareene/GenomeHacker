@@ -87,10 +87,10 @@ public:
 	virtual bool CheckCollisionOBB(const Collision& other) const = 0;
 
 	// データ取得
-	Vector3 GetCenter() const { return m_Center; }
-	Vector3 GetScale() const { return m_Scale; }
-	Vector3 GetRotation() const { return m_Rotation; }
-	bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
+	const Vector3 GetCenter() const { return m_Center; }
+	const Vector3 GetScale() const { return m_Scale; }
+	const Vector3 GetRotation() const { return m_Rotation; }
+	const bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
 	//float GetRadius() const { return m_Radius; } // Sphere用
 	// データセット
 	void SetCenter(const Vector3& center) { m_Center = center; }

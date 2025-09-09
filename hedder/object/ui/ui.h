@@ -44,8 +44,8 @@ public:
 	// 各派生クラスを作る
 
 public:
-	void SetNoUpdate(bool noUpdate) { m_NoUpdate = noUpdate; }
-	bool GetNoUpdate() const { return m_NoUpdate; }
+	void SetNoUpdate(const bool noUpdate) { m_NoUpdate = noUpdate; }
+	const bool GetNoUpdate() const { return m_NoUpdate; }
 private:
 	bool m_NoUpdate = false; // 更新しないUIかどうか
 };

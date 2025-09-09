@@ -14,8 +14,8 @@ public:
 	
 	void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
 	EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
-	void SetCurrentHP(float hp) { m_CurrentHP = hp; }
-	float GetCurrentHP() const { return m_CurrentHP; }
+	void SetCurrentHP(const float hp) { m_CurrentHP = hp; }
+	const float GetCurrentHP() const { return m_CurrentHP; }
 private:
 	bool m_IsHit = false; // 当たったかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 自身の元データへのポインタ

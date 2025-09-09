@@ -4,7 +4,7 @@
 #include "texture_manager.h"
 #include "shader_manager.h"
 
-void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, const std::wstring filePath, const std::wstring frameTexPath)
+void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring filePath, const std::wstring frameTexPath)
 {
 	// ボタンの初期化処理
 	SetPosition(Vector3(pos.x, pos.y, 0.0f));
@@ -25,7 +25,7 @@ void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 sc
 	m_TargetFunc = func; // コールバック関数を設定
 }
 
-void Button::Register(const std::function<void()>& func, Vector2 pos, Vector2 scale, Vector2 rot, int texID, const std::wstring frameTexPath)
+void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const int& texID, const std::wstring frameTexPath)
 {
 	// ボタンの初期化処理
 	SetPosition(Vector3(pos.x, pos.y, 0.0f));

@@ -33,7 +33,7 @@ public:
 	// ノードの処理効果
 protected:
 	// くっつけられるか判定関数
-	bool CanAttach(InputType type) const;
+	const bool CanAttach(InputType& type) const;
 private:
 	std::list<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::list<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)

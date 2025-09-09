@@ -47,7 +47,7 @@ protected:
 	void SetWorldMatrixOnDrawBillboard(); // ビルボード用のワールドマトリックス設定
 	void SetProjectionMatrixOnDraw();
 	void SetViewMatrixOnDraw();
-	void SetMaterialOnDraw(XMFLOAT4 diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4 amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), bool texEnable = true);
+	void SetMaterialOnDraw(const XMFLOAT4& diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const XMFLOAT4& amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const bool& texEnable = true);
 
 public:
 	virtual ~GameObject() { OutputDebugStringA("~GameObject\n"); }
@@ -62,19 +62,19 @@ public:
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
 	
-	void AddPosition(Vector3 Position, bool calcWorldSpeed = true);
+	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
 	const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
 	void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
 	Vector3& GetVelocity() { return m_Velocity; }
-	void SetVelocity(Vector3 Velocity) { m_Velocity = Velocity; }
+	void SetVelocity(const Vector3& Velocity) { m_Velocity = Velocity; }
 	const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
 	void SetRotation(const Vector3& Rotation) { m_Transform.SetRotation(Rotation); }
 	const Vector3& GetScale() const { return m_Transform.GetScale(); }
 	void SetScale(const Vector3& Scale) { m_Transform.SetScale(Scale); }
 	const Transform& GetTransform() const { return m_Transform; }
-	void SetTransform(Transform Transform) { m_Transform = Transform; }
+	void SetTransform(const Transform& Transform) { m_Transform = Transform; }
 	int GetTextureID() const { return m_TextureID; }
-	void SetTextureID(int TextureID) { m_TextureID = TextureID; }
+	void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
 	std::list<std::string>& GetTagList() { return m_Tag; }
 	bool IsTagAvailable(const std::string& tagName) const
 	{
@@ -88,12 +88,12 @@ public:
 		return false; // 見つからなかった場合
 	}
 	void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
-	void SetObjectSpeedMlt(float speedMlt) { m_ObjSpeedMlt = speedMlt; }
-	float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
-	bool IsActive() const { return m_IsActive; }
-	void SetActive(bool IsActive) { m_IsActive = IsActive; }
-	void SetDestory(bool Destroy) { m_Destroy = Destroy; }
-	bool IsDestory() const { return m_Destroy; }
+	void SetObjectSpeedMlt(const float& speedMlt) { m_ObjSpeedMlt = speedMlt; }
+	const float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
+	const bool IsActive() const { return m_IsActive; }
+	void SetActive(const bool& IsActive) { m_IsActive = IsActive; }
+	void SetDestory(const bool& Destroy) { m_Destroy = Destroy; }
+	const bool IsDestory() const { return m_Destroy; }
 	bool Destroy()
 	{ 
 		if (m_Destroy)
@@ -104,8 +104,8 @@ public:
 		return false;
 	}
 
-	Vector3 GetRight() const;
-	Vector3 GetUp() const;
-	Vector3 GetForward() const;
-	float GetDistance(Vector3 Position);
+	const Vector3 GetRight() const;
+	const Vector3 GetUp() const;
+	const Vector3 GetForward() const;
+	float GetDistance(const Vector3& Position) const;
 };

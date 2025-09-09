@@ -22,6 +22,6 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	void SetState(State state) { m_WillState = state; } // 状態を設定する関数->これシーンの最後に状態切り替えるような処理にしておくこと
-	State GetState() const { return m_State; } // 現在の状態を取得する関数
+	void SetState(const State& state) { m_WillState = state; } // 状態を設定する関数->これシーンの最後に状態切り替えるような処理にしておくこと
+	const State GetState() const { return m_State; } // 現在の状態を取得する関数
 };

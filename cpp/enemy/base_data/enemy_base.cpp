@@ -93,7 +93,7 @@ int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> tex
 	return m_TextureID; // 成功した場合はテクスチャIDを返す
 }
 
-void EnemyBase::ShowToDnaButton(Vector2 pos, const std::wstring filePath)
+void EnemyBase::ShowToDnaButton(const Vector2& pos, const std::wstring filePath)
 {
 	// DNAタブへの遷移ボタンを表示
 	// ここでボタンを生成して表示する処理を実装

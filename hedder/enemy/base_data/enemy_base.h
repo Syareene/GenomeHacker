@@ -19,7 +19,7 @@ public:
 
 	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
 	// ただ関数としてはここにほしいかな
-	void ShowToDnaButton(Vector2 pos, const std::wstring filePath);
+	void ShowToDnaButton(const Vector2& pos, const std::wstring filePath);
 	void HideToDnaButton();
 	// インスタンスを都度生成すると重たすぎるが保持しすぎてもメモリを圧迫するっていう
 	// 一旦都度生成でいく
@@ -34,16 +34,16 @@ public:
 	int GetEnemyID() const { return m_EnemyID; }
 
 	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
-	int GetEnemyTextureID() const { return m_TextureID; }
+	const int GetEnemyTextureID() const { return m_TextureID; }
 
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
-	void SetMaxHealth(float maxHealth) { m_MaxHealth = maxHealth; }
-	float GetMaxHealth() const { return m_MaxHealth; }
+	void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
+	const float GetMaxHealth() const { return m_MaxHealth; }
 
-	void SetDrawPosDiff(Vector3 posDiff) { m_PosDiff = posDiff; }
-	Vector3& GetDrawPosDiff() { return m_PosDiff; }
-	void SetDrawScaleDiff(Vector3 scaleDiff) {m_ScaleDiff = scaleDiff;}
-	Vector3& GetDrawScaleDiff() { return m_ScaleDiff; }
+	void SetDrawPosDiff(const Vector3& posDiff) { m_PosDiff = posDiff; }
+	const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
+	void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
+	const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
 	std::unique_ptr<DnaScreenScript> m_DnaScreen; // dnaタブをまとめているpanel->初期化時に自身のnodeを持つために作成する必要あり
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い

@@ -190,7 +190,7 @@ public:
     // 重い版読み込み(std::threadを使った非同期読み込み処理)
 
 	// テクスチャの取得
-	static ID3D11ShaderResourceView* GetTexture(int id)
+	static ID3D11ShaderResourceView* GetTexture(const int id)
 	{
 		// idが存在しない場合はnullptrを返す
 		if (m_TextureMap.find(id) == m_TextureMap.end())

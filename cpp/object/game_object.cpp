@@ -4,7 +4,7 @@
 #include "default_vertex.h"
 
 
-void GameObject::AddPosition(Vector3 Position, bool calcWorldSpeed)
+void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed)
 {
 	if (calcWorldSpeed)
 	{
@@ -176,7 +176,7 @@ void GameObject::SetViewMatrixOnDraw()
 	Renderer::SetViewMatrix(view);
 }
 
-void GameObject::SetMaterialOnDraw(XMFLOAT4 diff, XMFLOAT4 amb, bool texEnable)
+void GameObject::SetMaterialOnDraw(const XMFLOAT4& diff, const XMFLOAT4& amb, const bool& texEnable)
 {
 	MATERIAL material;
 	material.Diffuse = diff;
@@ -186,7 +186,7 @@ void GameObject::SetMaterialOnDraw(XMFLOAT4 diff, XMFLOAT4 amb, bool texEnable)
 	Renderer::SetMaterial(material);
 }
 
-Vector3 GameObject::GetRight() const
+const Vector3 GameObject::GetRight() const
 {
 	// 回転行列から右方向のベクトルを取得
 	XMMATRIX matrix;
@@ -196,7 +196,7 @@ Vector3 GameObject::GetRight() const
 	XMStoreFloat3((XMFLOAT3*)&right, matrix.r[0]);
 	return right;
 }
-Vector3 GameObject::GetUp() const
+const Vector3 GameObject::GetUp() const
 {
 	// 回転行列から上方向のベクトルを取得
 	XMMATRIX matrix;
@@ -207,7 +207,7 @@ Vector3 GameObject::GetUp() const
 	return up;
 }
 
-Vector3 GameObject::GetForward() const
+const Vector3 GameObject::GetForward() const
 {
 	// 回転行列から前方向のベクトルを取得
 	XMMATRIX matrix;
@@ -218,7 +218,7 @@ Vector3 GameObject::GetForward() const
 	return forward;
 }
 
-float GameObject::GetDistance(Vector3 Position)
+float GameObject::GetDistance(const Vector3& Position) const
 {
 	return (Position - GetPosition()).length();
 }

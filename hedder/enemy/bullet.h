@@ -10,7 +10,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void SetVelocity(const Vector3& velocity) { m_Velocity = velocity; }
-	Vector3 GetVelocity() const { return m_Velocity; }
+	const Vector3 GetVelocity() const { return m_Velocity; }
 private:
 	ID3D11VertexShader* m_VertexShader = nullptr;
 	ID3D11PixelShader* m_PixelShader = nullptr;

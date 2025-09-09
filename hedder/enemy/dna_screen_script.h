@@ -7,6 +7,8 @@ class AttackTab;
 class MoveTab;
 class DeathTab;
 
+// ここ仕組み変えないとダメそう
+
 class DnaScreenScript : public Panel
 {
 public:
