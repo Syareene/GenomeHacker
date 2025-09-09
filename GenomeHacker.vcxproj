@@ -29,7 +29,6 @@
     <ClInclude Include="hedder\enemy\base_data\slime.h" />
     <ClInclude Include="hedder\enemy\bullet.h" />
     <ClInclude Include="hedder\enemy\dna_screen_script.h" />
-    <ClInclude Include="hedder\enemy\enemy.h" />
     <ClInclude Include="hedder\enemy\enemy_3d.h" />
     <ClInclude Include="hedder\enemy\enemy_spawner.h" />
     <ClInclude Include="hedder\enemy\explosion.h" />
@@ -53,7 +52,6 @@
     <ClInclude Include="hedder\object\field.h" />
     <ClInclude Include="hedder\object\game_object.h" />
     <ClInclude Include="hedder\object\panel.h" />
-    <ClInclude Include="hedder\object\polygon.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
     <ClInclude Include="hedder\object\ui\in_game\enemy_node.h" />
@@ -84,7 +82,6 @@
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
-    <ClCompile Include="cpp\enemy\enemy.cpp" />
     <ClCompile Include="cpp\enemy\enemy_3d.cpp" />
     <ClCompile Include="cpp\enemy\enemy_spawner.cpp" />
     <ClCompile Include="cpp\enemy\explosion.cpp" />
@@ -115,7 +112,6 @@
     <ClCompile Include="modelRenderer.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="polygon.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="shader_manager.cpp" />

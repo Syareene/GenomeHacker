@@ -1,7 +1,6 @@
 ﻿#include "scene/title_scene.h"
 #include "renderer.h"
 #include "manager.h"
-#include "object/polygon.h"
 #include "input.h"
 #include "scene/game_scene.h"
 #include "object/ui/image.h"

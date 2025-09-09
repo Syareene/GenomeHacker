@@ -147,9 +147,6 @@
     <ClInclude Include="hedder\object\game_object.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\object\polygon.h">
-      <Filter>ヘッダー ファイル\object</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\object\ui\ui.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
@@ -196,9 +193,6 @@
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
     <ClInclude Include="hedder\enemy\bullet.h">
-      <Filter>ヘッダー ファイル\enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="hedder\enemy\enemy.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
     <ClInclude Include="hedder\enemy\explosion.h">
@@ -284,9 +278,6 @@
     <ClCompile Include="field.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
-    <ClCompile Include="polygon.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\player</Filter>
     </ClCompile>
@@ -330,9 +321,6 @@
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\bullet.cpp">
-      <Filter>ソース ファイル\enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\enemy.cpp">
       <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\explosion.cpp">

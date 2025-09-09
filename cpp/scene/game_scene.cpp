@@ -1,9 +1,7 @@
 ﻿#include "scene/game_scene.h"
 #include "object/camera.h"
 #include "object/field.h"
-#include "enemy/enemy.h"
 #include "player.h"
-#include "object/polygon.h"
 #include "object/ui/image.h"
 #include "lib/vector3.h"
 #include "particle.h"
@@ -21,9 +19,6 @@ void GameScene::Init()
 
 	AddGameObject<Camera>(0);
 	AddGameObject<Field>(0);
-	//AddGameObject<Enemy>(0)->SetPosition({ 3.0f, 1.0f, 0.0f });
-	//AddGameObject<Enemy>(0)->SetPosition({ 5.0f, 0.0f, 0.0f });
-	//AddGameObject<Enemy>(0)->SetPosition({ 8.0f, 0.0f, 0.0f });
 	AddGameObject<Player>(0);
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);

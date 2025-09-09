@@ -5,7 +5,6 @@
 #include "input.h"
 #include "object/camera.h"
 #include "manager.h"
-#include "enemy/enemy.h"
 #include "enemy/field_enemy.h"
 #include "collider/sphere.h"
 #include "enemy/explosion.h"
