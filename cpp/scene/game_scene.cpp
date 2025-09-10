@@ -117,7 +117,7 @@ void GameScene::Update()
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
 		// Enterキーが押されたらリザルトシーンに遷移
-		Manager::SetScene(std::make_unique<ResultScene>());
+		Manager::SetScene<ResultScene>();
 	}
 }
 

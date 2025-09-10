@@ -15,10 +15,11 @@ public:
 	static void Update();
 	static void Draw();
 
-	static void SetScene(std::unique_ptr<Scene> scene)
+	template <typename T>
+	static void SetScene()
 	{
 		// 次に生成したいシーンを設定
-		m_NextScene = std::move(scene);
+		m_NextScene = std::make_unique<T>();
 	}
 	static std::unique_ptr<Scene>& GetCurrentScene()
 	{

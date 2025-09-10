@@ -23,6 +23,6 @@ void TitleScene::Update()
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
 		// Enterキーが押されたらゲームシーンに遷移
-		Manager::SetScene(std::make_unique<GameScene>());
+		Manager::SetScene<GameScene>();
 	}
 }
