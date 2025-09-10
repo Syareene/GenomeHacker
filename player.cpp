@@ -18,12 +18,10 @@ void Player::Init(Transform trans)
 	m_ModelRenderer->Load("asset\\model\\player.obj");
 
 	// コリジョンを有効化する
+	Transform transform;
+	transform.SetPosition(GetPosition());
 	Sphere* collider = SetCollider<Sphere>();
-	collider->Init();
-
-	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 1.0f, 0.0f));
-	GetCollider()->SetScale(Vector3(1.0f, 1.0f, 1.0f));
+	collider->Init(transform, Vector3(0.0f, 1.0f, 0.0f));
 
 	AddTag("InGame");
 	AddTag("Player");
@@ -67,7 +65,7 @@ void Player::Update()
 	}
 
 	// コライダの場所更新(これ自動更新になるように変えたいね～～)
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 1.0f, 0.0f));
+	GetCollider()->Update(GetPosition());
 
 	if (Input::GetKeyTrigger(VK_SPACE))
 	{
@@ -96,7 +94,7 @@ void Player::Draw()
 	XMMATRIX trans, world, rot, scale;
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
 	//rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y + XM_PI, GetRotation().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y + XM_PI, GetRadian().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);

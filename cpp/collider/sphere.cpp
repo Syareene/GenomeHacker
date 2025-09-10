@@ -5,8 +5,14 @@
 
 ID3D11Buffer* Sphere::m_VertexBuffer = nullptr;
 
-void Sphere::Init()
+void Sphere::Init(const Transform& trans, const Vector3& pos_diff)
 {
+	// プロパティをセット
+	SetTransform(trans);
+	SetPositionOffset(pos_diff);
+	// pos_diff加算
+	SetPosition(GetPosition() + GetPositionOffset());
+
 	if(m_VertexBuffer)
 	{
 		// 既に生成されている
@@ -37,9 +43,10 @@ void Sphere::Uninit()
 	}
 }
 
-void Sphere::Update()
+void Sphere::Update(const Vector3& obj_pos)
 {
-	// 特に何もしない
+	// オブジェクトの位置にオフセットを加えた位置に更新
+	SetPosition(obj_pos + GetPositionOffset());
 }
 
 
@@ -59,8 +66,8 @@ void Sphere::DrawCollider()
 
 	// 移動、回転マトリックス設定
 	XMMATRIX trans, world, rot, scale;
-	trans = XMMatrixTranslation(GetCenter().x, GetCenter().y, GetCenter().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, 1.0f);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
@@ -97,8 +104,8 @@ void Sphere::DrawCollider()
 	// 縦には生成できたので回転し横向きにも描画
 	
 	// 移動、回転マトリックス設定
-	trans = XMMatrixTranslation(GetCenter().x, GetCenter().y, GetCenter().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x - 89.5f, GetRotation().y, GetRotation().z);
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw((GetRotation().x - 90.0f) * XM_PI / 180, GetRadian().y, GetRadian().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, 1.0f);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
@@ -153,8 +160,8 @@ bool Sphere::CheckCollision(const Collision& other)
 bool Sphere::CheckCollisionSphere(const Collision& other) const
 {
 	// Sphereの中心位置と半径を取得
-	Vector3 pos1 = GetCenter();
-	Vector3 pos2 = other.GetCenter();
+	Vector3 pos1 = GetPosition();
+	Vector3 pos2 = other.GetPosition();
 	float radius1 = GetScale().x * 1.0f; // 半径はスケールの値
 	float radius2 = other.GetScale().x * 1.0f;
 	// 中心間の距離を計算
@@ -172,11 +179,11 @@ bool Sphere::CheckCollisionAABB(const Collision& other) const
 	// AABBの中心位置と半径を取得
 
 	// こっちはAABB
-	Vector3 pos1 = other.GetCenter();
+	Vector3 pos1 = other.GetPosition();
 	Vector3 scale1 = other.GetScale();
 	Vector3 min1 = pos1 - scale1 * 0.5f;
 	Vector3 max1 = pos1 + scale1 * 0.5f;
-	Vector3 pos2 = GetCenter();
+	Vector3 pos2 = GetPosition();
 	float radius2 = GetScale().x * 1.0f; // 半径はスケールの値
 
 	// AABBの中心からSphereの中心までの最近点を計算

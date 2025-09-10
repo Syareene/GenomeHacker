@@ -10,15 +10,10 @@ struct VERTEX_3D; // 前方宣言
 class Sphere : public Collision
 {
 public:
-	void Init() override;
+	void Init(const Transform& trans = Transform(), const Vector3& pos_diff = { 0.0f, 0.0f, 0.0f }) override;
 	void Uninit() override;
-	void Update() override;
+	void Update(const Vector3& obj_pos) override;
 	void DrawCollider() override;
-	void SetSphereProperty(const Vector3& center, const Vector3& size) override
-	{
-		// 衝突判定のプロパティ設定
-		Collision::SetSphereProperty(center, size);
-	}
 
 	// コリジョン取得
 	bool CheckCollision(const Collision& other) override;

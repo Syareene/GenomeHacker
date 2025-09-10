@@ -15,9 +15,15 @@ class Collision
 	// Gameobjectにアタッチする用のプロパティ
 public:
 	virtual ~Collision() = default; // 未定義警告解消用。基本どの継承元クラスもvirtual destructorを持つべきかなぁ。
-	virtual void Init() {};
+	virtual void Init(const Transform& trans = Transform(), const Vector3& pos_diff = { 0.0f, 0.0f, 0.0f }) 
+	{
+		SetTransform(trans);
+		SetPositionOffset(pos_diff);
+		// pos_diff加算
+		SetPosition(GetPosition() + GetPositionOffset());
+	};
 	virtual void Uninit() {};
-	virtual void Update() {};
+	virtual void Update(const Vector3& obj_pos);
 	virtual void DrawCollider(); // デバッグ用の衝突判定の可視化
 
 	// 外部からはこっちの関数使って判定してもらう
@@ -87,28 +93,27 @@ public:
 	virtual bool CheckCollisionOBB(const Collision& other) const = 0;
 
 	// データ取得
-	const Vector3 GetCenter() const { return m_Center; }
-	const Vector3 GetScale() const { return m_Scale; }
-	const Vector3 GetRotation() const { return m_Rotation; }
+	const Transform& GetTransform() const { return m_Transform; }
+	const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
+	const Vector3& GetScale() const { return m_Transform.GetScale(); }
+	const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
+	const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
+	const Vector3& GetPositionOffset() const { return m_PositionOffset; } // 中心位置のオフセット
 	const bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
-	//float GetRadius() const { return m_Radius; } // Sphere用
 	// データセット
-	void SetCenter(const Vector3& center) { m_Center = center; }
-	void SetScale(const Vector3& size) { m_Scale = size; }
-	void SetRotation(const Vector3& rotation) { m_Rotation = rotation; }
+	void SetTransform(const Transform trans) { m_Transform = trans; };
+	void SetPosition(const Vector3& center) { m_Transform.SetPosition(center); }
+	void SetScale(const Vector3& size) { m_Transform.SetScale(size); }
+	void SetRotation(const Vector3& rotation) { m_Transform.SetRotation(rotation); }
+	void SetPositionOffset(const Vector3& offset) { m_PositionOffset = offset; } // 中心位置のオフセット
 	void SetIsHit(bool isHit) {m_IsHit = isHit;}
-	//void SetRadius(float radius) { m_Radius = radius; } // Sphere
 protected:
-	virtual void SetSphereProperty(const Vector3& center, const Vector3& size);
-	virtual void SetAABBProperty(const Vector3& center, const Vector3& size);
-	virtual void SetOBBProperty(const Vector3& center, const Vector3& size, const Vector3& rotation);
+	//virtual void SetSphereProperty(const Vector3& center, const Vector3& size);
+	//virtual void SetAABBProperty(const Vector3& center, const Vector3& size);
+	//virtual void SetOBBProperty(const Vector3& center, const Vector3& size, const Vector3& rotation);
 private:
 	// 衝突判定のプロパティ
-	Vector3 m_Center = { 0.0f, 0.0f, 0.0f }; // 中心位置
-	Vector3 m_Scale = { 1.0f, 1.0f, 1.0f }; // サイズ(AABBとOBB用)
-	Vector3 m_Rotation = { 0.0f, 0.0f, 0.0f }; // 回転値(OBB用)
+	Transform m_Transform = Transform(); // Transform情報(位置、回転、スケール)
+	Vector3 m_PositionOffset = { 0.0f, 0.0f, 0.0f }; // 中心位置のオフセット(基本は0,0,0で良い)
 	bool m_IsHit = false; // 当たっているかどうか(当たっている間はtrue)
-	//float m_Radius = 1.0f; // Sphereの半径->scaleに統合しても良くないか?
-
-	// collisiontypeを判定するためにこれをoverrideして使ったほうがいいかなぁって気がしなくもない。
 };

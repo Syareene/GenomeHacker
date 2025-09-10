@@ -25,10 +25,11 @@ void Bullet::Init(Transform trans)
 	SetTransform(trans);
 
 	// コリジョンを有効化する
+	Transform transform;
+	transform.SetPosition(GetPosition());
+	transform.SetScale(Vector3(0.225f, 0.225f, 0.225f));
 	Sphere* collider = SetCollider<Sphere>();
-	collider->Init();
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
-	GetCollider()->SetScale(Vector3(0.225f, 0.225f, 0.225f));
+	collider->Init(transform);
 }
 
 void Bullet::Uninit()
@@ -58,7 +59,7 @@ void Bullet::Update()
 	}
 
 	// コライダの場所更新
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+	GetCollider()->Update(GetPosition());
 
 	// 敵との衝突判定
 	std::list<FieldEnemy*> enemies = GetCollider()->GetHitObjectsByType<FieldEnemy>();

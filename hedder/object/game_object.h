@@ -71,6 +71,7 @@ public:
 	void SetRotation(const Vector3& Rotation) { m_Transform.SetRotation(Rotation); }
 	const Vector3& GetScale() const { return m_Transform.GetScale(); }
 	void SetScale(const Vector3& Scale) { m_Transform.SetScale(Scale); }
+	const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
 	const Transform& GetTransform() const { return m_Transform; }
 	void SetTransform(const Transform& Transform) { m_Transform = Transform; }
 	int GetTextureID() const { return m_TextureID; }

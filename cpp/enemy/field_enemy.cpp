@@ -17,12 +17,12 @@ void FieldEnemy::Init(Transform trans)
 
 	// 初期化処理
 	// コリジョンを有効化する
-	Sphere* collider = SetCollider<Sphere>();
-	collider->Init();
+	Transform transform;
+	transform.SetPosition(GetPosition());
+	transform.SetScale(Vector3(0.30f, 0.30f, 0.30f));
 
-	// 一旦見た目ちゃんと表示してほしいのでcenterを上に上げる
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
-	GetCollider()->SetScale(Vector3(0.30f, 0.30f, 0.30f));
+	Sphere* collider = SetCollider<Sphere>();
+	collider->Init(transform);
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
@@ -46,8 +46,8 @@ void FieldEnemy::Update()
 	m_EnemyBase->ExecuteAttack();
 	m_EnemyBase->ExecuteMove();
 
-	// コライダの場所更新(これ自動更新になるように変えたいね～～)
-	GetCollider()->SetCenter(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
+	// コライダ更新
+	GetCollider()->Update(GetPosition());
 
 	// 当たってるコライダがあるかチェック
 	std::list<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();

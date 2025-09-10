@@ -143,7 +143,7 @@ void GameObject::SetWorldMatrixOnDraw()
 {
 	XMMATRIX trans, world, rot, scale;
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 	world = scale * rot * trans;
 	Renderer::SetWorldMatrix(world);
@@ -161,9 +161,8 @@ void GameObject::SetWorldMatrixOnDrawBillboard()
 	invView.r[3].m128_f32[1] = 0.0f;
 	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
 
-	XMMATRIX trans, world, rot, scale;
+	XMMATRIX trans, world, scale;
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
-	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 	world = scale * invView * trans;
 	Renderer::SetWorldMatrix(world);
