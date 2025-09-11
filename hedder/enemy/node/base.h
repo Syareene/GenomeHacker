@@ -26,14 +26,26 @@ public:
 
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
-	void Update() override;
+	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
-	virtual void NodeEffect();
+	virtual bool NodeEffect(); // cd管理して終わったならtrueを返す
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
+	const bool CanAttach(InputType& type) const;
 protected:
 	// くっつけられるか判定関数
-	const bool CanAttach(InputType& type) const;
+	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
+	inline void AddInputTypeBottom(const InputType& type) {m_InputTypesBottom.push_back(type);}
+	inline const std::string& GetName() const { return m_Name; }
+	inline void SetName(const std::string& name) { m_Name = name; }
+	inline const std::string& GetDescription() const { return m_Description; }
+	inline void SetDescription(const std::string& desc) { m_Description = desc; }
+	inline const int GetID() const { return m_ID; }
+	inline void SetID(const int id) { m_ID = id; }
+	inline const std::string& GetKeyword() const { return m_Keyword; }
+	inline void SetKeyword(const std::string& key) { m_Keyword = key; }
+	inline const int GetCD() const { return m_CD; }
+	inline void SetCD(const int cd) { m_CD = cd; }
 private:
 	std::list<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::list<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
@@ -44,5 +56,6 @@ private:
 	std::string m_Description; // ノードの説明文
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
+	int m_CD = 0; // ノードのクールダウン(フレーム数)
 	// 
 };
