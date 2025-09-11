@@ -12,6 +12,8 @@ class Object3D;
 class Scene
 {
 public:
+	Scene() = default;
+	Scene(Scene&& other) noexcept = default;
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
