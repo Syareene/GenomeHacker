@@ -7,7 +7,11 @@
 #include "object/3d_object.h"
 #include "object/2d_object.h"
 
-class Object3D;
+class Object3D; // 前方宣言
+
+// concept(c++20~)はクラス外で定義する必要あり
+template<typename T>
+concept SupportedGameObject = std::is_base_of_v<Object2D, T> || std::is_base_of_v<Object3D, T>;
 
 class Scene
 {
@@ -23,7 +27,7 @@ public:
 	virtual void DrawObjectByTag(const std::string& tag);
 	virtual void DrawObjectByTags(const std::list<std::string>& tags);
 
-	template<typename T>
+	template<SupportedGameObject T> // Object2DかObject3Dを継承した型のみ許可->謎にGameObjectだとエラーでないのを回避できる
 	T* AddGameObject(int layerNum, Transform trans = Transform())
 	{
 		// 中で型を比べる

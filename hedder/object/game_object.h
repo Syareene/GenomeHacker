@@ -50,7 +50,7 @@ protected:
 	void SetMaterialOnDraw(const XMFLOAT4& diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const XMFLOAT4& amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const bool& texEnable = true);
 
 public:
-	virtual ~GameObject() { OutputDebugStringA("~GameObject\n"); }
+	virtual ~GameObject() {}
 	virtual void Init(Transform trans = Transform()) 
 	{
 		SetTransform(trans);
@@ -106,8 +106,8 @@ public:
 		return false;
 	}
 
-	inline const Vector3 GetRight() const;
-	inline const Vector3 GetUp() const;
-	inline const Vector3 GetForward() const;
-	inline float GetDistance(const Vector3& Position) const;
+	const Vector3 GetRight() const;
+	const Vector3 GetUp() const;
+	const Vector3 GetForward() const;
+	float GetDistance(const Vector3& Position) const;
 };

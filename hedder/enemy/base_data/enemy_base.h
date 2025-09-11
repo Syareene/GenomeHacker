@@ -33,7 +33,7 @@ public:
 	inline void SetEnemyID(int id) { m_EnemyID = id; }
 	inline int GetEnemyID() const { return m_EnemyID; }
 
-	inline int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
+	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
 	inline const int GetEnemyTextureID() const { return m_TextureID; }
 
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
