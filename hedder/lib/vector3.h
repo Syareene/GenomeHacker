@@ -19,7 +19,7 @@ public:
 	Vector3(float x, float y, float z) : x(x), y(y), z(z) {};
 
 	// 代入
-	Vector3& operator=(const Vector3& v)
+	inline Vector3& operator=(const Vector3& v)
 	{
 		x = v.x;
 		y = v.y;
@@ -29,12 +29,12 @@ public:
 
 	// 比較チェック
 
-	bool operator==(const Vector3& v) const
+	inline bool operator==(const Vector3& v) const
 	{
 		return (x == v.x && y == v.y && z == v.z);
 	}
 
-	bool operator!=(const Vector3& v) const
+	inline bool operator!=(const Vector3& v) const
 	{
 		return (x != v.x || y != v.y || z != v.z);
 	}
@@ -42,48 +42,48 @@ public:
 	// ベクトル操作
 	
 	// ベクトルを0に設定する
-	void zero()
+	inline void zero()
 	{
 		x = y = z = 0.0f;
 	}
 
 	// 単位式のマイナスは反転したベクトルを返す
-	Vector3 operator-() const
+	inline Vector3 operator-() const
 	{
 		return Vector3(-x, -y, -z);
 	}
 
 	// 二項式の+と-は、ベクトルの加算と減算を行う
-	Vector3 operator+(const Vector3& v) const
+	inline Vector3 operator+(const Vector3& v) const
 	{
 		return Vector3(x + v.x, y + v.y, z + v.z);
 	}
 
-	Vector3 operator-(const Vector3& v) const
+	inline Vector3 operator-(const Vector3& v) const
 	{
 		return Vector3(x - v.x, y - v.y, z - v.z);
 	}
 
 	// ベクトル同士の要素ごとの乗算
-	Vector3 mul(const Vector3& v) const
+	inline Vector3 mul(const Vector3& v) const
 	{
 		return Vector3(x * v.x, y * v.y, z * v.z);
 	}
 
 	// スカラーによる乗算と除算
-	Vector3 operator*(float s) const
+	inline Vector3 operator*(float s) const
 	{
 		return Vector3(x * s, y * s, z * s);
 	}
 
-	Vector3 operator/(float s) const
+	inline Vector3 operator/(float s) const
 	{
 		float oneOverS = 1.0f / s;
 		return Vector3(x * oneOverS, y * oneOverS, z * oneOverS);
 	}
 
 	// 組み合わせ代入演算
-	Vector3& operator+=(const Vector3& v)
+	inline Vector3& operator+=(const Vector3& v)
 	{
 		x += v.x;
 		y += v.y;
@@ -91,7 +91,7 @@ public:
 		return *this;
 	}
 
-	Vector3& operator-=(const Vector3& v)
+	inline Vector3& operator-=(const Vector3& v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -99,7 +99,7 @@ public:
 		return *this;
 	}
 
-	Vector3& operator*=(float s)
+	inline Vector3& operator*=(float s)
 	{
 		x *= s;
 		y *= s;
@@ -107,7 +107,7 @@ public:
 		return *this;
 	}
 
-	Vector3& operator/=(float s)
+	inline Vector3& operator/=(float s)
 	{
 		float oneOverS = 1.0f / s;
 		x *= oneOverS;
@@ -117,7 +117,7 @@ public:
 	}
 
 	// ベクトルを正規化する
-	void normalize()
+	inline void normalize()
 	{
 		float length = x * x + y * y + z * z;
 		if (length > 0.0f)
@@ -130,19 +130,19 @@ public:
 	}
 
 	// ベクトルの内積
-	float operator*(const Vector3& v) const
+	inline float operator*(const Vector3& v) const
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
 
 	// ベクトルの長さを計算する
-	float length() const
+	inline float length() const
 	{
 		return sqrt(x * x + y * y + z * z);
 	}
 
 	// ベクトルの長さの二乗を計算する(判定時など、厳密な値がいらない場合はこっちを使ってコストを下げる)
-	float lengthSquared() const
+	inline float lengthSquared() const
 	{
 		return x * x + y * y + z * z;
 	}

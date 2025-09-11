@@ -17,15 +17,15 @@ public:
 	static void Update();
 	static void UpdateFinal();
 	// 状態取得系は参照したいクラスが呼ぶ
-	static bool IsRightButtonDown() { return m_RightButtonDown; }
-	static bool IsRightButtonTrigger() { return m_RightButtonTrigger; }
-	static bool IsLeftButtonDown() { return m_LeftButtonDown; }
-	static bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
-	static Vector2 GetPosition() { return m_Position; }
-	static Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
+	static inline bool IsRightButtonDown() { return m_RightButtonDown; }
+	static inline bool IsRightButtonTrigger() { return m_RightButtonTrigger; }
+	static inline bool IsLeftButtonDown() { return m_LeftButtonDown; }
+	static inline bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
+	static inline Vector2 GetPosition() { return m_Position; }
+	static inline Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
 	static void SetScreenMousePosition(Vector2 pos);
 	static bool IsMouseInsideArea(Vector2 startPos, Vector2 endPos);
-	static int GetWheelDiff() { return m_WheelDiff; }
+	static inline int GetWheelDiff() { return m_WheelDiff; }
 private:
 	static bool m_RightButtonDown; // 右クリックが押されているかどうか
 	static bool m_RightButtonUp; // 右クリックが離されたかどうか

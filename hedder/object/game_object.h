@@ -30,12 +30,12 @@ private:
 	// ここに描画系の簡易関数を作成する
 	// 後shaderのポインタも持ってていいね
 protected:
-	void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
-	ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
-	ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
-	void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
-	void SetPixelShader(ID3D11PixelShader* PixelShader) { m_PixelShader = PixelShader; }
-	void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
+	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
+	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
+	inline ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
+	inline void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
+	inline void SetPixelShader(ID3D11PixelShader* PixelShader) { m_PixelShader = PixelShader; }
+	inline void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
 	void UninitDrawMember();
 	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 
@@ -61,23 +61,24 @@ public:
 
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
-	
-	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
-	const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
-	void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
-	Vector3& GetVelocity() { return m_Velocity; }
-	void SetVelocity(const Vector3& Velocity) { m_Velocity = Velocity; }
-	const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
-	void SetRotation(const Vector3& Rotation) { m_Transform.SetRotation(Rotation); }
-	const Vector3& GetScale() const { return m_Transform.GetScale(); }
-	void SetScale(const Vector3& Scale) { m_Transform.SetScale(Scale); }
-	const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
-	const Transform& GetTransform() const { return m_Transform; }
-	void SetTransform(const Transform& Transform) { m_Transform = Transform; }
-	int GetTextureID() const { return m_TextureID; }
-	void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
-	std::list<std::string>& GetTagList() { return m_Tag; }
-	bool IsTagAvailable(const std::string& tagName) const
+	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
+
+	inline void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
+	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
+	inline void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
+	inline Vector3& GetVelocity() { return m_Velocity; }
+	inline void SetVelocity(const Vector3& Velocity) { m_Velocity = Velocity; }
+	inline const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
+	inline void SetRotation(const Vector3& Rotation) { m_Transform.SetRotation(Rotation); }
+	inline const Vector3& GetScale() const { return m_Transform.GetScale(); }
+	inline void SetScale(const Vector3& Scale) { m_Transform.SetScale(Scale); }
+	inline const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
+	inline const Transform& GetTransform() const { return m_Transform; }
+	inline void SetTransform(const Transform& Transform) { m_Transform = Transform; }
+	inline int GetTextureID() const { return m_TextureID; }
+	inline void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
+	inline std::list<std::string>& GetTagList() { return m_Tag; }
+	inline bool IsTagAvailable(const std::string& tagName) const
 	{
 		for (const auto& tag : m_Tag)
 		{
@@ -88,14 +89,14 @@ public:
 		}
 		return false; // 見つからなかった場合
 	}
-	void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
-	void SetObjectSpeedMlt(const float& speedMlt) { m_ObjSpeedMlt = speedMlt; }
-	const float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
-	const bool IsActive() const { return m_IsActive; }
-	void SetActive(const bool& IsActive) { m_IsActive = IsActive; }
-	void SetDestory(const bool& Destroy) { m_Destroy = Destroy; }
-	const bool IsDestory() const { return m_Destroy; }
-	bool Destroy()
+	inline void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
+	inline void SetObjectSpeedMlt(const float& speedMlt) { m_ObjSpeedMlt = speedMlt; }
+	inline const float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
+	inline const bool IsActive() const { return m_IsActive; }
+	inline void SetActive(const bool& IsActive) { m_IsActive = IsActive; }
+	inline void SetDestory(const bool& Destroy) { m_Destroy = Destroy; }
+	inline const bool IsDestory() const { return m_Destroy; }
+	inline bool Destroy()
 	{ 
 		if (m_Destroy)
 		{
@@ -105,8 +106,8 @@ public:
 		return false;
 	}
 
-	const Vector3 GetRight() const;
-	const Vector3 GetUp() const;
-	const Vector3 GetForward() const;
-	float GetDistance(const Vector3& Position) const;
+	inline const Vector3 GetRight() const;
+	inline const Vector3 GetUp() const;
+	inline const Vector3 GetForward() const;
+	inline float GetDistance(const Vector3& Position) const;
 };

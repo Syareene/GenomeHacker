@@ -93,20 +93,20 @@ public:
 	virtual bool CheckCollisionOBB(const Collision& other) const = 0;
 
 	// データ取得
-	const Transform& GetTransform() const { return m_Transform; }
-	const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
-	const Vector3& GetScale() const { return m_Transform.GetScale(); }
-	const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
-	const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
-	const Vector3& GetPositionOffset() const { return m_PositionOffset; } // 中心位置のオフセット
-	const bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
+	inline const Transform& GetTransform() const { return m_Transform; }
+	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
+	inline const Vector3& GetScale() const { return m_Transform.GetScale(); }
+	inline const Vector3& GetRotation() const { return m_Transform.GetRotation(); }
+	inline const Vector3& GetRadian() const { return m_Transform.GetRadian(); }
+	inline const Vector3& GetPositionOffset() const { return m_PositionOffset; } // 中心位置のオフセット
+	inline const bool GetIsHit() const { return m_IsHit; } // 当たっているかどうか
 	// データセット
-	void SetTransform(const Transform trans) { m_Transform = trans; };
-	void SetPosition(const Vector3& center) { m_Transform.SetPosition(center); }
-	void SetScale(const Vector3& size) { m_Transform.SetScale(size); }
-	void SetRotation(const Vector3& rotation) { m_Transform.SetRotation(rotation); }
-	void SetPositionOffset(const Vector3& offset) { m_PositionOffset = offset; } // 中心位置のオフセット
-	void SetIsHit(bool isHit) {m_IsHit = isHit;}
+	inline void SetTransform(const Transform trans) { m_Transform = trans; };
+	inline void SetPosition(const Vector3& center) { m_Transform.SetPosition(center); }
+	inline void SetScale(const Vector3& size) { m_Transform.SetScale(size); }
+	inline void SetRotation(const Vector3& rotation) { m_Transform.SetRotation(rotation); }
+	inline void SetPositionOffset(const Vector3& offset) { m_PositionOffset = offset; } // 中心位置のオフセット
+	inline void SetIsHit(bool isHit) {m_IsHit = isHit;}
 protected:
 	//virtual void SetSphereProperty(const Vector3& center, const Vector3& size);
 	//virtual void SetAABBProperty(const Vector3& center, const Vector3& size);

@@ -24,7 +24,7 @@ public:
 		m_Collider = std::make_unique<T>();
 		return dynamic_cast<T*>(m_Collider.get());
 	};
-	Collision* GetCollider() const { return m_Collider.get(); }
+	inline Collision* GetCollider() const { return m_Collider.get(); }
 private:
 	std::unique_ptr<Collision> m_Collider = nullptr; // 球か箱かのポインタを持つ
 };

@@ -16,21 +16,21 @@ public:
 	static void Draw();
 
 	template <typename T>
-	static void SetScene()
+	static inline void SetScene()
 	{
 		// 次に生成したいシーンを設定
 		m_NextScene = std::make_unique<T>();
 	}
-	static std::unique_ptr<Scene>& GetCurrentScene()
+	static inline std::unique_ptr<Scene>& GetCurrentScene()
 	{
 		return m_CurrentScene;
 	}
-	static void SetGameSpeed(const float& speed)
+	static inline void SetGameSpeed(const float& speed)
 	{
 		m_GameSpeed = speed;
 	}
 
-	const static float GetGameSpeed()
+	const static inline float GetGameSpeed()
 	{
 		return m_GameSpeed;
 	}

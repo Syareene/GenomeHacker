@@ -15,12 +15,12 @@ public:
 	void Init(Transform trans = Transform()) override; // ボタン登録処理
 	// ボタンが押されたときに実行したいオブジェクト(コールバック登録)
 	template<typename... Args>
-	void SetOnClick(const std::function<void()>& func)
+	inline void SetOnClick(const std::function<void()>& func)
 	{
 		m_TargetFunc = func; // 関数を設定
 	}
 	
-	void OnClick()
+	inline void OnClick()
 	{
 		if(m_TargetFunc) // 関数が設定されている場合
 		{

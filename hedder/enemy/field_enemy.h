@@ -12,10 +12,10 @@ public:
 	void Update() override;
 	void Draw() override;
 	
-	void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
-	EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
-	void SetCurrentHP(const float hp) { m_CurrentHP = hp; }
-	const float GetCurrentHP() const { return m_CurrentHP; }
+	inline void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
+	inline EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
+	inline void SetCurrentHP(const float hp) { m_CurrentHP = hp; }
+	inline const float GetCurrentHP() const { return m_CurrentHP; }
 private:
 	bool m_IsHit = false; // 当たったかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 自身の元データへのポインタ

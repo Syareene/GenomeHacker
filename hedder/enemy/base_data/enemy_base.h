@@ -25,25 +25,25 @@ public:
 	// 一旦都度生成でいく
 
 	// DNAタブ関連の関数
-	void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
-	DnaScreenScript* GetDnaScreen() {return m_DnaScreen.get(); }
+	inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
+	inline DnaScreenScript* GetDnaScreen() {return m_DnaScreen.get(); }
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
 
-	void SetEnemyID(int id) { m_EnemyID = id; }
-	int GetEnemyID() const { return m_EnemyID; }
+	inline void SetEnemyID(int id) { m_EnemyID = id; }
+	inline int GetEnemyID() const { return m_EnemyID; }
 
-	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
-	const int GetEnemyTextureID() const { return m_TextureID; }
+	inline int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
+	inline const int GetEnemyTextureID() const { return m_TextureID; }
 
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
-	void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
-	const float GetMaxHealth() const { return m_MaxHealth; }
+	inline void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
+	inline const float GetMaxHealth() const { return m_MaxHealth; }
 
-	void SetDrawPosDiff(const Vector3& posDiff) { m_PosDiff = posDiff; }
-	const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
-	void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
-	const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
+	inline void SetDrawPosDiff(const Vector3& posDiff) { m_PosDiff = posDiff; }
+	inline const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
+	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
+	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
 	std::unique_ptr<DnaScreenScript> m_DnaScreen; // dnaタブをまとめているpanel->初期化時に自身のnodeを持つために作成する必要あり
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い

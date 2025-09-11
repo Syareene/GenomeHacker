@@ -19,7 +19,7 @@ public:
 	Vector2(float x, float y) : x(x), y(y) {};
 
 	// 代入
-	Vector2& operator=(const Vector2& v)
+	inline Vector2& operator=(const Vector2& v)
 	{
 		x = v.x;
 		y = v.y;
@@ -28,12 +28,12 @@ public:
 
 	// 比較チェック
 
-	bool operator==(const Vector2& v) const
+	inline bool operator==(const Vector2& v) const
 	{
 		return (x == v.x && y == v.y);
 	}
 
-	bool operator!=(const Vector2& v) const
+	inline bool operator!=(const Vector2& v) const
 	{
 		return (x != v.x || y != v.y);
 	}
@@ -41,63 +41,63 @@ public:
 	// ベクトル操作
 	
 	// ベクトルを0に設定する
-	void zero()
+	inline void zero()
 	{
 		x = y = 0.0f;
 	}
 
 	// 単位式のマイナスは反転したベクトルを返す
-	Vector2 operator-() const
+	inline Vector2 operator-() const
 	{
 		return Vector2(-x, -y);
 	}
 
 	// 二項式の+と-は、ベクトルの加算と減算を行う
-	Vector2 operator+(const Vector2& v) const
+	inline Vector2 operator+(const Vector2& v) const
 	{
 		return Vector2(x + v.x, y + v.y);
 	}
 
-	Vector2 operator-(const Vector2& v) const
+	inline Vector2 operator-(const Vector2& v) const
 	{
 		return Vector2(x - v.x, y - v.y);
 	}
 
 	// スカラーによる乗算と除算
-	Vector2 operator*(float s) const
+	inline Vector2 operator*(float s) const
 	{
 		return Vector2(x * s, y * s);
 	}
 
-	Vector2 operator/(float s) const
+	inline Vector2 operator/(float s) const
 	{
 		float oneOverS = 1.0f / s;
 		return Vector2(x * oneOverS, y * oneOverS);
 	}
 
 	// 組み合わせ代入演算
-	Vector2& operator+=(const Vector2& v)
+	inline Vector2& operator+=(const Vector2& v)
 	{
 		x += v.x;
 		y += v.y;
 		return *this;
 	}
 
-	Vector2& operator-=(const Vector2& v)
+	inline Vector2& operator-=(const Vector2& v)
 	{
 		x -= v.x;
 		y -= v.y;
 		return *this;
 	}
 
-	Vector2& operator*=(float s)
+	inline Vector2& operator*=(float s)
 	{
 		x *= s;
 		y *= s;
 		return *this;
 	}
 
-	Vector2& operator/=(float s)
+	inline Vector2& operator/=(float s)
 	{
 		float oneOverS = 1.0f / s;
 		x *= oneOverS;
@@ -106,7 +106,7 @@ public:
 	}
 
 	// ベクトルを正規化する
-	void normalize()
+	inline void normalize()
 	{
 		float length = x * x + y * y;
 		if (length > 0.0f)
@@ -118,19 +118,19 @@ public:
 	}
 
 	// ベクトルの内積
-	float operator*(const Vector2& v) const
+	inline float operator*(const Vector2& v) const
 	{
 		return x * v.x + y * v.y;
 	}
 
 	// ベクトルの長さを計算する
-	float length() const
+	inline float length() const
 	{
 		return sqrt(x * x + y * y);
 	}
 
 	// ベクトルの長さの二乗を計算する(判定時など、厳密な値がいらない場合はこっちを使ってコストを下げる)
-	float lengthSquared() const
+	inline float lengthSquared() const
 	{
 		return x * x + y * y;
 	}
