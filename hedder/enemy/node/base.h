@@ -31,7 +31,7 @@ public:
 	virtual bool NodeEffect(); // cd管理して終わったならtrueを返す
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
-	const bool CanAttach(InputType& type) const;
+	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -47,6 +47,8 @@ protected:
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
 private:
+	inline const std::list<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
+	inline const std::list<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	std::list<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::list<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな

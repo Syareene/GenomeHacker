@@ -189,7 +189,7 @@ const Vector3 GameObject::GetRight() const
 {
 	// 回転行列から右方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 right;
 	XMStoreFloat3((XMFLOAT3*)&right, matrix.r[0]);
@@ -199,7 +199,7 @@ const Vector3 GameObject::GetUp() const
 {
 	// 回転行列から上方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 up;
 	XMStoreFloat3((XMFLOAT3*)&up, matrix.r[1]);
@@ -210,7 +210,7 @@ const Vector3 GameObject::GetForward() const
 {
 	// 回転行列から前方向のベクトルを取得
 	XMMATRIX matrix;
-	matrix = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	matrix = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
 	// XMFLOAT3に変換してからVector3に変換
 	Vector3 forward;
 	XMStoreFloat3((XMFLOAT3*)&forward, matrix.r[2]);

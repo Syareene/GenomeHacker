@@ -21,7 +21,7 @@ void Player::Init(Transform trans)
 	Transform transform;
 	transform.SetPosition(GetPosition());
 	Sphere* collider = SetCollider<Sphere>();
-	collider->Init(transform, Vector3(0.0f, 1.0f, 0.0f));
+	collider->Init(transform, Vector3(0.0f, 0.85f, 0.0f));
 
 	AddTag("InGame");
 	AddTag("Player");
@@ -49,19 +49,19 @@ void Player::Update()
 	if (Input::GetKeyPress('S'))
 	{
 		SetPosition(GetPosition() + (camera->GetForward() * -0.1f));
-		SetRotation(Vector3(GetRotation().x, rotation.y + XM_PI, GetRotation().z));
+		SetRotation(Vector3(GetRotation().x, rotation.y + 180.0f, GetRotation().z)); // yもともとはXM_PI
 	}
 
 	if (Input::GetKeyPress('A'))
 	{
 		SetPosition(GetPosition() + (camera->GetRight() * -0.1f));
-		SetRotation(Vector3(GetRotation().x, rotation.y - XM_PIDIV2, GetRotation().z));
+		SetRotation(Vector3(GetRotation().x, rotation.y - 90.0f, GetRotation().z)); // yもともとは-XM_PI/2
 	}
 
 	if (Input::GetKeyPress('D'))
 	{
 		SetPosition(GetPosition() + (camera->GetRight() * 0.1f));
-		SetRotation(Vector3(GetRotation().x, rotation.y + XM_PIDIV2, GetRotation().z));
+		SetRotation(Vector3(GetRotation().x, rotation.y + 90.0f, GetRotation().z)); // yもともとはXM_PI/2
 	}
 
 	// コライダの場所更新(これ自動更新になるように変えたいね～～)

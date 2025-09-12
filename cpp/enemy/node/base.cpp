@@ -26,14 +26,75 @@ bool NodeBase::NodeEffect()
 }
 
 // これinsertする場合はどうしようね、上下判定しないといけないから
-const bool NodeBase::CanAttach(InputType& type) const
+const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 {
-	for (const auto& t : m_InputTypesBottom)
+	bool canTop = false;
+	bool canBottom = false;
+	bool isCheckUpper = false;
+	bool isCheckLower = false;
+
+	// ノードが存在しない場合はくっつけられないので判定しない
+	if (upper_node != nullptr)
 	{
-		if (t == type)
+		isCheckUpper = true;
+	}
+
+	if( lower_node != nullptr)
+	{
+		isCheckLower = true;
+	}
+
+	// 自身の上部にくっつけられるか
+	if (isCheckUpper)
+	{
+		for (const auto& t : m_InputTypesBottom)
 		{
-			return true;
+			// upper_nodeの下部にくっつけられる形と一致するか
+			for (const auto& u : upper_node->GetInputTypesTop())
+			{
+				if (t == u)
+				{
+					canTop = true;
+					break;
+				}
+			}
 		}
 	}
+	// 自身の下部にくっつけられるか
+	if (isCheckLower)
+	{
+		for( const auto& t : m_InputTypesTop)
+		{
+			// lower_nodeの上部にくっつけられる形と一致するか
+			for (const auto& l : lower_node->GetInputTypesBottom())
+			{
+				if (t == l)
+				{
+					canBottom = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// 条件に基づいてreturn
+	
+	// かたっぽだけチェックする場合
+	// 下
+	if (!isCheckUpper && isCheckLower)
+	{
+		return canBottom;
+	}
+	// 上
+	else if (isCheckUpper && !isCheckLower)
+	{
+		return canTop;
+	}
+	// 両方
+	else if (isCheckUpper && isCheckLower)
+	{
+		return (canTop && canBottom);
+	}
+
 	return false;
 }

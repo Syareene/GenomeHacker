@@ -21,12 +21,12 @@ void Camera::Update()
 {
 	if (Input::GetKeyPress(VK_LEFT))
 	{
-		SetRotation(GetRotation() + Vector3(0.0f, -0.05f, 0.0f));
+		SetRotation(GetRotation() + Vector3(0.0f, -2.0f, 0.0f));
 	}
 
 	if (Input::GetKeyPress(VK_RIGHT))
 	{
-		SetRotation(GetRotation() + Vector3(0.0f, 0.05f, 0.0f));
+		SetRotation(GetRotation() + Vector3(0.0f, 2.0f, 0.0f));
 	}
 
 	/*
@@ -44,7 +44,7 @@ void Camera::Update()
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
 
 	m_Target = player->GetPosition() + Vector3(0.0f, 1.5f, 0.0f);
-	SetPosition(m_Target + Vector3(-sinf(GetRotation().y), 0.5f, -cosf(GetRotation().y)) * 5.0f);
+	SetPosition(m_Target + Vector3(-sinf(GetRadian().y), 0.5f, -cosf(GetRadian().y)) * 5.0f);
 	
 	// 極座標変換で上向きも対応
 	//float r = sqrtf(GetRotation().x + GetRotation().y + GetRotation().z);
