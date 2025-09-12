@@ -2,7 +2,7 @@
 #include "common.hlsl"
 
 
-void main(in DEBUG_VSIN In, out DEBUG_PSIN Out)
+void main(in POS_VSIN In, out POS_PSIN Out)
 {
 
 	matrix wvp;

@@ -1,7 +1,7 @@
 
 #include "common.hlsl"
 
-void main(in DEBUG_PSIN In, out float4 outDiffuse : SV_Target)
+void main(in POS_PSIN In, out float4 outDiffuse : SV_Target)
 {
     if(Parameter.x <= 0.1f)
     {

@@ -22,7 +22,7 @@ void NodeBase::Draw()
 
 bool NodeBase::NodeEffect()
 {
-
+	return false;
 }
 
 // これinsertする場合はどうしようね、上下判定しないといけないから

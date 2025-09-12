@@ -12,6 +12,7 @@
 #include "lib/audio.h"
 #include "object/ui/button.h"
 #include "enemy/enemy_spawner.h"
+#include "object/ui/in_game/fade.h"
 
 void GameScene::Init()
 {
@@ -47,6 +48,8 @@ void GameScene::Init()
 		*/
 
 	//AddGameObject<Polygon2D>(2);
+	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始
+
 	m_BGM = new Audio();
 	m_BGM->Load("asset\\audio\\bgm\\cafe_seaside.wav");
 	m_BGM->GetSourceVoice()->SetVolume(0.1f); // 音量を設定

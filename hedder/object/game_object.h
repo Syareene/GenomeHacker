@@ -34,8 +34,14 @@ protected:
 	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 	inline ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
 	inline void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
+	inline ID3D11VertexShader* GetVertexShader() const { return m_VertexShader; }
+	inline ID3D11VertexShader** GetVertexShaderPointer() { return &m_VertexShader; }
 	inline void SetPixelShader(ID3D11PixelShader* PixelShader) { m_PixelShader = PixelShader; }
+	inline ID3D11PixelShader* GetPixelShader() const { return m_PixelShader; }
+	inline ID3D11PixelShader** GetPixelShaderPointer() { return &m_PixelShader; }
 	inline void SetVertexLayout(ID3D11InputLayout* VertexLayout) { m_VertexLayout = VertexLayout; }
+	inline ID3D11InputLayout* GetVertexLayout() const { return m_VertexLayout; }
+	inline ID3D11InputLayout** GetVertexLayoutPointer() { return &m_VertexLayout; }
 	void UninitDrawMember();
 	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 

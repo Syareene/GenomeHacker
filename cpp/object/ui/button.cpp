@@ -48,7 +48,7 @@ void Button::Register(const std::function<void()>& func, const Vector2& pos, con
 
 void Button::Init(Transform trans)
 {
-	
+	SetTransform(trans);
 }
 
 void Button::Uninit()

@@ -75,12 +75,12 @@ struct PS_IN
 	float2 TexCoord		: TEXCOORD0;
 };
 
-struct DEBUG_VSIN
+struct POS_VSIN
 {
     float4 Position : POSITION0;
 };
 
-struct DEBUG_PSIN
+struct POS_PSIN
 {
 	float4 Position : SV_POSITION;
 };
