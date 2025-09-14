@@ -3,8 +3,11 @@
 //#include "object/2d_object.h"
 #include "object/ui/button.h"
 #include "enemy/node/base.h"
-#include <list>
+#include <vector>
 #include <memory>
+
+template<typename T>
+concept NodeType = std::is_base_of_v<NodeBase, T>;
 
 class TabBase : public Button
 {
@@ -24,31 +27,61 @@ public:
 	void Update() override;
 	void Draw() override;
 	virtual void Clicked(); // クリックされたときの処理
-	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
-	template <typename T>
+	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	template <NodeType T>
 	T* AddNode(const int& index) // ノードを追加
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
 
-		if (index < -1 || index > static_cast<int>(m_CanUseNodes.size()))
+		if (index < -1 || index > static_cast<int>(m_Nodes.size()))
 		{
 			// 範囲外
 			return nullptr;
 		}
 
-		auto it = m_CanUseNodes.begin();
-		std::advance(it, index);
-
-		std::vector<int> test;
-		test[0] = 1;
-		test.
-		
-
-		return nullptr;
+		// インスタンス作る(これmove必要にはなっちゃうからmoveコンストラクタをそのうち作る必要あり)
+		std::unique_ptr<T> newNode = std::make_unique<T>();
+		// 初期化
+		newNode.get()->Init();
+		NodeBase* upperNode = nullptr;
+		NodeBase* lowerNode = nullptr;
+		// 上側ノード挿入判定
+		if(index > 0)
+		{
+			upperNode = m_Nodes[index - 1].get();
+		}
+		// 下側ノード挿入判定
+		if (index < static_cast<int>(m_Nodes.size()) && index != -1)
+		{
+			lowerNode = m_Nodes[index].get();
+		}
+		// これで配列の範囲外にアクセスすることはなくなったため安全にアクセスできる
+		// くっつけられるか判定
+		if (newNode.get()->CanAttach(upperNode, lowerNode))
+		{
+			// 追加する
+			if (index == -1 || index == static_cast<int>(m_Nodes.size()))
+			{
+				// 最後尾に追加
+				m_Nodes.push_back(std::move(newNode));
+				return static_cast<T*>(m_Nodes.back().get());
+			}
+			else
+			{
+				// 任意の位置に追加
+				m_Nodes.insert(m_Nodes.begin() + index, std::move(newNode));
+				return static_cast<T*>(m_Nodes[index].get());
+			}
+		}
+		else
+		{
+			// 追加しない
+			return nullptr;
+		}
 	};
 private:
-	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
-	std::list<NodeBase> m_CanUseNodes; // タブ内で使用可能なノードのリスト(設置するための物、呼び出された際にプレイヤー側からソートしてここにいれる感じになるかな)
+	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
+	//std::list<NodeBase> m_CanUseNodes; // タブ内で使用可能なノードのリスト(設置するための物、呼び出された際にプレイヤー側からソートしてここにいれる感じになるかな)
 	int m_Index = 0; // タブのインデックス
 	// あと上記変数のめんどいところはすでに使われているか否かをどうにかしないといけない
 	// プレイヤー側に実態は持っておいて、ここはあくまでポインタとして持っておき、実態にフラグ変数を設けることで管理しやすい、、、みたいな構造が望ましい。

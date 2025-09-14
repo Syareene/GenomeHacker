@@ -15,6 +15,8 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
+#include "enemy/node/move_x.h"
+
 void Slime::Register()
 {
 	// 登録処理
@@ -22,6 +24,8 @@ void Slime::Register()
 	// そのenemy固有の情報を登録
 	SetDnaScreen(std::make_unique<DnaScreenScript>());
 	GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
+
+	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\slime.png");

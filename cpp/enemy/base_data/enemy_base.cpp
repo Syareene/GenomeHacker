@@ -46,30 +46,30 @@ void EnemyBase::Unregister()
 	TextureManager::UnloadTexture(GetEnemyTextureID());
 }
 
-void EnemyBase::ExecuteAttack()
+void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 {
 	// 攻撃ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetAttackTab()->GetNodes())
 	{
-		node->NodeEffect(); // ノードの効果を実行
+		node->NodeEffect(enemy_ptr); // ノードの効果を実行
 	}
 }
 
-void EnemyBase::ExecuteMove()
+void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 {
 	// 移動ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetMoveTab()->GetNodes())
 	{
-		node->NodeEffect(); // ノードの効果を実行
+		node->NodeEffect(enemy_ptr); // ノードの効果を実行
 	}
 }
 
-bool EnemyBase::ExecuteDeath()
+bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 {
 	// 死亡ノードの処理を実行
 	for (auto& node : m_DnaScreen->GetDeathTab()->GetNodes())
 	{
-		node->NodeEffect();
+		node->NodeEffect(enemy_ptr);
 	}
 	return true; // 実行終わったらtrueを返す
 }

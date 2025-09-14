@@ -34,6 +34,7 @@
     <ClInclude Include="hedder\enemy\explosion.h" />
     <ClInclude Include="hedder\enemy\field_enemy.h" />
     <ClInclude Include="hedder\enemy\node\base.h" />
+    <ClInclude Include="hedder\enemy\node\move_x.h" />
     <ClInclude Include="hedder\enemy\node_tab\attack.h" />
     <ClInclude Include="hedder\enemy\node_tab\death.h" />
     <ClInclude Include="hedder\enemy\node_tab\movement.h" />
@@ -88,6 +89,7 @@
     <ClCompile Include="cpp\enemy\explosion.cpp" />
     <ClCompile Include="cpp\enemy\field_enemy.cpp" />
     <ClCompile Include="cpp\enemy\node\base.cpp" />
+    <ClCompile Include="cpp\enemy\node\move_x.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\attack.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\death.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\dnatab_button.cpp" />

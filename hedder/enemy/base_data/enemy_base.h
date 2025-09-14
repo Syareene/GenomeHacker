@@ -6,6 +6,8 @@
 #include "object/ui/button.h"
 #include "lib/vector3.h"
 
+class FieldEnemy; // 前方宣言
+
 
 class EnemyBase
 {
@@ -13,9 +15,9 @@ public:
 	virtual void Register(); // 登録処理
 	void Unregister(); // 登録解除処理
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)
-	void ExecuteAttack();
-	void ExecuteMove();
-	bool ExecuteDeath();
+	void ExecuteAttack(FieldEnemy* enemy_ptr);
+	void ExecuteMove(FieldEnemy* enemy_ptr);
+	bool ExecuteDeath(FieldEnemy* enemy_ptr);
 
 	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
 	// ただ関数としてはここにほしいかな

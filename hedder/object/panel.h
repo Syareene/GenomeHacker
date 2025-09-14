@@ -19,7 +19,7 @@ public:
 	void Draw() override;
 
 	// get系は軒並みbase_sceneにあるものを作りたいね
-	// というかパネルにするとbase_sceneのgetobjectから取得できなくなる気がする、、これ問題か????
+	// というかパネルにするとbase_sceneのgetobjectから取得できなくなる気がする、、タグ版は実装済みだがTから取得するやつは未実装。
 	std::list<GameObject*> GetChildObjects()
 	{
 		// 中身の要素を全列挙しポインタで返す
@@ -34,6 +34,19 @@ public:
 		return childObjects;
 	}
 
+	template <typename T>
+	T* GetChildObjectByType()
+	{
+		for (const auto& child : m_ChildObjects)
+		{
+			if (child && dynamic_cast<T*>(child.get()))
+			{
+				return dynamic_cast<T*>(child.get());
+			}
+		}
+		return nullptr; // 見つからなかった場合
+	}
+
 	// ここに対してadd_objectする場合、scene自体にadd_objectし、その参照をここで持つようにする?
 	// その場合処理順が親->子にならない可能性があるのでそこだけが懸念点。
 
@@ -43,4 +56,14 @@ public:
 		m_ChildObjects.push_back(std::move(child));
 		return m_ChildObjects.back().get(); // 追加した子オブジェクトのポインタを返す
 	}
+
+	/*
+	template<typename T>
+	T* AddChildObject()
+	{
+		m_ChildObjects.push_back(std::make_unique<T>());
+		return static_cast<T*>(m_ChildObjects.back().get());
+	}
+	*/
+	
 };

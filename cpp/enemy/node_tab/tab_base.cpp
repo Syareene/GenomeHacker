@@ -25,9 +25,13 @@ void TabBase::Update()
 	// nodeeffect実行したときに内部でカウント持っておいてcd終わってこいつが実行されたらindexを進めるみたいな形で対応すればいいんじゃないかな
 
 	// 実行
+
+
+	// 一旦エラー解消用にコメントアウト
+	/*
 	auto it = m_Nodes.begin();
 	std::advance(it, m_Index);
-	if (it->get()->NodeEffect())
+	if (it->get()->NodeEffect(this))
 	{
 		// cd終わったので次のノードを参照
 		m_Index++;
@@ -37,6 +41,7 @@ void TabBase::Update()
 			m_Index = 0; // 最初に戻る
 		}
 	}
+	*/
 
 	// ex
 	// cd120f, atk1

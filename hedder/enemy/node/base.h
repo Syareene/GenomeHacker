@@ -2,6 +2,7 @@
 
 //#include <list>
 #include "object/2d_object.h"
+#include "enemy/field_enemy.h"
 
 // 多分ui周りのクラス継承?わからんけど
 class NodeBase : public Object2D
@@ -28,7 +29,7 @@ public:
 	void Uninit() override;
 	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
-	virtual bool NodeEffect(); // cd管理して終わったならtrueを返す
+	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
@@ -47,10 +48,11 @@ protected:
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
 private:
-	inline const std::list<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
-	inline const std::list<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
-	std::list<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
-	std::list<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
+	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
+	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
+	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
+	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
+	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::string m_Name; // ノードの名前(表示名)
@@ -59,5 +61,4 @@ private:
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CD = 0; // ノードのクールダウン(フレーム数)
-	// 
 };

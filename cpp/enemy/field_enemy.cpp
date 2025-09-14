@@ -43,8 +43,8 @@ void FieldEnemy::Update()
 	Object3D::Update();
 	
 	// 各敵のnodeを実行。
-	m_EnemyBase->ExecuteAttack();
-	m_EnemyBase->ExecuteMove();
+	m_EnemyBase->ExecuteAttack(this);
+	m_EnemyBase->ExecuteMove(this);
 
 	// コライダ更新
 	GetCollider()->Update(GetPosition());

@@ -20,12 +20,11 @@ void NodeBase::Draw()
 
 }
 
-bool NodeBase::NodeEffect()
+bool NodeBase::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	return false;
 }
 
-// これinsertする場合はどうしようね、上下判定しないといけないから
 const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 {
 	bool canTop = false;
@@ -47,10 +46,10 @@ const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 	// 自身の上部にくっつけられるか
 	if (isCheckUpper)
 	{
-		for (const auto& t : m_InputTypesBottom)
+		for (const auto& t : m_InputTypesTop)
 		{
 			// upper_nodeの下部にくっつけられる形と一致するか
-			for (const auto& u : upper_node->GetInputTypesTop())
+			for (const auto& u : upper_node->GetInputTypesBottom())
 			{
 				if (t == u)
 				{
@@ -63,10 +62,10 @@ const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 	// 自身の下部にくっつけられるか
 	if (isCheckLower)
 	{
-		for( const auto& t : m_InputTypesTop)
+		for( const auto& t : m_InputTypesBottom)
 		{
 			// lower_nodeの上部にくっつけられる形と一致するか
-			for (const auto& l : lower_node->GetInputTypesBottom())
+			for (const auto& l : lower_node->GetInputTypesTop())
 			{
 				if (t == l)
 				{

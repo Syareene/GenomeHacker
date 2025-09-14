@@ -22,10 +22,9 @@ void DnaScreenScript::Init(Transform trans)
 	// 下3つはタブのボタン+タブ内部のスクリプトの描画を管理
 	// panelに足すだけじゃなく、すぐ管理できるようにポインタを自身で保持しておく。
 	// 生存管理はpanel側で行うので開放処理は必要ない(unique_ptrだしね)
-	m_AttackTab = dynamic_cast<AttackTab*>(Panel::AddChildObject(std::make_unique<AttackTab>()));
-	m_MoveTab = dynamic_cast<MoveTab*>(Panel::AddChildObject(std::make_unique<MoveTab>()));
-	m_DeathTab = dynamic_cast<DeathTab*>(Panel::AddChildObject(std::make_unique<DeathTab>()));
-
+	m_AttackTab = static_cast<AttackTab*>(Panel::AddChildObject(std::make_unique<AttackTab>()));
+	m_MoveTab = static_cast<MoveTab*>(Panel::AddChildObject(std::make_unique<MoveTab>()));
+	m_DeathTab = static_cast<DeathTab*>(Panel::AddChildObject(std::make_unique<DeathTab>()));
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
