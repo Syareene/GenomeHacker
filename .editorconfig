@@ -4,7 +4,7 @@ root = true
 [*.{cpp,h}]
 
 # ‰üsİ’è
-end_of_line = lf
+end_of_line = crlf
 
 # UTF-8‚É•ÏŠ·
 charset = utf-8-bom
