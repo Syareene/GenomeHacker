@@ -30,6 +30,20 @@ public:
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
 
+		if (index < -1 || index > static_cast<int>(m_CanUseNodes.size()))
+		{
+			// 範囲外
+			return nullptr;
+		}
+
+		auto it = m_CanUseNodes.begin();
+		std::advance(it, index);
+
+		std::vector<int> test;
+		test[0] = 1;
+		test.
+		
+
 		return nullptr;
 	};
 private:
