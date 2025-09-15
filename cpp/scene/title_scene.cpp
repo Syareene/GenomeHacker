@@ -17,7 +17,8 @@ void TitleScene::Init()
 	AddGameObject<Button>(1)->Register([]() {
 		// ボタンがクリックされた時の処理
 		Manager::SetScene<GameScene>();
-		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
+		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), 
+			Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
 }
 
 void TitleScene::Update()
