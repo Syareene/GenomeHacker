@@ -1,6 +1,5 @@
 ﻿#include "enemy/node/move_x.h"
 #include "enemy/field_enemy.h"
-#include "object/game_object.h"
 #include "lib/vector3.h"
 
 void MoveX::Init(Transform trans)
@@ -8,7 +7,7 @@ void MoveX::Init(Transform trans)
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCD(0);
-	m_MoveVal = 0.2f; // 移動量
+	m_MoveVal = -0.02f; // 移動量
 }
 
 void MoveX::Uninit()

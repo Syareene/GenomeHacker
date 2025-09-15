@@ -95,5 +95,6 @@ const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 		return (canTop && canBottom);
 	}
 
-	return false;
+	// 両方ともnullptr->チェックしなくていい場合はtrueを返す(初期状態とかこうなるしね)
+	return true;
 }

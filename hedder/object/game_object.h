@@ -69,7 +69,7 @@ public:
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
 
-	inline void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
+	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
 	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
 	inline void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
 	inline Vector3& GetVelocity() { return m_Velocity; }
