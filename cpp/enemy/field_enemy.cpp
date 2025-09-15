@@ -39,6 +39,20 @@ void FieldEnemy::Update()
 	// 判定リセット
 	m_IsHit = false;
 
+	// 体力が0以下かチェック
+	if (m_CurrentHP <= 0.0f)
+	{
+		// 死亡ノードを実行
+		bool isDead = m_EnemyBase->ExecuteDeath(this);
+		if (isDead)
+		{
+			// trueが帰ってきたら自身を削除
+			SetDestory(true);
+		}
+		// 0以下ならそれ移行の処理は実施したくないのでここでreturn
+		return;
+	}
+
 	// 更新処理
 	Object3D::Update();
 	
@@ -53,14 +67,8 @@ void FieldEnemy::Update()
 
 	// 当たってるコライダがあるかチェック
 	std::list<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();
-	for (auto& h : p_hit)
+	if (!p_hit.empty())
 	{
-		// 自分自身はスルー
-		//if(h == this)
-		//{
-		//	continue;
-		//}
-		// とりあえずここでブレークポイント設定
 		m_IsHit = true;
 	}
 
@@ -72,12 +80,8 @@ void FieldEnemy::Update()
 		{
 			continue;
 		}
-		// とりあえずここでブレークポイント設定
 		m_IsHit = true;
 	}
-	
-
-	// 体力が0なら死亡ノードを実行。trueが帰ってきたら自身を削除。
 }
 
 void FieldEnemy::Draw()

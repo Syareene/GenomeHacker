@@ -41,30 +41,29 @@ void DefaultVertex::Init()
 
 	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
 
-	// ビルボード成功した版に変えてみる
-	// 法線が必要なのはそうとして、、なんでだ。ちなみに2dobjは描画できなくなったのでそれぞれ別の固定頂点が必要になるね。
-	// とりあえずそれぞれの用途に合わせた頂点バッファを用意することにする。
+	// ビルボード版
+	// テクスチャ折り返し用対策で0.01～0.99にしてます
 
 	// ビルボード用頂点
 	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
+	vertex[0].TexCoord = XMFLOAT2(0.01f, 0.01f);
 
 	vertex[1].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
+	vertex[1].TexCoord = XMFLOAT2(0.99f, 0.01f);
 
 	vertex[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
+	vertex[2].TexCoord = XMFLOAT2(0.01f, 0.99f);
 
 	vertex[3].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
+	vertex[3].TexCoord = XMFLOAT2(0.99f, 0.99f);
 	
 
 	// 頂点バッファ生成

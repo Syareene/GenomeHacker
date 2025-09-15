@@ -26,6 +26,7 @@
     <ClInclude Include="hedder\collider\cube.h" />
     <ClInclude Include="hedder\collider\sphere.h" />
     <ClInclude Include="hedder\enemy\base_data\enemy_base.h" />
+    <ClInclude Include="hedder\enemy\base_data\minotaur.h" />
     <ClInclude Include="hedder\enemy\base_data\slime.h" />
     <ClInclude Include="hedder\enemy\bullet.h" />
     <ClInclude Include="hedder\enemy\dna_screen_script.h" />
@@ -33,8 +34,10 @@
     <ClInclude Include="hedder\enemy\enemy_spawner.h" />
     <ClInclude Include="hedder\enemy\explosion.h" />
     <ClInclude Include="hedder\enemy\field_enemy.h" />
+    <ClInclude Include="hedder\enemy\node\add_score.h" />
     <ClInclude Include="hedder\enemy\node\base.h" />
     <ClInclude Include="hedder\enemy\node\move_x.h" />
+    <ClInclude Include="hedder\enemy\node\move_z.h" />
     <ClInclude Include="hedder\enemy\node_tab\attack.h" />
     <ClInclude Include="hedder\enemy\node_tab\death.h" />
     <ClInclude Include="hedder\enemy\node_tab\movement.h" />
@@ -81,6 +84,7 @@
     <ClCompile Include="cpp\collider\collision.cpp" />
     <ClCompile Include="cpp\collider\sphere.cpp" />
     <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp" />
+    <ClCompile Include="cpp\enemy\base_data\minotaur.cpp" />
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
@@ -88,8 +92,10 @@
     <ClCompile Include="cpp\enemy\enemy_spawner.cpp" />
     <ClCompile Include="cpp\enemy\explosion.cpp" />
     <ClCompile Include="cpp\enemy\field_enemy.cpp" />
+    <ClCompile Include="cpp\enemy\node\add_score.cpp" />
     <ClCompile Include="cpp\enemy\node\base.cpp" />
     <ClCompile Include="cpp\enemy\node\move_x.cpp" />
+    <ClCompile Include="cpp\enemy\node\move_z.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\attack.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\death.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\dnatab_button.cpp" />

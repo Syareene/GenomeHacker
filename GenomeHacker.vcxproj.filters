@@ -252,6 +252,15 @@
     <ClInclude Include="hedder\enemy\node\move_x.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_z.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\minotaur.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\add_score.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -390,6 +399,15 @@
       <Filter>ソース ファイル\object\ui\in_game</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\move_x.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_z.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\minotaur.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\add_score.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>

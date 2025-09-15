@@ -30,7 +30,7 @@ void EnemyBase::Register()
 	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
 	
 	// ポインタに対して初期ノードを追加する。
-	m_DnaScreen->GetAttackTab()->AddNode<NodeBase>(-1);
+	//m_DnaScreen->GetAttackTab()->AddNode<NodeBase>(-1);
 }
 
 void EnemyBase::Unregister()

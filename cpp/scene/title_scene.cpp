@@ -13,6 +13,11 @@ void TitleScene::Init()
 	
 	// タイトル
 	AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
+
+	AddGameObject<Button>(1)->Register([]() {
+		// ボタンがクリックされた時の処理
+		Manager::SetScene<GameScene>();
+		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
 }
 
 void TitleScene::Update()

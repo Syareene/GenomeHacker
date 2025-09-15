@@ -16,6 +16,9 @@
 #include "enemy/node_tab/death.h"
 
 #include "enemy/node/move_x.h"
+#include "enemy/node/move_z.h"
+
+#include "enemy/node/add_score.h"
 
 void Slime::Register()
 {
@@ -25,7 +28,11 @@ void Slime::Register()
 	SetDnaScreen(std::make_unique<DnaScreenScript>());
 	GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
 
+	// ノード登録
 	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0);
+	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
+
+	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\slime.png");
@@ -35,8 +42,10 @@ void Slime::Register()
 	SetDrawScaleDiff({ 2.0f, 2.0f, 2.0f });
 
 	
-	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
-	
 	// ポインタに対して初期ノードを追加する。
 	GetDnaScreen()->GetAttackTab()->AddNode<NodeBase>(-1);
+
+
+	// 体力設定
+	SetMaxHealth(1.0f);
 }

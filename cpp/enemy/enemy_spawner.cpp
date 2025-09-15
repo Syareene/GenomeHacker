@@ -6,6 +6,7 @@
 
 // enemyDataのhedder
 #include "enemy/base_data/slime.h"
+#include "enemy/base_data/minotaur.h"
 
 void EnemySpawner::Init()
 {
@@ -16,6 +17,7 @@ void EnemySpawner::Init()
 
 	// 各種データを配列に追加し登録処理
 	m_EnemyBaseList.emplace_back(std::make_unique<Slime>())->Register();
+	m_EnemyBaseList.emplace_back(std::make_unique<Minotaur>())->Register();
 }
 
 void EnemySpawner::Uninit()
@@ -39,8 +41,8 @@ void EnemySpawner::Update()
 	{
 		m_SpawnTimer = 0;
 		// どの敵を出すかはとりあえず固定
-		// あとは敵のテクスチャによって座標変わるからそのズレとかをセットできるようにできればいいね
 		SpawnEnemy<Slime>({0.0f, 1.0f, static_cast<float>(m_SpawnCount) * 0.75f});
+		SpawnEnemy<Minotaur>({ 2.0f, 1.0f, static_cast<float>(m_SpawnCount) * 0.75f });
 		m_SpawnCount++;
 	}
 

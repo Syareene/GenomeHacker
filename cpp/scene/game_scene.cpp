@@ -51,7 +51,7 @@ void GameScene::Init()
 	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始
 
 	m_BGM = new Audio();
-	m_BGM->Load("asset\\audio\\bgm\\cafe_seaside.wav");
+	m_BGM->Load("asset\\audio\\bgm\\EpicBattle_Deity.wav");
 	m_BGM->GetSourceVoice()->SetVolume(0.1f); // 音量を設定
 	m_BGM->GetSourceVoice()->SetFrequencyRatio(1.0f); // 再生速度を設定
 	m_BGM->Play(true);

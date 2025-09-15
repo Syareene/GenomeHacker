@@ -50,13 +50,7 @@ void Bullet::Update()
 	SetPosition(GetPosition() + m_Velocity);
 
 	// 生存時間デクリメント
-	//m_LifeTime--;
-
-	if (GetPosition().length() > 25.0f)
-	{
-		// 画面外に出たら削除
-		SetDestory(true);
-	}
+	m_LifeTime--;
 
 	// コライダの場所更新
 	GetCollider()->Update(GetPosition());
@@ -66,43 +60,19 @@ void Bullet::Update()
 
 	for(auto& enemy : enemies)
 	{
-		/*
-		Vector3 d = enemy->GetPosition() - GetPosition();
-		float length = d.length();
-		if (length < 1.0f)
-		{
-			// 爆発エフェクトを生成
-			Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
-			// 敵に当たったら削除
-			SetDestory(true);
-			enemy->SetDestory(true); // 敵も削除
-			break; // 一つの敵に当たったらループを抜ける
-		}
-		*/
 		// 爆発エフェクトを生成
 		Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 敵に当たったら削除
 		SetDestory(true);
-		enemy->SetDestory(true); // 敵も削除
+		enemy->SetCurrentHP(enemy->GetCurrentHP() - 1); // 敵の体力を減らす
 		break; // 一つの敵に当たったらループを抜ける
 	}
 
-	/*
-	for (auto& enemy : enemies)
+	// 生存時間が0になったら削除
+	if(m_LifeTime <= 0)
 	{
-		Vector3 d = enemy->GetPosition() - GetPosition();
-		float length = d.length();
-		if (length < 1.0f)
-		{
-			// 爆発エフェクトを生成
-			Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 1.5f, 0.0f));
-
-			// 敵に当たったら削除
-			SetDestory(true);
-			enemy->SetDestory(true); // 敵も削除
-		}
+		SetDestory(true);
 	}
-	*/
 }
 
 void Bullet::Draw()
