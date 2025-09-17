@@ -53,6 +53,17 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	{
 		node->NodeEffect(enemy_ptr); // ノードの効果を実行
 	}
+
+	// 処理書き換え予定、、
+	// enemybaseに各ノードのcdを管理。
+	// 実行後true帰ってきたらカウントをインクリメント。
+	// そのカウントを見て実行するノードを判断する感じにする。
+	// 途中でノードに変更入ったときだけがめんどいが、それ以外はカウントが上がったときにノードの最大数判断して最大数なら0に戻すとかで正常に動くかな。
+	// あーでも実際にやりたいことってそれぞれのFieldEnemyが個別で動いてほしいって感じだからちょっと違うかも
+	// 
+	// 解決方法
+	// executeノード全部return返すようにして外部でindex管理?
+	// 
 }
 
 void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
