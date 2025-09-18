@@ -48,40 +48,171 @@ void EnemyBase::Unregister()
 
 void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 {
-	// 攻撃ノードの処理を実行
-	for (auto& node : m_DnaScreen->GetAttackTab()->GetNodes())
+	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
+	if(enemy_ptr->GetAttackNodeCDSum() != m_DnaScreen->GetAttackTab()->GetCDMax())
 	{
-		node->NodeEffect(enemy_ptr); // ノードの効果を実行
+		// 時間が伸びる場合はcdmaxだけ更新
+		// 短くなる場合は比を使い現在のcd位置も更新
+		if (enemy_ptr->GetAttackNodeCDSum() > m_DnaScreen->GetAttackTab()->GetCDMax())
+		{
+			// 現在のcd位置を更新
+			float ratio = static_cast<float>(enemy_ptr->GetAttackNodeCDSum()) / static_cast<float>(m_DnaScreen->GetAttackTab()->GetCDMax());
+			enemy_ptr->SetAttackNodeTime(static_cast<int>(enemy_ptr->GetAttackNodeTime() * ratio));
+
+			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
+		}
+
+		// 異なる場合は現在のcdmaxを保存
+		enemy_ptr->SetAttackNodeCDSum(m_DnaScreen->GetAttackTab()->GetCDMax());
 	}
 
-	// 処理書き換え予定、、
-	// enemybaseに各ノードのcdを管理。
-	// 実行後true帰ってきたらカウントをインクリメント。
-	// そのカウントを見て実行するノードを判断する感じにする。
-	// 途中でノードに変更入ったときだけがめんどいが、それ以外はカウントが上がったときにノードの最大数判断して最大数なら0に戻すとかで正常に動くかな。
-	// あーでも実際にやりたいことってそれぞれのFieldEnemyが個別で動いてほしいって感じだからちょっと違うかも
-	// 
-	// 解決方法
-	// executeノード全部return返すようにして外部でindex管理?
-	// 
+	// 今のcdカウントが最大値を超えているかどうかのチェック
+	if (enemy_ptr->GetAttackNodeTime() >= enemy_ptr->GetAttackNodeCDSum())
+	{
+		// 超えている場合は最大値分引く
+		enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() - enemy_ptr->GetAttackNodeCDSum());
+	}
+
+	int index = 0;
+	int beforeTime = 0;
+	bool isFinished = false;
+	for (auto& time : m_DnaScreen->GetAttackTab()->GetNodeTimeLine())
+	{
+		if (enemy_ptr->GetAttackNodeTime() <= time)
+		{
+			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
+			if (isFinished && beforeTime != time)
+			{
+				break;
+			}
+			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
+			auto it = m_DnaScreen->GetAttackTab()->GetNodes().begin();
+			std::advance(it, index);
+			(*it)->NodeEffect(enemy_ptr);
+
+			// ループ抜ける前に色々設定
+			beforeTime = time;
+			isFinished = true;
+		}
+		index++;
+	}
+
+	// カウントインクリメント
+	enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() + 1);
 }
 
 void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 {
-	// 移動ノードの処理を実行
-	for (auto& node : m_DnaScreen->GetMoveTab()->GetNodes())
+	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
+	if (enemy_ptr->GetMoveNodeCDSum() != m_DnaScreen->GetMoveTab()->GetCDMax())
 	{
-		node->NodeEffect(enemy_ptr); // ノードの効果を実行
+		// 生成時にfieldEnemyのcdmaxが更新されていないので最初はここはいる
+
+
+		// 時間が伸びる場合はcdmaxだけ更新
+		// 短くなる場合は比を使い現在のcd位置も更新
+		if (enemy_ptr->GetMoveNodeCDSum() > m_DnaScreen->GetMoveTab()->GetCDMax())
+		{
+			// 現在のcd位置を更新
+			float ratio = static_cast<float>(enemy_ptr->GetMoveNodeCDSum()) / static_cast<float>(m_DnaScreen->GetMoveTab()->GetCDMax());
+			enemy_ptr->SetMoveNodeTime(static_cast<int>(enemy_ptr->GetMoveNodeTime() * ratio));
+
+			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
+		}
+
+		// 異なる場合は現在のcdmaxを保存
+		enemy_ptr->SetMoveNodeCDSum(m_DnaScreen->GetMoveTab()->GetCDMax());
 	}
+
+	// 今のcdカウントが最大値を超えているかどうかのチェック
+	if (enemy_ptr->GetMoveNodeTime() >= enemy_ptr->GetMoveNodeCDSum())
+	{
+		// 超えている場合は最大値分引く
+		enemy_ptr->SetMoveNodeTime(enemy_ptr->GetMoveNodeTime() - enemy_ptr->GetMoveNodeCDSum());
+	}
+
+	// 移動ノードの処理を実行
+
+	int index = 0;
+	int beforeTime = 0;
+	bool isFinished = false;
+	for (auto& time : m_DnaScreen->GetMoveTab()->GetNodeTimeLine())
+	{
+		if (enemy_ptr->GetMoveNodeTime() <= time)
+		{
+			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
+			if (isFinished && beforeTime != time)
+			{
+				break;
+			}
+			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
+			m_DnaScreen->GetMoveTab()->GetNodes()[index].get()->NodeEffect(enemy_ptr);
+
+			// ループ抜ける前に色々設定
+			beforeTime = time;
+			isFinished = true;
+		}
+		index++;
+	}
+
+	// カウントインクリメント
+	enemy_ptr->SetMoveNodeTime(enemy_ptr->GetMoveNodeTime() + 1);
 }
 
 bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 {
-	// 死亡ノードの処理を実行
-	for (auto& node : m_DnaScreen->GetDeathTab()->GetNodes())
+	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
+	if (enemy_ptr->GetDeathNodeCDSum() != m_DnaScreen->GetDeathTab()->GetCDMax())
 	{
-		node->NodeEffect(enemy_ptr);
+		// 時間が伸びる場合はcdmaxだけ更新
+		// 短くなる場合は比を使い現在のcd位置も更新
+		if (enemy_ptr->GetDeathNodeCDSum() > m_DnaScreen->GetDeathTab()->GetCDMax())
+		{
+			// 現在のcd位置を更新
+			float ratio = static_cast<float>(enemy_ptr->GetDeathNodeCDSum()) / static_cast<float>(m_DnaScreen->GetDeathTab()->GetCDMax());
+			enemy_ptr->SetDeathNodeTime(static_cast<int>(enemy_ptr->GetDeathNodeTime() * ratio));
+
+			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
+		}
+
+		// 異なる場合は現在のcdmaxを保存
+		enemy_ptr->SetDeathNodeCDSum(m_DnaScreen->GetDeathTab()->GetCDMax());
 	}
+
+	// 今のcdカウントが最大値を超えているかどうかのチェック
+	if (enemy_ptr->GetDeathNodeTime() >= enemy_ptr->GetDeathNodeCDSum())
+	{
+		// 超えている場合は最大値分引く
+		enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() - enemy_ptr->GetDeathNodeCDSum());
+	}
+
+	// 死亡ノードの処理を実行
+	int index = 0;
+	int beforeTime = 0;
+	bool isFinished = false;
+	for (auto& time : m_DnaScreen->GetDeathTab()->GetNodeTimeLine())
+	{
+		if (enemy_ptr->GetDeathNodeTime() <= time)
+		{
+			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
+			if (isFinished && beforeTime != time)
+			{
+				break;
+			}
+			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
+			auto it = m_DnaScreen->GetDeathTab()->GetNodes().begin();
+			std::advance(it, index);
+			(*it)->NodeEffect(enemy_ptr);
+
+			// ループ抜ける前に色々設定
+			beforeTime = time;
+			isFinished = true;
+		}
+		index++;
+	}
+
+	// カウントインクリメント
+	enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() + 1);
 	return true; // 実行終わったらtrueを返す
 }
 

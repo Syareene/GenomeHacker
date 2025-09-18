@@ -57,8 +57,6 @@ void FieldEnemy::Update()
 	Object3D::Update();
 	
 	// 各敵のnodeを実行。
-
-	// ここ自体は実行されているけどexecute関数が実行されてないかも?
 	m_EnemyBase->ExecuteAttack(this);
 	m_EnemyBase->ExecuteMove(this);
 

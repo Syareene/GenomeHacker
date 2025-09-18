@@ -28,6 +28,8 @@ public:
 	void Draw() override;
 	virtual void Clicked(); // クリックされたときの処理
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
+	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
 	template <NodeType T>
 	T* AddNode(const int& index) // ノードを追加
 	{
@@ -64,12 +66,16 @@ public:
 			{
 				// 最後尾に追加
 				m_Nodes.push_back(std::move(newNode));
+				// タイムライン変更処理
+				ModifyTimeLine();
 				return static_cast<T*>(m_Nodes.back().get());
 			}
 			else
 			{
 				// 任意の位置に追加
 				m_Nodes.insert(m_Nodes.begin() + index, std::move(newNode));
+				// タイムライン変更処理
+				ModifyTimeLine();
 				return static_cast<T*>(m_Nodes[index].get());
 			}
 		}
@@ -80,9 +86,13 @@ public:
 		}
 	};
 private:
+	void ModifyTimeLine(); // タイムラインを修正する
+
 	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
 	//std::list<NodeBase> m_CanUseNodes; // タブ内で使用可能なノードのリスト(設置するための物、呼び出された際にプレイヤー側からソートしてここにいれる感じになるかな)
 	int m_Index = 0; // タブのインデックス
+	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン
+	std::list<int> m_NodeTimeLine; // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリスト
 	// あと上記変数のめんどいところはすでに使われているか否かをどうにかしないといけない
 	// プレイヤー側に実態は持っておいて、ここはあくまでポインタとして持っておき、実態にフラグ変数を設けることで管理しやすい、、、みたいな構造が望ましい。
 };

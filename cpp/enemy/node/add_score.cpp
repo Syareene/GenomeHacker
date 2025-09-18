@@ -6,6 +6,7 @@ void AddScore::Init(Transform trans)
 {
 	AddInputTypeTop(InputType::Death);
 	AddInputTypeBottom(InputType::Death);
+	SetCDMax(0);
 	SetCD(0);
 	m_AddScore = 1.0f; // スコア加算量
 }

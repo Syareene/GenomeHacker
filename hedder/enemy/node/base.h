@@ -33,6 +33,7 @@ public:
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
+	inline const int GetCDMax() const { return m_CDMax; }
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -45,6 +46,7 @@ protected:
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
 	inline void SetKeyword(const std::string& key) { m_Keyword = key; }
+	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
 private:
@@ -60,5 +62,6 @@ private:
 	std::string m_Description; // ノードの説明文
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
+	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)
 	int m_CD = 0; // ノードのクールダウン(フレーム数)
 };

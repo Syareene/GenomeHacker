@@ -6,6 +6,7 @@ void MoveZ::Init(Transform trans)
 {
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
+	SetCDMax(0);
 	SetCD(0);
 	m_MoveVal = 0.02f; // 移動量
 }
