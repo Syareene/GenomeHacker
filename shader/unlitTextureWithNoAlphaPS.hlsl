@@ -18,6 +18,7 @@ void main(in PS_IN In, out float4 outDiffuse : SV_Target)
         {
             discard;
         }
+        //clip();->‚±‚Á‚¿‚Å‚à
         
         outDiffuse *= In.Diffuse;
     }
