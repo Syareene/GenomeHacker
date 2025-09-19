@@ -155,6 +155,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 右クリック離された
 		g_Mouse.SetRightButtonUp(true);
 		break;
+	case WM_XBUTTONUP:
+		// サイドキー離れた
+		switch (GET_XBUTTON_WPARAM(wParam))
+		{
+		case XBUTTON1:
+			// サイドキー1
+			g_Mouse.SetSideButton1Up(true);
+			break;
+		case XBUTTON2:
+			// サイドキー2
+			g_Mouse.SetSideButton2Up(true);
+			break;
+		}
+		break;
+	case WM_XBUTTONDOWN:
+		// サイドキー押された
+		switch (GET_XBUTTON_WPARAM(wParam))
+		{
+		case XBUTTON1:
+			// サイドキー1
+			g_Mouse.SetSideButton1Down(true);
+			break;
+		case XBUTTON2:
+			// サイドキー2
+			g_Mouse.SetSideButton2Down(true);
+			break;
+		}
+		break;
 	case WM_MOUSEMOVE:
 		// マウス動いた
 		GetClientRect(hWnd, &g_Rect);
@@ -169,6 +197,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// ホイールが回った
 		// wParamのHIWORDで回転量を取得できる
 		g_Mouse.SetWheelDiff(static_cast<int>(GET_WHEEL_DELTA_WPARAM(wParam)));
+		break;
 	default:
 		break;
 	}

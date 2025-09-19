@@ -11,6 +11,10 @@ public:
 	void SetRightButtonUp(bool up);
 	void SetLeftButtonDown(bool down);
 	void SetLeftButtonUp(bool up);
+	void SetSideButton1Down(bool down);
+	void SetSideButton1Up(bool up);
+	void SetSideButton2Down(bool down);
+	void SetSideButton2Up(bool up);
 	void SetPosition(Vector2 position);
 	void SetWheelDiff(int diff);
 	// update2種はmanager側から呼ぶ
@@ -21,6 +25,10 @@ public:
 	static inline bool IsRightButtonTrigger() { return m_RightButtonTrigger; }
 	static inline bool IsLeftButtonDown() { return m_LeftButtonDown; }
 	static inline bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
+	static inline bool IsSideButton1Down() { return m_SideButton1Down; }
+	static inline bool IsSideButton1Trigger() { return m_SideButton1Trigger; }
+	static inline bool IsSideButton2Down() { return m_SideButton2Down; }
+	static inline bool IsSideButton2Trigger() { return m_SideButton2Trigger; }
 	static inline Vector2 GetPosition() { return m_Position; }
 	static inline Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
 	static void SetScreenMousePosition(Vector2 pos);
@@ -35,6 +43,14 @@ private:
 	static bool m_LeftButtonUp; // 左クリックが離されたかどうか
 	static bool m_LeftButtonDownOld; // 1f前の左クリック状態
 	static bool m_LeftButtonTrigger; // 左クリックが押されたかどうか(押され始めだけ)
+	static bool m_SideButton1Down; // サイドボタン1が押されているかどうか
+	static bool m_SideButton1Up; // サイドボタン1が離されたかどうか
+	static bool m_SideButton1DownOld; // 1f前のサイドボタン1状態
+	static bool m_SideButton1Trigger; // サイドボタン1が押されたかどうか(押され始めだけ)
+	static bool m_SideButton2Down; // サイドボタン2が押されているかどうか
+	static bool m_SideButton2Up; // サイドボタン2が離されたかどうか
+	static bool m_SideButton2DownOld; // 1f前のサイドボタン2状態
+	static bool m_SideButton2Trigger; // サイドボタン2が押されたかどうか(押され始めだけ)
 	static Vector2 m_OldPosition; // 1f前のマウスの位置
 	static Vector2 m_Position; // マウスの位置
 	static int m_WheelDiff; // ホイールの差分
