@@ -12,6 +12,8 @@
 #include "lib/audio.h"
 #include "object/ui/button.h"
 #include "enemy/enemy_spawner.h"
+#include "enemy/node_tab/dnatab_button.h"
+#include "enemy/node_tab/togame_button.h"
 #include "object/ui/in_game/fade.h"
 
 void GameScene::Init()
@@ -23,6 +25,8 @@ void GameScene::Init()
 	AddGameObject<Player>(0);
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);
+	AddGameObject<DNAButton>(2);
+	AddGameObject<ToGameButton>(2);
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 	
 

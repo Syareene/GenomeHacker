@@ -2,13 +2,13 @@
 
 #include "object/ui/button.h"
 
-class DNAButton : public Button
+class ToGameButton : public Button
 {
 public:
-	// ゲーム側からdnaタブに行くときの処理
+	// dnaタブからゲーム側に行く処理
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	void ToDNATab();
+	void ToGame();
 };

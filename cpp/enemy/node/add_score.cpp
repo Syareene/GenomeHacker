@@ -4,6 +4,7 @@
 
 void AddScore::Init(Transform trans)
 {
+	SetTransform(trans);
 	AddInputTypeTop(InputType::Death);
 	AddInputTypeBottom(InputType::Death);
 	SetCDMax(0);

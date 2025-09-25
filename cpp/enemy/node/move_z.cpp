@@ -4,6 +4,7 @@
 
 void MoveZ::Init(Transform trans)
 {
+	SetTransform(trans);
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);

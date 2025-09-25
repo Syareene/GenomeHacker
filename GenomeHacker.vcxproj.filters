@@ -261,6 +261,9 @@
     <ClInclude Include="hedder\enemy\node\add_score.h">
       <Filter>ヘッダー ファイル\enemy\base_data</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\togame_button.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -409,6 +412,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\add_score.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\togame_button.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

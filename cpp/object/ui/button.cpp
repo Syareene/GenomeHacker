@@ -58,6 +58,11 @@ void Button::Uninit()
 
 void Button::Update()
 {
+	if (!IsActive())
+	{
+		return;
+	}
+
 	// ボタンの更新処理
 	// クリック検知などを行う
 
@@ -72,6 +77,11 @@ void Button::Update()
 
 void Button::Draw()
 { 
+	if (!IsActive())
+	{
+		return;
+	}
+
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
 	// シェーダー設定

@@ -133,6 +133,11 @@ bool Mouse::IsMouseInsideArea(Vector2 startPos, Vector2 endPos)
 	Vector2 wnd_scale = Vector2(actual_screen_size.x / SCREEN_WIDTH, actual_screen_size.y / SCREEN_HEIGHT);
 	// その比率を使ってposを補正する
 
+	// debug用に1.0fに固定
+	//wnd_scale = Vector2(1.5f, 1.5f);
+	// んー、1280x720は1.0fで動くけどそうじゃないときは動かないね
+	// やっぱり上のタブの分が考慮されてないね、反映したいのは投影座標なのに上のタブの大きさも考慮されちゃってる、、
+
 	// マウスの位置が指定された範囲内にあるかどうかをチェック
 	return (m_Position.x >= startPos.x * wnd_scale.x && m_Position.x <= endPos.x * wnd_scale.x &&
 			m_Position.y >= startPos.y * wnd_scale.y && m_Position.y <= endPos.y * wnd_scale.y);
