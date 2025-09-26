@@ -23,7 +23,7 @@ HWND GetWindow()
 RECT GetRect()
 {
 	// 更新する
-	GetWindowRect(g_Window, &g_Rect);
+	GetClientRect(g_Window, &g_Rect); // クライアント領域(純粋なゲームの画面)のサイズを取得
 	return g_Rect;
 }
 
