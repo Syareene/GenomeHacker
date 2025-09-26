@@ -92,13 +92,14 @@ public:
 			auto it = m_Objects3D.begin();
 			std::advance(it, layerNum);
 			// layerNumの位置に追加
-			it->push_back(std::unique_ptr<Object3D>(std::move(game_obj)));
+			it->push_back((std::move(game_obj)));
 			// スマポで管理しつつも生ポインタで返すように
 			return static_cast<T*>(it->back().get());
 		}
 		return nullptr; // ここに来ることはないはず
 	}
 	template<SystemObj T>
+	//template <typename T>
 	T* AddSystemObject(void)
 	{
 		// 生成
@@ -107,7 +108,7 @@ public:
 		system_obj->Init();
 
 		// 型の整合性はconceptで取れているのでそのままpush_back
-		m_SystemObjects.push_back(std::unique_ptr<SystemObject>(std::move(system_obj)));
+		m_SystemObjects.push_back(std::move(system_obj));
 		return static_cast<T*>(m_SystemObjects.back().get());
 	}
 
@@ -206,6 +207,8 @@ public:
 				return ptr;
 			}
 		}
+		// 取れなかった場合はnullptrを返す
+		return nullptr;
 	}
 
 	// タグを使ってGameObjectを取得

@@ -13,9 +13,10 @@ template<typename T>
 concept EnemyBaseType = std::is_base_of_v <EnemyBase, T>;
 
 // システムオブジェクトを作ってそれを継承しつつ実体化しないといけない
-class EnemyList : SystemObject
+class EnemyList : public SystemObject
 {
 public:
+	EnemyList() {};
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
@@ -34,6 +35,7 @@ public:
 				return ptr; // 見つかったらポインタを返す
 			}
 		}
+		return nullptr;
 	}
 private:
 	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを保存するリスト
