@@ -12,11 +12,14 @@ private:
 	float m_FarZ = 0.0f;
 	float m_FieldOfViewY = 0.0f;
 	float m_AspectRatio = 0.0f;
+	float m_ShakeTime = 0.0f;
+	Vector3 m_ShakeVector = { 0.0f, 0.0f, 0.0f };
 public:
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
+	void Shake(const Vector3& power);
 	const Vector3 GetTarget() const { return m_Target; }
 	void SetTarget(const Vector3& target) { m_Target = target; }
 	XMMATRIX GetViewMatrix() const { return m_ViewMatrix; }

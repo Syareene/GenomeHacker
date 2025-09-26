@@ -42,8 +42,17 @@ void Camera::Update()
 	*/
 
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
+	if (player == nullptr)
+	{
+		return;
+	}
 
 	m_Target = player->GetPosition() + Vector3(0.0f, 1.5f, 0.0f);
+	// カメラシェイク(ここ汎用的じゃないから後々書き直そうかな)
+	m_Target += m_ShakeVector * sinf(m_ShakeTime);
+	m_ShakeTime += XM_2PI / 3.0f; // 揺らす速さ
+	m_ShakeVector *= 0.9f;
+
 	SetPosition(m_Target + Vector3(-sinf(GetRadian().y), 0.5f, -cosf(GetRadian().y)) * 5.0f);
 	
 	// 極座標変換で上向きも対応
@@ -65,4 +74,10 @@ void Camera::Draw()
 	XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
 	m_ViewMatrix = XMMatrixLookAtLH(XMLoadFloat3((XMFLOAT3*)&GetPosition()), XMLoadFloat3((XMFLOAT3*)&m_Target), XMLoadFloat3(&up));
 	Renderer::SetViewMatrix(m_ViewMatrix);
+}
+
+void Camera::Shake(const Vector3& power)
+{
+	m_ShakeVector = power;
+	m_ShakeTime = 0.0f;
 }

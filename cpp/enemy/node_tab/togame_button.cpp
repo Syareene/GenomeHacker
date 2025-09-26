@@ -17,9 +17,9 @@ void ToGameButton::Init(Transform trans)
 		L"resources/textures/ui/to_game_button.png");
 	*/
 
-	Button::Register(std::bind(&ToGameButton::ToGame, this), Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
-		Vector2(200.0f, 50.0f), Vector2(0.0f, 0.0f),
-		L"asset/texture/gravel.jpg");
+	Button::Register(std::bind(&ToGameButton::ToGame, this), ToGameButton::BUTTON_POS,
+		ToGameButton::BUTTON_SIZE, Vector2(0.0f, 0.0f),
+		L"asset/texture/return_temp.png");
 
 	// このボタンは最初見えてほしくないので非アクティブ
 	SetActive(false);

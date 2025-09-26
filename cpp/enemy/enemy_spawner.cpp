@@ -15,21 +15,12 @@ void EnemySpawner::Init()
 	// このタイミングで敵の元データを全て登録
 	// 自動でしたいけど一旦手動かな～ファイル読み込みとかしない限り自動化できん
 
-	// 各種データを配列に追加し登録処理
-	m_EnemyBaseList.emplace_back(std::make_unique<Slime>())->Register();
-	m_EnemyBaseList.emplace_back(std::make_unique<Minotaur>())->Register();
+	// ->enemy_listに移行済み
 }
 
 void EnemySpawner::Uninit()
 {
 	// 終了処理
-
-	// 登録解除して中身を消す
-	for(auto& enemy : m_EnemyBaseList)
-	{
-		enemy->Unregister(); // 登録解除処理
-	}
-	m_EnemyBaseList.clear();
 }
 
 void EnemySpawner::Update()

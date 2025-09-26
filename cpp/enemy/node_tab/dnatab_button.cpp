@@ -61,7 +61,6 @@ void DNAButton::ToDNATab()
 		// game_sceneではないのでreturn
 		return;
 	}
-	SetActive(false); // 自身をアクティブにする
 
 	scenePtr->SetState(GameScene::State::DNA_TAB); // ゲームシーンの状態をDNAタブに変更
 	

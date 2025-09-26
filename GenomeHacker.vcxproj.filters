@@ -264,6 +264,12 @@
     <ClInclude Include="hedder\enemy\node_tab\togame_button.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\enemy_list.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\system_object.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node_tab\togame_button.cpp">
       <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\enemy_list.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

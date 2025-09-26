@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include "manager.h"
+#include "enemy/base_data/enemy_list.h"
 
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
@@ -37,36 +38,32 @@ private:
 
 
 		// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
-		for (const auto& base : m_EnemyBaseList)
-		{
-			if (dynamic_cast<T*>(base.get()))
-			{
-				// 一致したのでデータをセットする
-
-				// fieldenemyに欲しいデータ上げておく
-				// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
-				// 後は変動するステータス: 現在HP
-
-				enemy->SetEnemyBase(base.get());
-				enemy->SetCurrentHP(base.get()->GetMaxHealth());
-
-				// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形で
-				//enemy->SetPosition(base.get()->GetDrawPosDiff());
-				enemy->SetScale(enemy->GetScale().mul(base.get()->GetDrawScaleDiff()));
-
-				// コライダをセット
 
 
-				// データセットしたのでループから抜ける
-				return true;
-			}
-		}
+		EnemyBase* base_data = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBase<T>();
+
+		// fieldenemyに欲しいデータ上げておく
+		// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
+		// 後は変動するステータス: 現在HP
+
+		enemy->SetEnemyBase(base_data);
+		enemy->SetCurrentHP(base_data->GetMaxHealth());
+
+		// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形で
+		//enemy->SetPosition(base.get()->GetDrawPosDiff());
+		enemy->SetScale(enemy->GetScale().mul(base_data->GetDrawScaleDiff()));
+
+		// コライダをセット
+
+
+		// データセットしたのでループから抜ける
+		return true;
 		// データが見つからなかった
-		assert(0 && "敵のデータが登録されておらず、インスタンス化できませんでした");
-		return false;
+		//assert(0 && "敵のデータが登録されておらず、インスタンス化できませんでした");
+		//return false;
 	}
 	// 敵の元データを格納する変数
-	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
+	//std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
 	int m_SpawnTimer = 0; // 敵を出すタイマー
 	int m_SpawnCount = 0; // 出した敵の数(temp)
 	//void SetEnemyData(FieldEnemy* set_target, int target_id); // ポインタを受け取って特定の敵の初期化情報をセットする関数

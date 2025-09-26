@@ -79,6 +79,11 @@ void Player::Update()
 		// 弾の速度を設定
 		bullet->SetVelocity(GetForward() * 0.2f);
 	}
+
+	if (Input::GetKeyTrigger('R'))
+	{
+		camera->Shake(Vector3(0.5f, 0.5f, 0.0f));
+	}
 }
 
 void Player::Draw()
