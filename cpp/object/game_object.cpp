@@ -1,7 +1,7 @@
 ﻿#include "object/game_object.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "object/camera.h"
-#include "default_vertex.h"
+#include "manager/default_vertex.h"
 
 
 void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed)

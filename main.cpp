@@ -1,5 +1,5 @@
 ﻿#include "main.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "lib/mouse.h"
 #include <thread>
 

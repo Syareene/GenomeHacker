@@ -1,7 +1,7 @@
 ﻿#include "object/ui/in_game/fade.h"
 #include "object/game_object.h"
 #include "lib/easing.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include <algorithm>
 
 void Fade::Init(Transform trans)

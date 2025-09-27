@@ -1,9 +1,9 @@
 ﻿#include "main.h"
-#include "manager.h"
-#include "renderer.h"
+#include "scene/manager.h"
+#include "lib/renderer.h"
 #include "object/camera.h"
 #include "player.h"
-#include "input.h"
+#include "lib/input.h"
 
 void Camera::Init(Transform trans)
 {

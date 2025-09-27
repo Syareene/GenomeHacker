@@ -1,5 +1,5 @@
 ﻿#include "enemy/node/add_score.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "score.h"
 
 void AddScore::Init(Transform trans)

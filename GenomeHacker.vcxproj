@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="component.h" />
-    <ClInclude Include="default_vertex.h" />
     <ClInclude Include="hedder\collider\collider_base.h" />
     <ClInclude Include="hedder\collider\collision.h" />
     <ClInclude Include="hedder\collider\cube.h" />
@@ -41,16 +40,23 @@
     <ClInclude Include="hedder\enemy\node\move_z.h" />
     <ClInclude Include="hedder\enemy\node_tab\attack.h" />
     <ClInclude Include="hedder\enemy\node_tab\death.h" />
+    <ClInclude Include="hedder\enemy\node_tab\enemy_dna_list.h" />
     <ClInclude Include="hedder\enemy\node_tab\movement.h" />
     <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h" />
     <ClInclude Include="hedder\enemy\node_tab\tab_base.h" />
     <ClInclude Include="hedder\enemy\node_tab\togame_button.h" />
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
+    <ClInclude Include="hedder\lib\input.h" />
+    <ClInclude Include="hedder\lib\modelRenderer.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
+    <ClInclude Include="hedder\lib\renderer.h" />
     <ClInclude Include="hedder\lib\transform.h" />
     <ClInclude Include="hedder\lib\vector2.h" />
     <ClInclude Include="hedder\lib\vector3.h" />
+    <ClInclude Include="hedder\manager\default_vertex.h" />
+    <ClInclude Include="hedder\manager\shader_manager.h" />
+    <ClInclude Include="hedder\manager\texture_manager.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
     <ClInclude Include="hedder\object\3d_object.h" />
     <ClInclude Include="hedder\object\billboard.h" />
@@ -66,24 +72,18 @@
     <ClInclude Include="hedder\object\ui\ui.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
     <ClInclude Include="hedder\scene\game_scene.h" />
+    <ClInclude Include="hedder\scene\manager.h" />
     <ClInclude Include="hedder\scene\setting_scene.h" />
     <ClInclude Include="hedder\scene\title_scene.h" />
-    <ClInclude Include="input.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="manager.h" />
-    <ClInclude Include="modelRenderer.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="result_scene.h" />
     <ClInclude Include="score.h" />
-    <ClInclude Include="shader_manager.h" />
     <ClInclude Include="skydome.h" />
-    <ClInclude Include="texture_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="billboard.cpp" />
-    <ClCompile Include="camera.cpp" />
     <ClCompile Include="cpp\collider\collision.cpp" />
     <ClCompile Include="cpp\collider\sphere.cpp" />
     <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp" />
@@ -103,35 +103,37 @@
     <ClCompile Include="cpp\enemy\node_tab\attack.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\death.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\dnatab_button.cpp" />
+    <ClCompile Include="cpp\enemy\node_tab\enemy_dna_list.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\movement.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\tab_base.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\togame_button.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />
     <ClCompile Include="cpp\lib\easing.cpp" />
+    <ClCompile Include="cpp\lib\input.cpp" />
+    <ClCompile Include="cpp\lib\modelRenderer.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
+    <ClCompile Include="cpp\lib\renderer.cpp" />
+    <ClCompile Include="cpp\manager\default_vertex.cpp" />
+    <ClCompile Include="cpp\manager\shader_manager.cpp" />
+    <ClCompile Include="cpp\manager\texture_manager.cpp" />
+    <ClCompile Include="cpp\object\camera.cpp" />
+    <ClCompile Include="cpp\object\field.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
     <ClCompile Include="cpp\object\panel.cpp" />
+    <ClCompile Include="cpp\object\player.cpp" />
+    <ClCompile Include="cpp\object\skydome.cpp" />
     <ClCompile Include="cpp\object\ui\button.cpp" />
     <ClCompile Include="cpp\object\ui\image.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\fade.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />
+    <ClCompile Include="cpp\scene\manager.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
-    <ClCompile Include="default_vertex.cpp" />
-    <ClCompile Include="field.cpp" />
-    <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="manager.cpp" />
-    <ClCompile Include="modelRenderer.cpp" />
     <ClCompile Include="particle.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="score.cpp" />
-    <ClCompile Include="shader_manager.cpp" />
-    <ClCompile Include="skydome.cpp" />
-    <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="result_scene.cpp" />
   </ItemGroup>
   <ItemGroup>

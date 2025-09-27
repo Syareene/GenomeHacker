@@ -1,8 +1,8 @@
 ﻿#include "object/ui/button.h"
-#include "input.h"
+#include "lib/input.h"
 #include "lib/mouse.h"
-#include "texture_manager.h"
-#include "shader_manager.h"
+#include "manager/texture_manager.h"
+#include "manager/shader_manager.h"
 
 void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring filePath, const std::wstring frameTexPath)
 {

@@ -1,7 +1,7 @@
 ﻿#include "result_scene.h"
-#include "renderer.h"
-#include "manager.h"
-#include "input.h"
+#include "lib/renderer.h"
+#include "scene/manager.h"
+#include "lib/input.h"
 #include "scene/title_scene.h"
 #include "object/ui/image.h"
 

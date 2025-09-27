@@ -1,6 +1,6 @@
 ﻿#include "scene/base_scene.h"
-#include "renderer.h"
-#include "manager.h"
+#include "lib/renderer.h"
+#include "scene/manager.h"
 #include "object/camera.h"
 #include "object/panel.h"
 

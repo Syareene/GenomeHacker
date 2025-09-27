@@ -1,5 +1,5 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include <io.h>
 
 

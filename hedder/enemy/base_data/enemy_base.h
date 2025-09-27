@@ -21,8 +21,11 @@ public:
 
 	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
 	// ただ関数としてはここにほしいかな
-	void ShowToDnaButton(const Vector2& pos, const std::wstring filePath);
-	void HideToDnaButton();
+	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID);
+	void HideDnaEditButton();
+	// テクスチャid版がほしい
+
+
 	// インスタンスを都度生成すると重たすぎるが保持しすぎてもメモリを圧迫するっていう
 	// 一旦都度生成でいく
 

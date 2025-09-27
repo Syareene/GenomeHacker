@@ -1,10 +1,10 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "enemy/explosion.h"
 #include "object/camera.h"
-#include "manager.h"
-#include "texture_manager.h"
-#include "shader_manager.h"
+#include "scene/manager.h"
+#include "manager/texture_manager.h"
+#include "manager/shader_manager.h"
 
 
 void Explosion::Init(Transform trans)

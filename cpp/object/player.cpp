@@ -1,12 +1,12 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "player.h"
-#include "modelRenderer.h"
-#include "input.h"
+#include "lib/modelRenderer.h"
+#include "lib/input.h"
 #include "object/camera.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "enemy/bullet.h"
-#include "shader_manager.h"
+#include "manager/shader_manager.h"
 #include "collider/sphere.h"
 
 void Player::Init(Transform trans)

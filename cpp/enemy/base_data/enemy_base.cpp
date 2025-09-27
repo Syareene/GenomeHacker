@@ -4,9 +4,9 @@
 // ノードに関してはdnaのボタンを押したときにこのクラスからデータを取ってくる形になるかな。
 
 #include "enemy/base_data/enemy_base.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "object/game_object.h"
-#include "texture_manager.h"
+#include "manager/texture_manager.h"
 
 #include "enemy/node_tab/tab_base.h"
 #include "enemy/node/base.h"
@@ -235,7 +235,7 @@ int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> tex
 	return m_TextureID; // 成功した場合はテクスチャIDを返す
 }
 
-void EnemyBase::ShowToDnaButton(const Vector2& pos, const std::wstring filePath)
+void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID)
 {
 	// DNAタブへの遷移ボタンを表示
 	// ここでボタンを生成して表示する処理を実装
@@ -244,11 +244,13 @@ void EnemyBase::ShowToDnaButton(const Vector2& pos, const std::wstring filePath)
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();
-		}, pos, Vector2(300.0f, 100.0f), Vector2(0.0f, 0.0f), filePath);
+		}, pos, size, Vector2(0.0f, 0.0f), texID, L"asset/texture/test_frame.png");
+	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
 	m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
+	m_ToDnaButton->AddTag("Dna");
 }
 
-void EnemyBase::HideToDnaButton()
+void EnemyBase::HideDnaEditButton()
 {
 	// DNAタブへの遷移ボタンを非表示
 	if (m_ToDnaButton)

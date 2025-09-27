@@ -2,7 +2,7 @@
 
 #include <list>
 #include <memory>
-#include "manager.h"
+#include "scene/manager.h"
 #include "enemy/base_data/enemy_list.h"
 
 #include "enemy/field_enemy.h"

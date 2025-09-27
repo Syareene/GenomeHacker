@@ -1,6 +1,6 @@
-﻿#include "default_vertex.h"
+﻿#include "manager/default_vertex.h"
 #include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 
 ID3D11Buffer* DefaultVertex::m_VertexBuffer = nullptr;
 ID3D11Buffer* DefaultVertex::m_BillboardVertexBuffer = nullptr;

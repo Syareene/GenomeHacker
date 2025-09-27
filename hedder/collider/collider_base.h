@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "object/game_object.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "collider/sphere.h"
 #include "collider/cube.h"
 #include "lib/vector3.h"

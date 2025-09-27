@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 #include <type_traits>
-#include "manager.h"
+#include "scene/manager.h"
 #include "object/game_object.h"
 #include "object/3d_object.h"
 

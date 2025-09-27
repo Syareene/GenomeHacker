@@ -5,8 +5,8 @@
 
 #include "enemy/base_data/slime.h"
 
-#include "texture_manager.h"
-#include "manager.h"
+#include "manager/texture_manager.h"
+#include "scene/manager.h"
 #include "object/game_object.h"
 
 #include "enemy/node_tab/tab_base.h"

@@ -1,9 +1,9 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "object/billboard.h"
 #include "object/camera.h"
-#include "manager.h"
-#include "shader_manager.h"
+#include "scene/manager.h"
+#include "manager/shader_manager.h"
 
 
 // 現在想定しているゲームだと敵とかのポリゴンを板ポリでやりたいので常に正面を向くポリゴンを作りたい

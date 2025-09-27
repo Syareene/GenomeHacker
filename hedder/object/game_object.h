@@ -2,8 +2,8 @@
 
 #include "lib/transform.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
-#include "renderer.h"
-//#include "manager.h"
+#include "lib/renderer.h"
+//#include "scene/manager.h"
 // ->多分ここのせいでエラー出てる
 #include <string>
 #include <list>

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 
 class ShaderManager
 {

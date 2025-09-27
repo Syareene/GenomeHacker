@@ -31,9 +31,6 @@
     <Filter Include="ソース ファイル\object">
       <UniqueIdentifier>{99bb6d1d-3d8d-4581-9c8d-d6e85e571b8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\player">
-      <UniqueIdentifier>{21d7c7e9-acf0-4617-b8a3-c19868ca7c9d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\lib">
       <UniqueIdentifier>{f933a465-00a6-429f-84a7-408de3b0df6d}</UniqueIdentifier>
     </Filter>
@@ -87,9 +84,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -117,18 +111,6 @@
     <ClInclude Include="hedder\collider\cube.h">
       <Filter>ヘッダー ファイル\collider</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>ヘッダー ファイル\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="modelRenderer.h">
-      <Filter>ヘッダー ファイル\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>ヘッダー ファイル\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>ヘッダー ファイル\manager</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
       <Filter>ヘッダー ファイル\player</Filter>
     </ClInclude>
@@ -150,9 +132,6 @@
     <ClInclude Include="hedder\object\ui\image.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
-    <ClInclude Include="shader_manager.h">
-      <Filter>ヘッダー ファイル\manager</Filter>
-    </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -161,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="score.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="default_vertex.h">
-      <Filter>ヘッダー ファイル\manager</Filter>
     </ClInclude>
     <ClInclude Include="hedder\lib\easing.h">
       <Filter>ヘッダー ファイル\lib</Filter>
@@ -270,6 +246,30 @@
     <ClInclude Include="hedder\object\system_object.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\enemy_dna_list.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\manager\shader_manager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\manager\texture_manager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\manager\default_vertex.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\scene\manager.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\input.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\modelRenderer.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\renderer.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -284,38 +284,11 @@
     <ClCompile Include="cpp\scene\title_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="modelRenderer.cpp">
-      <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
     <ClCompile Include="billboard.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="field.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\player</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>ソース ファイル\manager</Filter>
-    </ClCompile>
-    <ClCompile Include="manager.cpp">
-      <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\base_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_manager.cpp">
-      <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
@@ -329,17 +302,11 @@
     <ClCompile Include="score.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="default_vertex.cpp">
-      <Filter>ソース ファイル\manager</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\lib\easing.cpp">
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\audio.cpp">
       <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="skydome.cpp">
-      <Filter>ソース ファイル\object</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\mouse.cpp">
       <Filter>ソース ファイル\lib</Filter>
@@ -424,6 +391,42 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\base_data\enemy_list.cpp">
       <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\enemy_dna_list.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\field.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\player.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\skydome.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\camera.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\manager\shader_manager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\manager\texture_manager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\manager\default_vertex.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\input.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\renderer.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\modelRenderer.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\manager.cpp">
+      <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

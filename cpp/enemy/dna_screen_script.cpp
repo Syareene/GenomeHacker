@@ -1,6 +1,6 @@
 ﻿
 #include "enemy/dna_screen_script.h"
-#include "manager.h"
+#include "scene/manager.h"
 
 #include "enemy/node_tab/dnatab_button.h"
 #include "enemy/node_tab/attack.h"

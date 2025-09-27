@@ -1,10 +1,10 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "enemy/enemy_3d.h"
-#include "modelRenderer.h"
-#include "input.h"
+#include "lib/modelRenderer.h"
+#include "lib/input.h"
 #include "object/camera.h"
-#include "manager.h"
+#include "scene/manager.h"
 
 void Enemy3D::Init(Transform trans)
 {

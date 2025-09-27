@@ -1,8 +1,8 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "object/field.h"
-#include "texture_manager.h"
-#include "shader_manager.h"
+#include "manager/texture_manager.h"
+#include "manager/shader_manager.h"
 
 
 void Field::Init(Transform trans)

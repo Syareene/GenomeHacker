@@ -1,7 +1,7 @@
 ﻿#include "collider/sphere.h"
 #include "main.h"
-#include "renderer.h"
-#include "shader_manager.h"
+#include "lib/renderer.h"
+#include "manager/shader_manager.h"
 
 ID3D11Buffer* Sphere::m_VertexBuffer = nullptr;
 

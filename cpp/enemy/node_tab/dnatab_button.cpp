@@ -1,5 +1,5 @@
 ﻿#include "enemy/node_tab/dnatab_button.h"
-#include "manager.h"
+#include "scene/manager.h"
 #include "scene/game_scene.h"
 
 void DNAButton::Init(Transform trans)

@@ -1,10 +1,10 @@
 ﻿#include "main.h"
-#include "renderer.h"
+#include "lib/renderer.h"
 #include "skydome.h"
-#include "modelRenderer.h"
-#include "input.h"
+#include "lib/modelRenderer.h"
+#include "lib/input.h"
 #include "object/camera.h"
-#include "manager.h"
+#include "scene/manager.h"
 
 void SkyDome::Init(Transform trans)
 {
