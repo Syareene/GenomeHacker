@@ -1,5 +1,6 @@
 ﻿#include "enemy/node_tab/enemy_dna_list.h"
 #include "enemy/base_data/enemy_list.h"
+#include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"
 #include "lib/mouse.h"
 
@@ -18,9 +19,11 @@ void EnemyDnaList::Update()
 	// enemy_baseを元に再起し個別にノードいじる場所に整列
 
 
-	/*
-	std::list<std::unique_ptr<EnemyBase>> enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
+	
+	std::list<std::unique_ptr<EnemyBase>>& enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
 
+
+	
 	// スクロール対応
 	int scroll_value = Mouse::GetWheelDiff();
 
@@ -43,5 +46,5 @@ void EnemyDnaList::Update()
 		}
 	}
 
-	*/
+	
 }
