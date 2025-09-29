@@ -16,6 +16,7 @@
 #include "enemy/node_tab/togame_button.h"
 #include "object/ui/in_game/fade.h"
 #include "enemy/base_data/enemy_list.h"
+#include "enemy/node_tab/enemy_dna_list.h"
 
 void GameScene::Init()
 {
@@ -29,6 +30,7 @@ void GameScene::Init()
 	AddGameObject<DNAButton>(2);
 	AddGameObject<ToGameButton>(2);
 	AddSystemObject<EnemyList>();
+	AddSystemObject<EnemyDnaList>();
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 	
 
@@ -151,6 +153,10 @@ void GameScene::Draw()
 	}
 
 	// ゲームシーン内の描画が終わったのでstate変更処理
+
+	// state保存
+	m_BeforeState = m_State;
+	// state変更があった場合は変更
 	if (m_WillState != m_State)
 	{
 		m_State = m_WillState;

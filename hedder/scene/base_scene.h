@@ -216,8 +216,9 @@ public:
 	// タグを使ってGameObjectのリストを取得
 	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag);
 
-private:
+protected:
 	void DeleteGameObject();
+private:
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
 	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
 	std::list<std::unique_ptr<SystemObject>> m_SystemObjects; // システムオブジェクトを保存するリスト

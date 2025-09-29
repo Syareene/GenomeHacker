@@ -246,7 +246,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 		ShowDnaScreen();
 		}, pos, size, Vector2(0.0f, 0.0f), texID, L"asset/texture/test_frame.png");
 	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
-	m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
+	//m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("Dna");
 }
 
@@ -255,7 +255,7 @@ void EnemyBase::HideDnaEditButton()
 	// DNAタブへの遷移ボタンを非表示
 	if (m_ToDnaButton)
 	{
-		m_ToDnaButton->Destroy(); // ボタンを破棄
+		m_ToDnaButton->SetDestory(true); // ボタンを破棄
 		m_ToDnaButton = nullptr; // ポインタをnullptrに設定
 	}
 }

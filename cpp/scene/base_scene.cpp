@@ -71,10 +71,22 @@ void Scene::Uninit()
 		}
 	}
 	m_Objects2D.clear();
+
+	// システムオブジェクトの解放
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->Uninit();
+	}
 }
 
 void Scene::Update()
 {
+	// システムオブジェクトの更新
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->Update();
+	}
+
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
@@ -108,6 +120,12 @@ void Scene::Update()
 
 void Scene::UpdateObjectByTag(const std::string& tag)
 {
+	// システムオブジェクトは一旦タグ無視して問答無用で更新
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->Update();
+	}
+
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
@@ -151,6 +169,12 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 
 void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 {
+	// システムオブジェクトは一旦タグ無視して問答無用で更新
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->Update();
+	}
+
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
