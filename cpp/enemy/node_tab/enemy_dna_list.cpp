@@ -26,6 +26,7 @@ void EnemyDnaList::Update()
 	if(scene == nullptr)
 	{
 		// game_sceneではないのでreturn
+		assert(false);
 		return;
 	}
 
@@ -85,7 +86,6 @@ void EnemyDnaList::Update()
 	for(auto & enemyBase : enemy_base_list)
 	{
 		// スクロール量に応じて座標を更新。
-
 
 		// カウント更新
 		width_count++;
