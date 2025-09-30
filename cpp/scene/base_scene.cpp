@@ -120,9 +120,19 @@ void Scene::Update()
 
 void Scene::UpdateObjectByTag(const std::string& tag)
 {
-	// システムオブジェクトは一旦タグ無視して問答無用で更新
+	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if(systemObject.get() == nullptr)
+		{
+			continue;
+		}
+
+		// タグチェック
+		if(!systemObject.get()->IsTagAvailable("System"))
+		{
+			continue; // 該当タグが見つからなかった場合はスルー
+		}
 		systemObject->Update();
 	}
 
@@ -169,9 +179,19 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 
 void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 {
-	// システムオブジェクトは一旦タグ無視して問答無用で更新
+	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (systemObject.get() == nullptr)
+		{
+			continue;
+		}
+
+		// タグチェック
+		if (!systemObject.get()->IsTagAvailable("System"))
+		{
+			continue; // 該当タグが見つからなかった場合はスルー
+		}
 		systemObject->Update();
 	}
 

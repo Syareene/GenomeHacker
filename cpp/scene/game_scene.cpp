@@ -31,6 +31,7 @@ void GameScene::Init()
 	AddGameObject<ToGameButton>(2);
 	AddSystemObject<EnemyList>();
 	AddSystemObject<EnemyDnaList>();
+	AddSystemObject<EnemySpawner>();
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 	
 
@@ -64,11 +65,6 @@ void GameScene::Init()
 	m_BGM->GetSourceVoice()->SetFrequencyRatio(1.0f); // 再生速度を設定
 	m_BGM->Play(true);
 
-
-	// spawner追加
-	m_EnemySpawner = std::make_unique<EnemySpawner>();
-	m_EnemySpawner->Init(); // gameObjは自動でinit呼ばれるがこれはgameObjではないので自身でinitを呼ぶ
-
 	m_State = State::NORMAL; // 初期状態をNORMALに設定
 }
 
@@ -76,7 +72,6 @@ void GameScene::Uninit()
 {
 	// ゲームシーンの終了処理
 	Scene::Uninit();
-	m_EnemySpawner->Uninit();
 	// BGMの解放
 	if (m_BGM)
 	{
@@ -108,7 +103,6 @@ void GameScene::Update()
 		// 通常時処理
 		case State::NORMAL:
 			Scene::Update();
-			m_EnemySpawner->Update();
 			break;
 		// escメニュー出したとき(更新はせずobjの描画はする)
 		case State::ESC_MENU:

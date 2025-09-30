@@ -4,12 +4,13 @@
 #include <memory>
 #include "scene/manager.h"
 #include "enemy/base_data/enemy_list.h"
+#include "object/system_object.h"
 
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
 #include "collider/sphere.h"
 
-class EnemySpawner
+class EnemySpawner : public SystemObject
 {
 	// 基本はgameSceneにおいて、呼び出したときにオブジェクトを生成するだけのクラス
 	// 今後機能が拡張するとウェーブ管理とかもするので敵の召喚をgameScene側から関数を通じて指定するのではなく

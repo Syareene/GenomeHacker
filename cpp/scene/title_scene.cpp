@@ -4,6 +4,7 @@
 #include "lib/input.h"
 #include "scene/game_scene.h"
 #include "object/ui/image.h"
+#include "object/ui/button.h"
 
 #include <memory>
 
