@@ -60,9 +60,6 @@ void EnemyDnaList::Update()
 
 		for (auto& enemyBase : enemy_base_list)
 		{
-			// ここでenemyBaseのdnaScreenを表示する
-
-			// 今この状態だと毎f buttonが生成されちゃうので工夫は必要
 			enemyBase->ShowDnaEditButton(Vector2(200.0f + (width_count * (WIDTH_SIZE + WIDTH_SIZE / 8.0f)), 300.0f + (height_count * (HEIGHT_SIZE + HEIGHT_SIZE / 12.0f))), Vector2(WIDTH_SIZE, HEIGHT_SIZE), enemyBase->GetEnemyTextureID());
 			// カウント更新
 			width_count++;
@@ -86,6 +83,8 @@ void EnemyDnaList::Update()
 	for(auto & enemyBase : enemy_base_list)
 	{
 		// スクロール量に応じて座標を更新。
+		// これ以上スクロールされてほしくない領域に来たらテクスチャ座標を変えなければならぬ。
+		// 横の奴らは頂点データ同じの利用したいよね、、
 
 		// カウント更新
 		width_count++;
