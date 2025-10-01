@@ -55,6 +55,11 @@ cbuffer ParameterBuffer : register(b5)
     float4 Parameter;
 };
 
+cbuffer CameraBuffer : register(b6)
+{
+	float3 CameraPosition;
+}
+
 
 
 
@@ -73,6 +78,9 @@ struct PS_IN
 	float4 Position		: SV_POSITION;
 	float4 Diffuse		: COLOR0;
 	float2 TexCoord		: TEXCOORD0;
+    float Depth : DEPTH0;
+    float3 Normal : NORMAL0;
+    float4 WorldPosition : POSITION0;
 };
 
 struct POS_VSIN

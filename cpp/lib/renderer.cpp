@@ -17,6 +17,7 @@ ID3D11Buffer*			Renderer::m_ProjectionBuffer{};
 ID3D11Buffer*			Renderer::m_MaterialBuffer{};
 ID3D11Buffer*			Renderer::m_LightBuffer{};
 ID3D11Buffer*			Renderer::m_ParameterBuffer{};
+ID3D11Buffer*			Renderer::m_CameraBuffer{};
 
 
 ID3D11DepthStencilState* Renderer::m_DepthStateEnable{};
@@ -229,6 +230,11 @@ void Renderer::Init()
 	m_Device->CreateBuffer(&bufferDesc, NULL, &m_ParameterBuffer);
 	m_DeviceContext->PSSetConstantBuffers(5, 1, &m_ParameterBuffer);
 
+	bufferDesc.ByteWidth = sizeof(Vector3);
+
+	m_Device->CreateBuffer(&bufferDesc, NULL, &m_CameraBuffer);
+	m_DeviceContext->VSSetConstantBuffers(6, 1, &m_CameraBuffer);
+
 	// ライト初期化
 	LIGHT light{};
 	light.Enable = true;
@@ -361,6 +367,11 @@ void Renderer::SetLight( LIGHT Light )
 void Renderer::SetParameter( XMFLOAT4 parameter )
 {
 	m_DeviceContext->UpdateSubresource(m_ParameterBuffer, 0, NULL, &parameter, 0, 0);
+}
+
+void Renderer::SetCameraPosition( XMFLOAT3 position )
+{
+	m_DeviceContext->UpdateSubresource(m_CameraBuffer, 0, NULL, &position, 0, 0);
 }
 
 

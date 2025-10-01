@@ -56,6 +56,7 @@ private:
 	static ID3D11Buffer*			m_MaterialBuffer;
 	static ID3D11Buffer*			m_LightBuffer;
 	static ID3D11Buffer*			m_ParameterBuffer;
+	static ID3D11Buffer*			m_CameraBuffer;
 
 
 	static ID3D11DepthStencilState* m_DepthStateEnable;
@@ -81,6 +82,7 @@ public:
 	static void SetMaterial(MATERIAL Material);
 	static void SetLight(LIGHT Light);
 	static void SetParameter(XMFLOAT4 parameter);
+	static void SetCameraPosition(XMFLOAT3 position);
 
 	static ID3D11Device* GetDevice( void ){ return m_Device; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_DeviceContext; }
