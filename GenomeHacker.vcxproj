@@ -54,6 +54,7 @@
     <ClInclude Include="hedder\lib\transform.h" />
     <ClInclude Include="hedder\lib\vector2.h" />
     <ClInclude Include="hedder\lib\vector3.h" />
+    <ClInclude Include="hedder\lib\write_font.h" />
     <ClInclude Include="hedder\manager\default_vertex.h" />
     <ClInclude Include="hedder\manager\shader_manager.h" />
     <ClInclude Include="hedder\manager\texture_manager.h" />
@@ -66,6 +67,7 @@
     <ClInclude Include="hedder\object\panel.h" />
     <ClInclude Include="hedder\object\system_object.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
+    <ClInclude Include="hedder\object\ui\font.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
     <ClInclude Include="hedder\object\ui\in_game\enemy_node.h" />
     <ClInclude Include="hedder\object\ui\in_game\fade.h" />
@@ -113,6 +115,7 @@
     <ClCompile Include="cpp\lib\modelRenderer.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
     <ClCompile Include="cpp\lib\renderer.cpp" />
+    <ClCompile Include="cpp\lib\write_font.cpp" />
     <ClCompile Include="cpp\manager\default_vertex.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
@@ -123,6 +126,7 @@
     <ClCompile Include="cpp\object\player.cpp" />
     <ClCompile Include="cpp\object\skydome.cpp" />
     <ClCompile Include="cpp\object\ui\button.cpp" />
+    <ClCompile Include="cpp\object\ui\font.cpp" />
     <ClCompile Include="cpp\object\ui\image.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\fade.cpp" />
@@ -251,11 +255,23 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="shader\waterWaveVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shader\\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

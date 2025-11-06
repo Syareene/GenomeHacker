@@ -54,7 +54,7 @@ void Renderer::Init()
 	hr = D3D11CreateDeviceAndSwapChain( NULL,
 										D3D_DRIVER_TYPE_HARDWARE,
 										NULL,
-										0,
+										D3D11_CREATE_DEVICE_BGRA_SUPPORT, // フォント描画用に変更
 										NULL,
 										0,
 										D3D11_SDK_VERSION,

@@ -6,6 +6,8 @@
 #include "object/ui/image.h"
 #include "object/ui/button.h"
 
+#include "object/ui/font.h"
+
 #include <memory>
 
 void TitleScene::Init()
@@ -20,6 +22,7 @@ void TitleScene::Init()
 		Manager::SetScene<GameScene>();
 		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), 
 			Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
+	AddGameObject<DirectWriteSample>(3);
 }
 
 void TitleScene::Update()

@@ -270,6 +270,12 @@
     <ClInclude Include="hedder\lib\renderer.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\lib\write_font.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\ui\font.h">
+      <Filter>ヘッダー ファイル\object\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -427,6 +433,12 @@
     </ClCompile>
     <ClCompile Include="cpp\scene\manager.cpp">
       <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\write_font.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\ui\font.cpp">
+      <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

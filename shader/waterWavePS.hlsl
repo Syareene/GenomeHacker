@@ -35,5 +35,6 @@ void main(in PS_IN In, out float4 outDiffuse : SV_Target)
         outDiffuse = In.Diffuse;
     }
 
-
+    // プログラム用のフレネル反射式を用いてカメラのviewと法線の角度から反射率を計算してあげると
+    // いい感じに反射する
 }
