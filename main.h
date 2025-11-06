@@ -15,8 +15,8 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
+#include "lib/vector2.h"
 #include "lib/vector3.h"
-
 #include "lib/DirectXTex.h"
 
 #if _DEBUG

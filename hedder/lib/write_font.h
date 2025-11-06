@@ -12,7 +12,7 @@
 
 #include <d2d1.h>						// Direct2D
 #include <DWrite.h>						// DirectWrite
-#include "lib/vector2.h"
+
 
 #pragma warning(pop)
 

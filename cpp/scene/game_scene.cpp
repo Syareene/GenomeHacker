@@ -4,7 +4,7 @@
 #include "object/field.h"
 #include "player.h"
 #include "object/ui/image.h"
-#include "lib/vector3.h"
+
 #include "particle.h"
 #include "lib/input.h"
 #include "result_scene.h"

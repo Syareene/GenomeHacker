@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "main.h"
-#include "lib/vector3.h"
+
 //#include "lib/renderer.h"
 
 // 参考

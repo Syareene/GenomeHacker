@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "lib/vector3.h"
+
 #include <list>
 #include <string>
 #include <type_traits>

@@ -5,7 +5,7 @@
 #include "enemy/dna_screen_script.h"
 #include "object/ui/button.h"
 #include "enemy/base_data/enemy_base.h"
-#include "lib/vector3.h"
+
 #include "object/system_object.h"
 
 

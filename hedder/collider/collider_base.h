@@ -4,7 +4,7 @@
 #include "scene/manager.h"
 #include "collider/sphere.h"
 #include "collider/cube.h"
-#include "lib/vector3.h"
+
 #include <algorithm>
 
 // これ、判定を計算するクラスだけど

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "lib/vector2.h"
+
 
 // もしかしたら後々rawinputに統合するかも
 class Mouse

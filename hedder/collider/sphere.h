@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "collider/collision.h"
-#include "lib/vector3.h"
+
 #include <vector>
 
 

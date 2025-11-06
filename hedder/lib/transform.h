@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "lib/vector3.h"
+
 #include <numbers>
 
 class Transform
