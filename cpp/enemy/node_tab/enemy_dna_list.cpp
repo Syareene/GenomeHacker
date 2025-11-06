@@ -1,4 +1,5 @@
-﻿#include "enemy/node_tab/enemy_dna_list.h"
+﻿#include "main.h"
+#include "enemy/node_tab/enemy_dna_list.h"
 #include "enemy/base_data/enemy_list.h"
 #include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"

@@ -1,4 +1,5 @@
-﻿#include "lib/easing.h"
+﻿#include "main.h"
+#include "lib/easing.h"
 
 // 一次関数版
 

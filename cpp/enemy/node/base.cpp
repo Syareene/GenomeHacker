@@ -1,4 +1,5 @@
-﻿#include "enemy/node/base.h"
+﻿#include "main.h"
+#include "enemy/node/base.h"
 
 void NodeBase::Init(Transform trans)
 {

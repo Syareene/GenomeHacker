@@ -3,6 +3,8 @@
 // 敵を出す際はこのデータのポインタを渡して出す感じになる。
 // ノードに関してはdnaのボタンを押したときにこのクラスからデータを取ってくる形になるかな。
 
+#include "main.h"
+
 #include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"
 #include "object/game_object.h"

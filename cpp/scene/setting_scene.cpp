@@ -1,4 +1,5 @@
-﻿#include "scene/setting_scene.h"
+﻿#include "main.h"
+#include "scene/setting_scene.h"
 
 void SettingScene::Init()
 {

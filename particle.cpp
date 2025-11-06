@@ -1,6 +1,5 @@
-﻿#include "particle.h"
-
-#include "main.h"
+﻿#include "main.h"
+#include "particle.h"
 #include "lib/renderer.h"
 #include "object/camera.h"
 #include "scene/manager.h"

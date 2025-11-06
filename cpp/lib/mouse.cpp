@@ -1,5 +1,5 @@
-﻿#include "lib/mouse.h"
-#include "main.h"
+﻿#include "main.h"
+#include "lib/mouse.h"
 
 bool Mouse::m_RightButtonDown = false; // 右クリックが押されているかどうか
 bool Mouse::m_RightButtonUp = false; // 右クリックが離されたかどうか

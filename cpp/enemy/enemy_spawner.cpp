@@ -1,4 +1,6 @@
-﻿#include "enemy/enemy_spawner.h"
+﻿#include "main.h"
+
+#include "enemy/enemy_spawner.h"
 #include "scene/manager.h"
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"

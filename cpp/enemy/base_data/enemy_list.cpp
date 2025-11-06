@@ -1,4 +1,6 @@
-﻿#include "enemy/base_data/enemy_list.h"
+﻿#include "main.h"
+
+#include "enemy/base_data/enemy_list.h"
 
 
 // enemyDataのhedder

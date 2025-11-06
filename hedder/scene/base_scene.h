@@ -24,6 +24,8 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
+	/// @brief 指定タグを持つオブジェクトのみ更新する
+	/// @param tag タグ名
 	virtual void UpdateObjectByTag(const std::string& tag);
 	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw();

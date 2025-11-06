@@ -1,4 +1,5 @@
-﻿#include "collider/collision.h"
+﻿#include "main.h"
+#include "collider/collision.h"
 
 void Collision::Update(const Vector3& obj_pos)
 {

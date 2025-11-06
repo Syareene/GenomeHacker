@@ -1,4 +1,5 @@
-﻿#include "scene/base_scene.h"
+﻿#include "main.h"
+#include "scene/base_scene.h"
 #include "lib/renderer.h"
 #include "scene/manager.h"
 #include "object/camera.h"
@@ -117,7 +118,6 @@ void Scene::Update()
 	// 不要なgameobjectの削除準備
 	DeleteGameObject();
 }
-
 void Scene::UpdateObjectByTag(const std::string& tag)
 {
 	// システムオブジェクトはSystemタグがあれば更新

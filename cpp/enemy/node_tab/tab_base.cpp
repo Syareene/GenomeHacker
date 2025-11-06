@@ -1,4 +1,5 @@
-﻿#include "enemy/node_tab/tab_base.h"
+﻿#include "main.h"
+#include "enemy/node_tab/tab_base.h"
 
 void TabBase::Init(Transform trans)
 {

@@ -1,5 +1,5 @@
-﻿#include "collider/sphere.h"
-#include "main.h"
+﻿#include "main.h"
+#include "collider/sphere.h"
 #include "lib/renderer.h"
 #include "manager/shader_manager.h"
 

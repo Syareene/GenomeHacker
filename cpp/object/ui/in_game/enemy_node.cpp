@@ -1,4 +1,5 @@
-﻿#include "object/ui/in_game/enemy_node.h"
+﻿#include "main.h"
+#include "object/ui/in_game/enemy_node.h"
 #include "object/game_object.h"
 
 void EnemyNode::Init(Transform trans)

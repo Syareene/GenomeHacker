@@ -1,4 +1,5 @@
-﻿#include "enemy/node/move_z.h"
+﻿#include "main.h"
+#include "enemy/node/move_z.h"
 #include "enemy/field_enemy.h"
 #include "lib/vector3.h"
 

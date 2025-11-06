@@ -1,4 +1,5 @@
-﻿#include "object/game_object.h"
+﻿#include "main.h"
+#include "object/game_object.h"
 #include "scene/manager.h"
 #include "object/camera.h"
 #include "manager/default_vertex.h"

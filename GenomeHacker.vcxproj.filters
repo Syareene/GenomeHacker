@@ -82,6 +82,12 @@
     <Filter Include="ヘッダー ファイル\enemy\base_data">
       <UniqueIdentifier>{0c8a53d4-065b-4a59-8095-de3e7e3541b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\scene\state">
+      <UniqueIdentifier>{1aa69263-310c-4780-9446-5f8d6c5f52eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene\state">
+      <UniqueIdentifier>{c7f17780-7514-4d25-b6ca-5180a80bbe18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -276,6 +282,9 @@
     <ClInclude Include="hedder\object\ui\font.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\scene\state\base_state.h">
+      <Filter>ヘッダー ファイル\scene\state</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -439,6 +448,12 @@
     </ClCompile>
     <ClCompile Include="cpp\object\ui\font.cpp">
       <Filter>ソース ファイル\object\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\state\base_state.cpp">
+      <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

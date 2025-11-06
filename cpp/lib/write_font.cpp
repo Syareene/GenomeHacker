@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "lib/write_font.h"
 #include "main.h"
+#include "lib/write_font.h"
+
 
 // フォントコレクションローダー
 WRL::ComPtr <CustomFontCollectionLoader> pFontCollectionLoader = nullptr;

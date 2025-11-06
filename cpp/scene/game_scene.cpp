@@ -1,4 +1,5 @@
-﻿#include "scene/game_scene.h"
+﻿#include "main.h"
+#include "scene/game_scene.h"
 #include "object/camera.h"
 #include "object/field.h"
 #include "player.h"

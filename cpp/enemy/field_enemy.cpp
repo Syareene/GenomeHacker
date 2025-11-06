@@ -1,6 +1,6 @@
 ﻿// 基礎データからデータを持ってきてフィールドに描画する
 // データを読み取ってから書くのでこのクラスは継承されずデータを受け取り挙動を変えるクラスとなる
-
+#include "main.h"
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
 #include "manager/shader_manager.h"

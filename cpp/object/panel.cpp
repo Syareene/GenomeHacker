@@ -1,4 +1,5 @@
-﻿#include "object/panel.h"
+﻿#include "main.h"
+#include "object/panel.h"
 
 void Panel::Init(Transform trans)
 {

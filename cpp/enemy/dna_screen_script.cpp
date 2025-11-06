@@ -1,4 +1,5 @@
-﻿
+﻿#include "main.h"
+
 #include "enemy/dna_screen_script.h"
 #include "scene/manager.h"
 

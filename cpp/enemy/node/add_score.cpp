@@ -1,4 +1,5 @@
-﻿#include "enemy/node/add_score.h"
+﻿#include "main.h"
+#include "enemy/node/add_score.h"
 #include "scene/manager.h"
 #include "score.h"
 

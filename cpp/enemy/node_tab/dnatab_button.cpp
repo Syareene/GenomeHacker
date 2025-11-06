@@ -1,4 +1,5 @@
-﻿#include "enemy/node_tab/dnatab_button.h"
+﻿#include "main.h"
+#include "enemy/node_tab/dnatab_button.h"
 #include "scene/manager.h"
 #include "scene/game_scene.h"
 

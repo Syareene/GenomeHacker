@@ -1,4 +1,5 @@
-﻿#include "object/ui/in_game/fade.h"
+﻿#include "main.h"
+#include "object/ui/in_game/fade.h"
 #include "object/game_object.h"
 #include "lib/easing.h"
 #include "lib/renderer.h"

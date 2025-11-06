@@ -1,4 +1,5 @@
-﻿#include "object/ui/image.h"
+﻿#include "main.h"
+#include "object/ui/image.h"
 #include "manager/shader_manager.h"
 
 

@@ -1,4 +1,5 @@
-﻿#include "score.h"
+﻿#include "main.h"
+#include "score.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
 #include "lib/mouse.h"
