@@ -80,7 +80,7 @@ void EnemyDnaList::Update()
 	int height_count = 0;
 
 
-	for(auto & enemyBase : enemy_base_list)
+	for(auto& enemyBase : enemy_base_list)
 	{
 		// スクロール量に応じて座標を更新。
 		// これ以上スクロールされてほしくない領域に来たらテクスチャ座標を変えなければならぬ。
