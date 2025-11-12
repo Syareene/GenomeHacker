@@ -52,6 +52,10 @@ struct FontData
 	D2D1_COLOR_F shadowColor;					// 影の色
 	D2D1_POINT_2F shadowOffset;					// 影のオフセット
 
+	// アウトライン（縁取り）設定
+	D2D1_COLOR_F outlineColor;					// 縁取り色
+	FLOAT outlineWidth;							// 縁取り幅（ピクセル）
+
 	// デフォルト設定
 	FontData()
 	{
@@ -67,6 +71,9 @@ struct FontData
 
 		shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
 		shadowOffset = D2D1::Point2F(2.0f, -2.0f);
+
+		outlineColor = D2D1::ColorF(D2D1::ColorF::Black);
+		outlineWidth = 0.0f;
 	}
 };
 
@@ -120,13 +127,13 @@ public:
 	// string：文字列
 	// pos：描画ポジション
 	// options：テキストの整形
-	HRESULT DrawString(std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false);
+	HRESULT DrawString(std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 文字描画
 	// string：文字列
 	// rect：領域指定
 	// options：テキストの整形
-	HRESULT DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false);
+	HRESULT DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 指定されたパスのフォントを読み込む
 	HRESULT FontLoader();
@@ -152,6 +159,7 @@ private:
 	WRL::ComPtr <ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
 	WRL::ComPtr <ID2D1SolidColorBrush>	pBrush = nullptr;			// Direct2Dブラシ設定
 	WRL::ComPtr <ID2D1SolidColorBrush>	pShadowBrush = nullptr;		// Direct2Dブラシ設定（影）
+	WRL::ComPtr <ID2D1SolidColorBrush>	pOutlineBrush = nullptr;		// Direct2Dブラシ設定（縁取り）
 	WRL::ComPtr <IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
 	WRL::ComPtr <IDWriteTextFormat>		pTextFormat = nullptr;		// DirectWriteテキスト形式
 	WRL::ComPtr <IDWriteTextLayout>		pTextLayout = nullptr;		// DirectWriteテキスト書式

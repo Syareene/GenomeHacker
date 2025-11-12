@@ -24,6 +24,8 @@ void DirectWriteSample::Init(Transform trans)
 	m_FontData.font = Write->GetFontName(0);
 	m_FontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
 	m_FontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	m_FontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_FontData.outlineWidth = 6.0f;
 
 	// フォントをセット
 	Write->SetFont(m_FontData);
@@ -42,7 +44,7 @@ void DirectWriteSample::Update()
 
 void DirectWriteSample::Draw()
 {
-	Write->DrawString("ここはテスト画面です", Vector2(90, 90), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	Write->DrawString("テスト描画です", Vector2(90, 250), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
-	Write->DrawString("描画位置は調整してください", Vector2(90, 390), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	Write->DrawString("ここからいい感じにしたいね", Vector2(90, 340), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 }
