@@ -72,7 +72,7 @@ struct FontData
 		shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
 		shadowOffset = D2D1::Point2F(2.0f, -2.0f);
 
-		outlineColor = D2D1::ColorF(D2D1::ColorF::Black);
+		outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 		outlineWidth = 0.0f;
 	}
 };
@@ -123,6 +123,10 @@ public:
 		D2D1_POINT_2F			shadowOffset		// 影のオフセット
 	);
 
+	// テキストキャッシュ: SetTextでレイアウトを生成し、以降の描画で再利用する
+	HRESULT SetText(const std::string& str, FLOAT maxWidth = 0.0f, FLOAT maxHeight = 0.0f);
+	void ClearTextCache();
+
 	// 文字描画
 	// string：文字列
 	// pos：描画ポジション
@@ -162,7 +166,7 @@ private:
 	WRL::ComPtr <ID2D1SolidColorBrush>	pOutlineBrush = nullptr;		// Direct2Dブラシ設定（縁取り）
 	WRL::ComPtr <IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
 	WRL::ComPtr <IDWriteTextFormat>		pTextFormat = nullptr;		// DirectWriteテキスト形式
-	WRL::ComPtr <IDWriteTextLayout>		pTextLayout = nullptr;		// DirectWriteテキスト書式
+	WRL::ComPtr <IDWriteTextLayout>		pTextLayout = nullptr;		// DirectWriteテキスト書式 (キャッシュ用)
 	WRL::ComPtr <IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
 	// フォントファイルリスト
@@ -174,8 +178,14 @@ private:
 	// フォント名リスト
 	std::vector<std::wstring> fontNamesList;
 
-	// フォントのファイル名を取得する
-	WCHAR* GetFontFileNameWithoutExtension(const std::wstring& filePath);
+	// キャッシュしている文字列
+	std::string cachedText;
+	std::wstring cachedWText;
+	FLOAT cachedMaxWidth = 0.0f;
+	FLOAT cachedMaxHeight = 0.0f;
+
+	// フォントのファイル名（拡張子なし）を取得する（動的割当しない安全な戻り値）
+	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);
 
 	// stringをwstringへ変換する
 	std::wstring StringToWString(std::string oString);

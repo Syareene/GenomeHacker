@@ -201,5 +201,22 @@ bool Sphere::CheckCollisionAABB(const Collision& other) const
 
 bool Sphere::CheckCollisionOBB(const Collision& other) const
 {
+	// OBBと球の当たり判定
 	return false; // 未実装
+
+
+	// とりあえず授業内でやったOBB-OBBをメモ
+	// その場合obb+point(scale考慮されてないらしい、X,Z軸回転考慮)
+	// obbの中心位置取得
+	// direction= point_pos - obb_pos
+	// axisX = obb->GetRight();
+	// dotx = Vector3::dot(direction, axisX);
+	// axisY = obb->GetUp();
+	// axisY = Vector3::dot(direction, axisY);
+	// axisZ = obb->GetForward();
+	// dotz = Vector3::dot(direction, axisZ);
+
+	// if(-size.x < dotx&& dotX > size.x && -size_y < doty && dotY > size_y && -size_z < dotz && dotZ > size_z)
+	// { 	// 	return true;
+
 }
