@@ -218,6 +218,34 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	return true; // 実行終わったらtrueを返す
 }
 
+void EnemyBase::Init()
+{
+
+}
+
+void EnemyBase::Uninit()
+{
+
+}
+
+void EnemyBase::Update()
+{
+	// DNAタブが表示されている場合は更新処理を行う
+	if (m_IsDnaScreenVisible && m_DnaScreen)
+	{
+		m_DnaScreen->Update();
+	}
+}
+
+void EnemyBase::Draw()
+{
+	// DNAタブが表示されている場合は描画処理を行う
+	if (m_IsDnaScreenVisible && m_DnaScreen)
+	{
+		m_DnaScreen->Draw();
+	}
+}
+
 int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget, std::pair<int, int> texCount)
 {
 	// 本来ならuv設定される場合があるのでuv設定されてなければデフォ頂点のptrコピーでいいが
@@ -268,6 +296,7 @@ void EnemyBase::ShowDnaScreen()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
+		m_IsDnaScreenVisible = true;
 	}
 }
 
@@ -277,5 +306,6 @@ void EnemyBase::HideDnaScreen()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す	
+		m_IsDnaScreenVisible = false;
 	}
 }

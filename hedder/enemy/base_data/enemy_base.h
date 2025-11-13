@@ -19,6 +19,13 @@ public:
 	void ExecuteMove(FieldEnemy* enemy_ptr);
 	bool ExecuteDeath(FieldEnemy* enemy_ptr);
 
+	// DnaScreenにあるオブジェクトを操作するための関数群
+	void Init();
+	void Uninit();
+	void Update();
+	void Draw();
+
+
 	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
 	// ただ関数としてはここにほしいかな
 	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID);
@@ -51,6 +58,7 @@ public:
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
 	std::unique_ptr<DnaScreenScript> m_DnaScreen; // dnaタブをまとめているpanel->初期化時に自身のnodeを持つために作成する必要あり
+	bool m_IsDnaScreenVisible = false; // dnaタブが表示されているかどうかのフラグ
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
 	// static -> ボタン押すときの外枠テクスチャ用変数?
 	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、

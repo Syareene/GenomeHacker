@@ -4,7 +4,9 @@
 #include "lib/write_font.h"
 #include <memory>
 
-class DirectWriteSample : public Object2D
+// これ、仮に3d空間上に出したいとかならちょっと仕組み変えないといけないけど
+// とりあえずui用フォントなため2d継承で実装。
+class Font : public Object2D
 {
 public:
 	void Init(Transform trans = Transform()) override;
@@ -12,9 +14,13 @@ public:
 	void Update() override;
 	void Draw() override;
 	void SetDisplayText(const std::string& text);
-	void GetDisplayText(std::string& outText) const;	
+	void GetDisplayText(std::string& outText) const;
+	void Register(const Vector2& pos, const Vector2& rot, const float& fontSize, int fontNum);
+	void Register(const Vector2& pos, const Vector2& rot, const float& fontSize);
 private:
 	FontData m_FontData;
 	std::unique_ptr<DirectWriteCustomFont> m_Write = nullptr;
-	std::string m_DisplayText = "";
+	std::string m_DisplayText = ""; // 直接中身いじらず関数使っていじってね(自クラス内でも)
+	bool m_IsShadow = false;
+	bool m_IsOutline = false;
 };

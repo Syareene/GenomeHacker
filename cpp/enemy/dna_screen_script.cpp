@@ -2,6 +2,7 @@
 
 #include "enemy/dna_screen_script.h"
 #include "scene/manager.h"
+#include "object/ui/font.h"
 
 #include "enemy/node_tab/dnatab_button.h"
 #include "enemy/node_tab/attack.h"
@@ -64,9 +65,17 @@ void DnaScreenScript::ShowDnaInfo()
 {
 	// DNA情報を表示する処理
 	// ここで必要な処理を追加
+	Transform trans;
+	trans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+
+	Panel::AddChildObject(std::make_unique<Font>())->Init(trans);
 }
 
 void DnaScreenScript::HideDnaInfo()
 {
+	// 上でやってるように逆にここはゲームオブジェクトから登録解除し、別で管理する
+	// いらないデータは消す
 
+	// uninitとりあえず呼ぶ
+	Uninit();
 }

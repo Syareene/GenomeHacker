@@ -13,8 +13,11 @@ static int count = 0;
 
 // ここ、常にフォント作成されてて解放されずにメモリ常に食い続ける仕様になってそう?
 
-void DirectWriteSample::Init(Transform trans)
+void Font::Init(Transform trans)
 {
+	// transformセット
+	SetTransform(trans);
+
 	// DirectWrite用コンポーネントを作成
 	m_Write = std::make_unique<DirectWriteCustomFont>(&m_FontData);
 
@@ -35,33 +38,33 @@ void DirectWriteSample::Init(Transform trans)
 	m_Write->SetFont(m_FontData);
 }
 
-void DirectWriteSample::Uninit()
+void Font::Uninit()
 {
 	
 }
 
-void DirectWriteSample::Update()
+void Font::Update()
 {
 	// メモリ使用量が増加していないかを確認するためデバッグ用にここで毎度SetTextを呼んで確認
 	SetDisplayText("これはサンプルテキストです" + std::to_string(count));
 	count++;
 }
 
-void DirectWriteSample::Draw()
+void Font::Draw()
 {
-	m_Write->DrawString(m_DisplayText, Vector2(90, 250), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
+	m_Write->DrawString(m_DisplayText, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
-	m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
+	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 }
 
-void DirectWriteSample::SetDisplayText(const std::string& text)
+void Font::SetDisplayText(const std::string& text)
 {
 	m_DisplayText = text;
 	// フォントキャッシュを更新
 	m_Write->SetText(m_DisplayText);
 }
 
-void DirectWriteSample::GetDisplayText(std::string& outText) const
+void Font::GetDisplayText(std::string& outText) const
 {
 	outText = m_DisplayText;
 }
