@@ -17,6 +17,8 @@
 void DnaScreenScript::Init(Transform trans)
 {
 	SetTransform(trans);
+	AddTag("Dna");
+	
 	// 一括管理するために下位オブジェクトを生成
 
 	// これ、パネルの場合表示順いじれないの問題かも?->パネル内の描画は一旦追加順で対処。全体に関してはそもそもベースが描画順コントロールできるからそこでやってくれって感じで(unityも同じだから)
@@ -46,6 +48,10 @@ void DnaScreenScript::Uninit()
 
 void DnaScreenScript::Update()
 {
+	if (!IsActive())
+	{
+		return;
+	}
 	// DNAスクリーンの更新処理
 	Panel::Update();
 	// ここで必要な更新処理を追加
@@ -53,6 +59,11 @@ void DnaScreenScript::Update()
 
 void DnaScreenScript::Draw()
 {
+	if(!IsActive())
+	{
+		return;
+	}
+
 	// DNAスクリーンの描画処理
 	Panel::Draw();
 	// ここで必要な描画処理を追加
@@ -63,10 +74,13 @@ void DnaScreenScript::Draw()
 
 void DnaScreenScript::ShowDnaInfo()
 {
+	// 表示中かどうかもこっちで管理
+	SetActive(true);
+
 	// DNA情報を表示する処理
 	// ここで必要な処理を追加
 	Transform trans;
-	trans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+	trans.SetPosition(Vector3(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 3, 0.0f));
 
 	Panel::AddChildObject(std::make_unique<Font>())->Init(trans);
 }
@@ -75,7 +89,11 @@ void DnaScreenScript::HideDnaInfo()
 {
 	// 上でやってるように逆にここはゲームオブジェクトから登録解除し、別で管理する
 	// いらないデータは消す
+	SetActive(false);
+
+	// panelからfontオブジェクトを消す
+	Panel::GetChildObjectByType<Font>()->Destroy();
 
 	// uninitとりあえず呼ぶ
-	Uninit();
+	//Uninit();
 }

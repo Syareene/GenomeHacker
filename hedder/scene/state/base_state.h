@@ -10,19 +10,21 @@
 
 class Object3D; // 前方宣言
 
+// もともとはSceneを継承していたが継承する意味がよくわからなかったので外した
 
-class State : public Scene
+class State
 {
 public:
+	// stateを用いる各sceneにmanager的なものを作成してもらうor仲介するクラスを作成する
 	State() = default;
 	State(State&& other) noexcept = default;
 	// 
-	void Init() override;
-	void Uninit() override;
-	void Update() override;
-	void UpdateObjectByTag(const std::string& tag) override;
-	void UpdateObjectByTags(const std::list<std::string>& tags) override;
-	void Draw() override;
+	virtual void Init();
+	virtual void Uninit();
+	virtual void Update();
+	virtual void UpdateObjectByTag(const std::string& tag);
+	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
+	virtual void Draw();
 	virtual void DrawObjectByTag(const std::string& tag);
 	virtual void DrawObjectByTags(const std::list<std::string>& tags);
 

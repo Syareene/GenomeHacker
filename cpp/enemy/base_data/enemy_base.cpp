@@ -9,6 +9,7 @@
 #include "scene/manager.h"
 #include "object/game_object.h"
 #include "manager/texture_manager.h"
+#include "enemy/dna_screen_script.h"
 
 #include "enemy/node_tab/tab_base.h"
 #include "enemy/node/base.h"
@@ -21,12 +22,19 @@ void EnemyBase::Register()
 	// 登録処理
 
 	// そのenemy固有の情報を登録
-	m_DnaScreen = std::make_unique<DnaScreenScript>();
+	
+	// なんかこのタイミングでオブジェクトとして生成はしといて常駐させつつ、描画とかに必要なデータだけ表示時に受け取って、非表示時に消すとかがいいような
+	// 今すぐこのタイミングで作る必要が出てきた、、
+
+	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
+	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
+	
+	m_DnaScreen = Manager::GetCurrentScene()->AddGameObject<DnaScreenScript>(2); // DNAスクリーンをシーンに追加
 	m_DnaScreen->Init(); // DNAスクリーンの初期化
 
 	// テクスチャ生成
 	
-	m_TextureID = TextureManager::LoadTexture(L"asset\\texture\\");
+	//m_TextureID = TextureManager::LoadTexture(L"asset\\texture\\");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	
 	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
@@ -41,7 +49,7 @@ void EnemyBase::Unregister()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->Uninit(); // DNAスクリーンの終了処理
-		m_DnaScreen.reset(); // スクリーンのポインタを開放
+		m_DnaScreen = nullptr; // スクリーンのポインタを開放
 	}
 
 	// テクスチャ解放
@@ -220,7 +228,8 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 
 void EnemyBase::Init()
 {
-
+	// 一旦register呼ぶ
+	EnemyBase::Register();
 }
 
 void EnemyBase::Uninit()
@@ -231,19 +240,19 @@ void EnemyBase::Uninit()
 void EnemyBase::Update()
 {
 	// DNAタブが表示されている場合は更新処理を行う
-	if (m_IsDnaScreenVisible && m_DnaScreen)
-	{
-		m_DnaScreen->Update();
-	}
+	//if (m_IsDnaScreenVisible && m_DnaScreen)
+	//{
+	//	m_DnaScreen->Update();
+	//}
 }
 
 void EnemyBase::Draw()
 {
 	// DNAタブが表示されている場合は描画処理を行う
-	if (m_IsDnaScreenVisible && m_DnaScreen)
-	{
-		m_DnaScreen->Draw();
-	}
+	//if (m_IsDnaScreenVisible && m_DnaScreen)
+	//{
+	//	m_DnaScreen->Draw();
+	//}
 }
 
 int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget, std::pair<int, int> texCount)
@@ -275,6 +284,8 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();
 		}, pos, size, Vector2(0.0f, 0.0f), texID, L"asset/texture/test_frame.png");
+
+
 	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
 	//m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("Dna");
@@ -296,7 +307,6 @@ void EnemyBase::ShowDnaScreen()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
-		m_IsDnaScreenVisible = true;
 	}
 }
 
@@ -306,6 +316,5 @@ void EnemyBase::HideDnaScreen()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す	
-		m_IsDnaScreenVisible = false;
 	}
 }

@@ -20,7 +20,6 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
-	void Draw() override;
 
 	std::list<std::unique_ptr<EnemyBase>>& GetEnemyBases(void)
 	{

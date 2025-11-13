@@ -73,7 +73,7 @@ void Manager::Draw()
 		m_CurrentScene->Uninit();
 		m_CurrentScene = std::move(m_NextScene);
 		m_CurrentScene->Init();
-		// 一応nextシーンはnullptrにしておく
+		// nextシーンはnullptrに
 		m_NextScene = nullptr;
 	}
 }

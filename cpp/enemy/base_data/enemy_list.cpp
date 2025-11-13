@@ -25,18 +25,5 @@ void EnemyList::Uninit()
 
 void EnemyList::Update()
 {
-	// 格納している配列内のEnemyBaseのupdateを実行。
-	for (auto& enemyBase : m_EnemyBaseList)
-	{
-		enemyBase->Update();
-	}
-}
 
-void EnemyList::Draw()
-{
-	// 格納している配列内のEnemyBaseのdrawを実行。
-	for (auto& enemyBase : m_EnemyBaseList)
-	{
-		enemyBase->Draw();
-	}
 }
