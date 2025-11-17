@@ -18,7 +18,7 @@ void GameBaseState::Update()
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
-	Manager::GetCurrentScene()->Update();
+	Manager::GetCurrentScene()->UpdateObject();
 
 	// このstateのobjectの更新(これここで基底の変数にアクセスできないから基底に対して更新処理する関数を作成する必要あり)
 	UpdateStateObject();
@@ -27,7 +27,7 @@ void GameBaseState::Update()
 void GameBaseState::Draw()
 {
 	// updateと同じ
-	Manager::GetCurrentScene()->Draw();
+	Manager::GetCurrentScene()->DrawObject();
 	// このstate内オブジェクトの描画
 	DrawStateObject();
 }

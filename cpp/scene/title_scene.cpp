@@ -28,7 +28,7 @@ void TitleScene::Init()
 
 void TitleScene::Update()
 {
-	Scene::Update();
+	Scene::UpdateObject();
 
 	// タイトルシーンの更新処理
 	if (Input::GetKeyTrigger(VK_RETURN))
@@ -36,4 +36,9 @@ void TitleScene::Update()
 		// Enterキーが押されたらゲームシーンに遷移
 		Manager::SetScene<GameScene>();
 	}
+}
+
+void TitleScene::Draw()
+{
+	Scene::DrawObject();
 }

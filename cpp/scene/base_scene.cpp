@@ -80,7 +80,7 @@ void Scene::Uninit()
 	}
 }
 
-void Scene::Update()
+void Scene::UpdateObject()
 {
 	// システムオブジェクトの更新
 	for (auto& systemObject : m_SystemObjects)
@@ -242,7 +242,7 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 	DeleteGameObject();
 }
 
-void Scene::Draw()
+void Scene::DrawObject()
 {
 	// 描画順を揃えるためにソートする(listのアルゴリズム使用)->3dobjだけでいいからそこは工夫したいね
 	// 本当はカメラのz方向の距離でソートしないとダメ

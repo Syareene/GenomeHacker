@@ -21,16 +21,19 @@ class Scene
 public:
 	Scene() = default;
 	Scene(Scene&& other) noexcept = default;
+	virtual ~Scene() = default; // 仮想デストラクタを追加（基底ポインタで削除される際の未定義動作を防ぐ）
 	virtual void Init();
 	virtual void Uninit();
-	virtual void Update();
+	virtual void Update() = 0;
+	void UpdateObject();
 	/// @brief 指定タグを持つオブジェクトのみ更新する
 	/// @param tag タグ名
-	virtual void UpdateObjectByTag(const std::string& tag);
-	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
-	virtual void Draw();
-	virtual void DrawObjectByTag(const std::string& tag);
-	virtual void DrawObjectByTags(const std::list<std::string>& tags);
+	void UpdateObjectByTag(const std::string& tag);
+	void UpdateObjectByTags(const std::list<std::string>& tags);
+	virtual void Draw() = 0;
+	void DrawObject();
+	void DrawObjectByTag(const std::string& tag);
+	void DrawObjectByTags(const std::list<std::string>& tags);
 
 	template<SupportedGameObject T> // Object2DかObject3Dを継承した型のみ許可->謎にGameObjectだとエラーでないのを回避できる
 	T* AddGameObject(int layerNum, Transform trans = Transform())
@@ -199,7 +202,7 @@ public:
 		}
 	}
 
-	template <SystemObj T>
+	template<SystemObj T>
 	T* GetSystemObject()
 	{
 		for (auto& system : m_SystemObjects)
