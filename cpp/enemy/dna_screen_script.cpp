@@ -17,7 +17,7 @@
 void DnaScreenScript::Init(Transform trans)
 {
 	SetTransform(trans);
-	AddTag("Dna");
+	AddTag("dna_edit");
 	
 	// 一括管理するために下位オブジェクトを生成
 

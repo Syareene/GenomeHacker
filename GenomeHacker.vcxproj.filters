@@ -297,6 +297,9 @@
     <ClInclude Include="hedder\scene\state\game_base_state.h">
       <Filter>ヘッダー ファイル\scene\state</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\scene\state\setting_state.h">
+      <Filter>ヘッダー ファイル\scene\state</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -471,6 +474,15 @@
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
     <ClCompile Include="cpp\scene\state\state_manager.cpp">
+      <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\state\dna_edit_state.cpp">
+      <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\state\game_base_state.cpp">
+      <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\state\setting_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,7 +9,7 @@
 class DnaTableState : public State
 {
 public:
-	// 
+	// 敵一覧表示用State
 	void Init() override;
 	void Uninit() override;
 	void Update() override;

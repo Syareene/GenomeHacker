@@ -80,6 +80,7 @@
     <ClInclude Include="hedder\scene\state\dna_edit_state.h" />
     <ClInclude Include="hedder\scene\state\dna_table_state.h" />
     <ClInclude Include="hedder\scene\state\game_base_state.h" />
+    <ClInclude Include="hedder\scene\state\setting_state.h" />
     <ClInclude Include="hedder\scene\state\state_manager.h" />
     <ClInclude Include="hedder\scene\title_scene.h" />
     <ClInclude Include="main.h" />
@@ -140,7 +141,10 @@
     <ClCompile Include="cpp\scene\manager.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\state\base_state.cpp" />
+    <ClCompile Include="cpp\scene\state\dna_edit_state.cpp" />
     <ClCompile Include="cpp\scene\state\dna_table_state.cpp" />
+    <ClCompile Include="cpp\scene\state\game_base_state.cpp" />
+    <ClCompile Include="cpp\scene\state\setting_state.cpp" />
     <ClCompile Include="cpp\scene\state\state_manager.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
     <ClCompile Include="main.cpp" />

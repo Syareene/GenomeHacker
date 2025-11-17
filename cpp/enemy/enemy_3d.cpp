@@ -17,8 +17,8 @@ void Enemy3D::Init(Transform trans)
 
 	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 
-	AddTag("InGame");
-	AddTag("Enemy");
+	AddTag("in_game");
+	AddTag("enemy");
 }
 
 void Enemy3D::Uninit()

@@ -288,7 +288,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 
 	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
 	//m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
-	m_ToDnaButton->AddTag("Dna");
+	m_ToDnaButton->AddTag("dna");
 }
 
 void EnemyBase::HideDnaEditButton()

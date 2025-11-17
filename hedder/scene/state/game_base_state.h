@@ -6,10 +6,10 @@
 #include "scene/state/base_state.h"
 
 
-class DnaTableState : public State
+class GameBaseState : public State
 {
 public:
-	// 
+	// ゲーム基本用State
 	void Init() override;
 	void Uninit() override;
 	void Update() override;

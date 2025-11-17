@@ -10,7 +10,7 @@
 void EnemyList::Init()
 {
 	// システムタグ追加
-	AddTag("System");
+	AddTag("system");
 
 	// 敵を追加
 	m_EnemyBaseList.emplace_back(std::make_unique<Slime>())->Register();

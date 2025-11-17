@@ -24,7 +24,7 @@ void ToGameButton::Init(Transform trans)
 
 	// このボタンは最初見えてほしくないので非アクティブ
 	SetActive(false);
-	AddTag("Dna");
+	AddTag("dna");
 }
 
 void ToGameButton::Uninit()

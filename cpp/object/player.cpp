@@ -23,8 +23,8 @@ void Player::Init(Transform trans)
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform, Vector3(0.0f, 0.85f, 0.0f));
 
-	AddTag("InGame");
-	AddTag("Player");
+	AddTag("in_game");
+	AddTag("player");
 }
 
 void Player::Uninit()

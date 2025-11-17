@@ -8,7 +8,7 @@
 
 void EnemyDnaList::Init()
 {
-	AddTag("System");
+	AddTag("system");
 }
 
 void EnemyDnaList::Uninit()

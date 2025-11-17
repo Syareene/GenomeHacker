@@ -54,8 +54,8 @@ void Explosion::Init(Transform trans)
 	// 変数初期化
 	m_FrameCount = 0;
 
-	AddTag("InGame");
-	AddTag("Particle");
+	AddTag("in_game");
+	AddTag("particle");
 }
 
 void Explosion::Uninit()

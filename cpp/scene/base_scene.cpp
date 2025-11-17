@@ -129,7 +129,7 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 		}
 
 		// タグチェック
-		if(!systemObject.get()->IsTagAvailable("System"))
+		if(!systemObject.get()->IsTagAvailable("system"))
 		{
 			continue; // 該当タグが見つからなかった場合はスルー
 		}
@@ -188,7 +188,7 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 		}
 
 		// タグチェック
-		if (!systemObject.get()->IsTagAvailable("System"))
+		if (!systemObject.get()->IsTagAvailable("system"))
 		{
 			continue; // 該当タグが見つからなかった場合はスルー
 		}

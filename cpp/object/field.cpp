@@ -46,7 +46,7 @@ void Field::Init(Transform trans)
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\grass.jpg"));
 
-	AddTag("InGame");
+	AddTag("in_game");
 }
 
 void Field::Uninit()

@@ -8,7 +8,6 @@
 #include "object/3d_object.h"
 #include "object/2d_object.h"
 
-class Object3D; // 前方宣言
 
 // もともとはSceneを継承していたが継承する意味がよくわからなかったので外した
 
@@ -22,11 +21,7 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
-	virtual void UpdateObjectByTag(const std::string& tag);
-	virtual void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw();
-	virtual void DrawObjectByTag(const std::string& tag);
-	virtual void DrawObjectByTags(const std::list<std::string>& tags);
 
 	template<SupportedGameObject T> // Object2DかObject3Dを継承した型のみ許可->謎にGameObjectだとエラーでないのを回避できる
 	T* AddGameObject(int layerNum, Transform trans = Transform())
@@ -216,6 +211,12 @@ public:
 
 protected:
 	void DeleteGameObject();
+	void UpdateStateObject();
+	void UpdateStateObjectByTag(const std::string& tag);
+	void UpdateStateObjectByTags(const std::list<std::string>& tags);
+	void DrawStateObject();
+	void DrawStateObjectByTag(const std::string& tag);
+	void DrawStateObjectByTags(const std::list<std::string>& tags);
 
 private:
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;

@@ -6,10 +6,10 @@
 #include "scene/state/base_state.h"
 
 
-class DnaEditState : public State
+class SettingState : public State
 {
 public:
-	// DNA編集画面(敵別)用State
+	// ゲーム基本用State
 	void Init() override;
 	void Uninit() override;
 	void Update() override;

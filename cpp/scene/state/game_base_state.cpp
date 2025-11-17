@@ -1,33 +1,33 @@
 ﻿#include "main.h"
-#include "scene/state/dna_table_state.h"
+#include "scene/state/game_base_state.h"
 
-void DnaTableState::Init()
+void GameBaseState::Init()
 {
+
 	// 大本のSceneの
 	//Manager::GetCurrentScene()->Init();
 }
 
-void DnaTableState::Uninit()
+void GameBaseState::Uninit()
 {
 	// override後、個別で追加したいものの追加
 }
 
-void DnaTableState::Update()
+void GameBaseState::Update()
 {
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
-	Manager::GetCurrentScene()->UpdateObjectByTag("dna");
-	// このstate内オブジェクトの更新
-	UpdateStateObjectByTag("dna");
+	Manager::GetCurrentScene()->Update();
 
 	// このstateのobjectの更新(これここで基底の変数にアクセスできないから基底に対して更新処理する関数を作成する必要あり)
+	UpdateStateObject();
 }
 
-void DnaTableState::Draw()
+void GameBaseState::Draw()
 {
 	// updateと同じ
-	Manager::GetCurrentScene()->DrawObjectByTag("dna");
+	Manager::GetCurrentScene()->Draw();
 	// このstate内オブジェクトの描画
-	DrawStateObjectByTag("dna");
+	DrawStateObject();
 }

@@ -18,7 +18,7 @@ void SkyDome::Init(Transform trans)
 
 	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 
-	AddTag("InGame");
+	AddTag("in_game");
 }
 
 void SkyDome::Uninit()

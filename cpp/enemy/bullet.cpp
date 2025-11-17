@@ -19,8 +19,8 @@ void Bullet::Init(Transform trans)
 
 	Renderer::CreatePixelShader(&m_PixelShader, "shader\\unlitTexturePS.cso");
 
-	AddTag("InGame");
-	AddTag("Bullet");
+	AddTag("in_game");
+	AddTag("bullet");
 
 	SetTransform(trans);
 
