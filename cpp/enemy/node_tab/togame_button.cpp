@@ -2,6 +2,8 @@
 #include "enemy/node_tab/togame_button.h"
 #include "scene/manager.h"
 #include "scene/game_scene.h"
+#include "scene/state/dna_table_state.h"
+#include "scene/state/game_base_state.h"
 
 #include <iostream>
 
@@ -44,7 +46,8 @@ void ToGameButton::Update()
 		// game_sceneではないのでreturn
 		return;
 	}
-	if (scenePtr->GetState() != GameScene::State::DNA_TAB)
+	// Use type based check
+	if (!scenePtr->IsState<DnaTableState>())
 	{
 		SetActive(false);
 		return;
@@ -76,6 +79,6 @@ void ToGameButton::ToGame()
 		// game_sceneではないのでreturn
 		return;
 	}
-	scenePtr->SetState(GameScene::State::NORMAL); // ゲームシーンの状態を通常に変更
+	scenePtr->SetState<GameBaseState>(); // changed to template SetState
 	
 }

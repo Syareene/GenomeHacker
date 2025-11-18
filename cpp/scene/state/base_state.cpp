@@ -1,6 +1,8 @@
 ﻿#include "main.h"
 #include "scene/state/base_state.h"
 
+State::~State() = default;
+
 void State::Init()
 {
 	// override後、個別で追加したいものの追加

@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "scene/state/game_base_state.h"
+#include "scene/manager.h"
 
 void GameBaseState::Init()
 {

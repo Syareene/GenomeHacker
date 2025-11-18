@@ -28,10 +28,9 @@
 void GameScene::Init()
 {
 	// ゲームシーンの初期化処理
-	m_StateManager.SetState<GameBaseState>()->Init();
-	// 明示的にstateをセットする
-	m_StateManager.MoveState();
-
+	SetState<GameBaseState>()->Init();
+	// 明示的にstateをセットして遷移実行
+	MoveState();
 
 	AddGameObject<Camera>(0);
 	AddGameObject<Field>(0);
@@ -79,7 +78,7 @@ void GameScene::Init()
 
 void GameScene::Uninit()
 {
-	m_StateManager.GetState()->Uninit();
+	GetStatePtr()->Uninit();
 	// ゲームシーンの終了処理
 	Scene::Uninit();
 	// BGMの解放
@@ -93,46 +92,8 @@ void GameScene::Uninit()
 
 void GameScene::Update()
 {
-	// ゲームシーンの更新処理
-	// 本来ならScene::Update()を呼べばいいが、stateによる管理をしたいので、、って感じ
-	// どのみち判別方法がタブならSceneの方に特定のタグが付いているobjectかどうかってのを比較してからupdateすれば、,
-
-	// このシーンにおいてはscene内でのstateの情報と、すべてのgameobjのリストとは別に現在のstateで更新するオブジェクトのポインタを保持する配列が必要。
-	// その配列を使用しオブジェクトを更新する。もしstateの更新が入った場合はオブジェクトのポインタを保持する配列を、すべてのgameobjのリストから現在のstateに該当するものだけを抽出し、更新する。
-	// AddGameobj関数をoverrideし、追加する際にタグ等から現在のstateに対して追加してもいいかどうかを関数内で判断する(引数は変更できないから)処理を追加する必要あり。
-	// gameobjのタグに対してfieldobjとかsettingsobjとかのタグをもたせる感じかな、、、　更新はしないけど描画はするみたいな設定も欲しくはある。
-
-	// ゲーム時に使うobjectはInGameタグを付ける
-	// んで多分escメニューのときは更新切って描画だけ、dnaタブのときはどっちも切るみたいなことをするからそのときにどうするかみたいな話ではある。
-
-	// 現在のStateに応じてupdateを実行。
-	m_StateManager.GetState()->Update();
-
-	/*
-	switch (m_State)
-	{
-		// 特定のタグだけに対して更新処理を実行する関数を作ってもい	dが、単一タグだけじゃない可能性があるのが
-		// 両方の関数作ればよいか,,
-
-		// 通常時処理
-		case State::NORMAL:
-			Scene::Update();
-			break;
-		// escメニュー出したとき(更新はせずobjの描画はする)
-		case State::ESC_MENU:
-			// Sceneのupdateとは別でシステム系のやつだけ更新をいれる
-			Scene::UpdateObjectByTag("system");
-			break;
-		// dnaタブのときやその他ウィンドウ系(更新も描画もしない)
-		case State::DNA_TAB:
-			// Sceneのupdateとは別で今このシーンで使うやつにのみupdateを入れる
-			Scene::UpdateObjectByTag("dna");
-			break;
-		default:
-			break;
-	}
-	*/
-	
+	// 現在の State に応じて update を実行
+	GetStatePtr()->Update();
 
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
@@ -141,95 +102,16 @@ void GameScene::Update()
 	}
 
 	// フレーム内の更新が終わったら state-changed フラグをクリア
-	m_StateManager.ResetStateChanged();
+	ResetStateChanged();
 }
 
 void GameScene::Draw()
 {
-	// ゲームシーンの描画処理
-	m_StateManager.GetState()->Draw();
+	// 現在の State に応じて draw を実行
+	GetStatePtr()->Draw();
 
-	m_StateManager.MoveState();
-
-	/*
-	switch (m_State)
-	{
-		// 通常時処理
-	case State::NORMAL:
-		Scene::Draw();
-		break;
-		// escメニュー出したとき(更新はせずobjの描画はする)
-	case State::ESC_MENU:
-		Scene::DrawObjectByTags(std::list<std::string>({"in_game", "system"}));
-		break;
-		// dnaタブのときやその他ウィンドウ系(更新も描画もしない)
-	case State::DNA_TAB:
-		Scene::DrawObjectByTag("dna");
-		break;
-	default:
-		break;
-	}
-	*/
-
-	// ゲームシーン内の描画が終わったのでstate変更処理
-
-	// state保存
-	/*
-	m_BeforeState = m_State;
-	// state変更があった場合は変更
-	if (m_WillState != m_State)
-	{
-		m_State = m_WillState;
-	}
-	*/
+	// state の移行を実行
+	MoveState();
 }
 
-// ----------------- GameScene state wrappers -----------------
-void GameScene::SetState(State s)
-{
-	switch (s)
-	{
-	case State::NORMAL:
-		m_StateManager.SetState<GameBaseState>();
-		break;
-	case State::DNA_TAB:
-		m_StateManager.SetState<DnaTableState>();
-		break;
-	case State::DNA_EDIT:
-		m_StateManager.SetState<DnaEditState>();
-		break;
-	default:
-		break;
-	}
-}
-
-GameScene::State GameScene::GetState() const
-{
-	// 現在の state の型を見て enum を返す
-	// Compare type by querying the raw pointer type via typeid on the pointer if available
-	State result = State::NORMAL;
-	// get raw pointer from state manager
-	auto raw = m_StateManager.GetState();
-	if (raw)
-	{
-		std::type_index idx = std::type_index(typeid(*raw));
-		if (idx == std::type_index(typeid(GameBaseState)))
-		{
-			return State::NORMAL;
-		}
-		if (idx == std::type_index(typeid(DnaTableState)))
-		{
-			return State::DNA_TAB;
-		}
-		if (idx == std::type_index(typeid(DnaEditState)))
-		{
-			return State::DNA_EDIT;
-		}
-	}
-	return result;
-}
-
-bool GameScene::IsStateChanged() const
-{
-	return m_StateManager.IsStateChanged();
-}
+// GameScene no longer handles enum-based state; use Scene::SetState<T>() and IsState<T>()

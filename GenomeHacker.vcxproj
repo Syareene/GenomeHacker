@@ -125,6 +125,7 @@
     <ClCompile Include="cpp\manager\default_vertex.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
+    <ClCompile Include="cpp\object\3d_object.cpp" />
     <ClCompile Include="cpp\object\camera.cpp" />
     <ClCompile Include="cpp\object\field.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />

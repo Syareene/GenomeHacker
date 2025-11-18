@@ -5,6 +5,7 @@
 #include "scene/manager.h"
 #include "lib/mouse.h"
 #include "scene/game_scene.h"
+#include "scene/state/dna_table_state.h" // for type checks
 
 void EnemyDnaList::Init()
 {
@@ -35,7 +36,7 @@ void EnemyDnaList::Update()
 	std::list<std::unique_ptr<EnemyBase>>& enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
 
 	// stateが変わっており、かつstateがdna_tabでない場合にボタンを消す
-	if (scene->IsStateChanged() && scene->GetState() != GameScene::State::DNA_TAB)
+	if (scene->IsStateChanged() && !scene->IsState<DnaTableState>())
 	{
 		// ボタン消す
 		for (auto& enemyBase : enemy_base_list)
@@ -47,13 +48,13 @@ void EnemyDnaList::Update()
 	}
 
 	// dna_tabでない場合はreturn
-	if(scene->GetState() != GameScene::State::DNA_TAB)
+	if(!scene->IsState<DnaTableState>())
 	{
 		return;
 	}
 
 	// GameSceneの場合、stateが変わっており、かつstateがdna_tabの場合にボタンを生成
-	if (scene->IsStateChanged() && scene->GetState() == GameScene::State::DNA_TAB)
+	if (scene->IsStateChanged() && scene->IsState<DnaTableState>())
 	{
 		// 整列用カウント変数
 		int width_count = 0;

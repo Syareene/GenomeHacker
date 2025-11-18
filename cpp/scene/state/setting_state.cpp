@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "scene/state/setting_state.h"
+#include "scene/manager.h"
 
 void SettingState::Init()
 {

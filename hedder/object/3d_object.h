@@ -2,7 +2,6 @@
 
 #include "object/game_object.h"
 #include <memory>
-#include "collider/collision.h"
 
 class Collision;
 
@@ -10,6 +9,7 @@ class Collision;
 class Object3D : public GameObject
 {
 public:
+	virtual ~Object3D();
 	// エラー解消用にコメントアウト
 	void Init(Transform trans = Transform()) override
 	{

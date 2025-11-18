@@ -5,6 +5,9 @@
 #include "object/camera.h"
 #include "object/panel.h"
 
+// Define out-of-line destructor
+Scene::~Scene() = default;
+
 // プロトタイプ宣言
 GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag);
 void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result);
@@ -313,6 +316,7 @@ void Scene::DrawObjectByTag(const std::string& tag)
 			gameObject->Draw();
 		}
 	}
+
 	// 2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{

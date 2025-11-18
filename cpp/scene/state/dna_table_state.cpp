@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "scene/state/dna_table_state.h"
+#include "scene/manager.h"
 
 void DnaTableState::Init()
 {

@@ -2,6 +2,8 @@
 #include "enemy/node_tab/dnatab_button.h"
 #include "scene/manager.h"
 #include "scene/game_scene.h"
+#include "scene/state/dna_table_state.h"
+#include "scene/state/game_base_state.h"
 
 void DNAButton::Init(Transform trans)
 {
@@ -27,7 +29,8 @@ void DNAButton::Update()
 		// game_sceneではないのでreturn
 		return;
 	}
-	if (scenePtr->GetState() != GameScene::State::NORMAL)
+	// Use type-based state check
+	if (!scenePtr->IsState<GameBaseState>())
 	{
 		SetActive(false);
 		return;
@@ -49,12 +52,7 @@ void DNAButton::Draw()
 
 void DNAButton::ToDNATab()
 {
-	// んー、こいつらって実態としてもたせるのかどうかを忘れてしもた
-	// 実態としてもたせるならそもそもゲームシーン側のボタンの見た目とdna側での見た目と違うからややこしいような。
-
-	// DNAタブに移動する処理
-	
-	// 該当タブの可視性を有効にし、game_sceneのstateをtabにする
+	// 該当タブの可視性を有効にし、game_sceneのstateをDNAタブに変更
 	Scene* gameScene = Manager::GetCurrentScene().get();
 	GameScene* scenePtr = dynamic_cast<GameScene*>(gameScene);
 	if (scenePtr == nullptr)
@@ -63,6 +61,5 @@ void DNAButton::ToDNATab()
 		return;
 	}
 
-	scenePtr->SetState(GameScene::State::DNA_TAB); // ゲームシーンの状態をDNAタブに変更
-	
+	scenePtr->SetState<DnaTableState>(); // changed to template SetState
 }

@@ -3,10 +3,12 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include "object/game_object.h"
 #include "object/system_object.h"
 #include "object/3d_object.h"
 #include "object/2d_object.h"
+#include "scene/state/state_manager.h" // StateManager in base scene
 
 class Object3D; // 前方宣言
 
@@ -21,7 +23,41 @@ class Scene
 public:
 	Scene() = default;
 	Scene(Scene&& other) noexcept = default;
-	virtual ~Scene() = default; // 仮想デストラクタを追加（基底ポインタで削除される際の未定義動作を防ぐ）
+	virtual ~Scene(); // out-of-line to avoid incomplete State issues
+
+	// StateManager wrapper (move state management into base)
+	template <typename T>
+	T* SetState()
+	{
+		return m_StateManager.SetState<T>();
+	}
+
+	inline State* GetStatePtr() const
+	{
+		return m_StateManager.GetState();
+	}
+
+	template <typename T>
+	bool IsState() const
+	{
+		return m_StateManager.IsCurrentState<T>();
+	}
+
+	inline void MoveState()
+	{
+		m_StateManager.MoveState();
+	}
+
+	inline bool IsStateChanged() const
+	{
+		return m_StateManager.IsStateChanged();
+	}
+
+	inline void ResetStateChanged()
+	{
+		m_StateManager.ResetStateChanged();
+	}
+
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update() = 0;
@@ -223,6 +259,14 @@ public:
 
 protected:
 	void DeleteGameObject();
+	void UpdateStateObject();
+	void UpdateStateObjectByTag(const std::string& tag);
+	void UpdateStateObjectByTags(const std::list<std::string>& tags);
+	void DrawStateObject();
+	void DrawStateObjectByTag(const std::string& tag);
+	void DrawStateObjectByTags(const std::list<std::string>& tags);
+
+	StateManager m_StateManager; // moved here
 private:
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
 	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
