@@ -29,7 +29,7 @@ void EnemyBase::Register()
 	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
 	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
 	
-	m_DnaScreen = Manager::GetCurrentScene()->AddGameObject<DnaScreenScript>(2); // DNAスクリーンをシーンに追加
+	m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
 	m_DnaScreen->Init(); // DNAスクリーンの初期化
 
 	// テクスチャ生成
@@ -278,7 +278,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 {
 	// DNAタブへの遷移ボタンを表示
 	// ここでボタンを生成して表示する処理を実装
-	m_ToDnaButton = Manager::GetCurrentScene()->AddGameObject<Button>(2);
+	m_ToDnaButton = Manager::GetCurrentScene()->GetStatePtr()->AddGameObject<Button>(2);
 
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
@@ -289,6 +289,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
 	//m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("dna");
+
 }
 
 void EnemyBase::HideDnaEditButton()
@@ -306,6 +307,8 @@ void EnemyBase::ShowDnaScreen()
 	// DNAタブを表示
 	if (m_DnaScreen)
 	{
+		// m_DnaScreenの所有権を現在のstateに移す
+		m_DnaScreenPtr = Manager::GetCurrentScene()->GetStatePtr()->AddGameObject<DnaScreenScript>(std::move(m_DnaScreen), 2);
 		m_DnaScreen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 	}
 }
@@ -316,5 +319,7 @@ void EnemyBase::HideDnaScreen()
 	if (m_DnaScreen)
 	{
 		m_DnaScreen->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す	
+		// 所有権をsceneから移す
+		m_DnaScreen = std::move(Manager::GetCurrentScene()->GetStatePtr()->GetGameObjectUniquePtr<DnaScreenScript>(m_DnaScreenPtr));
 	}
 }

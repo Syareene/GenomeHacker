@@ -38,7 +38,17 @@ public:
 
 	// DNAタブ関連の関数
 	//inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
-	inline DnaScreenScript* GetDnaScreen() {return m_DnaScreen; }
+	inline DnaScreenScript* GetDnaScreen() 
+	{
+		if(m_DnaScreen) 
+		{ 
+			return m_DnaScreen.get(); 
+		} 
+		else 
+		{ 
+			return m_DnaScreenPtr; 
+		}
+	}
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
 
@@ -57,7 +67,9 @@ public:
 	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
-	DnaScreenScript* m_DnaScreen; // dnaタブをまとめているpanel->初期化時に自身のnodeを持つために作成する必要あり
+	std::unique_ptr<DnaScreenScript> m_DnaScreen; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
+	DnaScreenScript* m_DnaScreenPtr = nullptr; // DNAスクリーンのスクリプトオブジェクトのポインタ(stateで管理しているときはここに保存)
+
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
 	// static -> ボタン押すときの外枠テクスチャ用変数?
 	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、

@@ -81,3 +81,90 @@ void Camera::Shake(const Vector3& power)
 	m_ShakeVector = power;
 	m_ShakeTime = 0.0f;
 }
+
+// 視錐台カリング用
+bool Camera::CheckView(const Vector3& position, const float radius)
+{
+	XMMATRIX vp;
+
+	vp = m_ViewMatrix * m_ProjectionMatrix;
+	XMMATRIX invVp;
+	invVp = XMMatrixInverse(nullptr, vp); // 逆行列
+
+	XMFLOAT3 vpos[4];
+	vpos[0] = XMFLOAT3(-1.0f, 1.0f, 0.0f); // 左上
+	vpos[1] = XMFLOAT3(1.0f, 1.0f, 0.0f);  // 右上
+	vpos[2] = XMFLOAT3(-1.0f, -1.0f, 0.0f); // 左下
+	vpos[3] = XMFLOAT3(1.0f, -1.0f, 0.0f); // 右下
+
+	XMVECTOR vposv[4];
+	XMVECTOR wposv[4];
+	XMFLOAT3 wpos[4];
+	for(int i = 0; i < 4; i++)
+	{
+		vposv[i] = XMLoadFloat3(&vpos[i]);
+		wposv[i] = XMVector3TransformCoord(vposv[i], invVp);
+		XMStoreFloat3(&wpos[i], wposv[i]);
+	}
+
+	// カメラからターゲットに向かうベクトル
+	Vector3 v;
+	v = position - GetPosition();
+	
+	Vector3 wp[4];
+	for(int i = 0; i < 4; i++)
+	{
+		wp[i] = Vector3(wpos[i].x, wpos[i].y, wpos[i].z);
+	}
+
+	// 左面の判定
+	{
+		Vector3 v1, v2;
+		v1 = wp[0] - GetPosition();
+		v2 = wp[2] - GetPosition();
+		// 外積を使用して法線ベクトルを求める
+		Vector3 n;
+		n = CrossProduct(v1, v2);
+		n.normalize(); // 正規化
+
+		// 内積を使用して判定
+		float d;
+		d = n * v;
+		// ここの0.0fを-サイズにすると球で判定できるので点判定ではなくなる
+		if (d < -radius)
+		{
+			// 当たってない
+			return false;
+		}
+	}
+
+	// 右面の判定
+	{
+		Vector3 v1, v2;
+		v1 = wp[3] - GetPosition();
+		v2 = wp[1] - GetPosition();
+		// 外積を使用して法線ベクトルを求める
+		Vector3 n;
+		n = CrossProduct(v1, v2);
+		n.normalize();
+		// 内積を使用して判定
+		float d;
+		d = n * v;
+		if (d < -radius)
+		{
+			// 当たってない
+			return false;
+		}
+	}
+
+	// 距離カリング
+
+	float length = (position - GetPosition()).length();
+	if (length > 30.0f)
+	{
+		return false;
+	}
+	// このあと外で計算して距離に応じてα値いじるとかにすると見た目良くなる
+
+	return true;
+}

@@ -20,6 +20,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Shake(const Vector3& power);
+	bool CheckView(const Vector3& position, const float radius);
 	const Vector3 GetTarget() const { return m_Target; }
 	void SetTarget(const Vector3& target) { m_Target = target; }
 	XMMATRIX GetViewMatrix() const { return m_ViewMatrix; }

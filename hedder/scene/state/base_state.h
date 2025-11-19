@@ -73,6 +73,57 @@ public:
 	}
 
 	template<typename T>
+	// すでにあるunique_ptrを元に追加するパターン。あらかじめ初期化処理を読んだ物を渡すようにしてください。
+	T* AddGameObject(std::unique_ptr<T>&& object, int layerNum, Transform trans = Transform())
+	{
+		// 型チェック
+		if constexpr (!std::is_base_of_v<Object3D, T> && !std::is_base_of_v<Object2D, T>)
+		{
+			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
+			return nullptr; // 型が違う場合はnullptrを返す
+		}
+		// unique_ptrで受け取っているため初期化処理は実行しているものとみなす
+
+		if constexpr (std::is_base_of_v<Object2D, T>)
+		{
+			if (layerNum < 0)
+			{
+				//
+			}
+			else if (layerNum >= static_cast<int>(m_Objects2D.size()))
+			{
+				for (int i = static_cast<int>(m_Objects2D.size()); i <= layerNum; i++)
+				{
+					m_Objects2D.emplace_back(std::list<std::unique_ptr<Object2D>>());
+				}
+			}
+			auto it = m_Objects2D.begin();
+			std::advance(it, layerNum);
+			it->push_back(std::unique_ptr<Object2D>(std::move(object)));
+			return static_cast<T*>(it->back().get());
+		}
+		else if constexpr (std::is_base_of_v<Object3D, T>)
+		{
+			if (layerNum < 0)
+			{
+				//
+			}
+			else if (layerNum >= static_cast<int>(m_Objects3D.size()))
+			{
+				for (int i = static_cast<int>(m_Objects3D.size()); i <= layerNum; i++)
+				{
+					m_Objects3D.emplace_back(std::list<std::unique_ptr<Object3D>>());
+				}
+			}
+			auto it = m_Objects3D.begin();
+			std::advance(it, layerNum);
+			it->push_back((std::move(object)));
+			return static_cast<T*>(it->back().get());
+		}
+		return nullptr; // ここに来ることはないはず
+	}
+
+	template<typename T>
 	T* AddSystemObject()
 	{
 		static_assert(std::is_base_of_v<SystemObject, T>, "Unsupported SystemObject type");
@@ -80,6 +131,53 @@ public:
 		system_obj->Init();
 		m_SystemObjects.push_back(std::move(system_obj));
 		return static_cast<T*>(m_SystemObjects.back().get());
+	}
+
+	template<typename T>
+	std::unique_ptr<T> GetGameObjectUniquePtr(T* rawPtr)
+	{
+		static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
+
+		if constexpr (std::is_base_of_v<Object2D, T>)
+		{
+			for (auto& layer : m_Objects2D)
+			{
+				for (auto it = layer.begin(); it != layer.end(); ++it)
+				{
+					if (it->get() == rawPtr)
+					{
+						// 型安全にチェックしてから所有権を移す
+						if (dynamic_cast<T*>(rawPtr) == nullptr)
+						{
+							return nullptr; // 型違い: 所有権は移さない
+						}
+						T* raw = static_cast<T*>(it->release()); // ownership を手放させる
+						layer.erase(it);	// コンテナから削除
+						return std::unique_ptr<T>(raw);	// 新しい unique_ptr<T> を返す
+					}
+				}
+			}
+		}
+		else if constexpr (std::is_base_of_v<Object3D, T>)
+		{
+			for (auto& layer : m_Objects3D)
+			{
+				for (auto it = layer.begin(); it != layer.end(); ++it)
+				{
+					if (it->get() == rawPtr)
+					{
+						if (dynamic_cast<T*>(rawPtr) == nullptr)
+						{
+							return nullptr;
+						}
+						T* raw = static_cast<T*>(it->release());
+						layer.erase(it);
+						return std::unique_ptr<T>(raw);
+					}
+				}
+			}
+		}
+		return nullptr;
 	}
 
 	template <typename T>
