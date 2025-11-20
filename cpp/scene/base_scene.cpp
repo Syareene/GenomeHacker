@@ -42,6 +42,8 @@ void Scene::DeleteGameObject()
 				return false;
 			});
 	}
+
+
 }
 
 void Scene::Init()
@@ -85,6 +87,12 @@ void Scene::Uninit()
 
 void Scene::UpdateObject()
 {
+	// グローバルシステムオブジェクトの更新
+	for (auto& systemObject : m_GlobalSystemObjects)
+	{
+		systemObject->Update();
+	}
+
 	// システムオブジェクトの更新
 	for (auto& systemObject : m_SystemObjects)
 	{
@@ -123,6 +131,12 @@ void Scene::UpdateObject()
 }
 void Scene::UpdateObjectByTag(const std::string& tag)
 {
+	// グローバルなシステムオブジェクトの更新
+	for(auto& systemObject : m_GlobalSystemObjects)
+	{
+		systemObject.get()->Update();
+	}
+
 	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
@@ -182,6 +196,12 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 
 void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 {
+	// グローバルなシステムオブジェクトの更新
+	for (auto& systemObject : m_GlobalSystemObjects)
+	{
+		systemObject.get()->Update();
+	}
+
 	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
@@ -432,6 +452,12 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 
 void Scene::UpdateFinal()
 {
+	// グローバルなシステムオブジェクトの最終更新
+	for (auto& systemObject : m_GlobalSystemObjects)
+	{
+		systemObject.get()->Update();
+	}
+
 	// systemオブジェクトの最終更新
 	for (auto& systemObject : m_SystemObjects)
 	{

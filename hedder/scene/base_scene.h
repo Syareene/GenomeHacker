@@ -141,12 +141,20 @@ public:
 	}
 	template<SystemObj T>
 	//template <typename T>
-	T* AddSystemObject(void)
+	T* AddSystemObject(bool is_global = false)
 	{
 		// 生成
 		std::unique_ptr<T> system_obj = std::make_unique<T>();
 		// 初期化
 		system_obj->Init();
+
+		if(is_global)
+		{
+			// グローバルなシステムオブジェクトとして追加
+			m_GlobalSystemObjects.push_back(std::move(system_obj));
+			return static_cast<T*>(m_GlobalSystemObjects.back().get());
+		}
+		// 通常のシステムオブジェクトとして追加
 
 		// 型の整合性はconceptで取れているのでそのままpush_back
 		m_SystemObjects.push_back(std::move(system_obj));
@@ -239,8 +247,22 @@ public:
 	}
 
 	template<SystemObj T>
-	T* GetSystemObject()
+	T* GetSystemObject(bool is_global = false)
 	{
+		if(is_global)
+		{
+			// グローバルなシステムオブジェクトから探す
+			for (auto& system : m_GlobalSystemObjects)
+			{
+				if (auto ptr = dynamic_cast<T*>(system.get()))
+				{
+					return ptr;
+				}
+			}
+			// 取れなかった場合はnullptrを返す
+			return nullptr;
+		}
+		// 通常のシステムオブジェクトから探す
 		for (auto& system : m_SystemObjects)
 		{
 			if (auto ptr = dynamic_cast<T*>(system.get()))
@@ -272,4 +294,5 @@ private:
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
 	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
 	std::list<std::unique_ptr<SystemObject>> m_SystemObjects; // システムオブジェクトを保存するリスト
+	static std::list<std::unique_ptr<SystemObject>> m_GlobalSystemObjects; // グローバルなシステムオブジェクトを保存する
 };
