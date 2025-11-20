@@ -9,7 +9,7 @@
 class Font : public UI
 {
 public:
-	void Register(const Vector2& pos, FontData font_data, std::string text);
+	void Register(const Vector2& pos, const FontData& font_data, std::string text);
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;

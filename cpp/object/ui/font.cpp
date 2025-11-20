@@ -7,7 +7,7 @@
 // DirectWrite描画クラス
 //DirectWriteCustomFont* Write;
 
-void Font::Register(const Vector2& pos, FontData font_data, std::string text)
+void Font::Register(const Vector2& pos, const FontData& font_data, std::string text)
 {
 	// フォントデータを保存
 	m_FontData = font_data;

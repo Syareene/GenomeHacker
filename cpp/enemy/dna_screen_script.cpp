@@ -82,10 +82,18 @@ void DnaScreenScript::ShowDnaInfo()
 
 	// DNA情報を表示する処理
 	// ここで必要な処理を追加
-	Transform trans;
-	trans.SetPosition(Vector3(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 3, 0.0f));
 
-	Panel::AddChildObject<Font>()->Init(trans);
+	FontData fontData;
+	fontData.fontSize = 120;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
+	fontData.font = DirectWriteCustomFont::GetFontName(0);
+	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
+	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.outlineWidth = 12.0f;
+
+	Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 6), fontData, "情報表示中");
 }
 
 void DnaScreenScript::HideDnaInfo()
