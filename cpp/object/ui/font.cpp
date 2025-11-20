@@ -11,6 +11,7 @@ void Font::Register(const Vector2& pos, FontData font_data, std::string text)
 {
 	// フォントデータを保存
 	m_FontData = font_data;
+	m_Write->SetFont(m_FontData);
 	SetDisplayText(text);
 
 	// 位置セット

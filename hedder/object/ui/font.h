@@ -1,12 +1,12 @@
 ﻿#pragma once
 
-#include "object/2d_object.h"
+#include "object/ui/ui.h"
 #include "lib/write_font.h"
 #include <memory>
 
 // これ、仮に3d空間上に出したいとかならちょっと仕組み変えないといけないけど
 // とりあえずui用フォントなため2d継承で実装。
-class Font : public Object2D
+class Font : public UI
 {
 public:
 	void Register(const Vector2& pos, FontData font_data, std::string text);

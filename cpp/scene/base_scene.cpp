@@ -12,6 +12,7 @@ Scene::~Scene() = default;
 GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag);
 void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result);
 
+std::list<std::unique_ptr<SystemObject>> Scene::m_GlobalSystemObjects;
 
 void Scene::DeleteGameObject()
 {

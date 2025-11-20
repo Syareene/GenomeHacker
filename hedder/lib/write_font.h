@@ -143,7 +143,7 @@ public:
 	HRESULT FontLoader();
 
 	// フォント名を取得する
-	std::wstring GetFontName(int num);
+	static std::wstring GetFontName(int num);
 
 	// 読み込んだフォント名の数を取得する
 	int GetFontNameNum();
@@ -176,7 +176,7 @@ private:
 	FontData  Setting = FontData();
 
 	// フォント名リスト
-	std::vector<std::wstring> fontNamesList;
+	static std::vector<std::wstring> fontNamesList;
 
 	// キャッシュしている文字列
 	std::string cachedText;

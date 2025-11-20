@@ -8,6 +8,8 @@
 // フォントコレクションローダー
 WRL::ComPtr<CustomFontCollectionLoader> pFontCollectionLoader = nullptr;
 
+std::vector<std::wstring> DirectWriteCustomFont::fontNamesList;
+
 //=============================================================================
 // カスタムファイルローダー
 //=============================================================================

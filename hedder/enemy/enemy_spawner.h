@@ -16,9 +16,10 @@ class EnemySpawner : public SystemObject
 	// 今後機能が拡張するとウェーブ管理とかもするので敵の召喚をgameScene側から関数を通じて指定するのではなく
 	// こっち側で判断するように
 public:
-	void Init();
-	void Uninit();
-	void Update();
+	void Init() override;
+	void Uninit() override;
+	void Update() override;
+	void UpdateFinal() override {};
 private:
 	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>
