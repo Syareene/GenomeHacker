@@ -12,6 +12,8 @@ public:
 	virtual void Init() {};
 	virtual void Uninit() {};
 	virtual void Update() {};
+	virtual void UpdateFinal() {};
+
 
 	void AddTag(const std::string& tag)
 	{

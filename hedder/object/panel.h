@@ -3,8 +3,11 @@
 #include "object/2d_object.h"
 #include <memory>
 
+// concept定義
+template<typename T>
+concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 
-// こーれパネルの使用どうしよ。2d限定とか?
+// こーれパネルの仕様どうしよ。2d限定とか?
 class Panel : public Object2D
 {
 private:
@@ -50,11 +53,14 @@ public:
 	// ここに対してadd_objectする場合、scene自体にadd_objectし、その参照をここで持つようにする?
 	// その場合処理順が親->子にならない可能性があるのでそこだけが懸念点。
 
-	// ここmoveないとエラー出る->inputの形式変えたほうがいいかも
-	Object2D* AddChildObject(std::unique_ptr<Object2D> child) 
-	{ 
+	template <PanelSupportedGameObject T>
+	T* AddChildObject() 
+	{
+		// 中でインスタンスを作る
+		auto child = std::make_unique<T>();
+		T* childPtr = child.get();
 		m_ChildObjects.push_back(std::move(child));
-		return m_ChildObjects.back().get(); // 追加した子オブジェクトのポインタを返す
+		return childPtr; // 追加した子オブジェクトのポインタを返す
 	}
 
 	/*

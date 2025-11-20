@@ -9,14 +9,13 @@
 class Font : public Object2D
 {
 public:
+	void Register(const Vector2& pos, FontData font_data, std::string text);
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
 	void SetDisplayText(const std::string& text);
 	void GetDisplayText(std::string& outText) const;
-	void Register(const Vector2& pos, const Vector2& rot, const float& fontSize, int fontNum);
-	void Register(const Vector2& pos, const Vector2& rot, const float& fontSize);
 private:
 	FontData m_FontData;
 	std::unique_ptr<DirectWriteCustomFont> m_Write = nullptr;

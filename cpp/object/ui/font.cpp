@@ -7,11 +7,15 @@
 // DirectWrite描画クラス
 //DirectWriteCustomFont* Write;
 
-int drawNum = 0;
+void Font::Register(const Vector2& pos, FontData font_data, std::string text)
+{
+	// フォントデータを保存
+	m_FontData = font_data;
+	SetDisplayText(text);
 
-static int count = 0;
-
-// ここ、常にフォント作成されてて解放されずにメモリ常に食い続ける仕様になってそう?
+	// 位置セット
+	SetPosition(Vector3(pos.x, pos.y, 0.0f));
+}
 
 void Font::Init(Transform trans)
 {
@@ -45,9 +49,7 @@ void Font::Uninit()
 
 void Font::Update()
 {
-	// メモリ使用量が増加していないかを確認するためデバッグ用にここで毎度SetTextを呼んで確認
-	SetDisplayText("これはサンプルテキストです" + std::to_string(count));
-	count++;
+	//SetDisplayText("これはサンプルテキストです" + std::to_string(count));
 }
 
 void Font::Draw()

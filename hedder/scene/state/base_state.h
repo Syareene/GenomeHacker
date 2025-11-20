@@ -20,6 +20,7 @@ public:
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Draw();
+	void UpdateFinal();
 
 	template<typename T>
 	T* AddGameObject(int layerNum, Transform trans = Transform())

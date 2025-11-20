@@ -31,4 +31,7 @@ void ResultScene::Update()
 void ResultScene::Draw()
 {
 	Scene::DrawObject();
+
+	Scene::UpdateFinal();
+
 }

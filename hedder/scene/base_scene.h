@@ -23,10 +23,10 @@ class Scene
 public:
 	Scene() = default;
 	Scene(Scene&& other) noexcept = default;
-	virtual ~Scene(); // out-of-line to avoid incomplete State issues
+	virtual ~Scene();
 
-	// StateManager wrapper (move state management into base)
 	template <typename T>
+	// state変更関数。変更したstateに対して値をセットしたい場合はこの関数の戻り値を使うこと
 	T* SetState()
 	{
 		return m_StateManager.SetState<T>();
@@ -259,12 +259,13 @@ public:
 
 protected:
 	void DeleteGameObject();
-	void UpdateStateObject();
-	void UpdateStateObjectByTag(const std::string& tag);
-	void UpdateStateObjectByTags(const std::list<std::string>& tags);
-	void DrawStateObject();
-	void DrawStateObjectByTag(const std::string& tag);
-	void DrawStateObjectByTags(const std::list<std::string>& tags);
+	//void UpdateStateObject();
+	//void UpdateStateObjectByTag(const std::string& tag);
+	//void UpdateStateObjectByTags(const std::list<std::string>& tags);
+	//void DrawStateObject();
+	//void DrawStateObjectByTag(const std::string& tag);
+	//void DrawStateObjectByTags(const std::list<std::string>& tags);
+	void UpdateFinal(); // システムオブジェクトのUpdateFinalを呼び出す
 
 	StateManager m_StateManager; // moved here
 private:

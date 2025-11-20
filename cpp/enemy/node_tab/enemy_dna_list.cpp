@@ -97,3 +97,19 @@ void EnemyDnaList::Update()
 		}
 	}	
 }
+
+void EnemyDnaList::UpdateFinal()
+{
+	// 敵一覧を取得
+	std::list<std::unique_ptr<EnemyBase>>& enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
+
+	for (auto& enemyBase : enemy_base_list)
+	{
+		if (enemyBase->GetIsExitDnaEdit())
+		{
+			// dna_editから退出した場合、所有権を元に戻す
+			// 所有権を戻す
+			enemyBase->MovePtrFromState();
+		}
+	}
+}

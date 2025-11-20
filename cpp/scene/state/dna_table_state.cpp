@@ -20,7 +20,8 @@ void DnaTableState::Update()
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna");
 	// このstate内オブジェクトの更新
-	UpdateStateObjectByTag("dna");
+	UpdateStateObject();
+	//UpdateStateObjectByTag("dna");
 
 	// このstateのobjectの更新(これここで基底の変数にアクセスできないから基底に対して更新処理する関数を作成する必要あり)
 }
@@ -30,5 +31,7 @@ void DnaTableState::Draw()
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTag("dna");
 	// このstate内オブジェクトの描画
-	DrawStateObjectByTag("dna");
+	DrawStateObject();
+	//DrawStateObjectByTag("dna");
+	State::UpdateFinal();
 }

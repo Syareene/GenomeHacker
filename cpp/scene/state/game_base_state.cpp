@@ -31,4 +31,6 @@ void GameBaseState::Draw()
 	Manager::GetCurrentScene()->DrawObject();
 	// このstate内オブジェクトの描画
 	DrawStateObject();
+
+	State::UpdateFinal();
 }

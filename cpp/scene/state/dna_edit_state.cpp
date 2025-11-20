@@ -20,11 +20,16 @@ void DnaEditState::Update()
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
 	// state内オブジェクトの更新
-	UpdateStateObjectByTag("dna_edit");
+	//UpdateStateObjectByTag("dna_edit");
+	UpdateStateObject();
 }
 
 void DnaEditState::Draw()
 {
 	// updateと同じ
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
+	// state内オブジェクトの描画
+	DrawStateObject();
+
+	State::UpdateFinal();
 }

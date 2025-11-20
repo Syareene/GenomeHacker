@@ -9,6 +9,7 @@ public:
 	void Init() override;
 	void Uninit() override;
 	void Update() override;
+	void UpdateFinal() override;
 private:
 	const int COLUMN_NUM = 5; // 横に並べる数
 	//const int ROW_NUM = 3; // 縦に並べる数

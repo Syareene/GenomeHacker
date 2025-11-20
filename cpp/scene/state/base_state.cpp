@@ -32,6 +32,15 @@ void State::Draw()
 	// updateと同じ
 }
 
+void State::UpdateFinal()
+{
+	// systemオブジェクトを更新
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->UpdateFinal();
+	}
+}
+
 void State::DeleteGameObject()
 {
 	// 不要になった3dオブジェクトを削除

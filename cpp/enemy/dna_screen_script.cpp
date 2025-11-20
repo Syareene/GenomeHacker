@@ -14,6 +14,9 @@
 // 初期化時に属するクラスを勝手に登録する形に
 // あとは全体を管理するスクリプトを記載。
 
+// ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
+// それぞれ処理分けてもいい説はあります
+
 void DnaScreenScript::Init(Transform trans)
 {
 	SetTransform(trans);
@@ -22,13 +25,13 @@ void DnaScreenScript::Init(Transform trans)
 	// 一括管理するために下位オブジェクトを生成
 
 	// これ、パネルの場合表示順いじれないの問題かも?->パネル内の描画は一旦追加順で対処。全体に関してはそもそもベースが描画順コントロールできるからそこでやってくれって感じで(unityも同じだから)
-	Panel::AddChildObject(std::make_unique<DNAButton>());
+	Panel::AddChildObject<DNAButton>();
 	// 下3つはタブのボタン+タブ内部のスクリプトの描画を管理
 	// panelに足すだけじゃなく、すぐ管理できるようにポインタを自身で保持しておく。
 	// 生存管理はpanel側で行うので開放処理は必要ない(unique_ptrだしね)
-	m_AttackTab = static_cast<AttackTab*>(Panel::AddChildObject(std::make_unique<AttackTab>()));
-	m_MoveTab = static_cast<MoveTab*>(Panel::AddChildObject(std::make_unique<MoveTab>()));
-	m_DeathTab = static_cast<DeathTab*>(Panel::AddChildObject(std::make_unique<DeathTab>()));
+	m_AttackTab = Panel::AddChildObject<AttackTab>();
+	m_MoveTab = Panel::AddChildObject<MoveTab>();
+	m_DeathTab = Panel::AddChildObject<DeathTab>();
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
@@ -82,7 +85,7 @@ void DnaScreenScript::ShowDnaInfo()
 	Transform trans;
 	trans.SetPosition(Vector3(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 3, 0.0f));
 
-	Panel::AddChildObject(std::make_unique<Font>())->Init(trans);
+	Panel::AddChildObject<Font>()->Init(trans);
 }
 
 void DnaScreenScript::HideDnaInfo()

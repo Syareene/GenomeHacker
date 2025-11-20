@@ -92,7 +92,7 @@ void GameScene::Uninit()
 
 void GameScene::Update()
 {
-	// 現在の State に応じて update を実行
+	// 現在のstateに応じてupdateを実行
 	GetStatePtr()->Update();
 
 	if (Input::GetKeyTrigger(VK_RETURN))
@@ -107,11 +107,12 @@ void GameScene::Update()
 
 void GameScene::Draw()
 {
-	// 現在の State に応じて draw を実行
+	// 現在のstateに応じてdrawを実行
 	GetStatePtr()->Draw();
 
-	// state の移行を実行
+	Scene::UpdateFinal();
+	GetStatePtr()->UpdateFinal();
+
+	// stateの移行を実行
 	MoveState();
 }
-
-// GameScene no longer handles enum-based state; use Scene::SetState<T>() and IsState<T>()

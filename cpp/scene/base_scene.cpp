@@ -430,6 +430,14 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 	return result; // タグを持つオブジェクトのリストを返す
 }
 
+void Scene::UpdateFinal()
+{
+	// systemオブジェクトの最終更新
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->UpdateFinal();
+	}
+}
 
 // 再帰的にGameObjectを探索し、最初に見つかったものを返す
 GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag)

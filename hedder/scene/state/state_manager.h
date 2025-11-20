@@ -3,15 +3,16 @@
 #include <memory>
 #include <utility>
 
-#include "scene/state/base_state.h" // Ensure State is a complete type for unique_ptr
+#include "scene/state/base_state.h"
 
 class StateManager
 {
 public:
 	StateManager() = default;
-	~StateManager(); // defined in cpp
+	~StateManager();
 
 	template <typename T>
+	// state変更関数。変更したstateに対して値をセットしたい場合はこの関数の戻り値を使うこと
 	inline T* SetState()
 	{
 		m_WillState = std::make_unique<T>();

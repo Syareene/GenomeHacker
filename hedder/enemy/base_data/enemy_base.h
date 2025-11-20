@@ -51,6 +51,7 @@ public:
 	}
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
+	void MovePtrFromState(); // state側で管理しているdna_screenのポインタをこっちに移す
 
 	inline void SetEnemyID(int id) { m_EnemyID = id; }
 	inline int GetEnemyID() const { return m_EnemyID; }
@@ -61,6 +62,8 @@ public:
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
 	inline void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
 	inline const float GetMaxHealth() const { return m_MaxHealth; }
+	inline void SetIsExitDnaEdit(const bool isExit) { m_IsExitDnaEdit = isExit; }
+	inline const bool GetIsExitDnaEdit() const { return m_IsExitDnaEdit; }
 
 	inline void SetDrawPosDiff(const Vector3& posDiff) { m_PosDiff = posDiff; }
 	inline const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
@@ -82,6 +85,8 @@ private:
 	Vector3 m_PosDiff = { 0.0f, 0.0f, 0.0f }; // 描画時の位置の差分
 	Vector3 m_ScaleDiff = { 1.0f, 1.0f, 1.0f }; // 描画時のスケールの差分
 
+	bool m_IsExitDnaEdit = false; // DNA編集画面から退出したかどうかのフラグ
+	
 	// enemy共通で見るnode以外のステータスを格納する。
 	float m_MaxHealth; // 最大体力
 

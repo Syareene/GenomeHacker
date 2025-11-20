@@ -17,6 +17,11 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
+// state
+#include "scene/state/dna_edit_state.h"
+#include "scene/state/dna_table_state.h"
+
+
 void EnemyBase::Register()
 {
 	// 登録処理
@@ -314,21 +319,44 @@ void EnemyBase::ShowDnaScreen()
 	// DNAタブを表示
 	if (m_DnaScreen)
 	{
-		// m_DnaScreenの所有権を現在のstateに移す
-		m_DnaScreenPtr = Manager::GetCurrentScene()->GetStatePtr()->AddGameObject<DnaScreenScript>(std::move(m_DnaScreen), 2);
+		// state変更
+		DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
+
+		// ここ、stateが即座に変更されているわけではないので、ここで変更後addしても変更前の部分に追加されてて実行されない
+
+		// m_DnaScreenの所有権を移行先のstateに移す
+		m_DnaScreenPtr = will_state->AddGameObject<DnaScreenScript>(std::move(m_DnaScreen), 2);
+		// dna_editからdna_tableに遷移するボタンをセット
+		m_DnaScreenPtr->AddChildObject<Button>()->Register([this]() {
+			// ボタンがクリックされた時の処理
+			HideDnaScreen();
+			}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
+
 		m_DnaScreenPtr->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 	}
 }
 
 void EnemyBase::HideDnaScreen()
 {
-	// 現状この遷移先がなくこの関数が呼ばれないのでnullエラーでてる
-
 	// DNAタブを非表示
-	if (m_DnaScreen)
+	if (m_DnaScreenPtr)
 	{
-		m_DnaScreenPtr->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す	
-		// 所有権をsceneから移す
+		// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
+		m_IsExitDnaEdit = true;
+
+		// state変更
+		Manager::GetCurrentScene()->SetState<DnaTableState>();
+	}
+}
+
+void EnemyBase::MovePtrFromState()
+{
+	// state側で管理しているdna_screenのポインタをこっちに移す
+	if (m_DnaScreenPtr)
+	{
+		m_DnaScreenPtr->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す
+
 		m_DnaScreen = std::move(Manager::GetCurrentScene()->GetStatePtr()->GetGameObjectUniquePtr<DnaScreenScript>(m_DnaScreenPtr));
+		m_IsExitDnaEdit = false;
 	}
 }

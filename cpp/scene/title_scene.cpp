@@ -23,7 +23,17 @@ void TitleScene::Init()
 		Manager::SetScene<GameScene>();
 		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), 
 			Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
-	AddGameObject<Font>(3);
+	FontData fontData;
+	fontData.fontSize = 60;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
+	fontData.font = m_Write->GetFontName(0);
+	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.outlineWidth = 6.0f;
+
+	AddGameObject<Font>(3)->Register(Vector2(200.0f, 100.0f), fontData, "タイトル");
 }
 
 void TitleScene::Update()
@@ -41,4 +51,6 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 	Scene::DrawObject();
+
+	Scene::UpdateFinal();
 }
