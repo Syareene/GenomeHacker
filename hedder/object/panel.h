@@ -54,10 +54,11 @@ public:
 	// その場合処理順が親->子にならない可能性があるのでそこだけが懸念点。
 
 	template <PanelSupportedGameObject T>
-	T* AddChildObject() 
+	T* AddChildObject(Transform trans = Transform())
 	{
 		// 中でインスタンスを作る
 		auto child = std::make_unique<T>();
+		child->Init(trans); // 初期化実行
 		T* childPtr = child.get();
 		m_ChildObjects.push_back(std::move(child));
 		return childPtr; // 追加した子オブジェクトのポインタを返す
