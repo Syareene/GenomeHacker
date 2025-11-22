@@ -5,13 +5,22 @@
 #include "manager/texture_manager.h"
 #include "manager/shader_manager.h"
 
-void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring filePath, const std::wstring frameTexPath)
+void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring& filePath, const std::wstring& frameTexPath)
 {
 	// ボタンの初期化処理
 	SetPosition(Vector3(pos.x, pos.y, 0.0f));
 	SetScale(Vector3(scale.x, scale.y, 1.0f));
 	SetRotation(Vector3(rot.x, rot.y, 0.0f));
-	SetTextureID(TextureManager::LoadTexture(filePath));
+	if (!filePath.empty())
+	{
+		// テクスチャが指定されている場合、テクスチャIDを設定
+		SetTextureID(TextureManager::LoadTexture(filePath));
+	}
+	else
+	{
+		SetTextureID(-1); // テクスチャがない場合は-1に設定
+	}
+
 	if (!frameTexPath.empty())
 	{
 		// フレームテクスチャが指定されている場合、フレームテクスチャIDを設定
@@ -47,6 +56,41 @@ void Button::Register(const std::function<void()>& func, const Vector2& pos, con
 	m_TargetFunc = func; // コールバック関数を設定
 }
 
+void Button::Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const FontData& fontData, const std::string& text, const std::wstring& filePath, const std::wstring& frameTexPath)
+{
+	// ボタンの初期化処理
+	SetPosition(Vector3(pos.x, pos.y, 0.0f));
+	SetScale(Vector3(scale.x, scale.y, 1.0f));
+	SetRotation(Vector3(rot.x, rot.y, 0.0f));
+	if (!filePath.empty())
+	{
+		// テクスチャが指定されている場合、テクスチャIDを設定
+		SetTextureID(TextureManager::LoadTexture(filePath));
+	}
+	else
+	{
+		SetTextureID(-1); // テクスチャがない場合は-1に設定
+	}
+
+	if (!frameTexPath.empty())
+	{
+		// フレームテクスチャが指定されている場合、フレームテクスチャIDを設定
+		m_FrameTexID = TextureManager::LoadTexture(frameTexPath);
+	}
+	else
+	{
+		m_FrameTexID = -1; // フレームテクスチャがない場合は-1に設定
+	}
+	// テキストオブジェクトを作成
+	// ->これ操体市で生成できるようにしてないから位置がどうかなーといったところ
+	m_Text = std::make_unique<Font>();
+	m_Text->Init();
+	m_Text->Register(Vector2(pos.x, pos.y), fontData, text);
+	SetNoUpdate(false); // 更新しないが有効な状態にする
+	SetActive(true); // アクティブにする
+	m_TargetFunc = func; // コールバック関数を設定
+}
+
 void Button::Init(Transform trans)
 {
 	SetTransform(trans);
@@ -55,6 +99,7 @@ void Button::Init(Transform trans)
 void Button::Uninit()
 {
 	m_TargetFunc = nullptr; // コールバック関数をクリア
+	m_Text.reset(); // テキストオブジェクトを解放
 }
 
 void Button::Update()
@@ -74,6 +119,12 @@ void Button::Update()
 	{
 		OnClick(); // マウスがボタンの範囲内でクリックされた場合、OnClickを呼び出す
 	}
+
+	// テキストがあるならテキストに対して更新
+	if (m_Text)
+	{
+		m_Text->Update();
+	}
 }
 
 void Button::Draw()
@@ -81,6 +132,13 @@ void Button::Draw()
 	if (!IsActive())
 	{
 		return;
+	}
+
+
+	// フォントのポインタがあるならフォントを描画
+	if (m_Text)
+	{
+		m_Text->Draw();
 	}
 
 	// 入力レイアウト設定
@@ -117,7 +175,11 @@ void Button::Draw()
 		// 描画
 		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
-
+	// テクスチャがあるときだけ描画
+	if(GetTextureID() == -1)
+	{
+		return;
+	}
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
