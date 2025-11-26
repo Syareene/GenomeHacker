@@ -243,9 +243,6 @@
     <ClInclude Include="hedder\enemy\base_data\minotaur.h">
       <Filter>ヘッダー ファイル\enemy\base_data</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\add_score.h">
-      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\enemy\node_tab\togame_button.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
@@ -310,6 +307,9 @@
       <Filter>ヘッダー ファイル\enemy\node\socket</Filter>
     </ClInclude>
     <ClInclude Include="hedder\enemy\node\base.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\add_score.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
   </ItemGroup>
