@@ -2,6 +2,8 @@
 #include "scene/state/dna_edit_state.h"
 #include "scene/manager.h"
 
+#include "enemy/node/base.h"
+
 void DnaEditState::Init()
 {
 	// 大本のSceneの

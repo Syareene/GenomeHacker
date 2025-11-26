@@ -88,6 +88,12 @@
     <Filter Include="ヘッダー ファイル\scene\state">
       <UniqueIdentifier>{c7f17780-7514-4d25-b6ca-5180a80bbe18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\enemy\node\socket">
+      <UniqueIdentifier>{a6797e1e-2b48-430c-a8bb-6e641ccc5bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\enemy\node\socket">
+      <UniqueIdentifier>{8c15dbf5-ff57-499e-a3cd-faa0cf5d8613}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -300,6 +306,12 @@
     <ClInclude Include="hedder\scene\state\setting_state.h">
       <Filter>ヘッダー ファイル\scene\state</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\number.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\socket\number_socket.h">
+      <Filter>ヘッダー ファイル\enemy\node\socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -487,6 +499,12 @@
     </ClCompile>
     <ClCompile Include="cpp\object\3d_object.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\number.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
+      <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

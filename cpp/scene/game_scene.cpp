@@ -58,7 +58,7 @@ void GameScene::Init()
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Player>()->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
-		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(100.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "テストボタン", L"", L"");
+		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(100.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "テストボタン", L"asset\\texture\\debug_sprite.png", L"");
 		
 	
 

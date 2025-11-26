@@ -21,6 +21,12 @@ public:
 		Attack,
 		Death,
 	};
+
+	struct NodeDescription
+	{
+		std::string desc;
+		Vector2 text_pos;
+	};
 	
 	// このノード内で追加でくっつけられるノード(数字系のノード等)
 	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
@@ -29,6 +35,7 @@ public:
 	void Uninit() override;
 	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
+	void MoveNodeToMouse();
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
@@ -40,8 +47,26 @@ protected:
 	inline void AddInputTypeBottom(const InputType& type) {m_InputTypesBottom.push_back(type);}
 	inline const std::string& GetName() const { return m_Name; }
 	inline void SetName(const std::string& name) { m_Name = name; }
-	inline const std::string& GetDescription() const { return m_Description; }
-	inline void SetDescription(const std::string& desc) { m_Description = desc; }
+	inline const std::vector<NodeDescription*> GetDescriptions() const 
+	{
+		std::vector<NodeDescription*> desc_ptrs;
+		// 生ポインタを配列に詰めて返す
+		for(auto & desc : m_Description)
+		{
+			desc_ptrs.push_back(desc.get());
+		}
+		return desc_ptrs;
+	}
+	inline const NodeDescription* GetDescription(const int index) const { return m_Description[index].get(); }
+	inline void AddDescription(const NodeDescription& desc)
+	{
+		std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
+		m_Description.push_back(std::move(desc_ptr));
+	}
+	inline void SetDescriptionFontData(const FontData& fontData)
+	{
+		m_DescFontData = fontData;
+	}
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
@@ -52,14 +77,19 @@ protected:
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
+	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
-	std::string m_Name; // ノードの名前(表示名)
+	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
+
+	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
-	std::string m_Description; // ノードの説明文
+	std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+	FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)

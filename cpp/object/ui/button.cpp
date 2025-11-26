@@ -134,13 +134,6 @@ void Button::Draw()
 		return;
 	}
 
-
-	// フォントのポインタがあるならフォントを描画
-	if (m_Text)
-	{
-		m_Text->Draw();
-	}
-
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
 	// シェーダー設定
@@ -176,19 +169,24 @@ void Button::Draw()
 		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
 	// テクスチャがあるときだけ描画
-	if(GetTextureID() == -1)
+	if(GetTextureID() != -1)
 	{
-		return;
+		// テクスチャ設定
+	// 一時変数に入れないと参照取得できないのでこうする
+		ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+
+		// プリミティブトポロジ設定
+		Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+		// 描画
+		Renderer::GetDeviceContext()->Draw(4, 0);
 	}
 
-	// テクスチャ設定
-	// 一時変数に入れないと参照取得できないのでこうする
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
-	// プリミティブトポロジ設定
-	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// 描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
+	// フォントのポインタがあるならフォントを描画
+	if (m_Text)
+	{
+		m_Text->Draw();
+	}
 }

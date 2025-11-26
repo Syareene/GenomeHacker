@@ -1,9 +1,37 @@
 ﻿#include "main.h"
 #include "enemy/node/base.h"
+#include "scene/state/dna_edit_state.h"
+#include "scene/manager.h"
+#include "lib/mouse.h"
+#include "object/ui/font.h"
+#include "manager/shader_manager.h"
+#include "manager/texture_manager.h"
 
 void NodeBase::Init(Transform trans)
 {
+	SetTransform(trans);
+	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\debug_sprite.png"));
 
+
+	// 初期値セット
+	m_DescFontData.fontSize = 60;
+	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
+	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
+	m_DescFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.outlineWidth = 6.0f;
+
+	// フォントをセット
+
+	// これ、説明文をfontdataとして格納する形になるかな
+
+	m_DescFont = std::make_unique<Font>();
+	m_DescFont->Init(Transform());
+	m_DescFont->Register(Vector2(0.0f, 0.0f), fontData, "テキスト");
+
+	// ここに説明文格納する感じかな
 }
 
 void NodeBase::Uninit()
@@ -13,12 +41,116 @@ void NodeBase::Uninit()
 
 void NodeBase::Update()
 {
+	// ノードの実態としてあるなら判定を行う->dna_editなら実態ありとして判断?
+	DnaEditState* dnaState = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	if (!dnaState)
+	{
+		return;
+	}
+
+	// dna_edit stateでかつフォントデータが生成されていないなら生成
+
+	// プレイヤーが自身の範囲内にてクリックしたかどうかを判定
+	Vector2 startPos = Vector2(GetPosition().x - (GetScale().x * 0.5f), GetPosition().y - (GetScale().y * 0.5f));
+	Vector2 endPos = Vector2(GetPosition().x + (GetScale().x * 0.5f), GetPosition().y + (GetScale().y * 0.5f));
+
+	// マウス座標がノード内にあるかどうか
+	if (Mouse::IsMouseInsideArea(startPos, endPos))
+	{
+		// その状態で左クリックされたかどうか
+		if (Mouse::IsLeftButtonTrigger())
+		{
+			// 現在掴んでいるノードがあるかどうかを確認
+			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
+			if (grabbingNode)
+			{
+				// 既に掴んでいるノードがある場合は処理しない
+				return;
+			}
+			else
+			{
+				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
+				dnaState->SetGrabbingNode(this);
+			}
+		}
+	}
 
 }
 
 void NodeBase::Draw()
 {
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
+	// 移動、回転マトリックス設定
+	SetWorldMatrixOnDrawBillboard();
+
+	// マテリアル設定
+	SetMaterialOnDraw();
+
+	// 頂点バッファ設定
+	SetDefaultVertexBufferBillboardOnDraw();
+
+	// プリミティブトポロジ設定
+	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	// ノード自体の描画処理
+
+	// テクスチャ設定
+	// 一時変数に入れないと参照取得できないのでこうする
+
+	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+
+	// 描画
+	Renderer::GetDeviceContext()->Draw(4, 0);
+
+
+
+	// ノードソケットの描画処理
+
+	// ノード説明文の描画処理
+	for(const auto& desc : m_Description)
+	{
+		
+	}
+}
+
+void NodeBase::MoveNodeToMouse()
+{
+	// ノードの座標に対してクリックされたらマウスを掴み状態に、
+	// 掴み状態の場合はこの処理が実行、
+	// 掴んでる状態で再度クリックで外す。
+	// 親ノードの場合、子ノードの判定を取らないように子ノードから先に判定をする形となる。
+
+	// また、この形にしかくっつかないとかもあるので該当座標のノードがちゃんとガッチャンコされるかどうかとかもチェックしないといけない
+	// なのでくっつく場所に対しての空のオブジェクト(判定や位置を持っておく)があるとよいのかもしれない
+
+	// これ変数保存部分か取得部分をtemplateのTで取れるようにすればくっつけられる型が判断できるのと
+	// その中(子ノード)に対してgetscaleやposで位置取れるようになるからそれで判定できるね
+
+
+	// 現在dna_edit state上で掴んでいるノードがあるかどうかを確認
+	DnaEditState* dnaState = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr()); // 前で確認しているので安全に取得できる
+	NodeBase* grabbingNode = dnaState->GetGrabbingNode();
+	if (grabbingNode)
+	{
+		// 自身でないノードが掴まれている場合は処理しない
+		if (grabbingNode != this)
+		{
+			return;
+		}
+		else
+		{
+			// 掴んでいるノードが自分自身の場合、マウス位置に移動させる
+			Vector2 mousePos = Mouse::GetPosition();
+			Vector3 pos = Vector3(mousePos.x, mousePos.y, 0.0f);
+			SetPosition(pos);
+		}
+	}
 }
 
 bool NodeBase::NodeEffect(FieldEnemy* enemy_ptr)
