@@ -3,6 +3,7 @@
 //#include <list>
 #include "object/2d_object.h"
 #include "enemy/field_enemy.h"
+#include "object/ui/font.h"
 
 // 多分ui周りのクラス継承?わからんけど
 class NodeBase : public Object2D
@@ -47,26 +48,32 @@ protected:
 	inline void AddInputTypeBottom(const InputType& type) {m_InputTypesBottom.push_back(type);}
 	inline const std::string& GetName() const { return m_Name; }
 	inline void SetName(const std::string& name) { m_Name = name; }
-	inline const std::vector<NodeDescription*> GetDescriptions() const 
-	{
-		std::vector<NodeDescription*> desc_ptrs;
-		// 生ポインタを配列に詰めて返す
-		for(auto & desc : m_Description)
-		{
-			desc_ptrs.push_back(desc.get());
-		}
-		return desc_ptrs;
-	}
-	inline const NodeDescription* GetDescription(const int index) const { return m_Description[index].get(); }
-	inline void AddDescription(const NodeDescription& desc)
-	{
-		std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
-		m_Description.push_back(std::move(desc_ptr));
-	}
-	inline void SetDescriptionFontData(const FontData& fontData)
-	{
-		m_DescFontData = fontData;
-	}
+
+
+	inline const virtual std::vector<NodeDescription*> GetDescriptions() const = 0;
+
+	inline const virtual NodeDescription* GetDescription(const int index) const = 0;
+	//inline const NodeDescription* GetDescription(const int index) const { return m_Description[index].get(); }
+
+	inline virtual void AddDescription(const NodeDescription& desc) = 0;
+	//inline void AddDescription(const NodeDescription& desc)
+	//{
+	//	std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
+	//	m_Description.push_back(std::move(desc_ptr));
+	//}
+
+	inline virtual void SetDescriptionFontData(const FontData& fontData) = 0;
+	//inline void SetDescriptionFontData(const FontData& fontData)
+	//{
+	//	m_DescFontData = fontData;
+	//}
+
+	inline virtual FontData& GetDescriptionFontData() = 0;
+
+	inline virtual void AddFont(const std::string& text, const Vector2& pos) = 0; // dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
+	inline virtual const std::vector<Font*>& GetFonts() const = 0;
+
+
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
@@ -87,9 +94,9 @@ private:
 
 	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
-	std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
-	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
-	FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
+	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
+	//std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+	//FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)

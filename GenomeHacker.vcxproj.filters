@@ -192,9 +192,6 @@
     <ClInclude Include="hedder\enemy\node_tab\movement.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\base.h">
-      <Filter>ヘッダー ファイル\enemy\node</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\object\panel.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
@@ -311,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="hedder\enemy\node\socket\number_socket.h">
       <Filter>ヘッダー ファイル\enemy\node\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\base.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

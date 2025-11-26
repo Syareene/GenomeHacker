@@ -12,25 +12,6 @@ void NodeBase::Init(Transform trans)
 	SetTransform(trans);
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\debug_sprite.png"));
 
-
-	// 初期値セット
-	m_DescFontData.fontSize = 60;
-	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
-	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
-	m_DescFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_DescFontData.outlineWidth = 6.0f;
-
-	// フォントをセット
-
-	// これ、説明文をfontdataとして格納する形になるかな
-
-	m_DescFont = std::make_unique<Font>();
-	m_DescFont->Init(Transform());
-	m_DescFont->Register(Vector2(0.0f, 0.0f), fontData, "テキスト");
-
 	// ここに説明文格納する感じかな
 }
 
@@ -70,7 +51,7 @@ void NodeBase::Update()
 			else
 			{
 				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				dnaState->SetGrabbingNode(this);
+				//dnaState->SetGrabbingNode(this);
 			}
 		}
 	}
@@ -111,12 +92,6 @@ void NodeBase::Draw()
 
 
 	// ノードソケットの描画処理
-
-	// ノード説明文の描画処理
-	for(const auto& desc : m_Description)
-	{
-		
-	}
 }
 
 void NodeBase::MoveNodeToMouse()

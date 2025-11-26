@@ -11,6 +11,17 @@ void MoveX::Init(Transform trans)
 	SetCDMax(0);
 	SetCD(0);
 	m_MoveVal = -0.02f; // 移動量
+
+
+	// 初期値セット
+	m_DescFontData.fontSize = 60;
+	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
+	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
+	m_DescFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.outlineWidth = 6.0f;
 }
 
 void MoveX::Uninit()
