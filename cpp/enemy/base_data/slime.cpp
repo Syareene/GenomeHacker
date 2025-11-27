@@ -45,7 +45,7 @@ void Slime::Register()
 
 	
 	// ポインタに対して初期ノードを追加する。
-	GetDnaScreen()->GetAttackTab()->AddNode<NodeBase>(-1);
+	//GetDnaScreen()->GetAttackTab()->AddNode<NodeBase>(-1);
 
 
 	// 体力設定

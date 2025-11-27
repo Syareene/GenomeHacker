@@ -49,51 +49,31 @@ protected:
 	inline const std::string& GetName() const { return m_Name; }
 	inline void SetName(const std::string& name) { m_Name = name; }
 
-	inline const virtual std::vector<NodeDescription*> GetDescriptions() const
-	{
-		return std::vector<NodeDescription*>();
-	}
+	inline const virtual std::vector<NodeDescription*> GetDescriptions() const = 0;
 
-	inline const virtual NodeDescription* GetDescription(const int index) const
-	{
-		return nullptr;
-	}
+	inline const virtual NodeDescription* GetDescription(const int index) const = 0;
 	//inline const NodeDescription* GetDescription(const int index) const { return m_Description[index].get(); }
 
-	inline virtual void AddDescription(const NodeDescription& desc)
-	{
-		return;
-	}
+	inline virtual void AddDescription(const NodeDescription& desc) = 0;
 	//inline void AddDescription(const NodeDescription& desc)
 	//{
 	//	std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
 	//	m_Description.push_back(std::move(desc_ptr));
 	//}
 
-	inline virtual void SetDescriptionFontData(const FontData& fontData)
-	{
-		return;
-	}
+	inline virtual void SetDescriptionFontData(const FontData& fontData) = 0;
 	//inline void SetDescriptionFontData(const FontData& fontData)
 	//{
 	//	m_DescFontData = fontData;
 	//}
 
-	inline virtual FontData& GetDescriptionFontData()
-	{
-		FontData data;
-		return data;
-	}
+	inline virtual FontData& GetDescriptionFontData() = 0;
 
 	// dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
-	inline virtual void AddFont(const std::string& text, const Vector2& pos)
-	{
-		return;
-	}
-	inline virtual const std::vector<Font*> GetFonts()
-	{
-		return std::vector<Font*>();
-	}
+	inline virtual void AddFont(const std::string& text, const Vector2& pos) = 0;
+
+	inline virtual const std::vector<Font*> GetFonts() = 0;
+
 
 
 	inline const int GetID() const { return m_ID; }
