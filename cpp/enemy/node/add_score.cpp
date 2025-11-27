@@ -2,6 +2,11 @@
 #include "enemy/node/add_score.h"
 #include "scene/manager.h"
 #include "score.h"
+#include "enemy/node/base.h"
+
+std::vector<std::unique_ptr<NodeBase::NodeDescription>> AddScore::m_Description; // ノードの説明部分
+std::vector<std::unique_ptr<Font>> AddScore::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+FontData AddScore::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void AddScore::Init(Transform trans)
 {

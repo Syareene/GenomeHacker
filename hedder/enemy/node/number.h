@@ -56,7 +56,7 @@ public:
 		font_ptr->Init(Transform());
 		font_ptr->Register(pos, m_DescFontData, text);
 	}
-	inline const std::vector<Font*>& GetFonts() const override
+	inline const std::vector<Font*> GetFonts() override
 	{
 		std::vector<Font*> fonts;
 		for (auto& font_ptr : m_DescriptionFonts)
