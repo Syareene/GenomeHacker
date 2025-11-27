@@ -9,6 +9,8 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
+#include "lib/input.h" 
+
 
 // panel型を継承したscript
 // 初期化時に属するクラスを勝手に登録する形に
@@ -35,6 +37,11 @@ void DnaScreenScript::Init(Transform trans)
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
+
+	//m_AttackTab->SetIsSelected(true); // 最初は攻撃タブが選択されている状態にする
+
+	// デバッグ用にmoveで表示
+	m_MoveTab->SetIsSelected(true); // 最初は移動タブが選択されている状態にする
 }
 
 void DnaScreenScript::Uninit()
@@ -56,8 +63,64 @@ void DnaScreenScript::Update()
 		return;
 	}
 	// DNAスクリーンの更新処理
-	Panel::Update();
+	//Panel::Update();->こっちで管理したいのでこの下に自作
+
+
+	// Debug時限定で数字キーでタブ切り替え
+	
+	// 1キー: 攻撃タブ
+	if(Input::GetKeyTrigger('1'))
+	{
+		Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード表示中");
+		m_AttackTab->SetIsSelected(true);
+		m_MoveTab->SetIsSelected(false);
+		m_DeathTab->SetIsSelected(false);
+	}
+	// 2キー: 移動タブ
+	if (Input::GetKeyTrigger('2'))
+	{
+		Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード表示中");
+		m_AttackTab->SetIsSelected(false);
+		m_MoveTab->SetIsSelected(true);
+		m_DeathTab->SetIsSelected(false);
+	}
+	// 3キー: 死亡タブ
+	if(Input::GetKeyTrigger('3'))
+	{
+		Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード表示中");
+		m_AttackTab->SetIsSelected(false);
+		m_MoveTab->SetIsSelected(false);
+		m_DeathTab->SetIsSelected(true);
+	}
+
+
+	// 子オブジェクトの更新
+	for (auto& child : GetChildObjects())
+	{
+		if (TabBase* temp = static_cast<TabBase*>(child))
+		{
+			// TabBaseの場合は選択されていないならskip
+			if(!temp->GetIsSelected())
+			{
+				continue;
+			}
+		}
+		child->Update();
+	}
+
+
+	// パネルの更新処理
+	Object2D::Update();
+
+
+
 	// ここで必要な更新処理を追加
+
+
+
+
+	// 不要な子オブジェクトの削除処理(最後に呼ぶ)
+	DeleteChildObject();	
 }
 
 void DnaScreenScript::Draw()
@@ -65,6 +128,20 @@ void DnaScreenScript::Draw()
 	if(!IsActive())
 	{
 		return;
+	}
+
+	// 子オブジェクトの更新
+	for (auto& child : GetChildObjects())
+	{
+		if (TabBase* temp = static_cast<TabBase*>(child))
+		{
+			// TabBaseの場合は選択されていないならskip
+			if (!temp->GetIsSelected())
+			{
+				continue;
+			}
+		}
+		child->Draw();
 	}
 
 	// DNAスクリーンの描画処理
@@ -86,6 +163,7 @@ void DnaScreenScript::ShowDnaInfo()
 	FontData fontData;
 	fontData.fontSize = 120;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
 	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
 	fontData.font = DirectWriteCustomFont::GetFontName(0);
 	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
@@ -93,7 +171,22 @@ void DnaScreenScript::ShowDnaInfo()
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	fontData.outlineWidth = 12.0f;
 
-	Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 6), fontData, "情報表示中");
+	// 選択されているタブに応じてフォントを生成
+	if(m_AttackTab->GetIsSelected())
+	{
+		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード表示中");
+		return;
+	}
+	if(m_MoveTab->GetIsSelected())
+	{
+		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "移動ノード表示中");
+		return;
+	}
+	if(m_DeathTab->GetIsSelected())
+	{
+		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "死亡ノード表示中");
+		return;
+	}
 }
 
 void DnaScreenScript::HideDnaInfo()
@@ -103,7 +196,13 @@ void DnaScreenScript::HideDnaInfo()
 	SetActive(false);
 
 	// panelからfontオブジェクトを消す
-	Panel::GetChildObjectByType<Font>()->Destroy();
+	for(auto& child : GetChildObjectsByType<Font>())
+	{
+		child->SetDestory(true);
+	}
+
+	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも
+	DeleteChildObject();
 
 	// uninitとりあえず呼ぶ
 	//Uninit();

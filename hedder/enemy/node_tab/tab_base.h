@@ -27,6 +27,8 @@ public:
 	void Update() override;
 	void Draw() override;
 	virtual void Clicked(); // クリックされたときの処理
+	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
+	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
@@ -87,7 +89,7 @@ public:
 	};
 private:
 	void ModifyTimeLine(); // タイムラインを修正する
-
+	bool m_IsSelected = false; // 現在選択されているタブかどうか
 	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
 	//std::list<NodeBase> m_CanUseNodes; // タブ内で使用可能なノードのリスト(設置するための物、呼び出された際にプレイヤー側からソートしてここにいれる感じになるかな)
 	int m_Index = 0; // タブのインデックス

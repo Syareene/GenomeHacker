@@ -40,6 +40,7 @@
     <ClInclude Include="hedder\enemy\node\move_z.h" />
     <ClInclude Include="hedder\enemy\node\number.h" />
     <ClInclude Include="hedder\enemy\node\socket\number_socket.h" />
+    <ClInclude Include="hedder\enemy\node\visual_base.h" />
     <ClInclude Include="hedder\enemy\node_tab\attack.h" />
     <ClInclude Include="hedder\enemy\node_tab\death.h" />
     <ClInclude Include="hedder\enemy\node_tab\enemy_dna_list.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="cpp\enemy\node\move_z.cpp" />
     <ClCompile Include="cpp\enemy\node\number.cpp" />
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp" />
+    <ClCompile Include="cpp\enemy\node\visual_base.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\attack.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\death.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\dnatab_button.cpp" />

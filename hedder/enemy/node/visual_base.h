@@ -1,8 +1,9 @@
 ﻿#pragma once
 
-#include "enemy/node_tab/tab_base.h"
+#include "object/2d_object.h"
 
-class MoveTab : public TabBase
+
+class VisualBase : public Object2D 
 {
 public:
 	void Init(Transform trans = Transform()) override;

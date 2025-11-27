@@ -14,21 +14,46 @@ void MoveZ::Init(Transform trans)
 	SetCDMax(0);
 	SetCD(0);
 	m_MoveVal = 0.02f; // 移動量
+
+	// 初期値セット
+	m_DescFontData.fontSize = 24;
+	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
+	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
+	m_DescFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_DescFontData.outlineWidth = 2.5f;
+
+	// 生成されていないなら説明文をセット
+	if (m_DescriptionFonts.size() == 0)
+	{
+		// 説明文セット
+		m_DescriptionFonts.push_back(std::make_unique<Font>());
+		m_DescriptionFonts.back()->Init(Transform());
+		m_DescriptionFonts.back()->Register(Vector2(10.0f, 350.0f), m_DescFontData, "MoveZ: このノードがある敵は毎フレームn分だけZ軸に対し移動します。");
+	}
 }
 
 void MoveZ::Uninit()
 {
-
+	NodeBase::Uninit();
 }
 
 void MoveZ::Update()
 {
-
+	NodeBase::Update();
 }
 
 void MoveZ::Draw()
 {
+	NodeBase::Draw();
 
+	// テキストを描画
+	for (auto& font_ptr : m_DescriptionFonts)
+	{
+		font_ptr->Draw();
+	}
 }
 
 bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)

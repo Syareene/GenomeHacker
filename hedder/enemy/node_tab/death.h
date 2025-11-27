@@ -4,5 +4,9 @@
 
 class DeathTab : public TabBase
 {
-
+public:
+	void Init(Transform trans = Transform()) override;
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 };

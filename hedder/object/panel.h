@@ -50,6 +50,20 @@ public:
 		return nullptr; // 見つからなかった場合
 	}
 
+	template <typename T>
+	std::list<T*> GetChildObjectsByType()
+	{
+		std::list<T*> objects;
+		for (const auto& child : m_ChildObjects)
+		{
+			if (child && dynamic_cast<T*>(child.get()))
+			{
+				objects.push_back(dynamic_cast<T*>(child.get()));
+			}
+		}
+		return objects;
+	}
+
 	// ここに対してadd_objectする場合、scene自体にadd_objectし、その参照をここで持つようにする?
 	// その場合処理順が親->子にならない可能性があるのでそこだけが懸念点。
 
@@ -62,6 +76,15 @@ public:
 		T* childPtr = child.get();
 		m_ChildObjects.push_back(std::move(child));
 		return childPtr; // 追加した子オブジェクトのポインタを返す
+	}
+
+	void DeleteChildObject(void)
+	{
+		// destoryフラグが立っているオブジェクトを削除
+		m_ChildObjects.remove_if([](const std::unique_ptr<Object2D>& obj) {
+			// objがnullptrでないことを確認し、Destroyメソッドを呼び出す
+			return obj && obj->Destroy();
+		});
 	}
 
 	/*
