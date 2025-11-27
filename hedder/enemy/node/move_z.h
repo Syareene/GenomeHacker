@@ -28,7 +28,7 @@ public:
 		return m_Description[index].get();
 	}
 
-	inline void AddDescription(const NodeDescription& desc)
+	inline void AddDescription(const NodeDescription& desc) override
 	{
 		// desc使うようにする
 		std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
@@ -46,7 +46,7 @@ public:
 	}
 
 	// dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
-	inline void AddFont(const std::string& text, const Vector2& pos)
+	inline void AddFont(const std::string& text, const Vector2& pos) override
 	{
 		// 既存のfontdataを利用してfontオブジェクトを生成
 		std::unique_ptr<Font> font_ptr = std::make_unique<Font>();

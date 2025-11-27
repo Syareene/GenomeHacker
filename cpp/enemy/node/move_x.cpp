@@ -8,16 +8,15 @@ FontData MoveX::m_DescFontData; // 説明文用のフォントデータ(クラ�
 
 void MoveX::Init(Transform trans)
 {
-	SetTransform(trans);
+	NodeBase::Init(trans);
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
 	m_MoveVal = -0.02f; // 移動量
 
-
 	// 初期値セット
-	m_DescFontData.fontSize = 60;
+	m_DescFontData.fontSize = 50;
 	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
 	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
 	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
@@ -25,21 +24,36 @@ void MoveX::Init(Transform trans)
 	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
 	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	m_DescFontData.outlineWidth = 6.0f;
+
+	// 生成されていないなら説明文をセット
+	if(m_DescriptionFonts.size() == 0)
+	{
+		// 説明文セット
+		m_DescriptionFonts.push_back(std::make_unique<Font>());
+		m_DescriptionFonts.back()->Init(Transform());
+		m_DescriptionFonts.back()->Register(Vector2(10.0f, 10.0f), m_DescFontData, "MoveX: このノードがある敵は毎フレームn分だけ移動します。");
+	}
 }
 
 void MoveX::Uninit()
 {
-
+	NodeBase::Uninit();
 }
 
 void MoveX::Update()
 {
-
+	NodeBase::Update();
 }
 
 void MoveX::Draw()
 {
+	NodeBase::Draw();
 
+	// テキストを描画
+	for (auto& font_ptr : m_DescriptionFonts)
+	{
+		font_ptr->Draw();
+	}
 }
 
 bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)

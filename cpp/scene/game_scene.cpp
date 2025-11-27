@@ -45,20 +45,21 @@ void GameScene::Init()
 	//AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_title.png", false);
 
 	FontData fontData;
-	fontData.fontSize = 120;
+	fontData.fontSize = 50;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
 	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
 	fontData.font = DirectWriteCustomFont::GetFontName(0);
 	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
 	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	fontData.outlineWidth = 12.0f;
+	fontData.outlineWidth = 4.0f;
 
 	
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Player>()->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
-		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(100.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "テストボタン", L"asset\\texture\\debug_sprite.png", L"");
+		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(200.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "ボタン", L"asset\\texture\\debug_sprite.png", L"");
 		
 	
 

@@ -83,9 +83,13 @@ void Button::Register(const std::function<void()>& func, const Vector2& pos, con
 	}
 	// テキストオブジェクトを作成
 	// ->これ操体市で生成できるようにしてないから位置がどうかなーといったところ
+	// 試したところボタンの中心posとして左上から描画なのでそれを中央から描画に変更したい
+
+	// ｳｰﾝこのへん改善の余地あり、真ん中揃えにしてもテキストの実装によってズレてたりしてて困る
+
 	m_Text = std::make_unique<Font>();
 	m_Text->Init();
-	m_Text->Register(Vector2(pos.x, pos.y), fontData, text);
+	m_Text->Register(Vector2(pos.x - (SCREEN_WIDTH / 2), pos.y - (fontData.fontSize / 2 + fontData.outlineWidth * 2)), fontData, text);
 	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
 	m_TargetFunc = func; // コールバック関数を設定
