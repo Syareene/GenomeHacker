@@ -24,6 +24,7 @@ void DnaEditState::Update()
 	// state内オブジェクトの更新
 	//UpdateStateObjectByTag("dna_edit");
 	UpdateStateObject();
+	DeleteGameObject();
 }
 
 void DnaEditState::Draw()

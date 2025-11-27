@@ -5,6 +5,8 @@ void TabBase::Init(Transform trans)
 {
 	SetTransform(trans);
 	// タブの初期化処理
+	m_IsSelected = false;
+
 	Button::Init();
 	
 }
@@ -18,6 +20,19 @@ void TabBase::Uninit()
 
 void TabBase::Update()
 {
+	// m_IsSelectedがtrueのときにのみ子ノードに対するマウス選択処理等々を行う(描画も同じ)
+	// ただこの場合次のノードに移行するみたいな処理をどうするかっすね
+
+	if (m_IsSelected)
+	{
+		// タブ内にあるノードに対する更新処理
+		for (auto& node : m_Nodes)
+		{
+			node->Update();
+		}
+	}
+
+
 	// タブの更新処理
 	Button::Update();
 	// タブ内にあるノードに対する更新処理
@@ -52,6 +67,15 @@ void TabBase::Update()
 
 void TabBase::Draw()
 {
+	if (m_IsSelected)
+	{
+		// タブ内にあるノードに対する描画処理
+		for (auto& node : m_Nodes)
+		{
+			node->Draw();
+		}
+	}
+
 	// タブの描画処理
 	Button::Draw();
 	// タブ内にあるノードに対する描画処理
