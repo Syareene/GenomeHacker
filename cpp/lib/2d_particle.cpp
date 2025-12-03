@@ -53,10 +53,13 @@ void Particle2D::Init(Transform trans)
 		pos[i] = Vector2(0.0f, 0.0f);
 	}
 
+	// shaderに渡したいプロパティをInstanceDataで渡す
+	// でも多分中身を分割して渡さないと見れないはず(一応シェーダー側で構造体定義すればいけるか)
+
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(Vector3) * maxParticles;
-	bd.StructureByteStride = sizeof(Vector3);
+	bd.ByteWidth = sizeof(Vector2) * maxParticles;
+	bd.StructureByteStride = sizeof(Vector2);
 	bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	bd.CPUAccessFlags = 0;
