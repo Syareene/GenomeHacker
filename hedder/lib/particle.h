@@ -2,6 +2,8 @@
 
 #include "object/3d_object.h"
 
+// これ授業内でやったのをそのまま使ってるのでより最適化の必要あるかも
+
 class Particle : public Object3D
 {
 public:
