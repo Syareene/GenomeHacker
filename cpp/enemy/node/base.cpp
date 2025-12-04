@@ -62,8 +62,8 @@ void NodeBase::Update()
 		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
 		if (grabbingNode == this)
 		{
-			Vector2 mousePos = Mouse::GetPosition();
-			Vector3 pos = Vector3(mousePos.x, mousePos.y, 0.0f);
+			Vector2 mouseDiffPos = Mouse::GetDiffPosition();
+			Vector3 pos = Vector3(mouseDiffPos.x + GetPosition().x, mouseDiffPos.y + GetPosition().y, 0.0f);
 			SetPosition(pos);
 		}
 	}

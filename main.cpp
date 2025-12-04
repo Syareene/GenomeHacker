@@ -123,7 +123,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-
+	bool updateMouse = false;
 	switch(uMsg)
 	{
 	case WM_DESTROY:
@@ -188,7 +188,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &g_Rect);
 		POINTS pt = MAKEPOINTS(lParam);
 		// pt.x, pt.y でマウスの位置を取得し代入
-		g_Mouse.SetPosition(Vector2(static_cast<float>(pt.x), static_cast<float>(pt.y)));
+		g_Mouse.AddAccumulatedPosition(Vector2(static_cast<float>(pt.x), static_cast<float>(pt.y)));
+		updateMouse = true;
 		break;
 	case WM_MOUSELEAVE:
 		// マウスがウィンドウから出た
@@ -201,6 +202,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	default:
 		break;
 	}
+
+	//if (!updateMouse)
+	//{
+	//	// マウスの位置更新がなかった場合、現在の位置を再設定しておく
+	//	g_Mouse.SetPosition(g_Mouse.GetPosition());
+	//}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

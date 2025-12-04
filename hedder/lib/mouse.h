@@ -15,6 +15,9 @@ public:
 	void SetSideButton1Up(bool up);
 	void SetSideButton2Down(bool down);
 	void SetSideButton2Up(bool up);
+	// 累積移動量を追加(input時現在の位置を入力)
+	void AddAccumulatedPosition(Vector2 move);
+	// 古い関数のため基本的にAddAccumulatedPosition関数を使用してください
 	void SetPosition(Vector2 position);
 	void SetWheelDiff(int diff);
 	// update2種はmanager側から呼ぶ
@@ -30,7 +33,7 @@ public:
 	static inline bool IsSideButton2Down() { return m_SideButton2Down; }
 	static inline bool IsSideButton2Trigger() { return m_SideButton2Trigger; }
 	static inline Vector2 GetPosition() { return m_Position; }
-	static inline Vector2 GetDiffPosition() { return m_Position - m_OldPosition; }
+	static inline Vector2 GetDiffPosition() { return m_AccumulatedPosition; }
 	static void SetScreenMousePosition(Vector2 pos);
 	static bool IsMouseInsideArea(Vector2 startPos, Vector2 endPos);
 	static inline int GetWheelDiff() { return m_WheelDiff; }
@@ -51,8 +54,9 @@ private:
 	static bool m_SideButton2Up; // サイドボタン2が離されたかどうか
 	static bool m_SideButton2DownOld; // 1f前のサイドボタン2状態
 	static bool m_SideButton2Trigger; // サイドボタン2が押されたかどうか(押され始めだけ)
-	static Vector2 m_OldPosition; // 1f前のマウスの位置
+	//static Vector2 m_OldPosition; // 1f前のマウスの位置
 	static Vector2 m_Position; // マウスの位置
+	static Vector2 m_AccumulatedPosition; // マウスの累積位置
 	static int m_WheelDiff; // ホイールの差分
 
 	// XBUTTON(サイドキー)は一旦後回し
