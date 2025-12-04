@@ -15,6 +15,8 @@
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
 float Manager::m_GameSpeed = 1.0f; // ゲームの速度
+std::chrono::steady_clock::time_point Manager::m_BeforeTime;
+float Manager::m_DeltaTime = 0.0f; // 前回からの経過時間（ミリ秒）
 
 void Manager::Init()
 {
@@ -26,6 +28,10 @@ void Manager::Init()
 
 	// 初期シーン設定
 	m_CurrentScene = std::make_unique<TitleScene>();
+
+	// 時間初期化
+	m_BeforeTime = std::chrono::steady_clock::now();
+	m_DeltaTime = 0.0f;
 
 	m_CurrentScene->Init();
 }
@@ -47,6 +53,12 @@ void Manager::Uninit()
 
 void Manager::Update()
 {
+	// 時間取得
+	auto now = std::chrono::steady_clock::now();
+	std::chrono::duration<float, std::milli> diff = now - m_BeforeTime;
+	m_DeltaTime = diff.count(); // ミリ秒
+	m_BeforeTime = now;
+
 	Mouse::Update();
 	Input::Update();
 
