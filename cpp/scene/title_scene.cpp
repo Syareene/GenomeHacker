@@ -6,6 +6,7 @@
 #include "scene/game_scene.h"
 #include "object/ui/image.h"
 #include "object/ui/button.h"
+#include "lib/2d_particle.h"
 
 #include "object/ui/font.h"
 
@@ -35,7 +36,7 @@ void TitleScene::Init()
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	fontData.outlineWidth = 8.0f;
 
-	AddGameObject<Font>(3)->Register(Vector2(200.0f, 275.0f), fontData, "サブタイトルをフォントで描画");
+	//AddGameObject<Font>(3)->Register(Vector2(200.0f, 275.0f), fontData, "サブタイトルをフォントで描画");
 
 	fontData.fontSize = 60;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
@@ -46,7 +47,8 @@ void TitleScene::Init()
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	fontData.outlineWidth = 7.0f;
 
-	AddGameObject<Font>(3)->Register(Vector2(600.0f, 400.0f), fontData, "縁取りも色も変更可能");
+	//AddGameObject<Font>(3)->Register(Vector2(600.0f, 400.0f), fontData, "縁取りも色も変更可能");
+	AddGameObject<Particle2D>(0)->Register(1000);
 }
 
 void TitleScene::Update()

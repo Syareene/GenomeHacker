@@ -5,7 +5,7 @@
 #include "player.h"
 #include "object/ui/image.h"
 
-#include "particle.h"
+#include "lib/particle.h"
 #include "lib/input.h"
 #include "result_scene.h"
 #include "scene/manager.h"

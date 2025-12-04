@@ -5,10 +5,11 @@
 class Particle2D : public Object2D
 {
 public:
+	void Register(int maxCount);
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;
-	void UpdateParticle(float deltaTime);
+	void UpdateParticle();
 	void Draw() override;
 
 	// 1. パーティクル単体のデータ (CPU計算用)
@@ -31,6 +32,8 @@ public:
 		XMFLOAT4 UVOffset;        // テクスチャアトラス用 (xy: offset, zw: scale)
 	};
 
+
+	/*
     Particle2D(int maxCount) : maxParticles(maxCount) 
 	{
         m_Particles.resize(maxCount);
@@ -38,7 +41,11 @@ public:
 
         // デフォルトで全パーティクルを非アクティブに
         for (auto& p : m_Particles) p.IsActive = false;
+
+		// 初期化
+
     }
+	*/
 
     // ★振る舞いをセットする関数（これで動きや初期化を自由に差し替え可能）
     void SetInitBehavior(std::function<void(ParticleData&)> func) 
@@ -52,7 +59,7 @@ public:
     }
 
     // パーティクル発生
-    void Emit(int count, Vector2 startPos) 
+    void Emit(int count, Vector2 startPos, float size, XMFLOAT4 color) 
 	{
         int emitted = 0;
         for (auto& p : m_Particles) 
@@ -61,7 +68,9 @@ public:
 			{
                 p.IsActive = true;
                 p.Position = startPos;
-                p.LifeTime = 1.0f; // デフォルト
+                p.LifeTime = 750.0f; // デフォルト
+				p.Size = size;
+				p.Color = color;
 
                 // 設定された初期化ロジックを実行
 				if (initBehavior)
@@ -79,7 +88,9 @@ public:
     }
 
 private:
-	ID3D11ShaderResourceView* m_PositionSRV;
+	int m_Count = 0;
+	ID3D11Buffer* m_InstanceBuffer = nullptr;
+	ID3D11ShaderResourceView* m_InstanceSRV = nullptr;
 	// プールされたパーティクル配列
 	std::vector<ParticleData> m_Particles;
 	// GPU転送用バッファ（毎フレーム書き換える）
