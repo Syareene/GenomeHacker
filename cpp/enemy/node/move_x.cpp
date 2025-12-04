@@ -8,7 +8,11 @@ FontData MoveX::m_DescFontData; // 説明文用のフォントデータ(クラ�
 
 void MoveX::Init(Transform trans)
 {
-	NodeBase::Init(trans);
+	Transform defaultTrans = Transform();
+	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+
+	NodeBase::Init(defaultTrans);
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);

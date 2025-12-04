@@ -33,7 +33,7 @@ public:
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
 	template <NodeType T>
-	T* AddNode(const int& index) // ノードを追加
+	T* AddNode(const int& index, Transform trans = Transform()) // ノードを追加
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
 
@@ -46,7 +46,7 @@ public:
 		// インスタンス作る(これmove必要にはなっちゃうからmoveコンストラクタをそのうち作る必要あり)
 		std::unique_ptr<T> newNode = std::make_unique<T>();
 		// 初期化
-		newNode.get()->Init();
+		newNode.get()->Init(trans);
 		NodeBase* upperNode = nullptr;
 		NodeBase* lowerNode = nullptr;
 		// 上側ノード挿入判定

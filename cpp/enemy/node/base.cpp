@@ -45,14 +45,26 @@ void NodeBase::Update()
 			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
 			if (grabbingNode)
 			{
-				// 既に掴んでいるノードがある場合は処理しない
+				// 既に掴んでいるノードがある場合は離す
+				dnaState->SetGrabbingNode(nullptr);
 				return;
 			}
 			else
 			{
 				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				//dnaState->SetGrabbingNode(this);
+				dnaState->SetGrabbingNode(this);
 			}
+		}
+	}
+
+	if(NodeBase* grabbingNode = dnaState->GetGrabbingNode())
+	{
+		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
+		if (grabbingNode == this)
+		{
+			Vector2 mousePos = Mouse::GetPosition();
+			Vector3 pos = Vector3(mousePos.x, mousePos.y, 0.0f);
+			SetPosition(pos);
 		}
 	}
 
@@ -67,13 +79,15 @@ void NodeBase::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDrawBillboard();
+	SetWorldMatrixOnDraw();
 
 	// マテリアル設定
 	SetMaterialOnDraw();
 
+	Vector3 scale = GetTransform().GetScale();
+
 	// 頂点バッファ設定
-	SetDefaultVertexBufferBillboardOnDraw();
+	SetDefaultVertexBufferOnDraw();
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
