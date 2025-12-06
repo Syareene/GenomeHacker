@@ -68,8 +68,8 @@ void Particle2D::Init(Transform trans)
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\dna.png"));
 
 	// シェーダー設定
-	Renderer::CreatePixelShader(GetPixelShaderPointer(), "shader\\instancingPS.cso");
-	Renderer::CreateVertexShader(GetVertexShaderPointer(), GetVertexLayoutPointer(), "shader\\instancingVS.cso");
+	Renderer::CreatePixelShader(GetPixelShaderPointer(), "shader\\titleParticlePS.cso");
+	Renderer::CreateVertexShader(GetVertexShaderPointer(), GetVertexLayoutPointer(), "shader\\titleParticleVS.cso");
 
 	SetScale(Vector3(1.0f, 1.0f, 1.0f));
 }
@@ -88,7 +88,23 @@ void Particle2D::Update()
 	m_Count++;
 	if (m_Count >= 20)
 	{
-		Emit(1, Vector2(static_cast<float>(std::rand() % SCREEN_WIDTH), 0.0f), 50.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+		XMFLOAT4 color = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+		// ランダムでRかGかBを1.0に
+		int random = std::rand() % 3;
+		if(random == 0)
+		{
+			color.x = 1.0f;
+		}
+		else if(random == 1)
+		{
+			color.y = 1.0f;
+		}
+		else
+		{
+			color.z = 1.0f;
+		}
+
+		Emit(1, Vector2(static_cast<float>(std::rand() % SCREEN_WIDTH), 0.0f), 50.0f, color);
 		m_Count = 0;
 	}
 	UpdateParticle();
@@ -161,6 +177,10 @@ void Particle2D::Draw()
 
 	Renderer::SetDepthEnable(false);
 
+	// 加算合成on
+	//Renderer::GetDeviceContext()->OMSetBlendState(Renderer::GetBlendState(), NULL, 0xffffffff);
+
+
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(GetVertexLayout());
 	// シェーダー設定
@@ -197,4 +217,6 @@ void Particle2D::Draw()
 
 
 	Renderer::SetDepthEnable(true);
+	// 加算合成off(デフォに戻す)
+	//Renderer::GetDeviceContext()->OMSetBlendState(Renderer::GetBlendStateAlpha(), NULL, 0xffffffff);
 }

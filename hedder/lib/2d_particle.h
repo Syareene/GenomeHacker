@@ -2,6 +2,9 @@
 
 #include "object/2d_object.h"
 
+// まだ汎用化してないので機能を切り出して汎用化する必要あり
+
+
 class Particle2D : public Object2D
 {
 public:
@@ -47,7 +50,7 @@ public:
     }
 	*/
 
-    // ★振る舞いをセットする関数（これで動きや初期化を自由に差し替え可能）
+    // 振る舞いをセットする関数（これで動きや初期化を自由に差し替え可能）
     void SetInitBehavior(std::function<void(ParticleData&)> func) 
 	{
         initBehavior = func;

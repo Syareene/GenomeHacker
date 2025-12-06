@@ -63,6 +63,7 @@ private:
 	static ID3D11DepthStencilState* m_DepthStateDisable;
 
 	static ID3D11BlendState*		m_BlendState;
+	static ID3D11BlendState*		m_BlendStateAlpha;
 	static ID3D11BlendState*		m_BlendStateATC;
 
 
@@ -87,6 +88,10 @@ public:
 	static ID3D11Device* GetDevice( void ){ return m_Device; }
 	static ID3D11DeviceContext* GetDeviceContext( void ){ return m_DeviceContext; }
 	static IDXGISwapChain* GetSwapChain(void) { return m_SwapChain; }
+	// 加算合成用
+	static ID3D11BlendState* GetBlendState(void) { return m_BlendState; }
+	// 通常描画用(alpha込)
+	static ID3D11BlendState* GetBlendStateAlpha(void) { return m_BlendStateAlpha; }
 
 
 
