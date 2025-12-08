@@ -16,7 +16,9 @@ public:
 	void Draw() override;
 	void SetDisplayText(const std::string& text);
 	void GetDisplayText(std::string& outText) const;
+	Vector2 GetWidthHeight() const { return m_WidthHeight; }
 private:
+	Vector2 m_WidthHeight = Vector2(0.0f, 0.0f);
 	FontData m_FontData;
 	std::unique_ptr<DirectWriteCustomFont> m_Write = nullptr;
 	std::string m_DisplayText = ""; // 直接中身いじらず関数使っていじってね(自クラス内でも)

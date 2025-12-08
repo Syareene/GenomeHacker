@@ -65,6 +65,26 @@ void Font::SetDisplayText(const std::string& text)
 	m_DisplayText = text;
 	// フォントキャッシュを更新
 	m_Write->SetText(m_DisplayText);
+
+	// --- 取得例: DIP とピクセルでサイズを取る ---
+	FLOAT wDips = 0.0f, hDips = 0.0f;
+	if (SUCCEEDED(m_Write->GetTextSizeDips(m_DisplayText, &wDips, &hDips)))
+	{
+		// 必要ならここで UI の矩形を更新したり当たり判定に使う
+		// デバッグ出力（ワイド文字列に変換して表示）
+		wchar_t buf[256];
+		swprintf_s(buf, L"Text size (DIPs): w=%.2f h=%.2f\n", wDips, hDips);
+		OutputDebugStringW(buf);
+	}
+
+	FLOAT wPx = 0.0f, hPx = 0.0f;
+	if (SUCCEEDED(m_Write->GetTextSizePixels(m_DisplayText, &wPx, &hPx)))
+	{
+		wchar_t buf2[256];
+		swprintf_s(buf2, L"Text size (px): w=%.1f h=%.1f\n", wPx, hPx);
+		OutputDebugStringW(buf2);
+		m_WidthHeight = Vector2(wPx, hPx);
+	}
 }
 
 void Font::GetDisplayText(std::string& outText) const

@@ -598,7 +598,8 @@ std::wstring DirectWriteCustomFont::GetFontFileNameWithoutExtension(const std::w
     return filePath.substr(start, end - start);
 }
 
-std::wstring DirectWriteCustomFont::StringToWString(std::string oString)
+// stringをwstringへ変換する
+std::wstring DirectWriteCustomFont::StringToWString(std::string oString) const
 {
     int iBufferSize = MultiByteToWideChar(CP_ACP, 0, oString.c_str(), -1, nullptr, 0);
     if (iBufferSize <= 0) return L"";
@@ -607,4 +608,81 @@ std::wstring DirectWriteCustomFont::StringToWString(std::string oString)
     MultiByteToWideChar(CP_ACP, 0, oString.c_str(), -1, &buf[0], iBufferSize);
     buf.resize(iBufferSize - 1);
     return buf;
+}
+
+HRESULT DirectWriteCustomFont::GetTextSizeDips(const std::string& str, FLOAT* outWidthDips, FLOAT* outHeightDips) const
+{
+    if (!outWidthDips || !outHeightDips) return E_POINTER;
+    if (!pDWriteFactory) return E_FAIL;
+
+    WRL::ComPtr<IDWriteTextLayout> layoutToUse;
+    if (!cachedText.empty() && cachedText == str && pTextLayout)
+    {
+        layoutToUse = pTextLayout;
+    }
+    else
+    {
+        std::wstring w = StringToWString(str);
+        // レイアウト作成時の最大サイズ — 十分大きくするか、必要なら実際の期待サイズを渡す
+        D2D1_SIZE_F targetSize = pRenderTarget ? pRenderTarget->GetSize() : D2D1::SizeF(4096.0f, 4096.0f);
+        HRESULT hr = pDWriteFactory->CreateTextLayout(w.c_str(), static_cast<UINT32>(w.size()), pTextFormat.Get(), targetSize.width, targetSize.height, layoutToUse.GetAddressOf());
+        if (FAILED(hr)) return hr;
+    }
+
+    if (!layoutToUse) return E_FAIL;
+
+    DWRITE_TEXT_METRICS metrics = {};
+    HRESULT hr = layoutToUse->GetMetrics(&metrics);
+    if (FAILED(hr)) return hr;
+
+    DWRITE_OVERHANG_METRICS overhang = {};
+    hr = layoutToUse->GetOverhangMetrics(&overhang);
+    if (FAILED(hr)) return hr;
+
+    // overhang の負値は「はみ出していない」ことを示すので、正の値のみ加算する
+    FLOAT addLeft = (overhang.left  > 0.0f) ? overhang.left  : 0.0f;
+    FLOAT addTop  = (overhang.top   > 0.0f) ? overhang.top   : 0.0f;
+    FLOAT addRight= (overhang.right > 0.0f) ? overhang.right : 0.0f;
+    FLOAT addBottom=(overhang.bottom> 0.0f) ? overhang.bottom: 0.0f;
+
+    FLOAT rawWidth  = metrics.widthIncludingTrailingWhitespace + addLeft + addRight;
+    FLOAT rawHeight = metrics.height + addTop + addBottom;
+
+    // 安全のためクランプ
+    *outWidthDips  = (rawWidth  > 0.0f) ? rawWidth  : 0.0f;
+    *outHeightDips = (rawHeight > 0.0f) ? rawHeight : 0.0f;
+
+    // デバッグ出力（必要なら有効化）
+    /*
+    {
+        wchar_t dbg[512];
+        swprintf_s(dbg, L"Metrics: w=%.2f wInc=%.2f h=%.2f | Overhang L=%.2f T=%.2f R=%.2f B=%.2f -> result w=%.2f h=%.2f\n",
+            metrics.width, metrics.widthIncludingTrailingWhitespace, metrics.height,
+            overhang.left, overhang.top, overhang.right, overhang.bottom,
+            *outWidthDips, *outHeightDips);
+        OutputDebugStringW(dbg);
+    }
+    */
+
+    return S_OK;
+}
+
+HRESULT DirectWriteCustomFont::GetTextSizePixels(const std::string& str, FLOAT* outWidthPx, FLOAT* outHeightPx) const
+{
+    if (!outWidthPx || !outHeightPx) return E_POINTER;
+
+    FLOAT wDip = 0.0f, hDip = 0.0f;
+    HRESULT hr = GetTextSizeDips(str, &wDip, &hDip);
+    if (FAILED(hr)) return hr;
+
+    // DPI 取得（デフォルト 96）
+    FLOAT dpiX = 96.0f, dpiY = 96.0f;
+    if (pRenderTarget) pRenderTarget->GetDpi(&dpiX, &dpiY);
+
+    FLOAT scaleX = dpiX / 96.0f;
+    FLOAT scaleY = dpiY / 96.0f;
+
+    *outWidthPx = wDip * scaleX;
+    *outHeightPx = hDip * scaleY;
+    return S_OK;
 }

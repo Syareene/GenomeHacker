@@ -207,3 +207,20 @@ void DnaScreenScript::HideDnaInfo()
 	// uninitとりあえず呼ぶ
 	//Uninit();
 }
+
+TabBase* DnaScreenScript::GetActiveTab()
+{
+	if (m_AttackTab->GetIsSelected())
+	{
+		return m_AttackTab;
+	}
+	if (m_MoveTab->GetIsSelected())
+	{
+		return m_MoveTab;
+	}
+	if (m_DeathTab->GetIsSelected())
+	{
+		return m_DeathTab;
+	}
+	return nullptr;
+}

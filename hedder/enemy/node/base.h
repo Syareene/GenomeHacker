@@ -42,6 +42,8 @@ public:
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
 	inline const int GetCDMax() const { return m_CDMax; }
+
+	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -83,6 +85,12 @@ protected:
 	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
+	inline void AddFontPtr(Font* fontPtr) { m_Fonts.push_back(fontPtr); }
+	inline std::vector<Font*>& GetFontPtrs(std::vector<Font*>& outFonts) const
+	{
+		outFonts = m_Fonts;
+	}
+	inline Font& GetFontAt(const int index) const { return *(m_Fonts[index]); }
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
@@ -93,7 +101,7 @@ private:
 	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
-
+	std::vector<Font*> m_Fonts; // 派生クラスで管理しているstaticなポインタをここに保存->フォント諸々参照用
 	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分

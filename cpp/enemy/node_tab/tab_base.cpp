@@ -89,6 +89,24 @@ void TabBase::Clicked()
 	// 例えばタブの切り替えとか
 }
 
+void TabBase::ModifyNodePos()
+{
+	// index基準でnodeの位置を修正
+	for (auto& node : m_Nodes)
+	{
+		// nodeのindexを取得
+		auto it = std::find_if(m_Nodes.begin(), m_Nodes.end(),
+			[&node](const std::unique_ptr<NodeBase>& n) { return n.get() == node.get(); });
+		if (it != m_Nodes.end())
+		{
+			int index = std::distance(m_Nodes.begin(), it);
+			// 位置を修正
+			Vector2 newPos = NODE_START;
+			newPos.y += (node->GetScale().y + NodeBase::NODE_MARGIN.y) * index;
+		}
+	}
+}
+
 void TabBase::ModifyTimeLine()
 {
 	// タイムラインを修正

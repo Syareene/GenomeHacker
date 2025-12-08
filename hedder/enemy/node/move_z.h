@@ -12,7 +12,6 @@ public:
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
 	void SetMoveVal(const float val) { m_MoveVal = val; }
-
 	inline const std::vector<NodeDescription*> GetDescriptions() const override
 	{
 		std::vector<NodeDescription*> descs;
@@ -62,6 +61,7 @@ public:
 		}
 		return fonts;
 	}
+
 private:
 	float m_MoveVal = 1.0f; // 動く量
 	static std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分

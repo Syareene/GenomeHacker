@@ -20,6 +20,8 @@ public:
 	void ShowDnaInfo();
 	void HideDnaInfo();
 
+	TabBase* GetActiveTab();
+
 	AttackTab* GetAttackTab() { return m_AttackTab; }
 	MoveTab* GetMoveTab() { return m_MoveTab; }
 	DeathTab* GetDeathTab() { return m_DeathTab; }

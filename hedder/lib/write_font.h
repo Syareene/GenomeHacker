@@ -2,6 +2,7 @@
 
 // https://github.com/Islington036/DirectWrite_CustomFont/tree/master 
 // を元に自プロジェクト用に改変。
+// AIとかも結構使ってるのでそのうち適切に変更する必要あり。
 
 #include <string>						// 文字列
 #include <vector>						// 動的配列
@@ -154,6 +155,14 @@ public:
 	// 全てのフォント名を取得し直す
 	HRESULT GetAllFontFamilyName(IDWriteFontCollection* customFontCollection);
 
+	// --- 追加: 生成したテキストのサイズ取得 ---
+	// DIP（DIPs: device-independent pixels）単位で取得
+	// outWidthDips / outHeightDips は nullptr ではないこと
+	HRESULT GetTextSizeDips(const std::string& str, FLOAT* outWidthDips, FLOAT* outHeightDips) const;
+
+	// 物理ピクセル単位で取得（レンダーターゲットの DPI を使用）
+	HRESULT GetTextSizePixels(const std::string& str, FLOAT* outWidthPx, FLOAT* outHeightPx) const;
+
 	// カスタムフォントコレクション
 	WRL::ComPtr <IDWriteFontCollection> fontCollection = nullptr;
 
@@ -188,5 +197,5 @@ private:
 	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);
 
 	// stringをwstringへ変換する
-	std::wstring StringToWString(std::string oString);
+	std::wstring StringToWString(std::string oString) const;
 };

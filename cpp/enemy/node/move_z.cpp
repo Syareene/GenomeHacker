@@ -8,12 +8,9 @@ FontData MoveZ::m_DescFontData; // 説明文用のフォントデータ(クラ�
 
 void MoveZ::Init(Transform trans)
 {
-	SetTransform(trans);
-	AddInputTypeTop(InputType::Move);
-	AddInputTypeBottom(InputType::Move);
-	SetCDMax(0);
-	SetCD(0);
-	m_MoveVal = 0.02f; // 移動量
+	Transform defaultTrans = Transform();
+	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
 	// 初期値セット
 	m_DescFontData.fontSize = 24;
@@ -26,13 +23,23 @@ void MoveZ::Init(Transform trans)
 	m_DescFontData.outlineWidth = 2.5f;
 
 	// 生成されていないなら説明文をセット
-	if (m_DescriptionFonts.size() == 0)
+	if(m_DescriptionFonts.size() == 0)
 	{
 		// 説明文セット
 		m_DescriptionFonts.push_back(std::make_unique<Font>());
 		m_DescriptionFonts.back()->Init(Transform());
 		m_DescriptionFonts.back()->Register(Vector2(10.0f, 350.0f), m_DescFontData, "MoveZ: このノードがある敵は毎フレームn分だけZ軸に対し移動します。");
 	}
+	// 基底クラスの変数に対しフォントポインタを追加
+	AddFontPtr(m_DescriptionFonts.back().get());
+
+	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
+	NodeBase::Init(defaultTrans);
+	AddInputTypeTop(InputType::Move);
+	AddInputTypeBottom(InputType::Move);
+	SetCDMax(0);
+	SetCD(0);
+	m_MoveVal = 0.02f; // 移動量
 }
 
 void MoveZ::Uninit()

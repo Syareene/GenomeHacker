@@ -2,7 +2,6 @@
 
 #include "enemy/node/base.h"
 
-
 // 多分ui周りのクラス継承?わからんけど
 class AddScore: public NodeBase
 {
@@ -13,7 +12,6 @@ public:
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
 	void SetAddScore(const float score) { m_AddScore = score; }
-
 	inline const std::vector<NodeDescription*> GetDescriptions() const override
 	{
 		std::vector<NodeDescription*> descs;
@@ -63,6 +61,7 @@ public:
 		}
 		return fonts;
 	}
+
 private:
 	float m_AddScore = 1.0f; // スコア加算量
 	static std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分

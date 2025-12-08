@@ -27,6 +27,8 @@ public:
 	void Update() override;
 	void Draw() override;
 	virtual void Clicked(); // クリックされたときの処理
+	// index基準でnodeの位置を修正
+	void ModifyNodePos();
 	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
 	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
@@ -88,6 +90,7 @@ public:
 		}
 	};
 private:
+	inline static const Vector2 NODE_START = { 20.0f, 150.0f }; // ノードと文字の余白
 	void ModifyTimeLine(); // タイムラインを修正する
 	bool m_IsSelected = false; // 現在選択されているタブかどうか
 	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
