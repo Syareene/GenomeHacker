@@ -37,6 +37,7 @@ public:
 	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	void MoveNodeToMouse();
+	void FixFontPositions(Vector2 diff); // フォントの位置を説明文の位置に合わせて修正する
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
@@ -73,10 +74,7 @@ protected:
 
 	// dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
 	inline virtual void AddFont(const std::string& text, const Vector2& pos) = 0;
-
 	inline virtual const std::vector<Font*> GetFonts() = 0;
-
-
 
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }

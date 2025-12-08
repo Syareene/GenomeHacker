@@ -126,6 +126,16 @@ void NodeBase::Draw()
 	// ノードソケットの描画処理
 }
 
+void NodeBase::FixFontPositions(Vector2 diff)
+{
+	// フォントの位置をdiff分だけ修正
+	for(auto& fontPtr : m_Fonts)
+	{
+		Vector3 pos = fontPtr->GetPosition();
+		fontPtr->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
+	}
+}
+
 void NodeBase::MoveNodeToMouse()
 {
 	// ノードの座標に対してクリックされたらマウスを掴み状態に、

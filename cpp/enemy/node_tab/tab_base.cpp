@@ -91,19 +91,22 @@ void TabBase::Clicked()
 
 void TabBase::ModifyNodePos()
 {
+	// 座標加算用に保存
+	float currentPosY = NODE_START.y;
+
 	// index基準でnodeの位置を修正
 	for (auto& node : m_Nodes)
 	{
-		// nodeのindexを取得
-		auto it = std::find_if(m_Nodes.begin(), m_Nodes.end(),
-			[&node](const std::unique_ptr<NodeBase>& n) { return n.get() == node.get(); });
-		if (it != m_Nodes.end())
-		{
-			int index = std::distance(m_Nodes.begin(), it);
-			// 位置を修正
-			Vector2 newPos = NODE_START;
-			newPos.y += (node->GetScale().y + NodeBase::NODE_MARGIN.y) * index;
-		}
+		// ノードの位置を修正
+		Vector3 scale = node->GetScale();
+		Vector2 diff = Vector2(NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
+		Vector3 old_pos = node->GetPosition();
+		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
+		// 中身の説明文の位置も修正
+		node->FixFontPositions(diff);
+
+		// 次のノード用に位置を加算
+		currentPosY += scale.y;
 	}
 }
 
