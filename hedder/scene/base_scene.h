@@ -281,12 +281,6 @@ public:
 
 protected:
 	void DeleteGameObject();
-	//void UpdateStateObject();
-	//void UpdateStateObjectByTag(const std::string& tag);
-	//void UpdateStateObjectByTags(const std::list<std::string>& tags);
-	//void DrawStateObject();
-	//void DrawStateObjectByTag(const std::string& tag);
-	//void DrawStateObjectByTags(const std::list<std::string>& tags);
 	void UpdateFinal(); // システムオブジェクトのUpdateFinalを呼び出す
 
 	StateManager m_StateManager; // moved here

@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-//#include "object/2d_object.h"
 #include "object/ui/button.h"
 #include "enemy/node/base.h"
 #include <vector>

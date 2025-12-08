@@ -7,26 +7,6 @@ class ImageDraw : public UI
 {
 public:
 	ImageDraw() {} // デフォコン
-	// 引コン
-
-	/*
-	ImageDraw(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
-	{
-		// 引数を受け取り値をセット
-		SetPosition(pos);
-		SetScale(scale);
-		SetRotation(rot);
-		SetTextureID(TextureManager::LoadTexture(filePath));
-		SetNoUpdate(isNoUpdate);
-		SetDefaultVertex();
-		//SetActive(true);
-		// アップデートしないが有効なら初期化処理へ(そこに描画を置く)
-		if (isNoUpdate)
-		{
-			Init();
-		}
-	}
-	*/
 
 	void FirstInit(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
 	{

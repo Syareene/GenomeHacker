@@ -51,8 +51,7 @@ private:
 		enemy->SetEnemyBase(base_data);
 		enemy->SetCurrentHP(base_data->GetMaxHealth());
 
-		// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形で
-		//enemy->SetPosition(base.get()->GetDrawPosDiff());
+		// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形
 		enemy->SetScale(enemy->GetScale().mul(base_data->GetDrawScaleDiff()));
 
 		// コライダをセット

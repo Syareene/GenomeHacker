@@ -35,21 +35,6 @@ public:
 		XMFLOAT4 UVOffset;        // テクスチャアトラス用 (xy: offset, zw: scale)
 	};
 
-
-	/*
-    Particle2D(int maxCount) : maxParticles(maxCount) 
-	{
-        m_Particles.resize(maxCount);
-        m_InstanceDataBuffer.resize(maxCount);
-
-        // デフォルトで全パーティクルを非アクティブに
-        for (auto& p : m_Particles) p.IsActive = false;
-
-		// 初期化
-
-    }
-	*/
-
     // 振る舞いをセットする関数（これで動きや初期化を自由に差し替え可能）
     void SetInitBehavior(std::function<void(ParticleData&)> func) 
 	{

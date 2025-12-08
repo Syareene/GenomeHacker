@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-
-
 // もしかしたら後々rawinputに統合するかも
 class Mouse
 {

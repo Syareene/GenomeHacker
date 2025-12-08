@@ -10,7 +10,6 @@ class Object3D : public GameObject
 {
 public:
 	virtual ~Object3D();
-	// エラー解消用にコメントアウト
 	void Init(Transform trans = Transform()) override
 	{
 		SetTransform(trans);

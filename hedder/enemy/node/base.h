@@ -5,7 +5,6 @@
 #include "enemy/field_enemy.h"
 #include "object/ui/font.h"
 
-// 多分ui周りのクラス継承?わからんけど
 class NodeBase : public Object2D
 {
 	// 
@@ -34,7 +33,7 @@ public:
 
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
-	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
+	void Update() override;
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	void MoveNodeToMouse();
 	void FixFontPositions(Vector2 diff); // フォントの位置を説明文の位置に合わせて修正する
@@ -55,20 +54,10 @@ protected:
 	inline const virtual std::vector<NodeDescription*> GetDescriptions() const = 0;
 
 	inline const virtual NodeDescription* GetDescription(const int index) const = 0;
-	//inline const NodeDescription* GetDescription(const int index) const { return m_Description[index].get(); }
 
 	inline virtual void AddDescription(const NodeDescription& desc) = 0;
-	//inline void AddDescription(const NodeDescription& desc)
-	//{
-	//	std::unique_ptr<NodeDescription> desc_ptr = std::make_unique<NodeDescription>();
-	//	m_Description.push_back(std::move(desc_ptr));
-	//}
 
 	inline virtual void SetDescriptionFontData(const FontData& fontData) = 0;
-	//inline void SetDescriptionFontData(const FontData& fontData)
-	//{
-	//	m_DescFontData = fontData;
-	//}
 
 	inline virtual FontData& GetDescriptionFontData() = 0;
 

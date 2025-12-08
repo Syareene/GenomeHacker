@@ -7,8 +7,6 @@
 #include "enemy/node_tab/death.h"
 #include <memory>
 
-// ここ仕組み変えないとダメそう
-
 class DnaScreenScript : public Panel
 {
 public:

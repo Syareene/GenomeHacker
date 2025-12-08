@@ -7,8 +7,7 @@
 
 const int UNLOAD_TEXTURE_COUNT = 100;
 
-// どうせmainループ外で作るんだからstaticでもかわらんｗ多分。
-// あと、シーンとかを設定できるようにして、シーンが変わったら自動開放とかできるといいよねーって感じ
+// シーンとかを設定できるようにして、シーンが変わったら自動開放とかできるといいよねーって感じ
 // タイムラインとかもつけて、一定時間経過したら開放とかもあり
 
 
@@ -42,13 +41,6 @@ public:
             // カウントリセ
             m_CollectorCount = 0;
 
-            // erase_if使うのはいいけどテクスチャ開放できないんだよな
-			//std::erase_if(m_TextureMap, [](const auto& pair) 
-            //{
-            //     return pair.second.TextureCount <= 0;
-            //});
-
-
             for (auto it = m_TextureMap.begin(); it != m_TextureMap.end();)
             {
                 // もし読み込み数が0なら開放
@@ -73,35 +65,6 @@ public:
             }
         }
     }
-
-    /*
-    static void UnloadCurrentSceneTexture()
-    {
-        // 現在のシーンを取得
-        //auto current_scene = SceneManager::GetScene();
-
-        // テクスチャを解放
-        for (int i = 0; i < m_TextureMap.size();)
-        {
-            // シーン系のコンストラクタに入れてしまうと、前のシーンのポインタが入ってしまうので、開放されてしまう
-            // コンストラクタに入れずにinitにいれるのはまああり
-            if (m_TextureMap.begin()->second.stored_scene == current_scene)
-            {
-                // 今のイテレーターを取得
-                auto it = m_TextureMap.begin();
-                std::advance(it, i);
-                // テクスチャを解放
-                m_TextureMap.begin()->second.texture->Release();
-                // 要素を削除
-                m_TextureMap.erase(it);
-                // 要素消したのでカウンタは進めない
-                continue;
-            }
-            // カウンタを進める
-            i++;
-        }
-    }
-    */
 
     static void UnloadTexture(int id)
     {
@@ -187,7 +150,7 @@ public:
 		return textureID;
     }
 
-    // 重い版読み込み(std::threadを使った非同期読み込み処理)
+    // 重い版読み込み(std::threadを使った非同期読み込み処理)->実装予定
 
 	// テクスチャの取得
 	static inline ID3D11ShaderResourceView* GetTexture(const int id)
