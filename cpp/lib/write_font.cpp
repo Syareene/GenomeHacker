@@ -321,7 +321,7 @@ int DirectWriteCustomFont::GetFontNameNum() { return (int)fontNamesList.size(); 
 int DirectWriteCustomFont::FindOrCreatePreset(const FontData& data)
 {
     // 既存のプリセットを検索
-    for (const auto& preset : m_presetUsageList)
+    for (const auto& preset : m_PresetUseOrderList)
     {
         // FontData を比較するロジック（要実装）
         // 簡単な例としてフォント名とサイズで比較
@@ -332,16 +332,16 @@ int DirectWriteCustomFont::FindOrCreatePreset(const FontData& data)
     }
 
     // 見つからなければ新規作成
-    int newId = m_nextPresetId++;
+    int newId = m_NextPresetId++;
 
     // キャッシュが最大数に達していたら、一番古いもの（リストの末尾）を削除
-    if (m_presetUsageList.size() >= MAX_PRESET_CACHE_SIZE)
+    if (m_PresetUseOrderList.size() >= MAX_PRESET_CACHE_SIZE)
     {
         // 1. マップから削除
-        int oldId = m_presetUsageList.back().id; // idをFontPresetに追加する必要あり
-        m_presetCacheMap.erase(oldId);
+        int oldId = m_PresetUseOrderList.back().id; // idをFontPresetに追加する必要あり
+        m_PresetCacheMap.erase(oldId);
         // 2. リストから削除
-        m_presetUsageList.pop_back();
+        m_PresetUseOrderList.pop_back();
     }
 
     // 新しいプリセットを作成してリストの先頭に追加
@@ -354,8 +354,8 @@ int DirectWriteCustomFont::FindOrCreatePreset(const FontData& data)
     // 例: pDWriteFactory->CreateTextFormat(..., newPreset.textFormat.GetAddressOf());
     // 例: pRenderTarget->CreateSolidColorBrush(..., newPreset.brush.GetAddressOf());
 
-    m_presetUsageList.push_front(newPreset);
-    m_presetCacheMap[newId] = m_presetUsageList.begin();
+    m_PresetUseOrderList.push_front(newPreset);
+    m_PresetCacheMap[newId] = m_PresetUseOrderList.begin();
 
     return newId;
 }
@@ -363,17 +363,17 @@ int DirectWriteCustomFont::FindOrCreatePreset(const FontData& data)
 // 指定したIDのプリセットを適用する
 HRESULT DirectWriteCustomFont::ApplyPreset(int presetId)
 {
-    auto it = m_presetCacheMap.find(presetId);
-    if (it == m_presetCacheMap.end())
+    auto it = m_PresetCacheMap.find(presetId);
+    if (it == m_PresetCacheMap.end())
     {
         return E_INVALIDARG; // プリセットが見つからない
     }
 
     // 見つかったプリセットをリストの先頭に移動（＝最新の使用としてマーク）
-    m_presetUsageList.splice(m_presetUsageList.begin(), m_presetUsageList, it->second);
+    m_PresetUseOrderList.splice(m_PresetUseOrderList.begin(), m_PresetUseOrderList, it->second);
 
     // このプリセットをアクティブにする
-    m_activePresetId = presetId;
+    m_ActivePresetId = presetId;
 
     // 描画に使うポインタを、アクティブなプリセットのものに設定
     // (もしクラスのメンバとして pTextFormat 等を保持する場合)

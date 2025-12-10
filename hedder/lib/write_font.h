@@ -79,9 +79,34 @@ struct FontData
 	}
 };
 
+// FontData 比較用の演算子(AI提案なので精査必要あり)
+inline bool operator==(const D2D1_COLOR_F& a, const D2D1_COLOR_F& b) {
+	return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+}
+inline bool operator==(const D2D1_POINT_2F& a, const D2D1_POINT_2F& b) {
+	return a.x == b.x && a.y == b.y;
+}
+inline bool operator==(const FontData& a, const FontData& b) {
+	return a.font == b.font &&
+		a.fontWeight == b.fontWeight &&
+		a.fontStyle == b.fontStyle &&
+		a.fontStretch == b.fontStretch &&
+		a.fontSize == b.fontSize &&
+		wcscmp(a.localeName, b.localeName) == 0 &&
+		a.textAlignment == b.textAlignment &&
+		a.Color == b.Color &&
+		a.shadowColor == b.shadowColor &&
+		a.shadowOffset == b.shadowOffset &&
+		a.outlineColor == b.outlineColor &&
+		a.outlineWidth == b.outlineWidth;
+}
+
+
+
 // フォントプリセット
 struct FontPreset
 {
+	int id; // プリセットID
 	FontData data; // 元の設定値
 	WRL::ComPtr<IDWriteTextFormat> textFormat;
 	WRL::ComPtr<ID2D1SolidColorBrush> brush;
@@ -193,6 +218,8 @@ private:
 	// 第1引数：フォント設定
 	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
 
+	HRESULT ApplyPreset(int presetId);
+
 
 	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
 	WRL::ComPtr<ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
@@ -204,19 +231,19 @@ private:
 	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayout;		// DirectWriteテキスト書式 (キャッシュ用)
 	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
-	std::unordered_map<int, std::list<FontPreset>::iterator> m_presetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
+	std::unordered_map<int, std::list<FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
 
 	// 使用順リスト
-	std::list<FontPreset> m_presetUseOrderList;
+	std::list<FontPreset> m_PresetUseOrderList;
 	// アクティブなid
-	int m_activePresetId = -1;
+	int m_ActivePresetId = -1;
 	// キャッシュ最大数
-	static const size_t MAX_CACHE_PRESET = 16;
+	static const size_t MAX_PRESET_CACHE_SIZE = 16;
 	// プリセットidカウンター
-	int m_presetIdCounter = 0;
+	int m_PresetIdCounter = 0;
 
 	// テキストレイアウトキャッシュ
-	std::unordered_map<std::string, WRL::ComPtr<IDWriteTextLayout>> m_textLayoutCache;
+	std::unordered_map<std::string, WRL::ComPtr<IDWriteTextLayout>> m_TextLayoutCache;
 
 
 
