@@ -314,13 +314,88 @@ std::wstring DirectWriteCustomFont::GetFontName(int num)
 
 int DirectWriteCustomFont::GetFontNameNum() { return (int)fontNamesList.size(); }
 
+
+// 一旦AIから生成された2関数おいとく
+
+// プリセットを検索または新規作成して、そのIDを返す
+int DirectWriteCustomFont::FindOrCreatePreset(const FontData& data)
+{
+    // 既存のプリセットを検索
+    for (const auto& preset : m_presetUsageList)
+    {
+        // FontData を比較するロジック（要実装）
+        // 簡単な例としてフォント名とサイズで比較
+        if (preset.data.font == data.font && preset.data.fontSize == data.fontSize)
+        {
+            return preset.id; // 見つかったプリセットのIDを返す (idをFontPresetに追加する必要あり)
+        }
+    }
+
+    // 見つからなければ新規作成
+    int newId = m_nextPresetId++;
+
+    // キャッシュが最大数に達していたら、一番古いもの（リストの末尾）を削除
+    if (m_presetUsageList.size() >= MAX_PRESET_CACHE_SIZE)
+    {
+        // 1. マップから削除
+        int oldId = m_presetUsageList.back().id; // idをFontPresetに追加する必要あり
+        m_presetCacheMap.erase(oldId);
+        // 2. リストから削除
+        m_presetUsageList.pop_back();
+    }
+
+    // 新しいプリセットを作成してリストの先頭に追加
+    FontPreset newPreset;
+    newPreset.data = data;
+    newPreset.id = newId; // idをFontPresetに追加する必要あり
+
+    // リソースを作成 (TextFormat, Brushes)
+    // ... CreateTextFormat, CreateSolidColorBrush の呼び出し ...
+    // 例: pDWriteFactory->CreateTextFormat(..., newPreset.textFormat.GetAddressOf());
+    // 例: pRenderTarget->CreateSolidColorBrush(..., newPreset.brush.GetAddressOf());
+
+    m_presetUsageList.push_front(newPreset);
+    m_presetCacheMap[newId] = m_presetUsageList.begin();
+
+    return newId;
+}
+
+// 指定したIDのプリセットを適用する
+HRESULT DirectWriteCustomFont::ApplyPreset(int presetId)
+{
+    auto it = m_presetCacheMap.find(presetId);
+    if (it == m_presetCacheMap.end())
+    {
+        return E_INVALIDARG; // プリセットが見つからない
+    }
+
+    // 見つかったプリセットをリストの先頭に移動（＝最新の使用としてマーク）
+    m_presetUsageList.splice(m_presetUsageList.begin(), m_presetUsageList, it->second);
+
+    // このプリセットをアクティブにする
+    m_activePresetId = presetId;
+
+    // 描画に使うポインタを、アクティブなプリセットのものに設定
+    // (もしクラスのメンバとして pTextFormat 等を保持する場合)
+    // pTextFormat = m_presetUsageList.front().textFormat;
+    // pBrush = m_presetUsageList.front().brush;
+    // ...
+
+    return S_OK;
+}
+
+
+
 HRESULT DirectWriteCustomFont::SetFont(FontData set)
 {
     HRESULT result = S_OK;
 
     Setting = set;
 
-    result = pDWriteFactory->CreateTextFormat(GetFontFileNameWithoutExtension(Setting.font).c_str(), fontCollection.Get(), Setting.fontWeight, Setting.fontStyle, Setting.fontStretch, Setting.fontSize, Setting.localeName, pTextFormat.GetAddressOf());
+    // この辺インスタンス作ってから初期化してアクセス
+
+
+    result = pDWriteFactory->CreateTextFormat(GetFontFileNameWithoutExtension(Setting.font).c_str(), fontCollection.Get(), Setting.fontWeight, Setting.fontStyle, Setting.fontStretch, Setting.fontSize, Setting.localeName, pTextFormat.end()->GetAddressOf());
     if (FAILED(result)) return result;
 
     result = pTextFormat->SetTextAlignment(Setting.textAlignment);

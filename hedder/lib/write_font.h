@@ -6,6 +6,7 @@
 
 #include <string>						// 文字列
 #include <vector>						// 動的配列
+#include <memory>						// unique_ptr
 #include <wrl.h>						// ComPtr
 
 #pragma warning(push)
@@ -78,6 +79,18 @@ struct FontData
 	}
 };
 
+// フォントプリセット
+struct FontPreset
+{
+	FontData data; // 元の設定値
+	WRL::ComPtr<IDWriteTextFormat> textFormat;
+	WRL::ComPtr<ID2D1SolidColorBrush> brush;
+	WRL::ComPtr<ID2D1SolidColorBrush> shadowBrush;
+	WRL::ComPtr<ID2D1SolidColorBrush> outlineBrush;
+	// 必要なら追加
+};
+
+
 //=============================================================================
 //		DirectWrite
 //=============================================================================
@@ -85,12 +98,15 @@ class DirectWriteCustomFont
 {
 public:
 
-	// デフォルトコンストラクタを制限
-	DirectWriteCustomFont() = delete;
-
-	// コンストラクタ
-	// 第1引数：フォント設定
-	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
+	// シングルトン取得
+	static DirectWriteCustomFont* GetInstance(FontData* set = nullptr)
+	{
+		if (instance == nullptr && set != nullptr)
+		{
+			instance.reset(new DirectWriteCustomFont(set));
+		}
+		return instance.get();
+	}
 
 	// 初期化関数
 	HRESULT Init(IDXGISwapChain* swapChain);
@@ -167,16 +183,42 @@ public:
 	WRL::ComPtr <IDWriteFontCollection> fontCollection = nullptr;
 
 private:
+	// シングルトン用保管変数
+	static std::unique_ptr<DirectWriteCustomFont> instance;
 
-	WRL::ComPtr <ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
-	WRL::ComPtr <ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
-	WRL::ComPtr <ID2D1SolidColorBrush>	pBrush = nullptr;			// Direct2Dブラシ設定
-	WRL::ComPtr <ID2D1SolidColorBrush>	pShadowBrush = nullptr;		// Direct2Dブラシ設定（影）
-	WRL::ComPtr <ID2D1SolidColorBrush>	pOutlineBrush = nullptr;		// Direct2Dブラシ設定（縁取り）
-	WRL::ComPtr <IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
-	WRL::ComPtr <IDWriteTextFormat>		pTextFormat = nullptr;		// DirectWriteテキスト形式
-	WRL::ComPtr <IDWriteTextLayout>		pTextLayout = nullptr;		// DirectWriteテキスト書式 (キャッシュ用)
-	WRL::ComPtr <IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
+	// デフォルトコンストラクタを制限
+	DirectWriteCustomFont() = delete;
+
+	// コンストラクタ
+	// 第1引数：フォント設定
+	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
+
+
+	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
+	WRL::ComPtr<ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
+	//std::list<WRL::ComPtr<ID2D1SolidColorBrush>>	pBrush;			// Direct2Dブラシ設定
+	//std::list < WRL::ComPtr<ID2D1SolidColorBrush>>	pShadowBrush;		// Direct2Dブラシ設定（影）
+	//std::list < WRL::ComPtr<ID2D1SolidColorBrush>>	pOutlineBrush;		// Direct2Dブラシ設定（縁取り）
+	WRL::ComPtr<IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
+	//std::list<WRL::ComPtr<IDWriteTextFormat>>		pTextFormat;		// DirectWriteテキスト形式
+	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayout;		// DirectWriteテキスト書式 (キャッシュ用)
+	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
+
+	std::unordered_map<int, std::list<FontPreset>::iterator> m_presetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
+
+	// 使用順リスト
+	std::list<FontPreset> m_presetUseOrderList;
+	// アクティブなid
+	int m_activePresetId = -1;
+	// キャッシュ最大数
+	static const size_t MAX_CACHE_PRESET = 16;
+	// プリセットidカウンター
+	int m_presetIdCounter = 0;
+
+	// テキストレイアウトキャッシュ
+	std::unordered_map<std::string, WRL::ComPtr<IDWriteTextLayout>> m_textLayoutCache;
+
+
 
 	// フォントファイルリスト
 	std::vector<WRL::ComPtr<IDWriteFontFile>> pFontFileList;

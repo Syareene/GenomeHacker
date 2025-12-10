@@ -38,6 +38,7 @@
     <ClInclude Include="hedder\enemy\node\base.h" />
     <ClInclude Include="hedder\enemy\node\move_x.h" />
     <ClInclude Include="hedder\enemy\node\move_z.h" />
+    <ClInclude Include="hedder\enemy\node\node_font_manager.h" />
     <ClInclude Include="hedder\enemy\node\number.h" />
     <ClInclude Include="hedder\enemy\node\socket\number_socket.h" />
     <ClInclude Include="hedder\enemy\node\visual_base.h" />
@@ -85,6 +86,7 @@
     <ClInclude Include="hedder\scene\state\dna_edit_state.h" />
     <ClInclude Include="hedder\scene\state\dna_table_state.h" />
     <ClInclude Include="hedder\scene\state\game_base_state.h" />
+    <ClInclude Include="hedder\scene\state\load_state.h" />
     <ClInclude Include="hedder\scene\state\setting_state.h" />
     <ClInclude Include="hedder\scene\state\state_manager.h" />
     <ClInclude Include="hedder\scene\title_scene.h" />
@@ -112,6 +114,7 @@
     <ClCompile Include="cpp\enemy\node\base.cpp" />
     <ClCompile Include="cpp\enemy\node\move_x.cpp" />
     <ClCompile Include="cpp\enemy\node\move_z.cpp" />
+    <ClCompile Include="cpp\enemy\node\node_font_manager.cpp" />
     <ClCompile Include="cpp\enemy\node\number.cpp" />
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp" />
     <ClCompile Include="cpp\enemy\node\visual_base.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="cpp\scene\state\dna_edit_state.cpp" />
     <ClCompile Include="cpp\scene\state\dna_table_state.cpp" />
     <ClCompile Include="cpp\scene\state\game_base_state.cpp" />
+    <ClCompile Include="cpp\scene\state\load_state.cpp" />
     <ClCompile Include="cpp\scene\state\setting_state.cpp" />
     <ClCompile Include="cpp\scene\state\state_manager.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
@@ -443,6 +447,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -468,6 +474,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
