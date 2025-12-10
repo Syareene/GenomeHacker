@@ -1,5 +1,8 @@
 ﻿#include "main.h"
 #include "enemy/node_tab/tab_base.h"
+#include "lib/mouse.h"
+#include "scene/state/dna_edit_state.h"
+#include "scene/manager.h"
 
 void TabBase::Init(Transform trans)
 {
@@ -29,6 +32,26 @@ void TabBase::Update()
 		for (auto& node : m_Nodes)
 		{
 			node->Update();
+		}
+	}
+
+	// 掴んでるノードを取得
+	DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	if (state)
+	{
+		NodeBase* node = state->GetGrabbingNode();
+
+		// 該当するノードをm_Nodesから探してindexを取得
+		if (node)
+		{
+			for (int i = 0; i < static_cast<int>(m_Nodes.size()); i++)
+			{
+				if (&(*m_Nodes[i]) == node)
+				{
+					ModifyNodeIndexFromPos(Mouse::GetPosition(), i);
+					break;
+				}
+			}
 		}
 	}
 
@@ -111,6 +134,50 @@ void TabBase::ModifyNodePos()
 
 		// 次のノード用に位置を加算
 		currentPosY += scale.y;
+	}
+}
+
+
+// なぜかだいたい動いてしまったけど、動かしてるnodeが一番上とかの時(自身のindexの時?)に下に動かそうとすると動かないのでこの辺はなんとかしないとかも(中身が入れ替わってない?)
+void TabBase::ModifyNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
+{
+	// バグはなくなったが、現在のindexの範囲の場合nodeが動かないようにしてマウス座標だけ動きマウス座標がその範囲からでたら動くような形に変更したほうがいいかな
+	// ->ちゃんとindexが変わるようになりそれベースで位置変えてるので動かしたら強制的に位置が変わるようになっているのが原因
+
+	if (grabIndex < 0 || grabIndex >= static_cast<int>(m_Nodes.size()))
+		return;
+
+	// 安全のため生ポインタを保持（デバッグ用にも使える）
+	NodeBase* grabbedPtr = m_Nodes[grabIndex].get();
+
+	// シンプルかつ安定した実装：候補ノードとインデックスを交換する（swap）
+	// erase/insert を使うよりもポインタの移動とインデックス更新が確実
+	for (size_t i = 0; i < m_Nodes.size(); ++i)
+	{
+		if (static_cast<int>(i) == grabIndex)
+			continue;
+
+		NodeBase* curPtr = m_Nodes[i].get();
+
+		// 判定用の位置とサイズを取得
+		Vector3 nodePos = curPtr->GetPosition();
+		Vector3 nodeScale = curPtr->GetScale();
+
+		// マウスがこのノード領域内にあるか判定
+		if (mousePos.y < nodePos.y + (nodeScale.y * 0.5f) &&
+			mousePos.y > nodePos.y - (nodeScale.y * 0.5f))
+		{
+			// インデックス交換（swap）は簡潔で安全
+			std::swap(m_Nodes[grabIndex], m_Nodes[i]);
+
+			// grabIndex を移動先に合わせて更新
+			grabIndex = static_cast<int>(i);
+
+			// 描画位置を再配置
+			ModifyNodePos();
+
+			return;
+		}
 	}
 }
 

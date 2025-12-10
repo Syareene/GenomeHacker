@@ -149,8 +149,6 @@ void DnaScreenScript::Draw()
 	// ここで必要な描画処理を追加
 }
 
-// enemyのscriptからそれぞれのノードの処理を実行させる関数をここに追加する必要あり
-
 
 void DnaScreenScript::ShowDnaInfo()
 {

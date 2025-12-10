@@ -28,6 +28,8 @@ public:
 	virtual void Clicked(); // クリックされたときの処理
 	// index基準でnodeの位置を修正
 	void ModifyNodePos();
+	// ノード掴んでる時に掴んだノード基準でtab内のnode見て見た目含めindexを修正
+	void ModifyNodeIndexFromPos(Vector2 mousePos, int& grabIndex);
 	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
 	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
