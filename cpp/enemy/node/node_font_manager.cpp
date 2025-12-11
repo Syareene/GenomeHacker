@@ -1,6 +1,8 @@
 ﻿#include "main.h"
 #include "enemy/node/node_font_manager.h"
 
+std::vector<FontData> NodeFontManager::m_FontDataMap;
+
 void NodeFontManager::Init()
 {
 	// 各フォントタイプを生成し格納する
@@ -22,9 +24,9 @@ void NodeFontManager::Init()
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	fontData.outlineWidth = 2.5f;
 
-	m_DescriptionFonts.push_back(std::make_unique<Font>());
-	m_DescriptionFonts.back()->Init(Transform());
-	m_DescriptionFonts.back()->Register(Vector2(10.0f, 300.0f), m_DescFontData, "MoveX: このノードがある敵は毎フレームn分だけX軸に対し移動します。");
+	//m_DescriptionFonts.push_back(std::make_unique<Font>());
+	//m_DescriptionFonts.back()->Init(Transform());
+	//m_DescriptionFonts.back()->Register(Vector2(10.0f, 300.0f), m_DescFontData, "MoveX: このノードがある敵は毎フレームn分だけX軸に対し移動します。");
 }
 
 void NodeFontManager::Draw(std::string text, const Vector2& pos, TextType type)

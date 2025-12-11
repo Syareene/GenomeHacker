@@ -6,6 +6,7 @@
 
 #include <string>						// 文字列
 #include <vector>						// 動的配列
+#include <deque>
 #include <memory>						// unique_ptr
 #include <wrl.h>						// ComPtr
 
@@ -80,13 +81,16 @@ struct FontData
 };
 
 // FontData 比較用の演算子(AI提案なので精査必要あり)
-inline bool operator==(const D2D1_COLOR_F& a, const D2D1_COLOR_F& b) {
+inline bool operator==(const D2D1_COLOR_F& a, const D2D1_COLOR_F& b) 
+{
 	return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
 }
-inline bool operator==(const D2D1_POINT_2F& a, const D2D1_POINT_2F& b) {
+inline bool operator==(const D2D1_POINT_2F& a, const D2D1_POINT_2F& b) 
+{
 	return a.x == b.x && a.y == b.y;
 }
-inline bool operator==(const FontData& a, const FontData& b) {
+inline bool operator==(const FontData& a, const FontData& b) 
+{
 	return a.font == b.font &&
 		a.fontWeight == b.fontWeight &&
 		a.fontStyle == b.fontStyle &&
@@ -126,8 +130,14 @@ public:
 	// シングルトン取得
 	static DirectWriteCustomFont* GetInstance(FontData* set = nullptr)
 	{
-		if (instance == nullptr && set != nullptr)
+		if (instance == nullptr)
 		{
+			if (set == nullptr) 
+			{
+				// デフォルトFontDataを用意
+				static FontData defaultFontData;
+				set = &defaultFontData;
+			}
 			instance.reset(new DirectWriteCustomFont(set));
 		}
 		return instance.get();
@@ -138,7 +148,7 @@ public:
 
 	// フォント設定
 	// 第1引数：フォントデータ構造体
-	HRESULT SetFont(FontData set);
+	//HRESULT SetFont(FontData set);
 
 	// フォント設定
 	// 第1引数：フォント名（L"メイリオ", L"Arial", L"Meiryo UI"等）
@@ -151,6 +161,7 @@ public:
 	// 第8引数：フォントの色（D2D1::ColorF(D2D1::ColorF::Black)：黒, D2D1::ColorF(D2D1::ColorF(0.0f, 0.2f, 0.9f, 1.0f))：RGBA指定等）
 	// 第9引数：影の色（D2D1::ColorF(D2D1::ColorF::Black)：黒, D2D1::ColorF(D2D1::ColorF(0.0f, 0.2f, 0.9f, 1.0f))：RGBA指定等）
 	// 第10引数：影のオフセット（D2D1::Point2F(2.0f, 2.0f)：右下にポイントずらす）
+	/*
 	HRESULT SetFont
 	(
 		WCHAR const* fontname,						// フォント名
@@ -164,28 +175,34 @@ public:
 		D2D1_COLOR_F			shadowColor,		// 影の色
 		D2D1_POINT_2F			shadowOffset		// 影のオフセット
 	);
+	*/
 
 	// テキストキャッシュ: SetTextでレイアウトを生成し、以降の描画で再利用する
-	HRESULT SetText(const std::string& str, FLOAT maxWidth = 0.0f, FLOAT maxHeight = 0.0f);
-	void ClearTextCache();
+	//HRESULT SetText(const std::string& str, FLOAT maxWidth = 0.0f, FLOAT maxHeight = 0.0f);
+	//void ClearTextCache();
 
-	// 文字描画
+	HRESULT PreCacheTextLayout(FontData& fontData, const std::string& str, FLOAT maxWidth = 4096.0f, FLOAT maxHeight = 4096.0f);
+
+	// 文字描画(利用する際は前もってGetPresetIDでプリセットIDを取得しておくこと)
 	// string：文字列
 	// pos：描画ポジション
 	// options：テキストの整形
-	HRESULT DrawString(std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
+	HRESULT DrawString(const int& preset_id, std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 文字描画
 	// string：文字列
 	// rect：領域指定
 	// options：テキストの整形
-	HRESULT DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
+	//HRESULT DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 指定されたパスのフォントを読み込む
 	HRESULT FontLoader();
 
 	// フォント名を取得する
 	static std::wstring GetFontName(int num);
+
+	// プリセットidを取得
+	int GetPresetID(const FontData& fontData);
 
 	// 読み込んだフォント名の数を取得する
 	int GetFontNameNum();
@@ -218,7 +235,9 @@ private:
 	// 第1引数：フォント設定
 	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
 
-	HRESULT ApplyPreset(int presetId);
+	int FindOrCreateVisualPreset(const FontData& data);
+	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const int& preset_id, const std::string& str, FLOAT maxWidth, FLOAT maxHeight);
+	HRESULT ApplyVisualPreset(int presetId);
 
 
 	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
@@ -228,24 +247,23 @@ private:
 	//std::list < WRL::ComPtr<ID2D1SolidColorBrush>>	pOutlineBrush;		// Direct2Dブラシ設定（縁取り）
 	WRL::ComPtr<IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
 	//std::list<WRL::ComPtr<IDWriteTextFormat>>		pTextFormat;		// DirectWriteテキスト形式
-	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayout;		// DirectWriteテキスト書式 (キャッシュ用)
+	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayoutCache;		// DirectWriteテキスト書式 (キャッシュ用)
 	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
-	std::unordered_map<int, std::list<FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
+	std::unordered_map<int, std::deque<FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順デキュー内へのイテレーターマップ
 
-	// 使用順リスト
-	std::list<FontPreset> m_PresetUseOrderList;
+	// 使用順デキュー
+	std::deque<FontPreset> m_PresetUseOrderList;
 	// アクティブなid
 	int m_ActivePresetId = -1;
 	// キャッシュ最大数
 	static const size_t MAX_PRESET_CACHE_SIZE = 16;
+	static const size_t MAX_TEXTLAYOUT_CACHE_SIZE = 32;
 	// プリセットidカウンター
 	int m_PresetIdCounter = 0;
 
 	// テキストレイアウトキャッシュ
 	std::unordered_map<std::string, WRL::ComPtr<IDWriteTextLayout>> m_TextLayoutCache;
-
-
 
 	// フォントファイルリスト
 	std::vector<WRL::ComPtr<IDWriteFontFile>> pFontFileList;
@@ -257,10 +275,10 @@ private:
 	static std::vector<std::wstring> fontNamesList;
 
 	// キャッシュしている文字列
-	std::string cachedText;
-	std::wstring cachedWText;
-	FLOAT cachedMaxWidth = 0.0f;
-	FLOAT cachedMaxHeight = 0.0f;
+	//std::string cachedText;
+	//std::wstring cachedWText;
+	//FLOAT cachedMaxWidth = 0.0f;
+	//FLOAT cachedMaxHeight = 0.0f;
 
 	// フォントのファイル名（拡張子なし）を取得する（動的割当しない安全な戻り値）
 	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);

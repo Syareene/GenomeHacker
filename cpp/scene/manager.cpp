@@ -11,6 +11,7 @@
 #include "manager/default_vertex.h"
 #include "lib/audio.h"
 #include "lib/mouse.h"
+#include "lib/write_font.h"
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
@@ -22,6 +23,7 @@ void Manager::Init()
 {
 	Renderer::Init();
 	Input::Init();
+	DirectWriteCustomFont::GetInstance()->Init(Renderer::GetSwapChain());
 	ShaderManager::Init();
 	DefaultVertex::Init();
 	Audio::InitMaster();
