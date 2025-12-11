@@ -419,10 +419,11 @@ WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(con
 
 	// 見つからなければ新規作成
     WRL::ComPtr<IDWriteTextLayout> tempLayout; // 一時レイアウト
+	const std::wstring wstr = StringToWString(str); // マルチバイト文字列をワイド文字列に変換し変数として保持
 
     HRESULT hr = pDWriteFactory->CreateTextLayout(
-        StringToWString(str).c_str(),
-        (UINT32)str.size(),
+        wstr.c_str(),
+        (UINT32)wstr.size(),
         m_PresetUseOrderList.at(preset_index).textFormat.Get(),
         maxWidth,
         maxHeight,

@@ -62,6 +62,8 @@ void Font::Draw()
 	
 	DirectWriteCustomFont::GetInstance()->DrawString(presetID, m_DisplayText, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
+	Vector3 pos = GetPosition();
+
 	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 	return;
 }
