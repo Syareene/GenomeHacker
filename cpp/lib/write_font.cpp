@@ -314,23 +314,35 @@ std::wstring DirectWriteCustomFont::GetFontName(int num)
 
 int DirectWriteCustomFont::GetPresetID(const FontData& fontData)
 {
-    return FindOrCreateVisualPreset(fontData);
+    // これヘルパー関数として作ってたけど新規作成じゃないとだめ
+    for(const auto& preset : m_PresetUseOrderList)
+    {
+        // FontDataを比較
+        // 演算子オーバーロードしたので比較可能
+        if (preset.data == fontData)
+        {
+            return preset.id; // 見つかったプリセットのindexを返す
+        }
+	}
+	return -1; // 見つからなければ-1を返す
 }
 
 int DirectWriteCustomFont::GetFontNameNum() { return (int)fontNamesList.size(); }
 
-// プリセットを検索または新規作成して、そのIDを返す
+// プリセットを検索または新規作成して、そのindexを返す
 int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
 {
     // 既存のプリセットを検索
+	int count = 0;
     for (const auto& preset : m_PresetUseOrderList)
     {
         // FontDataを比較
         // 演算子オーバーロードしたので比較可能
         if (preset.data == data)
         {
-            return preset.id; // 見つかったプリセットのIDを返す
+            return count; // 見つかったプリセットのindexを返す
         }
+        count++;
     }
 
     // 見つからなければ新規作成
@@ -349,7 +361,7 @@ int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
     // 新しいプリセットを作成してリストの先頭に追加
     FontPreset newPreset;
     newPreset.data = data;
-    newPreset.id = newId; // idをFontPresetに追加する必要あり
+    newPreset.id = newId;
 
     // リソースを作成 (TextFormat, Brushes)
 	HRESULT hr = S_OK;
@@ -388,11 +400,11 @@ int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
 	// 作成したプリセットをリストとマップに登録
     m_PresetUseOrderList.push_front(newPreset);
     m_PresetCacheMap[newId] = m_PresetUseOrderList.begin();
-
-    return newId;
+    // 先頭に登録しているためindexは0である
+    return 0;
 }
 
-WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(const int& preset_id, const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
+WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(const int& preset_index, const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
 {
     // これ引数に描画対象となるformatの追加必要だーね
 
@@ -411,7 +423,7 @@ WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(con
     HRESULT hr = pDWriteFactory->CreateTextLayout(
         StringToWString(str).c_str(),
         (UINT32)str.size(),
-        m_PresetUseOrderList.at(preset_id).textFormat.Get(),
+        m_PresetUseOrderList.at(preset_index).textFormat.Get(),
         maxWidth,
         maxHeight,
         tempLayout.GetAddressOf()
@@ -608,6 +620,8 @@ HRESULT DirectWriteCustomFont::DrawString(const int& preset_id, std::string str,
     else
     {
         // レイアウトを作成
+
+        // ここid入れてるがindexでないといけない
         layoutToUse = FindOrCreateTextLayout(preset_id, str, 4096.0f, 4096.0f); // ここのmaxw/hは見直す必要あるかも
         if(layoutToUse == nullptr)
         {

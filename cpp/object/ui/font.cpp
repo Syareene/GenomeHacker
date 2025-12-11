@@ -10,35 +10,11 @@ void Font::Register(const Vector2& pos, const FontData& font_data, std::string t
 {
 	// フォントデータを保存
 	m_FontData = font_data;
-
-	// フォントをセット(関数異なると思うので一旦エラーだけ取る)
-	//DirectWriteCustomFont::GetInstance()->SetFont(m_FontData);
-	SetDisplayText(text);
+	// テキストデータセット
+	m_DisplayText = text;
 
 	// 位置セット
 	SetPosition(Vector3(pos.x, pos.y, 0.0f));
-}
-
-void Font::Init(Transform trans)
-{
-	// transformセット
-	SetTransform(trans);
-
-	// DirectWrite用コンポーネントを作成
-	//m_Write = std::make_unique<DirectWriteCustomFont>(&m_FontData);
-
-	// 初期化->まーあれか、共通インスタンスとしてどっかで保持しとかないといけないな、manager側とかに
-	//DirectWriteCustomFont::GetInstance()->Init(Renderer::GetSwapChain());
-
-	// フォントデータを改変
-	m_FontData.fontSize = 60;
-	m_FontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	m_FontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
-	m_FontData.font = DirectWriteCustomFont::GetInstance()->GetFontName(0);
-	m_FontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_FontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	m_FontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_FontData.outlineWidth = 6.0f;
 
 	// プレロード
 	DirectWriteCustomFont::GetInstance()->PreCacheTextLayout(m_FontData, m_DisplayText);
@@ -51,6 +27,22 @@ void Font::Init(Transform trans)
 		OutputDebugStringW(buf2);
 		m_WidthHeight = Vector2(wPx, hPx);
 	}
+}
+
+void Font::Init(Transform trans)
+{
+	// transformセット
+	SetTransform(trans);
+
+	// デフォルトフォントデータ設定
+	m_FontData.fontSize = 60;
+	m_FontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	m_FontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
+	m_FontData.font = DirectWriteCustomFont::GetInstance()->GetFontName(0);
+	m_FontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_FontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	m_FontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	m_FontData.outlineWidth = 6.0f;
 }
 
 void Font::Uninit()
@@ -66,11 +58,12 @@ void Font::Update()
 void Font::Draw()
 {
 	// フォントのプリセットIDを取得
-	int presetID = DirectWriteCustomFont::GetInstance()->GetPresetID(m_FontData);
+	int presetID = DirectWriteCustomFont::GetInstance()->FindOrCreateVisualPreset(m_FontData);
 	
 	DirectWriteCustomFont::GetInstance()->DrawString(presetID, m_DisplayText, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
 	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
+	return;
 }
 
 void Font::SetDisplayText(const std::string& text)

@@ -203,6 +203,8 @@ public:
 
 	// プリセットidを取得
 	int GetPresetID(const FontData& fontData);
+	// 見た目部分の作成(すでにあるならindexをそのまま返す)
+	int FindOrCreateVisualPreset(const FontData& data);
 
 	// 読み込んだフォント名の数を取得する
 	int GetFontNameNum();
@@ -235,8 +237,7 @@ private:
 	// 第1引数：フォント設定
 	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
 
-	int FindOrCreateVisualPreset(const FontData& data);
-	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const int& preset_id, const std::string& str, FLOAT maxWidth, FLOAT maxHeight);
+	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const int& preset_index, const std::string& str, FLOAT maxWidth, FLOAT maxHeight);
 	HRESULT ApplyVisualPreset(int presetId);
 
 
