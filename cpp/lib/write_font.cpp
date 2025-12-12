@@ -431,14 +431,21 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, const Vector2& pos, D
 
     // 使用するレイアウトを決定：キャッシュ済みか一時か
     WRL::ComPtr<IDWriteTextLayout> layoutToUse;
-    if (!cachedText.empty() && str == cachedText && pTextLayout)
+    
+    // キャッシュが有効かチェック（テキストとサイズの両方が一致する必要がある）
+    D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
+    const FLOAT EPS = 0.0001f;
+    bool cacheValid = !cachedText.empty() && str == cachedText && pTextLayout &&
+                     fabs(cachedMaxWidth - targetSize.width) < EPS &&
+                     fabs(cachedMaxHeight - targetSize.height) < EPS;
+    
+    if (cacheValid)
     {
         layoutToUse = pTextLayout;
     }
     else
     {
         // 一時レイアウトを作成
-        D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
         // サイズが無効な場合はエラーを返す
         if (targetSize.width <= 0.0f || targetSize.height <= 0.0f)
         {
@@ -499,20 +506,29 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
     HRESULT result = S_OK;
     std::wstring wstr = StringToWString(str);
 
+    FLOAT width = rect.right - rect.left;
+    FLOAT height = rect.bottom - rect.top;
+    
+    // サイズが無効な場合はエラーを返す
+    if (width <= 0.0f || height <= 0.0f)
+    {
+        return E_INVALIDARG;
+    }
+
     WRL::ComPtr<IDWriteTextLayout> layoutToUse;
-    if (!cachedText.empty() && str == cachedText && pTextLayout)
+    
+    // キャッシュが有効かチェック（テキストとサイズの両方が一致する必要がある）
+    const FLOAT EPS = 0.0001f;
+    bool cacheValid = !cachedText.empty() && str == cachedText && pTextLayout &&
+                     fabs(cachedMaxWidth - width) < EPS &&
+                     fabs(cachedMaxHeight - height) < EPS;
+    
+    if (cacheValid)
     {
         layoutToUse = pTextLayout;
     }
     else
     {
-        FLOAT width = rect.right - rect.left;
-        FLOAT height = rect.bottom - rect.top;
-        // サイズが無効な場合はエラーを返す
-        if (width <= 0.0f || height <= 0.0f)
-        {
-            return E_INVALIDARG;
-        }
         result = pDWriteFactory->CreateTextLayout(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), width, height, layoutToUse.GetAddressOf());
         if (FAILED(result)) return result;
     }
