@@ -371,10 +371,22 @@ HRESULT DirectWriteCustomFont::SetFont(WCHAR const* fontname, DWRITE_FONT_WEIGHT
 // キャッシュされた文字列用レイアウトを生成
 HRESULT DirectWriteCustomFont::SetText(const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
 {
+    // レンダーターゲットの検証
+    if (!pRenderTarget)
+    {
+        return E_FAIL;
+    }
+
     // 同じ文字列かつ同じサイズ制限が既にキャッシュされている場合は何もしない
     D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
     FLOAT wLimit = (maxWidth > 0.0f) ? maxWidth : targetSize.width;
     FLOAT hLimit = (maxHeight > 0.0f) ? maxHeight : targetSize.height;
+
+    // サイズの検証（0または負の値はエラー）
+    if (wLimit <= 0.0f || hLimit <= 0.0f)
+    {
+        return E_INVALIDARG;
+    }
 
     // 浮動小数比較用の小さなイプシロン
     const FLOAT EPS = 0.0001f;
@@ -427,8 +439,19 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, const Vector2& pos, D
     {
         // 一時レイアウトを作成
         D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
+        // サイズが無効な場合はエラーを返す
+        if (targetSize.width <= 0.0f || targetSize.height <= 0.0f)
+        {
+            return E_INVALIDARG;
+        }
         result = pDWriteFactory->CreateTextLayout(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), targetSize.width, targetSize.height, layoutToUse.GetAddressOf());
         if (FAILED(result)) return result;
+    }
+
+    // レイアウトが無効な場合はエラーを返す
+    if (!layoutToUse)
+    {
+        return E_FAIL;
     }
 
     D2D1_POINT_2F origin = D2D1::Point2F(pos.x, pos.y);
@@ -483,8 +506,21 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
     }
     else
     {
-        result = pDWriteFactory->CreateTextLayout(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), rect.right - rect.left, rect.bottom - rect.top, layoutToUse.GetAddressOf());
+        FLOAT width = rect.right - rect.left;
+        FLOAT height = rect.bottom - rect.top;
+        // サイズが無効な場合はエラーを返す
+        if (width <= 0.0f || height <= 0.0f)
+        {
+            return E_INVALIDARG;
+        }
+        result = pDWriteFactory->CreateTextLayout(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), width, height, layoutToUse.GetAddressOf());
         if (FAILED(result)) return result;
+    }
+
+    // レイアウトが無効な場合はエラーを返す
+    if (!layoutToUse)
+    {
+        return E_FAIL;
     }
 
     if (shadow)

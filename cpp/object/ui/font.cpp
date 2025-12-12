@@ -9,6 +9,12 @@
 
 void Font::Register(const Vector2& pos, const FontData& font_data, std::string text)
 {
+	// m_Writeが初期化されていない場合は何もしない（安全性チェック）
+	if (!m_Write)
+	{
+		return;
+	}
+
 	// フォントデータを保存
 	m_FontData = font_data;
 	m_Write->SetFont(m_FontData);
@@ -55,6 +61,12 @@ void Font::Update()
 
 void Font::Draw()
 {
+	// m_Writeが初期化されていない場合は何もしない（安全性チェック）
+	if (!m_Write)
+	{
+		return;
+	}
+
 	m_Write->DrawString(m_DisplayText, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
 	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
@@ -64,7 +76,9 @@ void Font::SetDisplayText(const std::string& text)
 {
 	m_DisplayText = text;
 	// フォントキャッシュを更新
-	m_Write->SetText(m_DisplayText);
+	HRESULT hr = m_Write->SetText(m_DisplayText);
+	// SetTextが失敗した場合でもm_DisplayTextは更新されているため、
+	// DrawString時に一時レイアウトが作成される
 }
 
 void Font::GetDisplayText(std::string& outText) const
