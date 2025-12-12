@@ -184,6 +184,9 @@ private:
 	FLOAT cachedMaxWidth = 0.0f;
 	FLOAT cachedMaxHeight = 0.0f;
 
+	// 浮動小数点比較用のイプシロン値
+	static constexpr FLOAT FLOAT_EPSILON = 0.0001f;
+
 	// フォントのファイル名（拡張子なし）を取得する（動的割当しない安全な戻り値）
 	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);
 

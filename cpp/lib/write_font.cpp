@@ -388,9 +388,8 @@ HRESULT DirectWriteCustomFont::SetText(const std::string& str, FLOAT maxWidth, F
         return E_INVALIDARG;
     }
 
-    // 浮動小数比較用の小さなイプシロン
-    const FLOAT EPS = 0.0001f;
-    if (!cachedText.empty() && cachedText == str && fabs(cachedMaxWidth - wLimit) < EPS && fabs(cachedMaxHeight - hLimit) < EPS)
+    // 浮動小数比較用のイプシロン
+    if (!cachedText.empty() && cachedText == str && fabs(cachedMaxWidth - wLimit) < FLOAT_EPSILON && fabs(cachedMaxHeight - hLimit) < FLOAT_EPSILON)
     {
         return S_OK; // 既にキャッシュ済み
     }
@@ -435,13 +434,12 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, const Vector2& pos, D
     // 現在のレンダーターゲットサイズを取得（一時レイアウト作成時に使用）
     D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
     
-    // キャッシュが有効かチェック
-    // Note: SetText() は maxWidth=0, maxHeight=0 で呼ばれるため、
-    // cachedMaxWidth/Height はレンダーターゲットの全サイズと等しいはず
-    const FLOAT EPS = 0.0001f;
+    // キャッシュが有効かチェック（テキストと実際のレイアウトサイズが一致する必要がある）
+    // Note: Font::SetDisplayText()経由で呼ばれる場合、maxWidth=0, maxHeight=0のため
+    // cachedMaxWidth/Heightはレンダーターゲットの全サイズと等しくなる
     bool cacheValid = !cachedText.empty() && str == cachedText && pTextLayout &&
-                     fabs(cachedMaxWidth - targetSize.width) < EPS &&
-                     fabs(cachedMaxHeight - targetSize.height) < EPS;
+                     fabs(cachedMaxWidth - targetSize.width) < FLOAT_EPSILON &&
+                     fabs(cachedMaxHeight - targetSize.height) < FLOAT_EPSILON;
     
     if (cacheValid)
     {
@@ -521,11 +519,10 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D
 
     WRL::ComPtr<IDWriteTextLayout> layoutToUse;
     
-    // キャッシュが有効かチェック（テキストとサイズの両方が一致する必要がある）
-    const FLOAT EPS = 0.0001f;
+    // キャッシュが有効かチェック（テキストと実際のレイアウトサイズが一致する必要がある）
     bool cacheValid = !cachedText.empty() && str == cachedText && pTextLayout &&
-                     fabs(cachedMaxWidth - width) < EPS &&
-                     fabs(cachedMaxHeight - height) < EPS;
+                     fabs(cachedMaxWidth - width) < FLOAT_EPSILON &&
+                     fabs(cachedMaxHeight - height) < FLOAT_EPSILON;
     
     if (cacheValid)
     {
