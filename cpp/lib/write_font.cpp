@@ -637,7 +637,7 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
 
     D2D1_POINT_2F origin = { pos.x, pos.y };
 
-	pRenderTarget->BeginDraw();
+	//pRenderTarget->BeginDraw();
     if (shadow && preset->shadowBrush)
     {
         pRenderTarget->DrawTextLayout({ origin.x + preset->data.shadowOffset.x, origin.y + preset->data.shadowOffset.y }, layout.Get(), preset->shadowBrush.Get(), options);
@@ -652,7 +652,7 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
     {
         pRenderTarget->DrawTextLayout(origin, layout.Get(), preset->brush.Get(), options);
     }
-	pRenderTarget->EndDraw();
+	//pRenderTarget->EndDraw();
 
     return S_OK;
 }

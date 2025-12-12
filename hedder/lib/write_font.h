@@ -143,6 +143,8 @@ public:
 		return instance.get();
 	}
 
+	ID2D1RenderTarget* GetRenderTarget() { return pRenderTarget.Get(); }
+
 	// 初期化関数
 	HRESULT Init(IDXGISwapChain* swapChain);
 
