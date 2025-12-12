@@ -60,9 +60,7 @@ void Font::Draw()
 	// フォントのプリセットIDを取得
 	int presetID = DirectWriteCustomFont::GetInstance()->FindOrCreateVisualPreset(m_FontData);
 	
-	DirectWriteCustomFont::GetInstance()->DrawString(presetID, m_DisplayText, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
-
-	Vector3 pos = GetPosition();
+	DirectWriteCustomFont::GetInstance()->DrawString(m_DisplayText, presetID, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 
 	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
 	return;

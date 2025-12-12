@@ -329,39 +329,33 @@ int DirectWriteCustomFont::GetPresetID(const FontData& fontData)
 
 int DirectWriteCustomFont::GetFontNameNum() { return (int)fontNamesList.size(); }
 
-// プリセットを検索または新規作成して、そのindexを返す
+// プリセットを検索または新規作成して、そのidを返す
 int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
 {
     // 既存のプリセットを検索
-	int count = 0;
-    for (const auto& preset : m_PresetUseOrderList)
+    for (auto it = m_PresetUseOrderList.begin(); it != m_PresetUseOrderList.end(); ++it)
     {
-        // FontDataを比較
-        // 演算子オーバーロードしたので比較可能
-        if (preset.data == data)
+        if (it->data == data)
         {
-            return count; // 見つかったプリセットのindexを返す
+            // 見つかった場合、リストの先頭に移動してIDを返す
+            m_PresetUseOrderList.splice(m_PresetUseOrderList.begin(), m_PresetUseOrderList, it);
+            return it->id;
         }
-        count++;
     }
 
     // 見つからなければ新規作成
-    int newId = m_PresetIdCounter++;
-
-    // キャッシュが最大数に達していたら末尾を削除
     if (m_PresetUseOrderList.size() >= MAX_PRESET_CACHE_SIZE)
     {
-        // マップから削除
         int oldId = m_PresetUseOrderList.back().id;
+        // mapとlistの両方に対し削除
         m_PresetCacheMap.erase(oldId);
-        // リストから削除
         m_PresetUseOrderList.pop_back();
     }
 
     // 新しいプリセットを作成してリストの先頭に追加
     FontPreset newPreset;
     newPreset.data = data;
-    newPreset.id = newId;
+    newPreset.id = m_PresetIdCounter++;
 
     // リソースを作成 (TextFormat, Brushes)
 	HRESULT hr = S_OK;
@@ -399,47 +393,73 @@ int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
 
 	// 作成したプリセットをリストとマップに登録
     m_PresetUseOrderList.push_front(newPreset);
-    m_PresetCacheMap[newId] = m_PresetUseOrderList.begin();
-    // 先頭に登録しているためindexは0である
-    return 0;
+    m_PresetCacheMap[newPreset.id] = m_PresetUseOrderList.begin();
+    return newPreset.id;
 }
 
-WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(const int& preset_index, const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
+FontPreset* DirectWriteCustomFont::GetPreset(int presetId)
 {
-    // これ引数に描画対象となるformatの追加必要だーね
+    auto it = m_PresetCacheMap.find(presetId);
+    if (it == m_PresetCacheMap.end()) {
+        return nullptr;
+    }
+    // アクセスされたのでリストの先頭に移動
+    m_PresetUseOrderList.splice(m_PresetUseOrderList.begin(), m_PresetUseOrderList, it->second);
+    return &(*m_PresetUseOrderList.begin());
+}
 
-	// キャッシュを検索
-    for(auto& cached : m_TextLayoutCache)
+WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(const std::string& str, int presetId, FLOAT maxWidth, FLOAT maxHeight)
+{
+    TextLayoutKey key = { presetId, str };
+
+    // 1. キャッシュを検索
+    auto map_it = m_TextLayoutCacheMap.find(key);
+    if (map_it != m_TextLayoutCacheMap.end())
     {
-        if (cached.first == str && fabs(cached.second->GetMaxWidth() - maxWidth) < 0.0001f && fabs(cached.second->GetMaxHeight() - maxHeight) < 0.0001f)
-        {
-            return cached.second; // 見つかったキャッシュのレイアウトを返す
-        }
-	}
+        // 2. キャッシュヒット！
+        // 見つかった要素をリストの先頭に移動（これがLRUの核）
+        m_TextLayoutUsageList.splice(m_TextLayoutUsageList.begin(), m_TextLayoutUsageList, map_it->second);
+        // 先頭に移動した要素のComPtrを返す
+        return map_it->second->second;
+    }
 
-	// 見つからなければ新規作成
-    WRL::ComPtr<IDWriteTextLayout> tempLayout; // 一時レイアウト
-	const std::wstring wstr = StringToWString(str); // マルチバイト文字列をワイド文字列に変換し変数として保持
+    // --- 3. キャッシュミス：新規作成 ---
+
+    // キャッシュが最大数に達していたら、一番古いもの（リストの末尾）を削除
+    if (m_TextLayoutCacheMap.size() >= MAX_TEXTLAYOUT_CACHE_SIZE)
+    {
+        // a. 削除する要素のキーを取得
+        const TextLayoutKey& oldKey = m_TextLayoutUsageList.back().first;
+        // b. マップから削除
+        m_TextLayoutCacheMap.erase(oldKey);
+        // c. リストから削除
+        m_TextLayoutUsageList.pop_back();
+    }
+
+    // プリセット（TextFormat）を取得
+    FontPreset* preset = GetPreset(presetId);
+    if (!preset) return nullptr;
+
+    // 新しいレイアウトを作成
+    WRL::ComPtr<IDWriteTextLayout> newLayout;
+    const std::wstring wstr = StringToWString(str);
 
     HRESULT hr = pDWriteFactory->CreateTextLayout(
         wstr.c_str(),
         (UINT32)wstr.size(),
-        m_PresetUseOrderList.at(preset_index).textFormat.Get(),
+        preset->textFormat.Get(), // 正しいTextFormatを使用
         maxWidth,
         maxHeight,
-        tempLayout.GetAddressOf()
-	);
+        &newLayout
+    );
     if (FAILED(hr)) return nullptr;
 
-    // 問題ないので代入を試みる
-	// キャッシュが最大数に達していたら最初の要素を削除
-    if (m_TextLayoutCache.size() >= MAX_TEXTLAYOUT_CACHE_SIZE)
-    {
-        m_TextLayoutCache.erase(m_TextLayoutCache.begin());
-    }
-    // 新しいレイアウトをキャッシュに追加(
-	m_TextLayoutCache.insert({ str, tempLayout });
-	return tempLayout;
+    // 作成したレイアウトをリストの先頭に追加
+    m_TextLayoutUsageList.push_front({ key, newLayout });
+    // 新しい要素を指すイテレータをマップに登録
+    m_TextLayoutCacheMap[key] = m_TextLayoutUsageList.begin();
+
+    return newLayout;
 }
 
 // 指定したIDのプリセットを適用する
@@ -596,7 +616,7 @@ HRESULT DirectWriteCustomFont::PreCacheTextLayout(FontData& fontData, const std:
     }
 
     // 2. テキストレイアウトを検索または作成
-    WRL::ComPtr<IDWriteTextLayout> layout = FindOrCreateTextLayout(presetId, str, maxWidth, maxHeight);
+    WRL::ComPtr<IDWriteTextLayout> layout = FindOrCreateTextLayout(str, presetId, maxWidth, maxHeight);
     if (layout == nullptr)
     {
         return E_FAIL; // レイアウトの作成に失敗
@@ -607,73 +627,32 @@ HRESULT DirectWriteCustomFont::PreCacheTextLayout(FontData& fontData, const std:
 
 
 // DrawString: pos バージョン
-HRESULT DirectWriteCustomFont::DrawString(const int& preset_id, std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow, bool outline)
+HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow, bool outline)
 {
-    HRESULT result = S_OK;
-    std::wstring wstr = StringToWString(str);
+    FontPreset* preset = GetPreset(presetId);
+    if (!preset) return E_INVALIDARG;
 
-    // 使用するレイアウトを決定：キャッシュ済みか一時か
-    WRL::ComPtr<IDWriteTextLayout> layoutToUse;
-    if(m_TextLayoutCache.find(str) != m_TextLayoutCache.end())
+    WRL::ComPtr<IDWriteTextLayout> layout = FindOrCreateTextLayout(str, presetId, 4096.f, 4096.f);
+    if (!layout) return E_FAIL;
+
+    D2D1_POINT_2F origin = { pos.x, pos.y };
+
+	pRenderTarget->BeginDraw();
+    if (shadow && preset->shadowBrush)
     {
-        layoutToUse = m_TextLayoutCache[str];
+        pRenderTarget->DrawTextLayout({ origin.x + preset->data.shadowOffset.x, origin.y + preset->data.shadowOffset.y }, layout.Get(), preset->shadowBrush.Get(), options);
+    }
+
+    if (outline && preset->data.outlineWidth > 0.0f && preset->outlineBrush)
+    {
+        OutlineTextRenderer renderer(pD2DFactory.Get(), pRenderTarget.Get(), preset->brush.Get(), preset->outlineBrush.Get(), preset->data.outlineWidth);
+        layout->Draw(nullptr, &renderer, origin.x, origin.y);
     }
     else
     {
-        // レイアウトを作成
-
-        // ここid入れてるがindexでないといけない
-        layoutToUse = FindOrCreateTextLayout(preset_id, str, 4096.0f, 4096.0f); // ここのmaxw/hは見直す必要あるかも
-        if(layoutToUse == nullptr)
-        {
-            return E_FAIL;
-		}
+        pRenderTarget->DrawTextLayout(origin, layout.Get(), preset->brush.Get(), options);
     }
-	// 現在のactiveIdに対応するプリセットを取得
-    const FontPreset& activePreset = m_PresetUseOrderList[preset_id]; // preset_idを使用してプリセットを取得
-	FontData activeData = activePreset.data;
-    WRL::ComPtr<ID2D1SolidColorBrush> brush = activePreset.brush;
-    WRL::ComPtr<ID2D1SolidColorBrush> shadowBrush = activePreset.shadowBrush;
-	WRL::ComPtr<ID2D1SolidColorBrush> outlineBrush = activePreset.outlineBrush;
-
-
-	// 原点の設定
-    D2D1_POINT_2F origin = D2D1::Point2F(pos.x, pos.y);
-
-
-    // 影の描画
-    if (shadow)
-    {
-        pRenderTarget->BeginDraw();
-        pRenderTarget->DrawTextLayout(D2D1::Point2F(origin.x - activeData.shadowOffset.x, origin.y - activeData.shadowOffset.y), layoutToUse.Get(), shadowBrush.Get(), options);
-        result = pRenderTarget->EndDraw();
-        if (FAILED(result)) return result;
-    }
-
-    // カスタムレンダラーを使用した縁取り描画
-    if (outline && activeData.outlineWidth > 0.0f && outlineBrush)
-    {
-        OutlineTextRenderer* renderer = new (std::nothrow) OutlineTextRenderer(pD2DFactory.Get(), pRenderTarget.Get(), brush.Get(), outlineBrush.Get(), activeData.outlineWidth);
-        if (!renderer) return E_OUTOFMEMORY;
-
-        pRenderTarget->BeginDraw();
-        result = layoutToUse->Draw(nullptr, renderer, origin.x, origin.y);
-        if (FAILED(result))
-        {
-            // フォールバック描画
-            pRenderTarget->DrawTextLayout(origin, layoutToUse.Get(), brush.Get(), options);
-        }
-        HRESULT endHr = pRenderTarget->EndDraw();
-        renderer->Release();
-        if (FAILED(endHr)) return endHr;
-    }
-    else
-    {
-        pRenderTarget->BeginDraw();
-        pRenderTarget->DrawTextLayout(origin, layoutToUse.Get(), brush.Get(), options);
-        result = pRenderTarget->EndDraw();
-        if (FAILED(result)) return result;
-    }
+	pRenderTarget->EndDraw();
 
     return S_OK;
 }
@@ -825,16 +804,15 @@ HRESULT DirectWriteCustomFont::GetTextSizeDips(const std::string& str, FLOAT* ou
     if (!outWidthDips || !outHeightDips) return E_POINTER;
     if (!pDWriteFactory) return E_FAIL;
 
-    WRL::ComPtr<IDWriteTextLayout> layoutToUse;
-    if(m_TextLayoutCache.find(str) != m_TextLayoutCache.end())
+    WRL::ComPtr<IDWriteTextLayout> layoutToUse = nullptr;
+    for(auto& presetPair : m_TextLayoutCacheMap)
     {
-        layoutToUse = m_TextLayoutCache.at(str);
+        if (presetPair.first.text == str)
+        {
+            layoutToUse = presetPair.second->second;
+			break;
+        }
 	}
-    else
-    {
-        // レイアウトは作成せずFAILを返す
-		return E_FAIL;
-    }
 
     if (!layoutToUse) return E_FAIL;
 

@@ -6,7 +6,7 @@
 
 #include <string>						// 文字列
 #include <vector>						// 動的配列
-#include <deque>
+#include <list>
 #include <memory>						// unique_ptr
 #include <wrl.h>						// ComPtr
 
@@ -187,7 +187,7 @@ public:
 	// string：文字列
 	// pos：描画ポジション
 	// options：テキストの整形
-	HRESULT DrawString(const int& preset_id, std::string str, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
+	HRESULT DrawString(const std::string& str, int presetId, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 文字描画
 	// string：文字列
@@ -203,7 +203,7 @@ public:
 
 	// プリセットidを取得
 	int GetPresetID(const FontData& fontData);
-	// 見た目部分の作成(すでにあるならindexをそのまま返す)
+	// 見た目部分の作成(idを返す)
 	int FindOrCreateVisualPreset(const FontData& data);
 
 	// 読み込んだフォント名の数を取得する
@@ -237,7 +237,8 @@ private:
 	// 第1引数：フォント設定
 	DirectWriteCustomFont(FontData* set) :Setting(*set) {};
 
-	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const int& preset_index, const std::string& str, FLOAT maxWidth, FLOAT maxHeight);
+	FontPreset* GetPreset(int presetId);
+	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const std::string& str, int presetId, FLOAT maxWidth, FLOAT maxHeight);
 	HRESULT ApplyVisualPreset(int presetId);
 
 
@@ -251,20 +252,44 @@ private:
 	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayoutCache;		// DirectWriteテキスト書式 (キャッシュ用)
 	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
-	std::unordered_map<int, std::deque<FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順デキュー内へのイテレーターマップ
+	std::unordered_map<int, std::list <FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順デキュー内へのイテレーターマップ
 
 	// 使用順デキュー
-	std::deque<FontPreset> m_PresetUseOrderList;
+	std::list<FontPreset> m_PresetUseOrderList;
 	// アクティブなid
 	int m_ActivePresetId = -1;
 	// キャッシュ最大数
 	static const size_t MAX_PRESET_CACHE_SIZE = 16;
-	static const size_t MAX_TEXTLAYOUT_CACHE_SIZE = 32;
+	static const size_t MAX_TEXTLAYOUT_CACHE_SIZE = 48;
 	// プリセットidカウンター
 	int m_PresetIdCounter = 0;
 
-	// テキストレイアウトキャッシュ
-	std::unordered_map<std::string, WRL::ComPtr<IDWriteTextLayout>> m_TextLayoutCache;
+	// テキストレイアウトキャッシュのキーを構造体にする
+	struct TextLayoutKey 
+	{
+		int presetId;
+		std::string text;
+		bool operator==(const TextLayoutKey& other) const 
+		{
+			return presetId == other.presetId && text == other.text;
+		}
+	};
+	// キーのハッシュ関数
+	struct TextLayoutKeyHash
+	{
+		std::size_t operator()(const TextLayoutKey& k) const 
+		{
+			return std::hash<int>()(k.presetId) ^ (std::hash<std::string>()(k.text) << 1);
+		}
+	};
+
+	using TextLayoutCachePair = std::pair<TextLayoutKey, WRL::ComPtr<IDWriteTextLayout>>;
+
+	// 順序管理リスト
+	std::list<TextLayoutCachePair> m_TextLayoutUsageList;
+
+	// 4. キーからリストのイテレータを引くためのマップ
+	std::unordered_map<TextLayoutKey, std::list<TextLayoutCachePair>::iterator, TextLayoutKeyHash> m_TextLayoutCacheMap;
 
 	// フォントファイルリスト
 	std::vector<WRL::ComPtr<IDWriteFontFile>> pFontFileList;
