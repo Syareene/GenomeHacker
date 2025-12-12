@@ -432,8 +432,12 @@ HRESULT DirectWriteCustomFont::DrawString(std::string str, const Vector2& pos, D
     // 使用するレイアウトを決定：キャッシュ済みか一時か
     WRL::ComPtr<IDWriteTextLayout> layoutToUse;
     
-    // キャッシュが有効かチェック（テキストとサイズの両方が一致する必要がある）
+    // 現在のレンダーターゲットサイズを取得（一時レイアウト作成時に使用）
     D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
+    
+    // キャッシュが有効かチェック
+    // Note: SetText() は maxWidth=0, maxHeight=0 で呼ばれるため、
+    // cachedMaxWidth/Height はレンダーターゲットの全サイズと等しいはず
     const FLOAT EPS = 0.0001f;
     bool cacheValid = !cachedText.empty() && str == cachedText && pTextLayout &&
                      fabs(cachedMaxWidth - targetSize.width) < EPS &&
