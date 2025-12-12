@@ -3,7 +3,7 @@
 #include "enemy/field_enemy.h"
 
 std::vector<std::unique_ptr<NodeBase::NodeDescription>> MoveX::m_Description; // ノードの説明部分
-std::vector<std::unique_ptr<Font>> MoveX::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+//std::vector<std::unique_ptr<Font>> MoveX::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 FontData MoveX::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void MoveX::Init(Transform trans)

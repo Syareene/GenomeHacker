@@ -64,6 +64,6 @@ public:
 private:
 	float m_MoveVal = 1.0f; // 動く量
 	static std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
-	static std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 	static FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 };
