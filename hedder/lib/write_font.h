@@ -241,7 +241,7 @@ private:
 
 	FontPreset* GetPreset(int presetId);
 	WRL::ComPtr<IDWriteTextLayout> FindOrCreateTextLayout(const std::string& str, int presetId, FLOAT maxWidth, FLOAT maxHeight);
-	HRESULT ApplyVisualPreset(int presetId);
+	HRESULT ApplyVisualPreset(int presetId);	
 
 
 	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース

@@ -635,7 +635,29 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
     WRL::ComPtr<IDWriteTextLayout> layout = FindOrCreateTextLayout(str, presetId, 4096.f, 4096.f);
     if (!layout) return E_FAIL;
 
+	// 揃え補正のためにメトリクスを取得
+    DWRITE_TEXT_METRICS metrics;
+    layout->GetMetrics(&metrics);
+
     D2D1_POINT_2F origin = { pos.x, pos.y };
+
+    // テキストのアライメント設定に応じて描画開始座標を補正する
+    switch (preset->data.textAlignment)
+    {
+    case DWRITE_TEXT_ALIGNMENT_CENTER:
+        // 中央揃え： テキストの幅の半分+左側の領域だけ左にずらす
+		// 中央揃えの場合left(フォントが描画されてないスペース)+width(フォントが描画された幅)/2を引く
+        origin.x -= (metrics.width / 2) + metrics.left;
+        break;
+    case DWRITE_TEXT_ALIGNMENT_TRAILING:
+        // 右揃え： テキストの幅分+左側の領域だけ左にずらす
+        origin.x -= metrics.width + metrics.left;
+        break;
+    case DWRITE_TEXT_ALIGNMENT_LEADING:
+    default:
+        // 左揃え: 何もしない
+        break;
+    }
 
 	//pRenderTarget->BeginDraw();
     if (shadow && preset->shadowBrush)

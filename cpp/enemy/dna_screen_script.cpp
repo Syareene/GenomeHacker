@@ -161,7 +161,7 @@ void DnaScreenScript::ShowDnaInfo()
 	FontData fontData;
 	fontData.fontSize = 120;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_TRAILING;
 	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
 	fontData.font = DirectWriteCustomFont::GetFontName(0);
 	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
@@ -172,17 +172,17 @@ void DnaScreenScript::ShowDnaInfo()
 	// 選択されているタブに応じてフォントを生成
 	if(m_AttackTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード表示中");
 		return;
 	}
 	if(m_MoveTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "移動ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH, SCREEN_HEIGHT / 8), fontData, "移動ノード表示中");
 		return;
 	}
 	if(m_DeathTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "死亡ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード表示中");
 		return;
 	}
 }
