@@ -314,7 +314,6 @@ std::wstring DirectWriteCustomFont::GetFontName(int num)
 
 int DirectWriteCustomFont::GetPresetID(const FontData& fontData)
 {
-    // これヘルパー関数として作ってたけど新規作成じゃないとだめ
     for(const auto& preset : m_PresetUseOrderList)
     {
         // FontDataを比較
@@ -412,18 +411,17 @@ WRL::ComPtr<IDWriteTextLayout> DirectWriteCustomFont::FindOrCreateTextLayout(con
 {
     TextLayoutKey key = { presetId, str };
 
-    // 1. キャッシュを検索
+    // キャッシュを検索
     auto map_it = m_TextLayoutCacheMap.find(key);
     if (map_it != m_TextLayoutCacheMap.end())
     {
-        // 2. キャッシュヒット！
-        // 見つかった要素をリストの先頭に移動（これがLRUの核）
+        // 見つかった要素をリストの先頭に移動
         m_TextLayoutUsageList.splice(m_TextLayoutUsageList.begin(), m_TextLayoutUsageList, map_it->second);
         // 先頭に移動した要素のComPtrを返す
         return map_it->second->second;
     }
-
-    // --- 3. キャッシュミス：新規作成 ---
+    
+    // ヒットしなかったため新規作成
 
     // キャッシュが最大数に達していたら、一番古いもの（リストの末尾）を削除
     if (m_TextLayoutCacheMap.size() >= MAX_TEXTLAYOUT_CACHE_SIZE)
@@ -477,145 +475,20 @@ HRESULT DirectWriteCustomFont::ApplyVisualPreset(int presetId)
     // このプリセットをアクティブにする
     m_ActivePresetId = presetId;
 
-    // 描画に使うポインタを、アクティブなプリセットのものに設定
-    // (もしクラスのメンバとして pTextFormat 等を保持する場合)
-    // pTextFormat = m_presetUsageList.front().textFormat;
-    // pBrush = m_presetUsageList.front().brush;
-    // ...
-
     return S_OK;
 }
-
-
-/*
-HRESULT DirectWriteCustomFont::SetFont(FontData set)
-{
-    HRESULT result = S_OK;
-
-    Setting = set;
-
-	// プリセットを検索または作成
-    int presetId = FindOrCreateVisualPreset(set);
-    // 適応
-	result = ApplyVisualPreset(presetId);
-	if (FAILED(result)) return result;
-
-    result = pDWriteFactory->CreateTextFormat(GetFontFileNameWithoutExtension(Setting.font).c_str(), fontCollection.Get(), Setting.fontWeight, Setting.fontStyle, Setting.fontStretch, Setting.fontSize, Setting.localeName, pTextFormat.end()->GetAddressOf());
-    if (FAILED(result)) return result;
-
-    result = pTextFormat->SetTextAlignment(Setting.textAlignment);
-    if (FAILED(result)) return result;
-
-    result = pRenderTarget->CreateSolidColorBrush(Setting.Color, pBrush.GetAddressOf());
-    if (FAILED(result)) return result;
-
-    result = pRenderTarget->CreateSolidColorBrush(Setting.shadowColor, pShadowBrush.GetAddressOf());
-    if (FAILED(result)) return result;
-
-    if (Setting.outlineWidth > 0.0f)
-    {
-        result = pRenderTarget->CreateSolidColorBrush(Setting.outlineColor, pOutlineBrush.GetAddressOf());
-        if (FAILED(result)) return result;
-    }
-    else
-    {
-        pOutlineBrush.Reset();
-    }
-
-    // キャッシュされたレイアウトをクリア（フォント/サイズが変わったため）
-    //ClearTextCache();
-
-    return S_OK;
-}
-*/
-
-/*
-HRESULT DirectWriteCustomFont::SetFont(WCHAR const* fontname, DWRITE_FONT_WEIGHT fontWeight, DWRITE_FONT_STYLE fontStyle, DWRITE_FONT_STRETCH fontStretch, FLOAT fontSize, WCHAR const* localeName, DWRITE_TEXT_ALIGNMENT textAlignment, D2D1_COLOR_F Color, D2D1_COLOR_F shadowColor, D2D1_POINT_2F shadowOffset)
-{
-    HRESULT result = S_OK;
-    result = pDWriteFactory->CreateTextFormat(GetFontFileNameWithoutExtension(std::wstring(fontname)).c_str(), fontCollection.Get(), fontWeight, fontStyle, fontStretch, fontSize, localeName, pTextFormat.GetAddressOf());
-    if (FAILED(result)) return result;
-
-    result = pTextFormat->SetTextAlignment(textAlignment);
-    if (FAILED(result)) return result;
-
-    result = pRenderTarget->CreateSolidColorBrush(Color, pBrush.GetAddressOf());
-    if (FAILED(result)) return result;
-
-    result = pRenderTarget->CreateSolidColorBrush(shadowColor, pShadowBrush.GetAddressOf());
-    if (FAILED(result)) return result;
-
-    pOutlineBrush.Reset();
-    ClearTextCache();
-    return S_OK;
-}
-*/
-
-// キャッシュされた文字列用レイアウトを生成
-/*
-HRESULT DirectWriteCustomFont::SetText(const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
-{
-    // ここの第一引数にid必要なのでsettextにもidないしはfontdataいるかも
-	FindOrCreateTextLayout(m_ActivePresetId, str, maxWidth, maxHeight);
-
-    // old
-
-    // 同じ文字列かつ同じサイズ制限が既にキャッシュされている場合は何もしない
-    D2D1_SIZE_F targetSize = pRenderTarget->GetSize();
-    FLOAT wLimit = (maxWidth > 0.0f) ? maxWidth : targetSize.width;
-    FLOAT hLimit = (maxHeight > 0.0f) ? maxHeight : targetSize.height;
-
-    // 浮動小数比較用の小さなイプシロン
-    const FLOAT EPS = 0.0001f;
-    if (!cachedText.empty() && cachedText == str && fabs(cachedMaxWidth - wLimit) < EPS && fabs(cachedMaxHeight - hLimit) < EPS)
-    {
-        return S_OK; // 既にキャッシュ済み
-    }
-
-    // wstringに変換
-    std::wstring w = StringToWString(str);
-
-    // 失敗時に既存の pTextLayout を上書きしないよう、一時レイアウトを作成
-    WRL::ComPtr<IDWriteTextLayout> tempLayout;
-    HRESULT hr = pDWriteFactory->CreateTextLayout(w.c_str(), (UINT32)w.size(), pTextFormat.Get(), wLimit, hLimit, tempLayout.GetAddressOf());
-    if (FAILED(hr))
-    {
-        return hr;
-    }
-
-    // 成功：一時レイアウトをキャッシュに反映（以前の pTextLayout は安全に解放される）
-    pTextLayout = tempLayout;
-    cachedText = str;
-    cachedWText = std::move(w);
-    cachedMaxWidth = wLimit;
-    cachedMaxHeight = hLimit;
-
-    return S_OK;
-}
-*/
-
-/*
-void DirectWriteCustomFont::ClearTextCache()
-{
-    // 自動的に管理されるからこの関数多分いらない
-
-    //pTextLayout.Reset();
-    //cachedText.clear();
-    //cachedWText.clear();
-}
-*/
 
 // 事前キャッシュ(第一引数preset_idからfontdata?
 HRESULT DirectWriteCustomFont::PreCacheTextLayout(FontData& fontData, const std::string& str, FLOAT maxWidth, FLOAT maxHeight)
 {
-    // 1. FontData からプリセットIDを取得（または作成）
+    // FontDataからプリセットIDを取得（または作成）
     int presetId = FindOrCreateVisualPreset(fontData);
     if (presetId == -1)
     {
         return E_FAIL; // プリセットの作成に失敗
     }
 
-    // 2. テキストレイアウトを検索または作成
+    // テキストレイアウトを検索または作成
     WRL::ComPtr<IDWriteTextLayout> layout = FindOrCreateTextLayout(str, presetId, maxWidth, maxHeight);
     if (layout == nullptr)
     {
@@ -848,7 +721,7 @@ HRESULT DirectWriteCustomFont::GetTextSizeDips(const std::string& str, FLOAT* ou
     hr = layoutToUse->GetOverhangMetrics(&overhang);
     if (FAILED(hr)) return hr;
 
-    // overhang の負値は「はみ出していない」ことを示すので、正の値のみ加算する
+    // overhang の負値ははみ出していないことを示すため正の値のみ加算
     FLOAT addLeft = (overhang.left  > 0.0f) ? overhang.left  : 0.0f;
     FLOAT addTop  = (overhang.top   > 0.0f) ? overhang.top   : 0.0f;
     FLOAT addRight= (overhang.right > 0.0f) ? overhang.right : 0.0f;
@@ -860,18 +733,6 @@ HRESULT DirectWriteCustomFont::GetTextSizeDips(const std::string& str, FLOAT* ou
     // 安全のためクランプ
     *outWidthDips  = (rawWidth  > 0.0f) ? rawWidth  : 0.0f;
     *outHeightDips = (rawHeight > 0.0f) ? rawHeight : 0.0f;
-
-    // デバッグ出力（必要なら有効化）
-    /*
-    {
-        wchar_t dbg[512];
-        swprintf_s(dbg, L"Metrics: w=%.2f wInc=%.2f h=%.2f | Overhang L=%.2f T=%.2f R=%.2f B=%.2f -> result w=%.2f h=%.2f\n",
-            metrics.width, metrics.widthIncludingTrailingWhitespace, metrics.height,
-            overhang.left, overhang.top, overhang.right, overhang.bottom,
-            *outWidthDips, *outHeightDips);
-        OutputDebugStringW(dbg);
-    }
-    */
 
     return S_OK;
 }

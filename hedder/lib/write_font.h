@@ -2,19 +2,19 @@
 
 // https://github.com/Islington036/DirectWrite_CustomFont/tree/master 
 // を元に自プロジェクト用に改変。
-// AIとかも結構使ってるのでそのうち適切に変更する必要あり。
+// AI+自力で拡張済み(シングルトン化、キャッシュ化、アウトライン対応等)
 
-#include <string>						// 文字列
-#include <vector>						// 動的配列
+#include <string>
+#include <vector>
 #include <list>
-#include <memory>						// unique_ptr
-#include <wrl.h>						// ComPtr
+#include <memory>
+#include <wrl.h>
 
 #pragma warning(push)
 #pragma warning(disable:4005)
 
-#include <d2d1.h>						// Direct2D
-#include <DWrite.h>						// DirectWrite
+#include <d2d1.h>
+#include <DWrite.h>
 
 
 #pragma warning(pop)
@@ -80,7 +80,7 @@ struct FontData
 	}
 };
 
-// FontData 比較用の演算子(AI提案なので精査必要あり)
+// FontData 比較用の演算子
 inline bool operator==(const D2D1_COLOR_F& a, const D2D1_COLOR_F& b) 
 {
 	return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
@@ -148,47 +148,10 @@ public:
 	// 初期化関数
 	HRESULT Init(IDXGISwapChain* swapChain);
 
-	// フォント設定
-	// 第1引数：フォントデータ構造体
-	//HRESULT SetFont(FontData set);
-
-	// フォント設定
-	// 第1引数：フォント名（L"メイリオ", L"Arial", L"Meiryo UI"等）
-	// 第2引数：フォントの太さ（DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_WEIGHT_BOLD等）
-	// 第3引数：フォントスタイル（DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STYLE_OBLIQUE, DWRITE_FONT_STYLE_ITALIC）
-	// 第4引数：フォントの幅（DWRITE_FONT_STRETCH_NORMAL,DWRITE_FONT_STRETCH_EXTRA_EXPANDED等）
-	// 第5引数：フォントサイズ（20, 30等）
-	// 第6引数：ロケール名（L"ja-jp"等）
-	// 第7引数：テキストの配置（DWRITE_TEXT_ALIGNMENT_LEADING：前, 等）
-	// 第8引数：フォントの色（D2D1::ColorF(D2D1::ColorF::Black)：黒, D2D1::ColorF(D2D1::ColorF(0.0f, 0.2f, 0.9f, 1.0f))：RGBA指定等）
-	// 第9引数：影の色（D2D1::ColorF(D2D1::ColorF::Black)：黒, D2D1::ColorF(D2D1::ColorF(0.0f, 0.2f, 0.9f, 1.0f))：RGBA指定等）
-	// 第10引数：影のオフセット（D2D1::Point2F(2.0f, 2.0f)：右下にポイントずらす）
-	/*
-	HRESULT SetFont
-	(
-		WCHAR const* fontname,						// フォント名
-		DWRITE_FONT_WEIGHT		fontWeight,			// フォントの太さ
-		DWRITE_FONT_STYLE		fontStyle,			// フォントスタイル
-		DWRITE_FONT_STRETCH		fontStretch,		// フォントの幅
-		FLOAT					fontSize,			// フォントサイズ
-		WCHAR const* localeName,					// ロケール名
-		DWRITE_TEXT_ALIGNMENT	textAlignment,		// テキストの配置
-		D2D1_COLOR_F			Color,				// フォントの色
-		D2D1_COLOR_F			shadowColor,		// 影の色
-		D2D1_POINT_2F			shadowOffset		// 影のオフセット
-	);
-	*/
-
-	// テキストキャッシュ: SetTextでレイアウトを生成し、以降の描画で再利用する
-	//HRESULT SetText(const std::string& str, FLOAT maxWidth = 0.0f, FLOAT maxHeight = 0.0f);
-	//void ClearTextCache();
-
+	// テキストレイアウトの事前キャッシュ
 	HRESULT PreCacheTextLayout(FontData& fontData, const std::string& str, FLOAT maxWidth = 4096.0f, FLOAT maxHeight = 4096.0f);
 
 	// 文字描画(利用する際は前もってGetPresetIDでプリセットIDを取得しておくこと)
-	// string：文字列
-	// pos：描画ポジション
-	// options：テキストの整形
 	HRESULT DrawString(const std::string& str, int presetId, const Vector2& pos, D2D1_DRAW_TEXT_OPTIONS options, bool shadow = false, bool outline = false);
 
 	// 文字描画
@@ -217,7 +180,7 @@ public:
 	// 全てのフォント名を取得し直す
 	HRESULT GetAllFontFamilyName(IDWriteFontCollection* customFontCollection);
 
-	// --- 追加: 生成したテキストのサイズ取得 ---
+	// 生成したテキストのサイズ取得
 	// DIP（DIPs: device-independent pixels）単位で取得
 	// outWidthDips / outHeightDips は nullptr ではないこと
 	HRESULT GetTextSizeDips(const std::string& str, FLOAT* outWidthDips, FLOAT* outHeightDips) const;
@@ -246,17 +209,13 @@ private:
 
 	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
 	WRL::ComPtr<ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
-	//std::list<WRL::ComPtr<ID2D1SolidColorBrush>>	pBrush;			// Direct2Dブラシ設定
-	//std::list < WRL::ComPtr<ID2D1SolidColorBrush>>	pShadowBrush;		// Direct2Dブラシ設定（影）
-	//std::list < WRL::ComPtr<ID2D1SolidColorBrush>>	pOutlineBrush;		// Direct2Dブラシ設定（縁取り）
 	WRL::ComPtr<IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
-	//std::list<WRL::ComPtr<IDWriteTextFormat>>		pTextFormat;		// DirectWriteテキスト形式
 	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayoutCache;		// DirectWriteテキスト書式 (キャッシュ用)
 	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
-	std::unordered_map<int, std::list <FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順デキュー内へのイテレーターマップ
+	std::unordered_map<int, std::list <FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
 
-	// 使用順デキュー
+	// 使用順リスト
 	std::list<FontPreset> m_PresetUseOrderList;
 	// アクティブなid
 	int m_ActivePresetId = -1;
@@ -289,24 +248,14 @@ private:
 
 	// 順序管理リスト
 	std::list<TextLayoutCachePair> m_TextLayoutUsageList;
-
-	// 4. キーからリストのイテレータを引くためのマップ
+	// キーからリストのイテレータを引くためのマップ
 	std::unordered_map<TextLayoutKey, std::list<TextLayoutCachePair>::iterator, TextLayoutKeyHash> m_TextLayoutCacheMap;
-
 	// フォントファイルリスト
 	std::vector<WRL::ComPtr<IDWriteFontFile>> pFontFileList;
-
 	// フォントデータ
 	FontData  Setting = FontData();
-
 	// フォント名リスト
 	static std::vector<std::wstring> fontNamesList;
-
-	// キャッシュしている文字列
-	//std::string cachedText;
-	//std::wstring cachedWText;
-	//FLOAT cachedMaxWidth = 0.0f;
-	//FLOAT cachedMaxHeight = 0.0f;
 
 	// フォントのファイル名（拡張子なし）を取得する（動的割当しない安全な戻り値）
 	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);

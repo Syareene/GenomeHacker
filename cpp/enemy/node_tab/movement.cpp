@@ -13,7 +13,7 @@ void MoveTab::Uninit()
 
 void MoveTab::Update()
 {
-	auto& nodes = this->GetNodes(); // やっぱ対象敵のノードちゃんとここで取得できてるわ
+	auto& nodes = this->GetNodes();
 	TabBase::Update();
 }
 

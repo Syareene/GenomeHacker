@@ -31,13 +31,8 @@ void Enemy3D::Uninit()
 
 void Enemy3D::Update()
 {
-	// vector3が間違ってる可能性とかもある?
-
 	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
 	Vector3 rotation = camera->GetRotation();
-
-	// ここonとM_PIでバグるね->いらない?
-	//camera->SetTarget(GetPosition() + Vector3(0.0f, 1.5f, 0.0f));
 }
 
 void Enemy3D::Draw()

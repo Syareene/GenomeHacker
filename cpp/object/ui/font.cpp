@@ -52,22 +52,20 @@ void Font::Uninit()
 
 void Font::Update()
 {
-	//SetDisplayText("これはサンプルテキストです" + std::to_string(count));
+	
 }
 
 void Font::Draw()
 {
 	// フォントのプリセットIDを取得
 	int presetID = DirectWriteCustomFont::GetInstance()->FindOrCreateVisualPreset(m_FontData);
-	
+	// 描画
 	DirectWriteCustomFont::GetInstance()->DrawString(m_DisplayText, presetID, Vector2(GetPosition().x, GetPosition().y), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
-
-	//m_Write->DrawString("ここからいい感じにしたいね", Vector2(90, 680), D2D1_DRAW_TEXT_OPTIONS_NONE, false, true);
-	return;
 }
 
 void Font::SetDisplayText(const std::string& text)
 {
+	// テキストデータセット
 	m_DisplayText = text;
 	// フォントキャッシュを更新
 	DirectWriteCustomFont::GetInstance()->PreCacheTextLayout(m_FontData, m_DisplayText);

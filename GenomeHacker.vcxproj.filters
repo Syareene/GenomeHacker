@@ -318,9 +318,6 @@
     <ClInclude Include="hedder\lib\2d_particle.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\node_font_manager.h">
-      <Filter>ヘッダー ファイル\enemy\node</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\scene\state\load_state.h">
       <Filter>ヘッダー ファイル\scene\state</Filter>
     </ClInclude>
@@ -523,9 +520,6 @@
     </ClCompile>
     <ClCompile Include="cpp\lib\particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\node\node_font_manager.cpp">
-      <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
     <ClCompile Include="cpp\scene\state\load_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>

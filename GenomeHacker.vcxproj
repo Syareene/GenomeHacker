@@ -38,7 +38,6 @@
     <ClInclude Include="hedder\enemy\node\base.h" />
     <ClInclude Include="hedder\enemy\node\move_x.h" />
     <ClInclude Include="hedder\enemy\node\move_z.h" />
-    <ClInclude Include="hedder\enemy\node\node_font_manager.h" />
     <ClInclude Include="hedder\enemy\node\number.h" />
     <ClInclude Include="hedder\enemy\node\socket\number_socket.h" />
     <ClInclude Include="hedder\enemy\node\visual_base.h" />
@@ -114,7 +113,6 @@
     <ClCompile Include="cpp\enemy\node\base.cpp" />
     <ClCompile Include="cpp\enemy\node\move_x.cpp" />
     <ClCompile Include="cpp\enemy\node\move_z.cpp" />
-    <ClCompile Include="cpp\enemy\node\node_font_manager.cpp" />
     <ClCompile Include="cpp\enemy\node\number.cpp" />
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp" />
     <ClCompile Include="cpp\enemy\node\visual_base.cpp" />

@@ -15,9 +15,6 @@ void LoadState::Init()
 {
 	// ロード画面用スクリプトを登録
 
-
-
-
 	// スレッド作成
 	std::thread th([=] 
 	{
