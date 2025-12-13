@@ -648,6 +648,8 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
         // 中央揃え： テキストの幅の半分+左側の領域だけ左にずらす
 		// 中央揃えの場合left(フォントが描画されてないスペース)+width(フォントが描画された幅)/2を引く
         origin.x -= (metrics.width / 2) + metrics.left;
+        // yも中央揃えする
+		origin.y -= (metrics.height / 2) + metrics.top;
         break;
     case DWRITE_TEXT_ALIGNMENT_TRAILING:
         // 右揃え： テキストの幅分+左側の領域だけ左にずらす
