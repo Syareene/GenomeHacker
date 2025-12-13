@@ -7,7 +7,7 @@
 template<typename T>
 concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 
-// こーれパネルの仕様どうしよ。2d限定とか?
+// 現状パネルは2d限定
 class Panel : public Object2D
 {
 private:
@@ -21,8 +21,6 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	// get系は軒並みbase_sceneにあるものを作りたいね
-	// というかパネルにするとbase_sceneのgetobjectから取得できなくなる気がする、、タグ版は実装済みだがTから取得するやつは未実装。
 	std::list<Object2D*> GetChildObjects()
 	{
 		// 中身の要素を全列挙しポインタで返す
@@ -64,9 +62,6 @@ public:
 		return objects;
 	}
 
-	// ここに対してadd_objectする場合、scene自体にadd_objectし、その参照をここで持つようにする?
-	// その場合処理順が親->子にならない可能性があるのでそこだけが懸念点。
-
 	template <PanelSupportedGameObject T>
 	T* AddChildObject(Transform trans = Transform())
 	{
@@ -86,14 +81,5 @@ public:
 			return obj && obj->Destroy();
 		});
 	}
-
-	/*
-	template<typename T>
-	T* AddChildObject()
-	{
-		m_ChildObjects.push_back(std::make_unique<T>());
-		return static_cast<T*>(m_ChildObjects.back().get());
-	}
-	*/
 	
 };

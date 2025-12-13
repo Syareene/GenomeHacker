@@ -144,9 +144,6 @@
     <ClInclude Include="hedder\object\ui\image.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
-    <ClInclude Include="particle.h">
-      <Filter>ヘッダー ファイル\lib</Filter>
-    </ClInclude>
     <ClInclude Include="result_scene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
@@ -312,6 +309,18 @@
     <ClInclude Include="hedder\enemy\node\add_score.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\visual_base.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\particle.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\2d_particle.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\scene\state\load_state.h">
+      <Filter>ヘッダー ファイル\scene\state</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -334,9 +343,6 @@
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
     <ClCompile Include="result_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
@@ -506,6 +512,18 @@
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
       <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\enemy\node\visual_base.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\2d_particle.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\particle.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\state\load_state.cpp">
+      <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\unlitTextureVS.hlsl">
@@ -539,6 +557,18 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="shader\waterWaveVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\instancingPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\instancingVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\titleParticlePS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\titleParticleVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

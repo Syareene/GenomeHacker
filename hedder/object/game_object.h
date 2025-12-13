@@ -28,7 +28,6 @@ private:
 	ID3D11InputLayout* m_VertexLayout = nullptr;
 
 	// ここに描画系の簡易関数を作成する
-	// 後shaderのポインタも持ってていいね
 protected:
 	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
 	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
@@ -68,7 +67,6 @@ public:
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
-
 	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
 	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
 	inline void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }

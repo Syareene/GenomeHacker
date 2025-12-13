@@ -14,7 +14,7 @@ class State
 public:
 	State() = default;
 	State(State&& other) noexcept = default;
-	virtual ~State(); // defined out-of-line in cpp to avoid deleting incomplete types in header
+	virtual ~State();
 
 	virtual void Init();
 	virtual void Uninit();

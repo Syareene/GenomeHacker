@@ -2,6 +2,7 @@
 
 #include "scene/base_scene.h"
 #include <memory>
+#include <chrono>
 
 // エラー解消用に前方宣言
 class Scene;
@@ -35,8 +36,11 @@ public:
 		return m_GameSpeed;
 	}
 
+	static float m_DeltaTime; // 前回からの経過時間（ミリ秒）
+
 private:
 	static std::unique_ptr<Scene> m_CurrentScene; // 現在のシーン
 	static std::unique_ptr<Scene> m_NextScene; // 次のシーン
 	static float m_GameSpeed; // ゲームの速度
+	static std::chrono::steady_clock::time_point m_BeforeTime; // 前回時刻
 };

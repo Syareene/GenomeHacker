@@ -2,13 +2,12 @@
 
 #include "enemy/node/base.h"
 
-// 多分ui周りのクラス継承?わからんけど
 class MoveX : public NodeBase
 {
 public:
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
-	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
+	void Update() override;
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
 	void SetMoveVal(const float val) { m_MoveVal = val; }
@@ -65,6 +64,6 @@ public:
 private:
 	float m_MoveVal = 1.0f; // 動く量
 	static std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
-	static std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 	static FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 };

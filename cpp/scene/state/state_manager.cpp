@@ -6,6 +6,7 @@ StateManager::~StateManager() = default;
 
 void StateManager::MoveState()
 {
+	// state変更が予定されている場合、stateを移動させる
 	if (m_WillState)
 	{
 		if (m_State)

@@ -32,10 +32,6 @@ public:
 	void HideDnaEditButton();
 	// テクスチャid版がほしい
 
-
-	// インスタンスを都度生成すると重たすぎるが保持しすぎてもメモリを圧迫するっていう
-	// 一旦都度生成でいく
-
 	// DNAタブ関連の関数
 	//inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
 	inline DnaScreenScript* GetDnaScreen() 

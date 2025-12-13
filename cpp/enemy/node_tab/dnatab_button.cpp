@@ -29,7 +29,7 @@ void DNAButton::Update()
 		// game_sceneではないのでreturn
 		return;
 	}
-	// Use type-based state check
+	// stateを確認
 	if (!scenePtr->IsState<GameBaseState>())
 	{
 		SetActive(false);
@@ -61,5 +61,5 @@ void DNAButton::ToDNATab()
 		return;
 	}
 
-	scenePtr->SetState<DnaTableState>(); // changed to template SetState
+	scenePtr->SetState<DnaTableState>();
 }

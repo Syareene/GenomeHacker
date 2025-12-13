@@ -79,6 +79,6 @@ void ToGameButton::ToGame()
 		// game_sceneではないのでreturn
 		return;
 	}
-	scenePtr->SetState<GameBaseState>(); // changed to template SetState
+	scenePtr->SetState<GameBaseState>(); // ゲーム画面stateへ
 	
 }

@@ -17,6 +17,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	NodeBase* GetGrabbingNode() const { return m_GrabbingNode; } // プレイヤーが現在掴んでいるノードを取得
+	void SetGrabbingNode(NodeBase* node) { m_GrabbingNode = node; } // プレイヤーが現在掴んでいるノードを設定
 private:
 	NodeBase* m_GrabbingNode = nullptr; // プレイヤーが現在掴んでいるノード
 };

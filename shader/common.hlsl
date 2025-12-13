@@ -62,7 +62,12 @@ cbuffer CameraBuffer : register(b6)
 
 
 
-
+struct ParticleInstanceData
+{
+    float4 PositionAndSize; // xy: pos, z: size, w: rotation
+    float4 Color;
+    float4 UVOffset; // xy: offset, zw: scale
+};
 
 struct VS_IN
 {
@@ -70,6 +75,7 @@ struct VS_IN
 	float4 Normal		: NORMAL0;
 	float4 Diffuse		: COLOR0;
 	float2 TexCoord		: TEXCOORD0;
+    uint InstanceId : SV_InstanceID;
 };
 
 

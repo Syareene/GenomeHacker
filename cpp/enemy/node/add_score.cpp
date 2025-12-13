@@ -5,17 +5,14 @@
 #include "enemy/node/base.h"
 
 std::vector<std::unique_ptr<NodeBase::NodeDescription>> AddScore::m_Description; // ノードの説明部分
-std::vector<std::unique_ptr<Font>> AddScore::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+//std::vector<std::unique_ptr<Font>> AddScore::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 FontData AddScore::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void AddScore::Init(Transform trans)
 {
-	SetTransform(trans);
-	AddInputTypeTop(InputType::Death);
-	AddInputTypeBottom(InputType::Death);
-	SetCDMax(0);
-	SetCD(0);
-	m_AddScore = 1.0f; // スコア加算量
+	Transform defaultTrans = Transform();
+	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
 	// 初期値セット
 	m_DescFontData.fontSize = 24;
@@ -35,6 +32,16 @@ void AddScore::Init(Transform trans)
 		m_DescriptionFonts.back()->Init(Transform());
 		m_DescriptionFonts.back()->Register(Vector2(10.0f, 300.0f), m_DescFontData, "Number: このノードを通過するとスコアがnだけ加算されます。");
 	}
+	// 基底クラスの変数に対しフォントポインタを追加
+	AddFontPtr(m_DescriptionFonts.back().get());
+
+	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
+	NodeBase::Init(defaultTrans);
+	AddInputTypeTop(InputType::Death);
+	AddInputTypeBottom(InputType::Death);
+	SetCDMax(0);
+	SetCD(0);
+	m_AddScore = 1.0f; // スコア加算量
 }
 
 void AddScore::Uninit()

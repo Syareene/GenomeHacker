@@ -5,7 +5,7 @@
 #include "scene/manager.h"
 #include "lib/mouse.h"
 #include "scene/game_scene.h"
-#include "scene/state/dna_table_state.h" // for type checks
+#include "scene/state/dna_table_state.h"
 
 void EnemyDnaList::Init()
 {

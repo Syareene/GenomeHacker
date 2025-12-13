@@ -3,6 +3,7 @@
 #include "enemy/dna_screen_script.h"
 #include "scene/manager.h"
 #include "object/ui/font.h"
+#include "object/ui/button.h"
 
 #include "enemy/node_tab/dnatab_button.h"
 #include "enemy/node_tab/attack.h"
@@ -71,26 +72,17 @@ void DnaScreenScript::Update()
 	// 1キー: 攻撃タブ
 	if(Input::GetKeyTrigger('1'))
 	{
-		Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード表示中");
-		m_AttackTab->SetIsSelected(true);
-		m_MoveTab->SetIsSelected(false);
-		m_DeathTab->SetIsSelected(false);
+		SelectedAttackTab();
 	}
 	// 2キー: 移動タブ
 	if (Input::GetKeyTrigger('2'))
 	{
-		Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード表示中");
-		m_AttackTab->SetIsSelected(false);
-		m_MoveTab->SetIsSelected(true);
-		m_DeathTab->SetIsSelected(false);
+		SelectedMoveTab();
 	}
 	// 3キー: 死亡タブ
 	if(Input::GetKeyTrigger('3'))
 	{
-		Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード表示中");
-		m_AttackTab->SetIsSelected(false);
-		m_MoveTab->SetIsSelected(false);
-		m_DeathTab->SetIsSelected(true);
+		SelectedDeathTab();
 	}
 
 
@@ -149,8 +141,6 @@ void DnaScreenScript::Draw()
 	// ここで必要な描画処理を追加
 }
 
-// enemyのscriptからそれぞれのノードの処理を実行させる関数をここに追加する必要あり
-
 
 void DnaScreenScript::ShowDnaInfo()
 {
@@ -158,9 +148,35 @@ void DnaScreenScript::ShowDnaInfo()
 	SetActive(true);
 
 	// DNA情報を表示する処理
-	// ここで必要な処理を追加
 
+	// 各タブに遷移するテキスト入りボタンを生成
 	FontData fontData;
+	fontData.fontSize = 35;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::ForestGreen);
+	fontData.font = DirectWriteCustomFont::GetFontName(0);
+	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
+	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.outlineWidth = 4.0f;
+
+
+	Panel:: AddChildObject<Button>()->Register([this]() {
+		// ボタンがクリックされた時の処理
+		SelectedAttackTab();
+		}, Vector2(1000.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
+	Panel::AddChildObject<Button>()->Register([this]() {
+		// ボタンがクリックされた時の処理
+		SelectedMoveTab();
+		}, Vector2(1100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
+	Panel::AddChildObject<Button>()->Register([this]() {
+		// ボタンがクリックされた時の処理
+		SelectedDeathTab();
+		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
+
+
+	// 現在のノードを表示
 	fontData.fontSize = 120;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
 	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
@@ -171,20 +187,21 @@ void DnaScreenScript::ShowDnaInfo()
 	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	fontData.outlineWidth = 12.0f;
 
+
 	// 選択されているタブに応じてフォントを生成
 	if(m_AttackTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 4), fontData, "攻撃ノード表示中");
 		return;
 	}
 	if(m_MoveTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "移動ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 4), fontData, "移動ノード表示中");
 		return;
 	}
 	if(m_DeathTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>()->Register(Vector2(0.0f, SCREEN_HEIGHT / 8), fontData, "死亡ノード表示中");
+		Panel::AddChildObject<Font>()->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 4), fontData, "死亡ノード表示中");
 		return;
 	}
 }
@@ -206,4 +223,45 @@ void DnaScreenScript::HideDnaInfo()
 
 	// uninitとりあえず呼ぶ
 	//Uninit();
+}
+
+TabBase* DnaScreenScript::GetActiveTab()
+{
+	if (m_AttackTab->GetIsSelected())
+	{
+		return m_AttackTab;
+	}
+	if (m_MoveTab->GetIsSelected())
+	{
+		return m_MoveTab;
+	}
+	if (m_DeathTab->GetIsSelected())
+	{
+		return m_DeathTab;
+	}
+	return nullptr;
+}
+
+void DnaScreenScript::SelectedAttackTab()
+{
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード表示中");
+	m_AttackTab->SetIsSelected(true);
+	m_MoveTab->SetIsSelected(false);
+	m_DeathTab->SetIsSelected(false);
+}
+
+void DnaScreenScript::SelectedMoveTab()
+{
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード表示中");
+	m_AttackTab->SetIsSelected(false);
+	m_MoveTab->SetIsSelected(true);
+	m_DeathTab->SetIsSelected(false);
+}
+
+void DnaScreenScript::SelectedDeathTab()
+{
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード表示中");
+	m_AttackTab->SetIsSelected(false);
+	m_MoveTab->SetIsSelected(false);
+	m_DeathTab->SetIsSelected(true);
 }

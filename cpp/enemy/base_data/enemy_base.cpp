@@ -332,6 +332,8 @@ void EnemyBase::ShowDnaScreen()
 			HideDnaScreen();
 			}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
 
+		m_DnaScreenPtr->GetActiveTab()->ModifyNodePos(); // ノード位置修正
+
 		m_DnaScreenPtr->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 	}
 }

@@ -17,7 +17,8 @@ bool Mouse::m_SideButton2Down = false; // サイドボタン1が押されてい�
 bool Mouse::m_SideButton2Up = false; // サイドボタン1が離されたかどうか
 bool Mouse::m_SideButton2DownOld = false; // 1f前のサイドボタン1状態
 bool Mouse::m_SideButton2Trigger = false; // サイドボタン1が押されたかどうか(押され始めだけ)
-Vector2 Mouse::m_OldPosition = Vector2(0.0f, 0.0f); // 1f前のマウスの位置
+//Vector2 Mouse::m_OldPosition = Vector2(0.0f, 0.0f); // 1f前のマウスの位置
+Vector2 Mouse::m_AccumulatedPosition = Vector2(0.0f, 0.0f); // マウスの累積位置
 Vector2 Mouse::m_Position = Vector2(0.0f, 0.0f); // マウスの位置
 int Mouse::m_WheelDiff = 0; // ホイールの差分
 
@@ -62,10 +63,21 @@ void Mouse::SetSideButton2Up(bool up)
 	m_SideButton2Up = up;
 }
 
+void Mouse::AddAccumulatedPosition(Vector2 move)
+{
+	// inputの座標 - 現在の座標で移動量を計算
+	Vector2 dx = move - m_Position;
+
+	// 累積移動量を追加
+	m_AccumulatedPosition += dx;
+
+	// 現在の位置を更新
+	m_Position = move;
+}
+
 // マウスの位置を設定(内部的な値であって実マウスの座標を変えれるわけではない)
 void Mouse::SetPosition(Vector2 position)
 {
-	m_OldPosition = m_Position; // 1f前の位置を保存
 	m_Position = position;
 }
 
@@ -94,6 +106,9 @@ void Mouse::SetScreenMousePosition(Vector2 pos)
 
 void Mouse::Update()
 {
+	// 1f前の位置を保存
+	//m_OldPosition = m_Position;
+
 	// トリガーの状態更新
 	m_RightButtonTrigger = m_RightButtonDown && !m_RightButtonDownOld; // 右クリックが押された瞬間
 	m_LeftButtonTrigger = m_LeftButtonDown && !m_LeftButtonDownOld; // 左クリックが押された瞬間
@@ -123,6 +138,8 @@ void Mouse::UpdateFinal()
 
 	// diffをリセット
 	m_WheelDiff = 0;
+	m_AccumulatedPosition.x = 0.0f;
+	m_AccumulatedPosition.y = 0.0f;
 }
 
 bool Mouse::IsMouseInsideArea(Vector2 startPos, Vector2 endPos)

@@ -3,17 +3,13 @@
 #include "enemy/field_enemy.h"
 
 std::vector<std::unique_ptr<NodeBase::NodeDescription>> MoveX::m_Description; // ノードの説明部分
-std::vector<std::unique_ptr<Font>> MoveX::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 FontData MoveX::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void MoveX::Init(Transform trans)
 {
-	NodeBase::Init(trans);
-	AddInputTypeTop(InputType::Move);
-	AddInputTypeBottom(InputType::Move);
-	SetCDMax(0);
-	SetCD(0);
-	m_MoveVal = -0.02f; // 移動量
+	Transform defaultTrans = Transform();
+	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
 	// 初期値セット
 	m_DescFontData.fontSize = 24;
@@ -33,6 +29,16 @@ void MoveX::Init(Transform trans)
 		m_DescriptionFonts.back()->Init(Transform());
 		m_DescriptionFonts.back()->Register(Vector2(10.0f, 300.0f), m_DescFontData, "MoveX: このノードがある敵は毎フレームn分だけX軸に対し移動します。");
 	}
+	// 基底クラスの変数に対しフォントポインタを追加
+	AddFontPtr(m_DescriptionFonts.back().get());
+
+	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
+	NodeBase::Init(defaultTrans);
+	AddInputTypeTop(InputType::Move);
+	AddInputTypeBottom(InputType::Move);
+	SetCDMax(0);
+	SetCD(0);
+	m_MoveVal = -0.02f; // 移動量
 }
 
 void MoveX::Uninit()

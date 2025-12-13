@@ -30,9 +30,15 @@ void Slime::Register()
 
 	EnemyBase::Init();
 
+	// ここでAddnodeする時にposも指定できるようにして
+	// そのposと内部にあるテキストのyで位置調整する(xは固定)
+
 	// ノード登録
 	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0);
 	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
+	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
+	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
+	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
 
 	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
 

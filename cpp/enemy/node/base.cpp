@@ -12,6 +12,14 @@ void NodeBase::Init(Transform trans)
 	SetTransform(trans);
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\debug_sprite.png"));
 
+	// とりあえずフォントの部分に移動させてるけどこのせいで掴みが全く動かなくはなってる
+	// 実行順序の関係でupdateに入れてるだけなので実行順序を明確化させたいね
+	// 正直数字とかつける時にfont単体ではなくなるからこの実装だとよろしくない
+	Vector2 scale = m_Fonts.back()->GetWidthHeight();
+	Vector3 start_pos = m_Fonts.back()->GetPosition();
+	SetScale(Vector3(scale.x + NODE_MARGIN.x, scale.y + NODE_MARGIN.y, 0.0f));
+	SetPosition(Vector3(scale.x * 0.5f + start_pos.x, scale.y * 0.5f + start_pos.y, 0.0f));
+
 	// ここに説明文格納する感じかな
 }
 
@@ -45,17 +53,41 @@ void NodeBase::Update()
 			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
 			if (grabbingNode)
 			{
-				// 既に掴んでいるノードがある場合は処理しない
+				// 既に掴んでいるノードがある場合は離す
+				dnaState->SetGrabbingNode(nullptr);
 				return;
 			}
 			else
 			{
 				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				//dnaState->SetGrabbingNode(this);
+				dnaState->SetGrabbingNode(this);
 			}
 		}
 	}
 
+	if(NodeBase* grabbingNode = dnaState->GetGrabbingNode())
+	{
+		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
+		if (grabbingNode == this)
+		{
+			Vector2 mouseDiffPos = Mouse::GetDiffPosition();
+			Vector3 pos = Vector3(mouseDiffPos.x + GetPosition().x, mouseDiffPos.y + GetPosition().y, 0.0f);
+			SetPosition(pos);
+			// 中身のフォントの位置も動かす
+			if(m_Fonts.empty())
+			{
+				return;
+			}
+			m_Fonts.back()->SetPosition(Vector3(pos.x - (GetScale().x * 0.5f) + (NODE_MARGIN.x * 0.5f), pos.y - (GetScale().y * 0.5f) + (NODE_MARGIN.x * 0.5f), 0.0f));
+		}
+	}
+
+	// フォント参照してサイズ更新
+	// 今あるノード実装しきったらここはいった時にassertでエラー出す	
+	if(m_Fonts.empty())
+	{
+		return;
+	}
 }
 
 void NodeBase::Draw()
@@ -67,13 +99,13 @@ void NodeBase::Draw()
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDrawBillboard();
+	SetWorldMatrixOnDraw();
 
 	// マテリアル設定
 	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferBillboardOnDraw();
+	SetDefaultVertexBufferOnDraw();
 
 	// プリミティブトポロジ設定
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -92,6 +124,16 @@ void NodeBase::Draw()
 
 
 	// ノードソケットの描画処理
+}
+
+void NodeBase::FixFontPositions(Vector2 diff)
+{
+	// フォントの位置をdiff分だけ修正
+	for(auto& fontPtr : m_Fonts)
+	{
+		Vector3 pos = fontPtr->GetPosition();
+		fontPtr->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
+	}
 }
 
 void NodeBase::MoveNodeToMouse()

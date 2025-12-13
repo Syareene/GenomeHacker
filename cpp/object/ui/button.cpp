@@ -89,7 +89,7 @@ void Button::Register(const std::function<void()>& func, const Vector2& pos, con
 
 	m_Text = std::make_unique<Font>();
 	m_Text->Init();
-	m_Text->Register(Vector2(pos.x - (SCREEN_WIDTH / 2), pos.y - (fontData.fontSize / 2 + fontData.outlineWidth * 2)), fontData, text);
+	m_Text->Register(Vector2(pos.x, pos.y), fontData, text);
 	SetNoUpdate(false); // 更新しないが有効な状態にする
 	SetActive(true); // アクティブにする
 	m_TargetFunc = func; // コールバック関数を設定
