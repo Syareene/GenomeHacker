@@ -5,11 +5,13 @@
 #include "lib/input.h"
 #include "scene/game_scene.h"
 #include "object/ui/image.h"
+#include "object/field.h"
+#include "object/camera.h"
+#include "collider/collision.h"
 #include "object/ui/button.h"
 #include "lib/2d_particle.h"
 
 #include "object/ui/font.h"
-
 #include "lib/write_font.h"
 
 #include <memory>
@@ -20,7 +22,8 @@ void TitleScene::Init()
 
 	// タイトル背景
 	//AddGameObject<ImageDraw>(0)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f), Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\debug_sprite.png", false);
-	
+	AddGameObject<Camera>(0)->SetPosition(Vector3(0.0f, 3.0f, -5.0f));
+	AddGameObject<Field>(1);
 	// タイトル
 	AddGameObject<ImageDraw>(3)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - SCREEN_HEIGHT / 8, 0.0f), Vector3(1024.0f, 576.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\genome_hacker.png", false);
 
