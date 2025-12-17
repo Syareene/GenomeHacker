@@ -60,7 +60,7 @@ void NodeBase::Update()
 			{
 				// 既に掴んでいるノードがある場合は離す
 				dnaState->SetGrabbingNode(nullptr);
-				return;
+				//return;
 			}
 			else
 			{
@@ -68,6 +68,11 @@ void NodeBase::Update()
 				dnaState->SetGrabbingNode(this);
 			}
 		}
+	}
+	else
+	{
+		// 非表示
+		m_HoverTimer = 0;
 	}
 
 	if(NodeBase* grabbingNode = dnaState->GetGrabbingNode())
@@ -90,9 +95,16 @@ void NodeBase::Update()
 
 	// フォント参照してサイズ更新
 	// 今あるノード実装しきったらここはいった時にassertでエラー出す	
-	if(!m_NameFont.get())
+	if(!m_NameFont.get() || !m_DescriptionFonts.back().get())
 	{
-		return;
+		assert(false && "font data is null");
+	}
+
+	// ホバータイマーが一定値以上なら説明文を表示
+	if (m_HoverTimer >= SHOW_DESC_TIME)
+	{
+		// ノードのちょい上あたりに表示
+		m_DescriptionFonts.back()->SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back()->GetWidthHeight().y), 0.0f));
 	}
 }
 
@@ -135,6 +147,26 @@ void NodeBase::Draw()
 	// ホバーしてるなら説明文出す
 	if (IsShowDesc())
 	{
+		for (const auto& desc : m_DescriptionFonts)
+		{
+			// フォントの幅に合わせた背景をここで表示
+			XMMATRIX trans, world, rot, scale;
+			trans = XMMatrixTranslation(desc->GetPosition().x, desc->GetPosition().y, desc->GetPosition().z);
+			rot = XMMatrixRotationRollPitchYaw(desc->GetRadian().x, desc->GetRadian().y, desc->GetRadian().z);
+			scale = XMMatrixScaling(desc->GetWidthHeight().x, desc->GetWidthHeight().y, 1.0f);
+			world = scale * rot * trans;
+			Renderer::SetWorldMatrix(world);
+
+			// テクスチャセット
+
+			Renderer::GetDeviceContext()->Draw(4, 0);
+
+			// フォント描画
+			desc->Draw();
+		}
+
+		// 描画時のpos諸々をそれ用にしないといけないのでやはりそれ用のものを作って複数フォント格納しても良い形にするのが丸いか?
+
 		//for (const auto& desc : GetDescriptions())
 		//{
 		//	Font tempFont;

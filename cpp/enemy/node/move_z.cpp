@@ -25,11 +25,15 @@ void MoveZ::Init(Transform trans)
 	// ベースデータセット
 	m_NodeName = { "MoveZ", Vector2(10.0f, 10.0f) };
 
-	m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけZ軸に対し移動します。", Vector2(10.0f, 350.0f) });
+	// 生成されていないなら説明文をセット
+	if (m_Descriptions.size() == 0)
+	{
+		m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけZ軸に対し移動します。", Vector2(10.0f, 350.0f) });
+	}
 
 	// 生成されていないなら説明文をセット
-	if(GetDescFonts().size() == 0)
-	{
+	//if(GetDescFonts().size() == 0)
+	//{
 		// ノード名セット
 		SetNameFont(m_DescFontData, m_NodeName.description);
 
@@ -38,7 +42,7 @@ void MoveZ::Init(Transform trans)
 		{
 			AddDescFont(m_DescFontData, desc.description);
 		}
-	}
+	//}
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
@@ -80,4 +84,9 @@ bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)
 	enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
+}
+
+void MoveZ::UpdateDescriptionData()
+{
+
 }

@@ -3,6 +3,7 @@
 #include "scene/manager.h"
 #include "score.h"
 #include "enemy/node/base.h"
+#include <format>
 
 NodeBase::NodeTextData AddScore::m_NodeName; // ノード名
 std::vector<NodeBase::NodeTextData> AddScore::m_Descriptions; // ノードの説明部分
@@ -26,12 +27,15 @@ void AddScore::Init(Transform trans)
 
 	// ベースデータセット
 	m_NodeName = { "AddScore", Vector2(10.0f, 10.0f) };
-
-	m_Descriptions.push_back({ "このノードを通過するとスコアがnだけ加算されます。", Vector2(10.0f, 300.0f) });
+	// 生成されていないなら説明文をセット
+	if (m_Descriptions.size() == 0)
+	{
+		m_Descriptions.push_back({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f) });
+	}
 
 	// 生成されていないなら説明文をセット
-	if (GetDescFonts().size() == 0)
-	{
+	//if (GetDescFonts().size() == 0)
+	//{
 		// ノード名セット
 		SetNameFont(m_DescFontData, m_NodeName.description);
 
@@ -40,7 +44,12 @@ void AddScore::Init(Transform trans)
 		{
 			AddDescFont(m_DescFontData, desc.description);
 		}
-	}
+	//}
+
+	m_AddScore = 1.0f; // スコア加算量
+
+	// フォントデータ更新
+	UpdateDescriptionData();
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
@@ -48,7 +57,6 @@ void AddScore::Init(Transform trans)
 	AddInputTypeBottom(InputType::Death);
 	SetCDMax(0);
 	SetCD(0);
-	m_AddScore = 1.0f; // スコア加算量
 }
 
 void AddScore::Uninit()
@@ -78,4 +86,20 @@ bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)
 	Manager::GetCurrentScene()->GetGameObject<Score>()->AddScore(static_cast<int>(m_AddScore));
 
 	return true;
+}
+
+// この関数init時とeditにきた瞬間に呼ぶようにしようね
+void AddScore::UpdateDescriptionData()
+{
+	// 説明文のテンプレートを取得
+	std::string format_string = m_Descriptions[0].description;
+
+	// std::formatを使用して最終的な文字列を生成
+	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_AddScore));
+
+	// Fontオブジェクトのテキストを更新
+	if (GetDescFonts().size() > 0)
+	{
+		GetDescFontAt(0).SetDisplayText(formatted_text);
+	}
 }

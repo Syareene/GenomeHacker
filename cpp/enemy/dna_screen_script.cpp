@@ -137,7 +137,7 @@ void DnaScreenScript::Draw()
 	}
 
 	// DNAスクリーンの描画処理
-	Panel::Draw();
+	//Panel::Draw();
 	// ここで必要な描画処理を追加
 }
 

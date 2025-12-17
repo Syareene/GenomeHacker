@@ -48,6 +48,8 @@ public:
 		return m_DescFontData;
 	}
 
+	void UpdateDescriptionData() override;
+
 private:
 	static NodeTextData m_NodeName; // ノード名
 	static std::vector<NodeTextData> m_Descriptions; // ノードの説明部分

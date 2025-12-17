@@ -25,11 +25,15 @@ void MoveX::Init(Transform trans)
 	// ベースデータセット
 	m_NodeName = { "MoveX", Vector2(10.0f, 10.0f) };
 
-	m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけX軸に対し移動します。", Vector2(10.0f, 350.0f) });
+	// 生成されていないなら説明文をセット
+	if (m_Descriptions.size() == 0)
+	{
+		m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけX軸に対し移動します。", Vector2(10.0f, 350.0f) });
+	}
 
 	// 生成されていないなら説明文をセット
-	if (GetDescFonts().size() == 0)
-	{
+	//if (GetDescFonts().size() == 0)
+	//{
 		// ノード名セット
 		SetNameFont(m_DescFontData, m_NodeName.description);
 
@@ -38,7 +42,7 @@ void MoveX::Init(Transform trans)
 		{
 			AddDescFont(m_DescFontData, desc.description);
 		}
-	}
+	//}
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
@@ -80,4 +84,9 @@ bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)
 	enemy_ptr->AddPosition(Vector3(m_MoveVal, 0.0f, 0.0f)); // x方向に動かす
 
 	return true;
+}
+
+void MoveX::UpdateDescriptionData()
+{
+
 }

@@ -44,6 +44,8 @@ public:
 	inline const int GetCDMax() const { return m_CDMax; }
 
 	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
+	constexpr static const int SHOW_DESC_TIME = 60; // 説明文を表示するまでのホバー時間(フレーム数)
+	virtual void UpdateDescriptionData() = 0;
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -88,7 +90,7 @@ protected:
 	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
-	inline bool IsShowDesc() const { return m_HoverTimer > 60; } // ホバーしてから60フレーム以上経っていたら説明文表示
+	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
@@ -100,7 +102,7 @@ private:
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	std::unique_ptr<Font> m_NameFont; // ノードのフォント実態
-	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // ノード説明部分のフォント実態
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // ノード説明部分のフォント実態 ->これ敵1つにある全部のnodeXのデータが入っちゃってる？
 	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分

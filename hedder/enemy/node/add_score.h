@@ -10,7 +10,12 @@ public:
 	void Update() override;
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
-	void SetAddScore(const float score) { m_AddScore = score; }
+	void SetAddScore(const float score) 
+	{ 
+		m_AddScore = score;
+		// データを更新したため説明文も更新
+		UpdateDescriptionData();
+	}
 
 	inline void SetDescriptionFontData(const FontData& fontData) override
 	{
@@ -21,6 +26,8 @@ public:
 	{
 		return m_DescFontData;
 	}
+
+	void UpdateDescriptionData() override;
 
 private:
 	float m_AddScore = 1.0f; // スコア加算量

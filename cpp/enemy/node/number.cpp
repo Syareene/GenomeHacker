@@ -40,3 +40,8 @@ bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 
 	return true;
 }
+
+void NumberNode::UpdateDescriptionData()
+{
+
+}
