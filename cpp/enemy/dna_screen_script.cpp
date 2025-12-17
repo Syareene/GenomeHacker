@@ -246,6 +246,7 @@ void DnaScreenScript::SelectedAttackTab()
 {
 	Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード表示中");
 	m_AttackTab->SetIsSelected(true);
+	m_AttackTab->ModifyNodePos(); // ノード位置修正
 	m_MoveTab->SetIsSelected(false);
 	m_DeathTab->SetIsSelected(false);
 }
@@ -255,6 +256,7 @@ void DnaScreenScript::SelectedMoveTab()
 	Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード表示中");
 	m_AttackTab->SetIsSelected(false);
 	m_MoveTab->SetIsSelected(true);
+	m_MoveTab->ModifyNodePos(); // ノード位置修正
 	m_DeathTab->SetIsSelected(false);
 }
 
@@ -264,4 +266,5 @@ void DnaScreenScript::SelectedDeathTab()
 	m_AttackTab->SetIsSelected(false);
 	m_MoveTab->SetIsSelected(false);
 	m_DeathTab->SetIsSelected(true);
+	m_DeathTab->ModifyNodePos(); // ノード位置修正
 }

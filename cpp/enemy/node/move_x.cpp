@@ -2,7 +2,8 @@
 #include "enemy/node/move_x.h"
 #include "enemy/field_enemy.h"
 
-std::vector<std::unique_ptr<NodeBase::NodeDescription>> MoveX::m_Description; // ノードの説明部分
+NodeBase::NodeTextData MoveX::m_NodeName; // ノード名
+std::vector<NodeBase::NodeTextData> MoveX::m_Descriptions; // ノードの説明部分
 FontData MoveX::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void MoveX::Init(Transform trans)
@@ -21,16 +22,23 @@ void MoveX::Init(Transform trans)
 	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	m_DescFontData.outlineWidth = 2.5f;
 
+	// ベースデータセット
+	m_NodeName = { "MoveX", Vector2(10.0f, 10.0f) };
+
+	m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけX軸に対し移動します。", Vector2(10.0f, 350.0f) });
+
 	// 生成されていないなら説明文をセット
-	if(m_DescriptionFonts.size() == 0)
+	if (GetDescFonts().size() == 0)
 	{
+		// ノード名セット
+		SetNameFont(m_DescFontData, m_NodeName.description);
+
 		// 説明文セット
-		m_DescriptionFonts.push_back(std::make_unique<Font>());
-		m_DescriptionFonts.back()->Init(Transform());
-		m_DescriptionFonts.back()->Register(Vector2(10.0f, 300.0f), m_DescFontData, "MoveX: このノードがある敵は毎フレームn分だけX軸に対し移動します。");
+		for (auto& desc : m_Descriptions)
+		{
+			AddDescFont(m_DescFontData, desc.description);
+		}
 	}
-	// 基底クラスの変数に対しフォントポインタを追加
-	AddFontPtr(m_DescriptionFonts.back().get());
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
@@ -56,10 +64,10 @@ void MoveX::Draw()
 	NodeBase::Draw();
 
 	// テキストを描画
-	for (auto& font_ptr : m_DescriptionFonts)
-	{
-		font_ptr->Draw();
-	}
+	//for (auto& font_ptr : m_DescriptionFonts)
+	//{
+	//	font_ptr->Draw();
+	//}
 }
 
 bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)
