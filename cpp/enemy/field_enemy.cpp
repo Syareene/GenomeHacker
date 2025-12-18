@@ -107,7 +107,7 @@ void FieldEnemy::Draw()
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetEnemyBase()->GetEnemyTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetEnemyBase()->GetEnemyTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定

@@ -50,6 +50,7 @@ void Manager::Uninit()
 	DefaultVertex::Uninit();
 	ShaderManager::Uninit();
 	Input::Uninit();
+	TextureManager::UnloadAllTexture();
 	Renderer::Uninit();
 }
 
@@ -75,11 +76,11 @@ void Manager::Update()
 void Manager::Draw()
 {
 	Renderer::Begin();
-	Renderer::GetD2DRenderTarget()->BeginDraw();
+	Renderer::GetID2D1DeviceContext()->BeginDraw();
 
 	m_CurrentScene->Draw();
 
-	Renderer::GetD2DRenderTarget()->EndDraw();
+	Renderer::GetID2D1DeviceContext()->EndDraw();
 	Renderer::End();
 
 	// nextシーンが設定されてたらシーン切り替え

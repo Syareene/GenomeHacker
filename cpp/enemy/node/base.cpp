@@ -133,7 +133,7 @@ void NodeBase::Draw()
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// 描画
@@ -161,7 +161,17 @@ void NodeBase::Draw()
 
 			// テクスチャセット
 
-			Renderer::GetDeviceContext()->Draw(4, 0);
+			Renderer::GetID2D1DeviceContext()->DrawBitmap(
+				TextureManager::Get2DTexture(GetTextureID()),
+				D2D1::RectF(
+					desc->GetPosition().x,
+					desc->GetPosition().y,
+					desc->GetPosition().x + desc->GetWidthHeight().x,
+					desc->GetPosition().y + desc->GetWidthHeight().y),
+				1.0f,
+				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+				D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
+			);
 
 			// フォント描画
 			desc->Draw();

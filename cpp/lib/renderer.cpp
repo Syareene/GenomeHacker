@@ -28,9 +28,10 @@ ID3D11BlendState*		Renderer::m_BlendState{};
 ID3D11BlendState*		Renderer::m_BlendStateAlpha{};
 ID3D11BlendState*		Renderer::m_BlendStateATC{};
 
-ID2D1Factory* Renderer::m_D2DFactory{};
-ID2D1RenderTarget* Renderer::m_D2DRenderTarget{};
-IDXGISurface* Renderer::m_DXGISurface{};
+ID2D1Factory1* Renderer::m_D2DFactory{};
+ID2D1Device* Renderer::m_D2DDevice;
+ID2D1DeviceContext* Renderer::m_D2DDeviceContext;
+ID2D1Bitmap1* Renderer::m_D2DTargetBitmap;
 
 
 
@@ -68,13 +69,67 @@ void Renderer::Init()
 										&m_DeviceContext );
 
 	// direct2d作成
-		D2D1CreateFactory(
-			D2D1_FACTORY_TYPE_SINGLE_THREADED,
-			&m_D2DFactory
-		);
-		// DXGIサーフェス取得
-		hr = m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_DXGISurface));
+		// 1. Direct2D Factory1 を作成
+	D2D1_FACTORY_OPTIONS options{};
+#ifdef _DEBUG
+	options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+#endif
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory1), &options, (void**)&m_D2DFactory);
 
+	// 2. Direct3DデバイスからDXGIデバイスを取得
+	IDXGIDevice* dxgiDevice = nullptr;
+	hr = m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
+	// 3. Direct2Dデバイスを作成
+	if (SUCCEEDED(hr))
+	{
+		hr = m_D2DFactory->CreateDevice(dxgiDevice, &m_D2DDevice);
+	}
+
+	// 4. Direct2Dデバイスコンテキストを作成
+	if (SUCCEEDED(hr))
+	{
+		hr = m_D2DDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_D2DDeviceContext);
+	}
+
+	// 5. スワップチェーンのバックバッファからDirect2Dのターゲットビットマップを作成
+	if (SUCCEEDED(hr))
+	{
+		// DPI設定
+		UINT dpi = GetDpiForWindow(GetWindow());
+		FLOAT dpiF = static_cast<FLOAT>(dpi);
+		m_D2DDeviceContext->SetDpi(dpiF, dpiF);
+
+		// ビットマッププロパティ
+		D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
+			D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED)
+		);
+
+		// スワップチェーンからDXGIサーフェスを取得
+		IDXGISurface* dxgiBackBuffer;
+		hr = m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+
+		if (SUCCEEDED(hr))
+		{
+			// DXGIサーフェスからビットマップを作成
+			hr = m_D2DDeviceContext->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &m_D2DTargetBitmap);
+			dxgiBackBuffer->Release();
+		}
+	}
+
+	// 6. デバイスコンテキストのターゲットを設定
+	if (SUCCEEDED(hr))
+	{
+		m_D2DDeviceContext->SetTarget(m_D2DTargetBitmap);
+	}
+
+	if (dxgiDevice)
+	{
+		dxgiDevice->Release();
+	}
+
+	/*
 		// プロパティ設定するためにdpi取得
 		UINT dpi = GetDpiForWindow(GetWindow());
 		FLOAT dpiF = static_cast<FLOAT>(dpi);
@@ -84,6 +139,7 @@ void Renderer::Init()
 			D2D1_RENDER_TARGET_TYPE_DEFAULT,
 			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
 			dpiF, dpiF);
+	*/
 	
 
 	// レンダーターゲットビュー作成
@@ -91,14 +147,14 @@ void Renderer::Init()
 	m_SwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&renderTarget );
 	m_Device->CreateRenderTargetView( renderTarget, NULL, &m_RenderTargetView );
 
-	// Direct2Dのレンダーターゲット作成
-	m_DXGISurface->QueryInterface(__uuidof(IDXGISurface), (void**)&m_DXGISurface);
+	//// Direct2Dのレンダーターゲット作成
+	//m_DXGISurface->QueryInterface(__uuidof(IDXGISurface), (void**)&m_DXGISurface);
 
-	m_D2DFactory->CreateDxgiSurfaceRenderTarget(
-		m_DXGISurface,
-		props, // プロパティ
-		&m_D2DRenderTarget
-	);
+	//m_D2DFactory->CreateDxgiSurfaceRenderTarget(
+	//	m_DXGISurface,
+	//	props, // プロパティ
+	//	&m_D2DRenderTarget
+	//);
 
 
 	renderTarget->Release();
@@ -157,8 +213,7 @@ void Renderer::Init()
 	m_Device->CreateRasterizerState( &rasterizerDesc, &rs );
 
 	m_DeviceContext->RSSetState( rs );
-
-
+	rs->Release();
 
 
 	// ブレンドステート設定
@@ -303,13 +358,22 @@ void Renderer::Uninit()
 	m_MaterialBuffer->Release();
 	m_ParameterBuffer->Release();
 
+	m_DepthStencilView->Release();
+	m_DepthStateEnable->Release();
+	m_DepthStateDisable->Release();
+
+	m_BlendState->Release();
+	m_BlendStateAlpha->Release();
+	m_BlendStateATC->Release();
 
 	m_DeviceContext->ClearState();
 	m_RenderTargetView->Release();
-	m_D2DRenderTarget->Release();
 	m_SwapChain->Release();
 	m_DeviceContext->Release();
 	m_D2DFactory->Release();
+	m_D2DDeviceContext->Release();
+	m_D2DTargetBitmap->Release();
+	m_D2DDevice->Release();
 	m_Device->Release();
 
 }
@@ -411,6 +475,23 @@ void Renderer::SetCameraPosition( XMFLOAT3 position )
 	m_DeviceContext->UpdateSubresource(m_CameraBuffer, 0, NULL, &position, 0, 0);
 }
 
+/*
+void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale)
+{
+	Renderer::GetID2D1DeviceContext()->DrawBitmap
+	(
+		TextureManager::Get2DTexture(GetTextureID()),
+		D2D1::RectF(
+			desc->GetPosition().x,
+			desc->GetPosition().y,
+			desc->GetPosition().x + desc->GetWidthHeight().x,
+			desc->GetPosition().y + desc->GetWidthHeight().y),
+		1.0f,
+		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
+	);
+}
+*/
 
 
 
