@@ -66,7 +66,9 @@ private:
 	static ID3D11BlendState*		m_BlendStateAlpha;
 	static ID3D11BlendState*		m_BlendStateATC;
 
-
+	static ID2D1Factory* m_D2DFactory;
+	static ID2D1RenderTarget* m_D2DRenderTarget;
+	static IDXGISurface* m_DXGISurface;
 
 public:
 	static void Init();
@@ -93,6 +95,9 @@ public:
 	// 通常描画用(alpha込)
 	static ID3D11BlendState* GetBlendStateAlpha(void) { return m_BlendStateAlpha; }
 
+	static ID2D1Factory* GetD2DFactory(void) { return m_D2DFactory; }
+	static ID2D1RenderTarget* GetD2DRenderTarget(void) { return m_D2DRenderTarget; }
+	static IDXGISurface* GetDXGISurface(void) { return m_DXGISurface; }
 
 
 	static void CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);

@@ -8,7 +8,9 @@
 #include <assert.h>
 #include <functional>
 
+#include <d2d1.h>
 #include <d3d11.h>
+#pragma comment(lib,"d2d1.lib")
 #pragma comment (lib, "d3d11.lib")
 
 

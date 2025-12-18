@@ -28,14 +28,16 @@ ID3D11BlendState*		Renderer::m_BlendState{};
 ID3D11BlendState*		Renderer::m_BlendStateAlpha{};
 ID3D11BlendState*		Renderer::m_BlendStateATC{};
 
+ID2D1Factory* Renderer::m_D2DFactory{};
+ID2D1RenderTarget* Renderer::m_D2DRenderTarget{};
+IDXGISurface* Renderer::m_DXGISurface{};
+
 
 
 
 void Renderer::Init()
 {
 	HRESULT hr = S_OK;
-
-
 
 
 	// デバイス、スワップチェーン作成
@@ -65,15 +67,40 @@ void Renderer::Init()
 										&m_FeatureLevel,
 										&m_DeviceContext );
 
+	// direct2d作成
+		D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			&m_D2DFactory
+		);
+		// DXGIサーフェス取得
+		hr = m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_DXGISurface));
 
+		// プロパティ設定するためにdpi取得
+		UINT dpi = GetDpiForWindow(GetWindow());
+		FLOAT dpiF = static_cast<FLOAT>(dpi);
 
-
-
+		// プロパティ設定
+		D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+			D2D1_RENDER_TARGET_TYPE_DEFAULT,
+			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+			dpiF, dpiF);
+	
 
 	// レンダーターゲットビュー作成
 	ID3D11Texture2D* renderTarget{};
 	m_SwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&renderTarget );
 	m_Device->CreateRenderTargetView( renderTarget, NULL, &m_RenderTargetView );
+
+	// Direct2Dのレンダーターゲット作成
+	m_DXGISurface->QueryInterface(__uuidof(IDXGISurface), (void**)&m_DXGISurface);
+
+	m_D2DFactory->CreateDxgiSurfaceRenderTarget(
+		m_DXGISurface,
+		props, // プロパティ
+		&m_D2DRenderTarget
+	);
+
+
 	renderTarget->Release();
 
 
@@ -279,8 +306,10 @@ void Renderer::Uninit()
 
 	m_DeviceContext->ClearState();
 	m_RenderTargetView->Release();
+	m_D2DRenderTarget->Release();
 	m_SwapChain->Release();
 	m_DeviceContext->Release();
+	m_D2DFactory->Release();
 	m_Device->Release();
 
 }

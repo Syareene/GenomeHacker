@@ -75,11 +75,11 @@ void Manager::Update()
 void Manager::Draw()
 {
 	Renderer::Begin();
-	DirectWriteCustomFont::GetInstance()->GetRenderTarget()->BeginDraw();
+	Renderer::GetD2DRenderTarget()->BeginDraw();
 
 	m_CurrentScene->Draw();
 
-	DirectWriteCustomFont::GetInstance()->GetRenderTarget()->EndDraw();
+	Renderer::GetD2DRenderTarget()->EndDraw();
 	Renderer::End();
 
 	// nextシーンが設定されてたらシーン切り替え

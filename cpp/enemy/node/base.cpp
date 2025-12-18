@@ -139,6 +139,8 @@ void NodeBase::Draw()
 	// 描画
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
+	//Renderer::GetD2DRenderTarget()->Draw
+
 	// フォント描画
 	m_NameFont->Draw();
 

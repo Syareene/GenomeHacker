@@ -132,7 +132,7 @@ void Particle2D::UpdateParticle()
 			continue;
 		}
 
-		// ★設定された更新ロジックを実行（ここがカスタマイズ可能）
+		// 設定された更新ロジックを実行（ここがカスタマイズ可能）
 		if (updateBehavior)
 		{
 			updateBehavior(p, 1);
