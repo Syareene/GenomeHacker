@@ -7,9 +7,12 @@ void Panel::Init(Transform trans)
 	Object2D::Init(trans);
 
 	// 子オブジェクトの初期化
-	for (auto& child : m_ChildObjects)
+	for (auto& layer : m_ChildObjects)
 	{
-		child.get()->Init();
+		for (auto& child : layer)
+		{
+			child.get()->Init();
+		}
 	}
 }
 
@@ -19,9 +22,12 @@ void Panel::Uninit()
 	Object2D::Uninit();
 
 	// 子オブジェクトの終了
-	for (auto& child : m_ChildObjects)
+	for (auto& layer : m_ChildObjects)
 	{
-		child.get()->Uninit();
+		for (auto& child : layer)
+		{
+			child.get()->Uninit();
+		}
 	}
 }
 
@@ -30,15 +36,16 @@ void Panel::Update()
 	// パネルの更新処理
 	Object2D::Update();
 	// 子オブジェクトの更新
-	for (auto& child : m_ChildObjects)
+	for (auto& layer : m_ChildObjects)
 	{
-		child.get()->Update();
+		for (auto& child : layer)
+		{
+			child.get()->Update();
+		}
 	}
 
 	// 不要な子オブジェクトの削除処理
-	m_ChildObjects.remove_if([](std::unique_ptr<Object2D>& obj) {
-		return obj && obj->Destroy(); // 子オブジェクトが削除予約されている場合
-		});
+	DeleteChildObject();
 }
 
 void Panel::Draw()
@@ -46,8 +53,11 @@ void Panel::Draw()
 	// パネルの描画処理
 	Object2D::Draw();
 	// 子オブジェクトの描画
-	for (auto& child : m_ChildObjects)
+	for (auto& layer : m_ChildObjects)
 	{
-		child.get()->Draw();
+		for (auto& child : layer)
+		{
+			child.get()->Draw();
+		}
 	}
 }

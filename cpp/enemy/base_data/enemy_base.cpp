@@ -327,7 +327,7 @@ void EnemyBase::ShowDnaScreen()
 		// m_DnaScreenの所有権を移行先のstateに移す
 		m_DnaScreenPtr = will_state->AddGameObject<DnaScreenScript>(std::move(m_DnaScreen), 2);
 		// dna_editからdna_tableに遷移するボタンをセット
-		m_DnaScreenPtr->AddChildObject<Button>()->Register([this]() {
+		m_DnaScreenPtr->AddChildObject<Button>(0)->Register([this]() {
 			// ボタンがクリックされた時の処理
 			HideDnaScreen();
 			}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
