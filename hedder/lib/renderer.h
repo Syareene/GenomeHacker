@@ -88,7 +88,10 @@ public:
 	static void SetParameter(XMFLOAT4 parameter);
 	static void SetCameraPosition(XMFLOAT3 position);
 
-	static void Draw2D();
+	// 2d描画をしたい場合はこれだけを用いれば描画完了!
+	static void Draw2D(int texID, Vector3 pos, Vector3 scale);
+	// 2d描画をしたい場合はこれだけを用いれば描画完了!
+	static void Draw2D(int texID, Vector2 pos, Vector2 scale);
 
 	static ID3D11Device* GetDevice(void) { return m_Device; }
 	static ID3D11DeviceContext* GetDeviceContext(void) { return m_DeviceContext; }

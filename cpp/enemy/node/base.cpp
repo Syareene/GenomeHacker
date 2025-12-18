@@ -111,33 +111,33 @@ void NodeBase::Update()
 void NodeBase::Draw()
 {
 	// 入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
+	//Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
 	// シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
+	//Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
+	//Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDraw();
+	//SetWorldMatrixOnDraw();
 
 	// マテリアル設定
-	SetMaterialOnDraw();
+	//SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw();
+	//SetDefaultVertexBufferOnDraw();
 
 	// プリミティブトポロジ設定
-	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	// ノード自体の描画処理
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+	//ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
+	//Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// 描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
+	Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale());
 
 	//Renderer::GetD2DRenderTarget()->Draw
 
@@ -151,27 +151,10 @@ void NodeBase::Draw()
 	{
 		for (const auto& desc : m_DescriptionFonts)
 		{
-			// フォントの幅に合わせた背景をここで表示
-			XMMATRIX trans, world, rot, scale;
-			trans = XMMatrixTranslation(desc->GetPosition().x + (desc->GetWidthHeight().x * 0.5f), desc->GetPosition().y + (desc->GetWidthHeight().y * 0.5f), desc->GetPosition().z);
-			rot = XMMatrixRotationRollPitchYaw(desc->GetRadian().x, desc->GetRadian().y, desc->GetRadian().z);
-			scale = XMMatrixScaling(desc->GetWidthHeight().x, desc->GetWidthHeight().y, 1.0f);
-			world = scale * rot * trans;
-			Renderer::SetWorldMatrix(world);
-
-			// テクスチャセット
-
-			Renderer::GetID2D1DeviceContext()->DrawBitmap(
-				TextureManager::Get2DTexture(GetTextureID()),
-				D2D1::RectF(
-					desc->GetPosition().x,
-					desc->GetPosition().y,
-					desc->GetPosition().x + desc->GetWidthHeight().x,
-					desc->GetPosition().y + desc->GetWidthHeight().y),
-				1.0f,
-				D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-				D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
-			);
+			// 2d描画
+			Renderer::Draw2D(GetTextureID(), 
+				Vector2(desc->GetPosition().x + (desc->GetWidthHeight().x * 0.5f), desc->GetPosition().y + (desc->GetWidthHeight().y * 0.5f)),
+				Vector2(desc->GetWidthHeight().x, desc->GetWidthHeight().y));
 
 			// フォント描画
 			desc->Draw();

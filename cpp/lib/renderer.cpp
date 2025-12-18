@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "lib/renderer.h"
+#include "manager/texture_manager.h"
 #include <io.h>
 
 
@@ -475,23 +476,37 @@ void Renderer::SetCameraPosition( XMFLOAT3 position )
 	m_DeviceContext->UpdateSubresource(m_CameraBuffer, 0, NULL, &position, 0, 0);
 }
 
-/*
-void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale)
+void Renderer::Draw2D(int texID, Vector3 pos, Vector3 scale)
 {
 	Renderer::GetID2D1DeviceContext()->DrawBitmap
 	(
-		TextureManager::Get2DTexture(GetTextureID()),
+		TextureManager::Get2DTexture(texID),
 		D2D1::RectF(
-			desc->GetPosition().x,
-			desc->GetPosition().y,
-			desc->GetPosition().x + desc->GetWidthHeight().x,
-			desc->GetPosition().y + desc->GetWidthHeight().y),
+			pos.x - (scale.x * 0.5f),
+			pos.y - (scale.y * 0.5f),
+			pos.x + (scale.x * 0.5f),
+			pos.y + (scale.y * 0.5f)),
 		1.0f,
 		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 		D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
 	);
 }
-*/
+
+void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale)
+{
+	Renderer::GetID2D1DeviceContext()->DrawBitmap
+	(
+		TextureManager::Get2DTexture(texID),
+		D2D1::RectF(
+			pos.x - (scale.x * 0.5f),
+			pos.y - (scale.y * 0.5f),
+			pos.x + (scale.x * 0.5f),
+			pos.y + (scale.y * 0.5f)),
+		1.0f,
+		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
+	);
+}
 
 
 

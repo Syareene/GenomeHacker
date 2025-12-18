@@ -44,7 +44,7 @@ public:
 	inline const int GetCDMax() const { return m_CDMax; }
 
 	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
-	constexpr static const int SHOW_DESC_TIME = 60; // 説明文を表示するまでのホバー時間(フレーム数)
+	constexpr static const int SHOW_DESC_TIME = 45; // 説明文を表示するまでのホバー時間(フレーム数)
 	virtual void UpdateDescriptionData() = 0;
 protected:
 	// くっつけられるか判定関数
