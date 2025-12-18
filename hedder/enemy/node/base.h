@@ -102,7 +102,7 @@ private:
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	std::unique_ptr<Font> m_NameFont; // ノードのフォント実態
-	std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // ノード説明部分のフォント実態 ->これ敵1つにある全部のnodeXのデータが入っちゃってる？
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts;
 	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分

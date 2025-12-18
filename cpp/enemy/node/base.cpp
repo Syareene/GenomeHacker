@@ -151,7 +151,7 @@ void NodeBase::Draw()
 		{
 			// フォントの幅に合わせた背景をここで表示
 			XMMATRIX trans, world, rot, scale;
-			trans = XMMatrixTranslation(desc->GetPosition().x, desc->GetPosition().y, desc->GetPosition().z);
+			trans = XMMatrixTranslation(desc->GetPosition().x + (desc->GetWidthHeight().x * 0.5f), desc->GetPosition().y + (desc->GetWidthHeight().y * 0.5f), desc->GetPosition().z);
 			rot = XMMatrixRotationRollPitchYaw(desc->GetRadian().x, desc->GetRadian().y, desc->GetRadian().z);
 			scale = XMMatrixScaling(desc->GetWidthHeight().x, desc->GetWidthHeight().y, 1.0f);
 			world = scale * rot * trans;
@@ -164,19 +164,7 @@ void NodeBase::Draw()
 			// フォント描画
 			desc->Draw();
 		}
-
-		// 描画時のpos諸々をそれ用にしないといけないのでやはりそれ用のものを作って複数フォント格納しても良い形にするのが丸いか?
-
-		//for (const auto& desc : GetDescriptions())
-		//{
-		//	Font tempFont;
-		//	tempFont.Register(desc->text_pos, GetDescriptionFontData(), desc->desc);
-		//	tempFont.Draw();
-		//}
 	}
-
-
-
 
 	// ノードソケットの描画処理
 }
