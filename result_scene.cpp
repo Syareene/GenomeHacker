@@ -13,7 +13,7 @@ void ResultScene::Init()
 	// タイトルシーンの初期化処理
 
 	// タイトル
-	AddGameObject<ImageDraw>(2)->FirstInit(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_result.png", false);
+	AddGameObject<ImageDraw>(2)->Register(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, 0.0f), Vector3(1000.0f, 200.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\temp_result.png", false);
 }
 
 void ResultScene::Update()

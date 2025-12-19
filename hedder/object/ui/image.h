@@ -8,7 +8,7 @@ class ImageDraw : public UI
 public:
 	ImageDraw() {} // デフォコン
 
-	void FirstInit(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
+	void Register(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
 	{
 		// 引数を受け取り値をセット
 		SetPosition(pos);
@@ -29,5 +29,6 @@ public:
 	void Update() override; // 動かすなら、、というか動く系のUIを作る場合は別途overrideかな？
 	// moveuiみたいなクラス作ってあげればa->bに動かすとかできるねぇ、でもその場合はunityと同様に独自でクラス(script)作れば良い気が
 	void Draw() override; // 画像描画処理
+private:
 
 };

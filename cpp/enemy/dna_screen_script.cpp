@@ -183,7 +183,7 @@ void DnaScreenScript::ShowDnaInfo()
 		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
 
 	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
-	//Panel::AddChildObject<ImageDraw>(1)->FirstInit(Vector3(1125.0f, 500.0f, 0.0f), Vector3(350.0f, 600.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
+	//Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(1125.0f, 500.0f, 0.0f), Vector3(350.0f, 600.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
 
 
 	// 現在のノードを表示

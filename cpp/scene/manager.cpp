@@ -7,6 +7,7 @@
 #include "lib/input.h"
 #include "manager/texture_manager.h"
 #include "scene/title_scene.h"
+//#include "scene/initialize_scene.h"
 #include "manager/shader_manager.h"
 #include "manager/default_vertex.h"
 #include "lib/audio.h"
