@@ -2,19 +2,28 @@
 #include "scene/state/dna_table_state.h"
 #include "scene/manager.h"
 
+#include "enemy/node_tab/enemy_dna_list.h"
+
 void DnaTableState::Init()
 {
-	// 大本のSceneの
-	//Manager::GetCurrentScene()->Init();
+	if (IsInitialized())
+	{
+		return;
+	}
+	SetIsInitialized(true);
+	State::Init();
+	AddSystemObject<EnemyDnaList>();
 }
 
 void DnaTableState::Uninit()
 {
 	// override後、個別で追加したいものの追加
+	State::Uninit();
 }
 
 void DnaTableState::Update()
 {
+	State::Update();
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
@@ -28,6 +37,7 @@ void DnaTableState::Update()
 
 void DnaTableState::Draw()
 {
+	State::Update();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTag("dna");
 	// このstate内オブジェクトの描画

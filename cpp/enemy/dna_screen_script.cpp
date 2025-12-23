@@ -228,6 +228,13 @@ void DnaScreenScript::HideDnaInfo()
 		child->SetDestory(true);
 	}
 
+	// buttonも消す
+	// これでもDNAButtonとかも消えちゃうからタグつけないとだ
+	for(auto& child : GetChildObjectsByType<Button>())
+	{
+		child->SetDestory(true);
+	}
+
 	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも
 	DeleteChildObject();
 

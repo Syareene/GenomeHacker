@@ -277,7 +277,10 @@ public:
 	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag);
 
 protected:
+	inline bool IsInitialized() const { return m_IsInitialized; }
+	inline void SetIsInitialized(const bool& isInitialized) { m_IsInitialized = isInitialized; }
 	void DeleteGameObject();
+	void DeleteAllGameObject();
 	void UpdateStateObject();
 	void UpdateStateObjectByTag(const std::string& tag);
 	void UpdateStateObjectByTags(const std::list<std::string>& tags);
@@ -286,6 +289,7 @@ protected:
 	void DrawStateObjectByTags(const std::list<std::string>& tags);
 
 private:
+	bool m_IsInitialized = false;
 	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
 	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
 	std::list<std::unique_ptr<SystemObject>> m_SystemObjects; // システムオブジェクトを保存するリスト

@@ -6,6 +6,7 @@
 
 void LoadState::Load()
 {
+
 	// 先に読み込みたいものの処理を各クラスにload関数として実装
 }
 
@@ -13,6 +14,12 @@ void LoadState::Load()
 
 void LoadState::Init()
 {
+	if (IsInitialized())
+	{
+		return;
+	}
+	SetIsInitialized(true);
+	State::Init();
 	// ロード画面用スクリプトを登録
 
 	// スレッド作成
@@ -39,10 +46,12 @@ void LoadState::Init()
 void LoadState::Uninit()
 {
 	// override後、個別で追加したいものの追加
+	State::Uninit();
 }
 
 void LoadState::Update()
 {
+	State::Update();
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
@@ -57,6 +66,7 @@ void LoadState::Update()
 
 void LoadState::Draw()
 {
+	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTags(std::list<std::string>({ "in_game", "system" }));
 	// このstate内オブジェクトの描画
