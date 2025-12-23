@@ -7,6 +7,7 @@
 #include "lib/input.h"
 #include "manager/texture_manager.h"
 #include "scene/title_scene.h"
+//#include "scene/initialize_scene.h"
 #include "manager/shader_manager.h"
 #include "manager/default_vertex.h"
 #include "lib/audio.h"
@@ -50,6 +51,7 @@ void Manager::Uninit()
 	DefaultVertex::Uninit();
 	ShaderManager::Uninit();
 	Input::Uninit();
+	TextureManager::UnloadAllTexture();
 	Renderer::Uninit();
 }
 
@@ -75,11 +77,11 @@ void Manager::Update()
 void Manager::Draw()
 {
 	Renderer::Begin();
-	DirectWriteCustomFont::GetInstance()->GetRenderTarget()->BeginDraw();
+	Renderer::GetID2D1DeviceContext()->BeginDraw();
 
 	m_CurrentScene->Draw();
 
-	DirectWriteCustomFont::GetInstance()->GetRenderTarget()->EndDraw();
+	Renderer::GetID2D1DeviceContext()->EndDraw();
 	Renderer::End();
 
 	// nextシーンが設定されてたらシーン切り替え

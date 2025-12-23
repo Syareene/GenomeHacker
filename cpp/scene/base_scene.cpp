@@ -475,9 +475,14 @@ GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag
 	}
 	// Panel型なら子オブジェクトも探索
 	if (auto panel = dynamic_cast<Panel*>(obj)) {
-		for (auto child : panel->GetChildObjects()) {
-			if (auto found = FindGameObjectByTagRecursive(child, tag)) {
-				return found;
+		for (auto& layer : panel->GetAllChildObjects()) 
+		{
+			for (auto& child : layer)
+			{
+				if (auto found = FindGameObjectByTagRecursive(child.get(), tag))
+				{
+					return found;
+				}
 			}
 		}
 	}
@@ -493,8 +498,12 @@ void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std:
 	}
 	// Panel型なら子オブジェクトも探索
 	if (auto panel = dynamic_cast<Panel*>(obj)) {
-		for (auto child : panel->GetChildObjects()) {
-			FindGameObjectsByTagRecursive(child, tag, result);
+		for (auto& layer : panel->GetAllChildObjects()) 
+		{
+			for (auto& child : layer)
+			{
+				FindGameObjectsByTagRecursive(child.get(), tag, result);
+			}
 		}
 	}
 }

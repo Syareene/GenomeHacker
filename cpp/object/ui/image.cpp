@@ -25,7 +25,7 @@ void ImageDraw::Init(Transform trans)
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定
@@ -77,7 +77,7 @@ void ImageDraw::Draw()
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定

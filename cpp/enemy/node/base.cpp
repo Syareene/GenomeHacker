@@ -15,8 +15,9 @@ void NodeBase::Init(Transform trans)
 	// とりあえずフォントの部分に移動させてるけどこのせいで掴みが全く動かなくはなってる
 	// 実行順序の関係でupdateに入れてるだけなので実行順序を明確化させたいね
 	// 正直数字とかつける時にfont単体ではなくなるからこの実装だとよろしくない
-	Vector2 scale = m_Fonts.back()->GetWidthHeight();
-	Vector3 start_pos = m_Fonts.back()->GetPosition();
+
+	Vector2 scale = m_NameFont->GetWidthHeight();
+	Vector3 start_pos = m_NameFont->GetPosition();
 	SetScale(Vector3(scale.x + NODE_MARGIN.x, scale.y + NODE_MARGIN.y, 0.0f));
 	SetPosition(Vector3(scale.x * 0.5f + start_pos.x, scale.y * 0.5f + start_pos.y, 0.0f));
 
@@ -46,16 +47,20 @@ void NodeBase::Update()
 	// マウス座標がノード内にあるかどうか
 	if (Mouse::IsMouseInsideArea(startPos, endPos))
 	{
+		// カウントインクリメント
+		m_HoverTimer++;
+
 		// その状態で左クリックされたかどうか
 		if (Mouse::IsLeftButtonTrigger())
 		{
+			m_HoverTimer = 0; // ホバータイマーリセット
 			// 現在掴んでいるノードがあるかどうかを確認
 			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
 			if (grabbingNode)
 			{
 				// 既に掴んでいるノードがある場合は離す
 				dnaState->SetGrabbingNode(nullptr);
-				return;
+				//return;
 			}
 			else
 			{
@@ -64,9 +69,15 @@ void NodeBase::Update()
 			}
 		}
 	}
+	else
+	{
+		// 非表示
+		m_HoverTimer = 0;
+	}
 
 	if(NodeBase* grabbingNode = dnaState->GetGrabbingNode())
 	{
+		m_HoverTimer = 0; // ホバータイマーリセット
 		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
 		if (grabbingNode == this)
 		{
@@ -74,54 +85,81 @@ void NodeBase::Update()
 			Vector3 pos = Vector3(mouseDiffPos.x + GetPosition().x, mouseDiffPos.y + GetPosition().y, 0.0f);
 			SetPosition(pos);
 			// 中身のフォントの位置も動かす
-			if(m_Fonts.empty())
+			if(!m_NameFont.get())
 			{
 				return;
 			}
-			m_Fonts.back()->SetPosition(Vector3(pos.x - (GetScale().x * 0.5f) + (NODE_MARGIN.x * 0.5f), pos.y - (GetScale().y * 0.5f) + (NODE_MARGIN.x * 0.5f), 0.0f));
+			m_NameFont->SetPosition(Vector3(pos.x - (GetScale().x * 0.5f) + (NODE_MARGIN.x * 0.5f), pos.y - (GetScale().y * 0.5f) + (NODE_MARGIN.x * 0.5f), 0.0f));
 		}
 	}
 
 	// フォント参照してサイズ更新
 	// 今あるノード実装しきったらここはいった時にassertでエラー出す	
-	if(m_Fonts.empty())
+	if(!m_NameFont.get() || !m_DescriptionFonts.back().get())
 	{
-		return;
+		assert(false && "font data is null");
+	}
+
+	// ホバータイマーが一定値以上なら説明文を表示
+	if (m_HoverTimer >= SHOW_DESC_TIME)
+	{
+		// ノードのちょい上あたりに表示
+		m_DescriptionFonts.back()->SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back()->GetWidthHeight().y), 0.0f));
 	}
 }
 
 void NodeBase::Draw()
 {
 	// 入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
+	//Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
 	// シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
+	//Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
+	//Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDraw();
+	//SetWorldMatrixOnDraw();
 
 	// マテリアル設定
-	SetMaterialOnDraw();
+	//SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw();
+	//SetDefaultVertexBufferOnDraw();
 
 	// プリミティブトポロジ設定
-	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	// ノード自体の描画処理
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+	//ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
+	//Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// 描画
-	Renderer::GetDeviceContext()->Draw(4, 0);
+	Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale());
 
+	//Renderer::GetD2DRenderTarget()->Draw
 
+	// フォント描画
+	m_NameFont->Draw();
+
+	// 説明文描画
+
+	// ホバーしてるなら説明文出す
+	if (IsShowDesc())
+	{
+		for (const auto& desc : m_DescriptionFonts)
+		{
+			// 2d描画
+			Renderer::Draw2D(GetTextureID(), 
+				Vector2(desc->GetPosition().x + (desc->GetWidthHeight().x * 0.5f), desc->GetPosition().y + (desc->GetWidthHeight().y * 0.5f)),
+				Vector2(desc->GetWidthHeight().x, desc->GetWidthHeight().y));
+
+			// フォント描画
+			desc->Draw();
+		}
+	}
 
 	// ノードソケットの描画処理
 }
@@ -129,11 +167,16 @@ void NodeBase::Draw()
 void NodeBase::FixFontPositions(Vector2 diff)
 {
 	// フォントの位置をdiff分だけ修正
-	for(auto& fontPtr : m_Fonts)
-	{
-		Vector3 pos = fontPtr->GetPosition();
-		fontPtr->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
-	}
+
+	Vector3 pos = m_NameFont->GetPosition();
+	m_NameFont->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
+
+
+	//for(auto& fontPtr : m_Fonts)
+	//{
+	//	Vector3 pos = fontPtr->GetPosition();
+	//	fontPtr->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
+	//}
 }
 
 void NodeBase::MoveNodeToMouse()

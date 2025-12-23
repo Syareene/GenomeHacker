@@ -94,6 +94,12 @@
     <Filter Include="ソース ファイル\enemy\node\socket">
       <UniqueIdentifier>{8c15dbf5-ff57-499e-a3cd-faa0cf5d8613}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\object\movement">
+      <UniqueIdentifier>{83177e50-b918-4640-a0d5-5f19b98ba17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\object\movement">
+      <UniqueIdentifier>{96d1bfcd-87ad-4314-a99d-eac4c7d4327b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -321,6 +327,12 @@
     <ClInclude Include="hedder\scene\state\load_state.h">
       <Filter>ヘッダー ファイル\scene\state</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\object\movement\title_cam.h">
+      <Filter>ヘッダー ファイル\object\movement</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\scene\initialize_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -523,6 +535,12 @@
     </ClCompile>
     <ClCompile Include="cpp\scene\state\load_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\movement\title_cam.cpp">
+      <Filter>ソース ファイル\object\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\initialize_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

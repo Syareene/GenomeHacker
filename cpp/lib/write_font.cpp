@@ -2,6 +2,7 @@
 
 #include "main.h"
 #include "lib/write_font.h"
+#include "lib/renderer.h"
 
 #include <cmath>
 
@@ -254,26 +255,34 @@ private:
 //=============================================================================
 HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain)
 {
+    // ref: 
+    // https://learn.microsoft.com/ja-jp/windows/win32/direct2d/getting-started-with-direct2d
+    // 基本的にfactoryは一こ作ればいいのでrendererあたりでdirect2d作ってそのfactoryをfontで使うのがいいね
+
+    // 後本来作るpD2DFactory->CreateHwndRenderTargetがねえ
+    // 終了時はSafeRelease(pD2DFactory);
+
     HRESULT result = S_OK;
 
-    result = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, pD2DFactory.GetAddressOf());
-    if (FAILED(result)) return result;
+	// ID2D1Factory作成
+    //result = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, pD2DFactory.GetAddressOf());
+    //if (FAILED(result)) return result;
 
-    result = swapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-    if (FAILED(result)) return result;
+    //result = swapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+    //if (FAILED(result)) return result;
 
-    UINT dpi = GetDpiForWindow(GetWindow());
-    FLOAT dpiF = static_cast<FLOAT>(dpi);
+    //UINT dpi = GetDpiForWindow(GetWindow());
+    //FLOAT dpiF = static_cast<FLOAT>(dpi);
 
-    D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
-        D2D1_RENDER_TARGET_TYPE_DEFAULT,
-        D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
-        dpiF, dpiF);
+    //D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+    //    D2D1_RENDER_TARGET_TYPE_DEFAULT,
+    //    D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+    //    dpiF, dpiF);
 
-    result = pD2DFactory->CreateDxgiSurfaceRenderTarget(pBackBuffer.Get(), &props, pRenderTarget.GetAddressOf());
-    if (FAILED(result)) return result;
+    //result = pD2DFactory->CreateDxgiSurfaceRenderTarget(pBackBuffer.Get(), &props, pRenderTarget.GetAddressOf());
+    //if (FAILED(result)) return result;
 
-    pRenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE);
+    Renderer::GetID2D1DeviceContext()->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE);
 
     result = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(pDWriteFactory.GetAddressOf()));
     if (FAILED(result)) return result;
@@ -374,15 +383,15 @@ int DirectWriteCustomFont::FindOrCreateVisualPreset(const FontData& data)
     hr = newPreset.textFormat->SetTextAlignment(newPreset.data.textAlignment);
     if (FAILED(hr)) return -1;
 
-    hr = pRenderTarget->CreateSolidColorBrush(newPreset.data.Color, newPreset.brush.GetAddressOf());
+    hr = Renderer::GetID2D1DeviceContext()->CreateSolidColorBrush(newPreset.data.Color, newPreset.brush.GetAddressOf());
     if (FAILED(hr)) return -1;
 
-    hr = pRenderTarget->CreateSolidColorBrush(newPreset.data.shadowColor, newPreset.shadowBrush.GetAddressOf());
+    hr = Renderer::GetID2D1DeviceContext()->CreateSolidColorBrush(newPreset.data.shadowColor, newPreset.shadowBrush.GetAddressOf());
     if (FAILED(hr)) return -1;
 
     if (newPreset.data.outlineWidth > 0.0f)
     {
-        hr = pRenderTarget->CreateSolidColorBrush(newPreset.data.outlineColor, newPreset.outlineBrush.GetAddressOf());
+        hr = Renderer::GetID2D1DeviceContext()->CreateSolidColorBrush(newPreset.data.outlineColor, newPreset.outlineBrush.GetAddressOf());
         if (FAILED(hr)) return -1;
     }
     else
@@ -537,17 +546,17 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
 	//pRenderTarget->BeginDraw();
     if (shadow && preset->shadowBrush)
     {
-        pRenderTarget->DrawTextLayout({ origin.x + preset->data.shadowOffset.x, origin.y + preset->data.shadowOffset.y }, layout.Get(), preset->shadowBrush.Get(), options);
+        Renderer::GetID2D1DeviceContext()->DrawTextLayout({ origin.x + preset->data.shadowOffset.x, origin.y + preset->data.shadowOffset.y }, layout.Get(), preset->shadowBrush.Get(), options);
     }
 
     if (outline && preset->data.outlineWidth > 0.0f && preset->outlineBrush)
     {
-        OutlineTextRenderer renderer(pD2DFactory.Get(), pRenderTarget.Get(), preset->brush.Get(), preset->outlineBrush.Get(), preset->data.outlineWidth);
+        OutlineTextRenderer renderer(Renderer::GetID2D1Factory(), Renderer::GetID2D1DeviceContext(), preset->brush.Get(), preset->outlineBrush.Get(), preset->data.outlineWidth);
         layout->Draw(nullptr, &renderer, origin.x, origin.y);
     }
     else
     {
-        pRenderTarget->DrawTextLayout(origin, layout.Get(), preset->brush.Get(), options);
+        Renderer::GetID2D1DeviceContext()->DrawTextLayout(origin, layout.Get(), preset->brush.Get(), options);
     }
 	//pRenderTarget->EndDraw();
 
@@ -747,7 +756,7 @@ HRESULT DirectWriteCustomFont::GetTextSizePixels(const std::string& str, FLOAT* 
 
     // DPI 取得（デフォルト 96）
     FLOAT dpiX = 96.0f, dpiY = 96.0f;
-    if (pRenderTarget) pRenderTarget->GetDpi(&dpiX, &dpiY);
+    if (Renderer::GetID2D1DeviceContext()) Renderer::GetID2D1DeviceContext()->GetDpi(&dpiX, &dpiY);
 
     FLOAT scaleX = dpiX / 96.0f;
     FLOAT scaleY = dpiY / 96.0f;

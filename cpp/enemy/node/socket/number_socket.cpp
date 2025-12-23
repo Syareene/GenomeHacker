@@ -23,7 +23,7 @@ void NumberSocket::Update()
 
 void NumberSocket::Draw()
 {
-
+	//Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale());
 }
 
 NumberNode* NumberSocket::GetNumberNode()

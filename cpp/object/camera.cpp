@@ -41,6 +41,13 @@ void Camera::Update()
 	}
 	*/
 
+	if (m_TitleCam)
+	{
+		// 中身実装
+		m_TitleCam->Move(1.0f);
+	}
+
+
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
 	if (player == nullptr)
 	{

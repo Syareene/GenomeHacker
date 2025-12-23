@@ -22,9 +22,9 @@ public:
 		Death,
 	};
 
-	struct NodeDescription
+	struct NodeTextData
 	{
-		std::string desc;
+		std::string description;
 		Vector2 text_pos;
 	};
 	
@@ -44,6 +44,8 @@ public:
 	inline const int GetCDMax() const { return m_CDMax; }
 
 	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
+	constexpr static const int SHOW_DESC_TIME = 45; // 説明文を表示するまでのホバー時間(フレーム数)
+	virtual void UpdateDescriptionData() = 0;
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -51,19 +53,35 @@ protected:
 	inline const std::string& GetName() const { return m_Name; }
 	inline void SetName(const std::string& name) { m_Name = name; }
 
-	inline const virtual std::vector<NodeDescription*> GetDescriptions() const = 0;
-
-	inline const virtual NodeDescription* GetDescription(const int index) const = 0;
-
-	inline virtual void AddDescription(const NodeDescription& desc) = 0;
-
 	inline virtual void SetDescriptionFontData(const FontData& fontData) = 0;
-
 	inline virtual FontData& GetDescriptionFontData() = 0;
 
 	// dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
-	inline virtual void AddFont(const std::string& text, const Vector2& pos) = 0;
-	inline virtual const std::vector<Font*> GetFonts() = 0;
+	void SetNameFont(FontData& font_data, std::string text)
+	{
+		// フォントを作成
+		m_NameFont = std::make_unique<Font>();
+		m_NameFont->Init(Transform());
+		m_NameFont->Register(Vector2(0.0f, 0.0f), font_data, text);
+	}
+	inline const std::unique_ptr<Font>& GetNameFont() const
+	{
+		return m_NameFont;
+	}
+
+	void AddDescFont(FontData& font_data, std::string text)
+	{
+		// フォントを作成
+		std::unique_ptr<Font> font_ptr = std::make_unique<Font>();
+		font_ptr->Init(Transform());
+		font_ptr->Register(Vector2(0.0f, 0.0f), font_data, text);
+		m_DescriptionFonts.push_back(std::move(font_ptr));
+	}
+	inline const std::vector<std::unique_ptr<Font>>& GetDescFonts() const
+	{
+		return m_DescriptionFonts;
+	}
+	inline Font& GetDescFontAt(const int index) const { return *(m_DescriptionFonts[index]); }
 
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
@@ -72,12 +90,7 @@ protected:
 	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
-	inline void AddFontPtr(Font* fontPtr) { m_Fonts.push_back(fontPtr); }
-	inline std::vector<Font*>& GetFontPtrs(std::vector<Font*>& outFonts) const
-	{
-		outFonts = m_Fonts;
-	}
-	inline Font& GetFontAt(const int index) const { return *(m_Fonts[index]); }
+	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
@@ -88,12 +101,14 @@ private:
 	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
-	std::vector<Font*> m_Fonts; // 派生クラスで管理しているstaticなポインタをここに保存->フォント諸々参照用
+	std::unique_ptr<Font> m_NameFont; // ノードのフォント実態
+	std::vector<std::unique_ptr<Font>> m_DescriptionFonts;
 	std::string m_Name; // ノードの名前(表示名、いらないかも)
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
 	//std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 	//FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
+	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)

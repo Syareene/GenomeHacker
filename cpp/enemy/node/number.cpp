@@ -1,8 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/number.h"
 
-std::vector<std::unique_ptr<NodeBase::NodeDescription>> NumberNode::m_Description; // ノードの説明部分
-std::vector<std::unique_ptr<Font>> NumberNode::m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
+std::vector<NodeBase::NodeTextData> NumberNode::m_Descriptions; // ノードの説明部分
 FontData NumberNode::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 
@@ -40,4 +39,9 @@ bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 	//enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
+}
+
+void NumberNode::UpdateDescriptionData()
+{
+
 }

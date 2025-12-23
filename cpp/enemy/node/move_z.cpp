@@ -2,7 +2,8 @@
 #include "enemy/node/move_z.h"
 #include "enemy/field_enemy.h"
 
-std::vector<std::unique_ptr<NodeBase::NodeDescription>> MoveZ::m_Description; // ノードの説明部分
+NodeBase::NodeTextData MoveZ::m_NodeName; // ノード名
+std::vector<NodeBase::NodeTextData> MoveZ::m_Descriptions; // ノードの説明部分
 FontData MoveZ::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 
 void MoveZ::Init(Transform trans)
@@ -21,16 +22,27 @@ void MoveZ::Init(Transform trans)
 	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 	m_DescFontData.outlineWidth = 2.5f;
 
+	// ベースデータセット
+	m_NodeName = { "MoveZ", Vector2(10.0f, 10.0f) };
+
 	// 生成されていないなら説明文をセット
-	if(m_DescriptionFonts.size() == 0)
+	if (m_Descriptions.size() == 0)
 	{
-		// 説明文セット
-		m_DescriptionFonts.push_back(std::make_unique<Font>());
-		m_DescriptionFonts.back()->Init(Transform());
-		m_DescriptionFonts.back()->Register(Vector2(10.0f, 350.0f), m_DescFontData, "MoveZ: このノードがある敵は毎フレームn分だけZ軸に対し移動します。");
+		m_Descriptions.push_back({ "このノードがある敵は毎フレームn分だけZ軸に対し移動します。", Vector2(10.0f, 350.0f) });
 	}
-	// 基底クラスの変数に対しフォントポインタを追加
-	AddFontPtr(m_DescriptionFonts.back().get());
+
+	// 生成されていないなら説明文をセット
+	//if(GetDescFonts().size() == 0)
+	//{
+		// ノード名セット
+		SetNameFont(m_DescFontData, m_NodeName.description);
+
+		// 説明文セット
+		for (auto& desc : m_Descriptions)
+		{
+			AddDescFont(m_DescFontData, desc.description);
+		}
+	//}
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
@@ -56,10 +68,10 @@ void MoveZ::Draw()
 	NodeBase::Draw();
 
 	// テキストを描画
-	for (auto& font_ptr : m_DescriptionFonts)
-	{
-		font_ptr->Draw();
-	}
+	//for (auto& font_ptr : m_DescriptionFonts)
+	//{
+	//	font_ptr->Draw();
+	//}
 }
 
 bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)
@@ -72,4 +84,9 @@ bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)
 	enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
+}
+
+void MoveZ::UpdateDescriptionData()
+{
+
 }

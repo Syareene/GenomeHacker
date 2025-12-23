@@ -19,6 +19,7 @@ const int UNLOAD_TEXTURE_COUNT = 100;
 struct TexData
 {
     ID3D11ShaderResourceView* Texture = nullptr; // テクスチャデータ
+	ID2D1Bitmap1* D2DTexture = nullptr; // Direct2D用テクスチャデータ
 	int TextureCount = 0; // テクスチャの参照カウント
 	std::wstring FilePath; // ファイルパス
 };
@@ -28,6 +29,13 @@ class TextureManager
 public:
     TextureManager() = default;
     ~TextureManager() = default;
+
+    enum class TextureType
+    {
+        DX_2D = 0,
+        DX_3D,
+        DX_BOTH,
+    };
 
     static void GarbageCollection()
     {
@@ -51,6 +59,7 @@ public:
 
                     // テクスチャを解放
                     it->second.Texture->Release();
+                    it->second.D2DTexture->Release();
 
                     // m_TextureMapから削除（itが次の要素を指すようになる）
                     it = m_TextureMap.erase(it);
@@ -76,6 +85,7 @@ public:
 		{
 			// テクスチャを解放
 			m_TextureMap[id].Texture->Release();
+			m_TextureMap[id].D2DTexture->Release();
 			// 要素の削除
 			m_TextureMap.erase(id);
 		}
@@ -87,6 +97,7 @@ public:
         for (auto& texture : m_TextureMap)
         {
             texture.second.Texture->Release();
+			texture.second.D2DTexture->Release();
         }
         // pathmapからも開放
         m_TextureMap.clear();
@@ -97,7 +108,7 @@ public:
 
     // テクスチャの取得
     // 注意: シーン系はこの関数をコンストラクタで使用せず、Init関数内で使用してください!(これどうなるかわからん)
-    static int LoadTexture(const std::wstring filePath)
+    static int LoadTexture(const std::wstring filePath, const TextureType tex_type = TextureManager::TextureType::DX_3D)
     {
         // すでに読み込まれているテクスチャならそれを返す
         auto it = m_PathMap.find(filePath);
@@ -122,6 +133,36 @@ public:
         CreateShaderResourceView(Renderer::GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &texture);
         assert(texture);
 
+        // 2dテクスチャ作成
+
+		// ID3D11Resource取得
+        ID3D11Resource* resource = nullptr;
+		texture->GetResource(&resource);
+
+        // IDXGISurfaceにキャスト
+        IDXGISurface1* dxgiSurface = nullptr;
+        resource->QueryInterface(__uuidof(IDXGISurface), reinterpret_cast<void**>(&dxgiSurface));
+        resource->Release(); // resourceはここで解放
+
+        // IDXGISurfaceからID2D1bitmapへ
+        ID2D1Bitmap1* bitmap = nullptr;
+        D2D1_BITMAP_PROPERTIES1 bitmapProp1 = D2D1::BitmapProperties1(
+            D2D1_BITMAP_OPTIONS_NONE, // 通常はNONEでOK
+            D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED)
+        );
+
+		// ID2D1Bitmap1* bitmap1 = nullptr;
+        HRESULT hr = Renderer::GetID2D1DeviceContext()->CreateBitmapFromDxgiSurface(
+            dxgiSurface,
+            &bitmapProp1,
+            &bitmap
+        );
+
+        // エラー処理は必要に応じて追加
+
+        dxgiSurface->Release(); // dxgiSurfaceはここで解放
+
+
         //LoadFromWICFile(filePath.data(), WIC_FLAGS_NONE, &metadata, image);
         // フォーマットを下げる
         //ScratchImage convered_image;
@@ -141,6 +182,7 @@ public:
 		// m_TextureMapに追加
 		m_TextureMap[textureID].FilePath = filePath; // ファイルパスを保存
 		m_TextureMap[textureID].Texture = texture; // テクスチャデータを保存
+		m_TextureMap[textureID].D2DTexture = bitmap; // Direct2D用テクスチャデータを保存
 		m_TextureMap[textureID].TextureCount = 1; // 初期は1
 
 		// m_PathMapにファイルパスとテクスチャIDを追加
@@ -153,7 +195,7 @@ public:
     // 重い版読み込み(std::threadを使った非同期読み込み処理)->実装予定
 
 	// テクスチャの取得
-	static inline ID3D11ShaderResourceView* GetTexture(const int id)
+	static inline ID3D11ShaderResourceView* Get3DTexture(const int id)
 	{
 		// idが存在しない場合はnullptrを返す
 		if (m_TextureMap.find(id) == m_TextureMap.end())
@@ -163,6 +205,18 @@ public:
 		// テクスチャを返す
 		return m_TextureMap[id].Texture;
 	}
+    
+    static inline ID2D1Bitmap1* Get2DTexture(const int id)
+    {
+        // idが存在しない場合はnullptrを返す
+        if (m_TextureMap.find(id) == m_TextureMap.end())
+        {
+            return nullptr;
+        }
+        // テクスチャを返す
+        return m_TextureMap[id].D2DTexture;
+    }
+
 private:
     static std::unordered_map<int, TexData> m_TextureMap;
 	static std::unordered_map<std::wstring, int> m_PathMap; // ファイルパスをキーにしたマップ

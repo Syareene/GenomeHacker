@@ -132,7 +132,7 @@ void Particle2D::UpdateParticle()
 			continue;
 		}
 
-		// ★設定された更新ロジックを実行（ここがカスタマイズ可能）
+		// 設定された更新ロジックを実行（ここがカスタマイズ可能）
 		if (updateBehavior)
 		{
 			updateBehavior(p, 1);
@@ -203,7 +203,7 @@ void Particle2D::Draw()
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
-	ID3D11ShaderResourceView* texture = TextureManager::GetTexture(GetTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// ストラクチャードバッファ設定

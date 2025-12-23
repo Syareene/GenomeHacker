@@ -69,6 +69,7 @@
     <ClInclude Include="hedder\object\camera.h" />
     <ClInclude Include="hedder\object\field.h" />
     <ClInclude Include="hedder\object\game_object.h" />
+    <ClInclude Include="hedder\object\movement\title_cam.h" />
     <ClInclude Include="hedder\object\panel.h" />
     <ClInclude Include="hedder\object\system_object.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="hedder\object\ui\ui.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
     <ClInclude Include="hedder\scene\game_scene.h" />
+    <ClInclude Include="hedder\scene\initialize_scene.h" />
     <ClInclude Include="hedder\scene\manager.h" />
     <ClInclude Include="hedder\scene\setting_scene.h" />
     <ClInclude Include="hedder\scene\state\base_state.h" />
@@ -139,6 +141,7 @@
     <ClCompile Include="cpp\object\camera.cpp" />
     <ClCompile Include="cpp\object\field.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
+    <ClCompile Include="cpp\object\movement\title_cam.cpp" />
     <ClCompile Include="cpp\object\panel.cpp" />
     <ClCompile Include="cpp\object\player.cpp" />
     <ClCompile Include="cpp\object\skydome.cpp" />
@@ -149,6 +152,7 @@
     <ClCompile Include="cpp\object\ui\in_game\fade.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />
+    <ClCompile Include="cpp\scene\initialize_scene.cpp" />
     <ClCompile Include="cpp\scene\manager.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\state\base_state.cpp" />

@@ -143,7 +143,7 @@ public:
 		return instance.get();
 	}
 
-	ID2D1RenderTarget* GetRenderTarget() { return pRenderTarget.Get(); }
+	//ID2D1RenderTarget* GetRenderTarget() { return pRenderTarget.Get(); }
 
 	// 初期化関数
 	HRESULT Init(IDXGISwapChain* swapChain);
@@ -207,11 +207,11 @@ private:
 	HRESULT ApplyVisualPreset(int presetId);	
 
 
-	WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
-	WRL::ComPtr<ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
+	//WRL::ComPtr<ID2D1Factory>			pD2DFactory = nullptr;		// Direct2Dリソース
+	//WRL::ComPtr<ID2D1RenderTarget>		pRenderTarget = nullptr;	// Direct2Dレンダーターゲット
 	WRL::ComPtr<IDWriteFactory>		pDWriteFactory = nullptr;	// DirectWriteリソース
 	std::list < WRL::ComPtr<IDWriteTextLayout>>		pTextLayoutCache;		// DirectWriteテキスト書式 (キャッシュ用)
-	WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
+	//WRL::ComPtr	<IDXGISurface>			pBackBuffer = nullptr;		// サーフェス情報
 
 	std::unordered_map<int, std::list <FontPreset>::iterator> m_PresetCacheMap; // プリセットidから、使用順リスト内へのイテレーターマップ
 
