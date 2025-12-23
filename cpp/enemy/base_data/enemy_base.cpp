@@ -346,6 +346,9 @@ void EnemyBase::HideDnaScreen()
 		// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
 		m_IsExitDnaEdit = true;
 
+		// ここ、button消すようにしないとだめ、というか上のボタン出すの各enemy依存ではないからdna_edit_state側で登録しといたほうがいいね
+		//m_DnaScreenPtr->GetChildObjectByType();
+
 		// state変更
 		Manager::GetCurrentScene()->SetState<DnaTableState>();
 	}
