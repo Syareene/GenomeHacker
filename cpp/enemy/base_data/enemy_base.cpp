@@ -57,13 +57,6 @@ void EnemyBase::Unregister()
 		m_DnaScreen = nullptr; // スクリーンのポインタを開放
 	}
 
-	if(m_DnaScreenPtr)
-	{
-		// state側で管理している場合はこちらを開放
-		m_DnaScreenPtr->Uninit();
-		m_DnaScreenPtr = nullptr;
-	}
-
 	// テクスチャ解放
 	TextureManager::UnloadTexture(GetEnemyTextureID());
 }
@@ -322,46 +315,26 @@ void EnemyBase::ShowDnaScreen()
 		// state変更
 		DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
 
-		// ここ、stateが即座に変更されているわけではないので、ここで変更後addしても変更前の部分に追加されてて実行されない
+		m_DnaScreen->SetActive(true); // DNAスクリーンをアクティブにする
+		will_state->SetCurrentEnemyBase(this); // 現在編集中の敵データを設定
 
-		// m_DnaScreenの所有権を移行先のstateに移す
-		m_DnaScreenPtr = will_state->AddGameObject<DnaScreenScript>(std::move(m_DnaScreen), 2);
-		// dna_editからdna_tableに遷移するボタンをセット
-		m_DnaScreenPtr->AddChildObject<Button>(0)->Register([this]() {
-			// ボタンがクリックされた時の処理
-			HideDnaScreen();
-			}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
-
-		m_DnaScreenPtr->GetActiveTab()->ModifyNodePos(); // ノード位置修正
-
-		m_DnaScreenPtr->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
+		m_DnaScreen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
+		m_DnaScreen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 	}
 }
 
 void EnemyBase::HideDnaScreen()
 {
-	// DNAタブを非表示
-	if (m_DnaScreenPtr)
+	// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
+	m_IsExitDnaEdit = true;
+	DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	if (state)
 	{
-		// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
-		m_IsExitDnaEdit = true;
-
-		// ここ、button消すようにしないとだめ、というか上のボタン出すの各enemy依存ではないからdna_edit_state側で登録しといたほうがいいね
-		//m_DnaScreenPtr->GetChildObjectByType();
-
-		// state変更
-		Manager::GetCurrentScene()->SetState<DnaTableState>();
+		state->SetCurrentEnemyBase(nullptr); // 現在編集中の敵データをクリア
 	}
-}
 
-void EnemyBase::MovePtrFromState()
-{
-	// state側で管理しているdna_screenのポインタをこっちに移す
-	if (m_DnaScreenPtr)
-	{
-		m_DnaScreenPtr->HideDnaInfo(); // DNA情報を非表示にする関数を呼び出す
+	m_DnaScreen->SetActive(false); // DNAスクリーンを非アクティブにする
 
-		m_DnaScreen = std::move(Manager::GetCurrentScene()->GetStatePtr()->GetGameObjectUniquePtr<DnaScreenScript>(m_DnaScreenPtr));
-		m_IsExitDnaEdit = false;
-	}
+	// state変更
+	Manager::GetCurrentScene()->SetState<DnaTableState>();
 }

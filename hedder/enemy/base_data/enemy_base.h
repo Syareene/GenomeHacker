@@ -40,14 +40,9 @@ public:
 		{ 
 			return m_DnaScreen.get(); 
 		} 
-		else 
-		{ 
-			return m_DnaScreenPtr; 
-		}
 	}
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
-	void MovePtrFromState(); // state側で管理しているdna_screenのポインタをこっちに移す
 
 	inline void SetEnemyID(int id) { m_EnemyID = id; }
 	inline int GetEnemyID() const { return m_EnemyID; }
@@ -67,7 +62,6 @@ public:
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
 	std::unique_ptr<DnaScreenScript> m_DnaScreen; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
-	DnaScreenScript* m_DnaScreenPtr = nullptr; // DNAスクリーンのスクリプトオブジェクトのポインタ(stateで管理しているときはここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
 	// static -> ボタン押すときの外枠テクスチャ用変数?
