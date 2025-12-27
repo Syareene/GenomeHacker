@@ -13,6 +13,7 @@
 #include "lib/audio.h"
 #include "lib/mouse.h"
 #include "lib/write_font.h"
+#include "lib/random_number.h"
 
 std::unique_ptr<Scene> Manager::m_CurrentScene;
 std::unique_ptr<Scene> Manager::m_NextScene = nullptr;
@@ -28,6 +29,7 @@ void Manager::Init()
 	ShaderManager::Init();
 	DefaultVertex::Init();
 	Audio::InitMaster();
+	RandomNumber::GetInstance()->Init();
 
 	// 初期シーン設定
 	m_CurrentScene = std::make_unique<TitleScene>();
