@@ -55,6 +55,7 @@
     <ClInclude Include="hedder\lib\modelRenderer.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
     <ClInclude Include="hedder\lib\particle.h" />
+    <ClInclude Include="hedder\lib\random_number.h" />
     <ClInclude Include="hedder\lib\renderer.h" />
     <ClInclude Include="hedder\lib\transform.h" />
     <ClInclude Include="hedder\lib\vector2.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="cpp\lib\modelRenderer.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
     <ClCompile Include="cpp\lib\particle.cpp" />
+    <ClCompile Include="cpp\lib\random_number.cpp" />
     <ClCompile Include="cpp\lib\renderer.cpp" />
     <ClCompile Include="cpp\lib\write_font.cpp" />
     <ClCompile Include="cpp\manager\default_vertex.cpp" />

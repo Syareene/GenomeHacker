@@ -37,6 +37,10 @@ public:
 		}
 		return nullptr;
 	}
+	int GetEnemyBaseCount() const
+	{
+		return static_cast<int>(m_EnemyBaseList.size());
+	}
 private:
 	std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを保存するリスト
 };

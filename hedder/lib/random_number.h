@@ -6,7 +6,6 @@
 
 class RandomNumber
 {
-	// これそもそもsingletonか?
 public:
 	static RandomNumber* GetInstance()
 	{

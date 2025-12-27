@@ -27,8 +27,8 @@ private:
 	{
 		// 敵を出す処理
 
-		// 一時的処理として30体以上でないようにする
-		if (m_SpawnCount >= 30) return false;
+		// 一時的処理として一定以上でないようにする
+		if (m_SpawnedCount >= ENEMY_MAX_AMOUNT) return false;
 
 		// objectをフィールドに追加
 		Transform trans;
@@ -63,9 +63,43 @@ private:
 		//assert(0 && "敵のデータが登録されておらず、インスタンス化できませんでした");
 		//return false;
 	}
-	// 敵の元データを格納する変数
-	//std::list<std::unique_ptr<EnemyBase>> m_EnemyBaseList; // 敵の元データを格納するリスト
+
+	bool SpawnEnemyByData(Vector3 spawn_pos = { 0.0f, 0.0f, 0.0f })
+	{
+		// 一時的処理として一定以上でないようにする
+		if (m_SpawnedCount >= ENEMY_MAX_AMOUNT) return false;
+
+		// objectをフィールドに追加
+		Transform trans;
+		trans.SetPosition(spawn_pos);
+		trans.SetRotation({ 0.0f, 0.0f, 0.0f });
+		trans.SetScale({ 1.0f, 1.0f, 1.0f });
+
+		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0, trans);
+
+		// fieldenemyに欲しいデータ上げておく
+		// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
+		// 後は変動するステータス: 現在HP
+
+		enemy->SetEnemyBase(m_EnemyBaseData);
+		enemy->SetCurrentHP(m_EnemyBaseData->GetMaxHealth());
+
+		// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形
+		enemy->SetScale(enemy->GetScale().mul(m_EnemyBaseData->GetDrawScaleDiff()));
+
+		// コライダをセット
+
+		// 生成したのでtrueを返す
+		return true;
+	}
+
+	EnemyBase* m_EnemyBaseData = nullptr; // 敵の元データを格納するポインタ(敵を出現させるのに用いる)
 	int m_SpawnTimer = 0; // 敵を出すタイマー
-	int m_SpawnCount = 0; // 出した敵の数(temp)
-	//void SetEnemyData(FieldEnemy* set_target, int target_id); // ポインタを受け取って特定の敵の初期化情報をセットする関数
+	int m_SpawnCount = 0; // 出す敵の数
+	int m_SpawnedCount = 0; // 出した敵の数(temp)
+	int m_EnemyCost = 20;
+	int m_TimeCost = 1200; // 敵の出現事の間隔とwave間の間隔を決めるための変数
+	int m_EnemySpawnInterval = 0; // 敵が出現するまでの間隔
+	int m_TimeNextWave = 0; // ウェーブ間の時間
+	constexpr static int ENEMY_MAX_AMOUNT = 30;
 };
