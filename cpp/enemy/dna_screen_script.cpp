@@ -86,13 +86,12 @@ void DnaScreenScript::Update()
 		SelectedDeathTab();
 	}
 
-
 	// 子オブジェクトの更新
 	for (auto& layer : GetAllChildObjects())
 	{
 		for (auto& child : layer)
 		{
-			if (TabBase* temp = static_cast<TabBase*>(child.get()))
+			if (TabBase* temp = dynamic_cast<TabBase*>(child.get()))
 			{
 				// TabBaseの場合は選択されていないならskip
 				if (!temp->GetIsSelected())
@@ -104,16 +103,10 @@ void DnaScreenScript::Update()
 		}
 	}
 
-
 	// パネルの更新処理
 	Object2D::Update();
 
-
-
 	// ここで必要な更新処理を追加
-
-
-
 
 	// 不要な子オブジェクトの削除処理(最後に呼ぶ)
 	DeleteChildObject();	
@@ -131,7 +124,7 @@ void DnaScreenScript::Draw()
 	{
 		for (auto& child : layer)
 		{
-			if (TabBase* temp = static_cast<TabBase*>(child.get()))
+			if (TabBase* temp = dynamic_cast<TabBase*>(child.get()))
 			{
 				// TabBaseの場合は選択されていないならskip
 				if (!temp->GetIsSelected())
@@ -182,8 +175,12 @@ void DnaScreenScript::ShowDnaInfo()
 		SelectedDeathTab();
 		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
 
+	// 右側の追加したいノード郡
+	//Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(950.0f, 50.0f, 0.0f), Vector3(400.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\debug_sprite.png");
+
 	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
-	//Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(1125.0f, 500.0f, 0.0f), Vector3(350.0f, 600.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
+	// 描画されてない時、game_objのリストにはあるが範囲forにてヒットしておらず描画されない?
+	Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(1024.0f, 450.0f, 0.0f), Vector3(512.0f, 540.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
 
 
 	// 現在のノードを表示
@@ -201,17 +198,17 @@ void DnaScreenScript::ShowDnaInfo()
 	// 選択されているタブに応じてフォントを生成
 	if(m_AttackTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT / 4), fontData, "攻撃ノード表示中");
+		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード");
 		return;
 	}
 	if(m_MoveTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT / 4), fontData, "移動ノード表示中");
+		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "移動ノード");
 		return;
 	}
 	if(m_DeathTab->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.4f, SCREEN_HEIGHT / 4), fontData, "死亡ノード表示中");
+		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード");
 		return;
 	}
 }
@@ -221,6 +218,9 @@ void DnaScreenScript::HideDnaInfo()
 	// 上でやってるように逆にここはゲームオブジェクトから登録解除し、別で管理する
 	// いらないデータは消す
 	SetActive(false);
+
+	// ここTabBase以外を消すようにしたほうがいいな
+
 
 	// panelからfontオブジェクトを消す
 	for(auto& child : GetChildObjectsByType<Font>())

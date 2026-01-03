@@ -39,7 +39,8 @@ public:
 		if(m_DnaScreen) 
 		{ 
 			return m_DnaScreen.get(); 
-		} 
+		}
+		return nullptr;
 	}
 	void ShowDnaScreen(); // 呼ばれたらコイツ自身のnode情報を持っているscriptを表示
 	void HideDnaScreen();
