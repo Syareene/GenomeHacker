@@ -29,8 +29,8 @@ public:
 	virtual void Clicked(); // クリックされたときの処理
 	// index基準でnodeの位置を修正
 	void ModifyNodePos(); // enemyとplayer両方修正する関数
-	void ModifyEnemyNodePos();
-	void ModifyPlayerNodePos();
+	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
+	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
 	// ノード掴んでる時に掴んだノード基準でtab内のnode見て見た目含めindexを修正
 	void ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex);
 	void ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex);

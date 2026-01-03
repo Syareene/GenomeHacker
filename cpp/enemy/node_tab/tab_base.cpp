@@ -172,18 +172,60 @@ void TabBase::ModifyNodePos()
 		ModifyPlayerNodePos();
 }
 
-void TabBase::ModifyEnemyNodePos()
+void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 {
 	// 座標加算用に保存
 	float currentPosY = ENEMY_NODE_START.y;
+	// マウス座標を取得
+	Vector2 mousePos = Mouse::GetPosition();
+
+	float grabNodeStartY = 0.0f;
+	if (grabPtr)
+	{
+		// 掴んでるノードのposとscaleを取得
+		Vector2 grabNodePos = Vector2(grabPtr->GetPosition().x, grabPtr->GetPosition().y);
+		Vector3 grabNodeScale = grabPtr->GetScale();
+		// 掴みノードの開始yを計算(マウス座標からscaleの半分引いた位置)
+		grabNodeStartY = mousePos.y - (grabNodeScale.y * 0.5f);
+	}
 
 	// index基準でnodeの位置を修正
+	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
 	for (auto& node : m_Nodes)
 	{
+		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね(
+
+		// 掴みノードならマウス座標へ移動
+		if (node.get() == grabPtr)
+		{
+			// ノードの位置を修正
+			Vector3 old_pos = node->GetPosition();
+			node->SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
+			// 中身の説明文の位置も修正
+			Vector2 diff = Vector2(mousePos.x, mousePos.y) - Vector2(old_pos.x, old_pos.y);
+			node->FixFontPositions(diff);
+			continue; // 次のノードへ
+		}
+
+
+		// つかみノードある場合は掴んだmouseの座標+そのノードのscale見てそれより超えてたらその分枠をあける
+		if (!isOverGrabNode && grabPtr)
+		{
+			// 掴みノードを超えたかどうか判定
+			if (grabNodeStartY <= (node->GetPosition().y - node->GetScale().y))
+			{
+				// 超えた
+				isOverGrabNode = true;
+				// 掴みノード分位置をずらす
+				currentPosY += grabPtr->GetScale().y;
+			}
+		}
+
 		// ノードの位置を修正
 		Vector3 scale = node->GetScale();
 		Vector2 diff = Vector2(ENEMY_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
 		Vector3 old_pos = node->GetPosition();
+
 		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		// 中身の説明文の位置も修正
 		node->FixFontPositions(diff);
@@ -193,7 +235,7 @@ void TabBase::ModifyEnemyNodePos()
 	}
 }
 
-void TabBase::ModifyPlayerNodePos()
+void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 {
 	// 座標加算用に保存
 	float currentPosY = PLAYER_NODE_START.y;
@@ -245,13 +287,13 @@ void TabBase::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 			mousePos.y > nodePos.y - (nodeScale.y * 0.5f))
 		{
 			// インデックス交換（swap）は簡潔で安全
-			std::swap(m_Nodes[grabIndex], m_Nodes[i]);
+			//std::swap(m_Nodes[grabIndex], m_Nodes[i]);
 
 			// grabIndex を移動先に合わせて更新
-			grabIndex = static_cast<int>(i);
+			//grabIndex = static_cast<int>(i);
 
 			// 描画位置を再配置
-			ModifyEnemyNodePos();
+			ModifyEnemyNodePos(curPtr);
 
 			return;
 		}
@@ -294,7 +336,7 @@ void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 			grabIndex = static_cast<int>(i);
 
 			// 描画位置を再配置
-			ModifyPlayerNodePos();
+			ModifyPlayerNodePos(curPtr);
 
 			return;
 		}
