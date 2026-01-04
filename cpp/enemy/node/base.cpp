@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "enemy/node/base.h"
+#include "enemy/base_data/enemy_base.h"
 #include "scene/state/dna_edit_state.h"
 #include "scene/manager.h"
 #include "lib/mouse.h"
@@ -59,6 +60,9 @@ void NodeBase::Update()
 			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
 			if (grabbingNode)
 			{
+				// 反映処理
+				dnaState->GetCurrentEnemyBase()->GetDnaScreen()->GetActiveTab()->ApplyGrabNode();
+
 				// 既に掴んでいるノードがある場合は離す
 				dnaState->SetGrabbingNode(nullptr);
 				//return;

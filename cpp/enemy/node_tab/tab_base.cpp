@@ -172,6 +172,114 @@ void TabBase::ModifyNodePos()
 		ModifyPlayerNodePos();
 }
 
+void TabBase::ApplyGrabNode()
+{
+	// 掴んでいるノードの位置を見て適切な場所に挿入
+	DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	if (state)
+	{
+		NodeBase* grabNode = state->GetGrabbingNode();
+		if (grabNode)
+		{
+			// 掴みノードがenemy/playerどっちに所属しているかを取得
+			NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
+
+			// 所属しているノードリストから一時変数にmove
+			std::unique_ptr<NodeBase> tempNode = nullptr;
+			if (loc == NodeBase::NodeLocation::Enemy)
+			{
+				// enemyノード側から探す
+				auto it = std::find_if(m_Nodes.begin(), m_Nodes.end(),
+					[&](const std::unique_ptr<NodeBase>& node) {
+						return node.get() == grabNode;
+					});
+				if (it != m_Nodes.end())
+				{
+					// 見つかったらmoveで一時変数に保存
+					tempNode = std::move(*it);
+					// リストから削除
+					m_Nodes.erase(it);
+				}
+			}
+			else if (loc == NodeBase::NodeLocation::Player)
+			{
+				// プレイヤーノード側から探す
+				auto& playerNodes = m_PlayerPtr->GetAllNodes();
+				auto it = std::find_if(playerNodes.begin(), playerNodes.end(),
+					[&](const std::unique_ptr<NodeBase>& node) {
+						return node.get() == grabNode;
+					});
+				if (it != playerNodes.end())
+				{
+					// 見つかったらmoveで一時変数に保存
+					tempNode = std::move(*it);
+					// リストから削除
+					playerNodes.erase(it);
+				}
+			}
+
+			// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
+			state->SetGrabbingNode(tempNode.get());
+			grabNode = state->GetGrabbingNode();
+
+			// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
+			if (grabNode->GetPosition().x < 768.0f)
+			{
+				// 敵ノード側に追加
+				float grabPosY = grabNode->GetPosition().y;
+				bool inserted = false;
+
+				// iterator基準のループ処理
+				for (auto it = m_Nodes.begin(); it != m_Nodes.end(); ++it)
+				{
+					if (grabPosY < (*it)->GetPosition().y)
+					{
+						// 見つかったら挿入
+						m_Nodes.insert(it, std::move(tempNode));
+						inserted = true;
+						break;
+					}
+				}
+
+				// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
+				if (!inserted)
+				{
+					m_Nodes.push_back(std::move(tempNode));
+				}
+
+				ModifyEnemyNodePos();
+			}
+			else
+			{
+				// プレイヤーノード側に追加
+				auto& playerNodes = m_PlayerPtr->GetAllNodes();
+				float grabPosY = grabNode->GetPosition().y;
+				bool inserted = false;
+
+				// iterator基準のループ処理
+				for (auto it = playerNodes.begin(); it != playerNodes.end(); ++it)
+				{
+					if (grabPosY < (*it)->GetPosition().y)
+					{
+						// 見つかったら挿入
+						playerNodes.insert(it, std::move(tempNode));
+						inserted = true;
+						break;
+					}
+				}
+
+				// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
+				if (!inserted)
+				{
+					playerNodes.push_back(std::move(tempNode));
+				}
+
+				ModifyPlayerNodePos();
+			}
+		}
+	}
+}
+
 void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 {
 	// 座標加算用に保存
@@ -179,21 +287,22 @@ void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 	// マウス座標を取得
 	Vector2 mousePos = Mouse::GetPosition();
 
-	float grabNodeStartY = 0.0f;
+	bool isDownMove = false;
+	// マウスの移動方向を見てっどっち側に動いてるかを判定
+	Mouse::GetDiffPosition().y > 0.0f ? isDownMove = true : isDownMove = false;
 	if (grabPtr)
 	{
 		// 掴んでるノードのposとscaleを取得
 		Vector2 grabNodePos = Vector2(grabPtr->GetPosition().x, grabPtr->GetPosition().y);
 		Vector3 grabNodeScale = grabPtr->GetScale();
 		// 掴みノードの開始yを計算(マウス座標からscaleの半分引いた位置)
-		grabNodeStartY = mousePos.y - (grabNodeScale.y * 0.5f);
 	}
 
 	// index基準でnodeの位置を修正
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
 	for (auto& node : m_Nodes)
 	{
-		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね(
+		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
 		// 掴みノードならマウス座標へ移動
 		if (node.get() == grabPtr)
@@ -207,17 +316,17 @@ void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 			continue; // 次のノードへ
 		}
 
-
-		// つかみノードある場合は掴んだmouseの座標+そのノードのscale見てそれより超えてたらその分枠をあける
+		// 掴んでいるノードがある場合は、そのスペースを考慮する
+		// ノードの基準が中心になっているが一旦はこれで行くしかないかな、ちらつきそうだし
 		if (!isOverGrabNode && grabPtr)
 		{
-			// 掴みノードを超えたかどうか判定
-			if (grabNodeStartY <= (node->GetPosition().y - node->GetScale().y))
+			// 掴んでいるノードが現在のノードよりも上にあるか、
+			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
+			if (mousePos.y < node->GetPosition().y)
 			{
-				// 超えた
-				isOverGrabNode = true;
-				// 掴みノード分位置をずらす
+				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
+				isOverGrabNode = true;
 			}
 		}
 
@@ -292,8 +401,10 @@ void TabBase::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 			// grabIndex を移動先に合わせて更新
 			//grabIndex = static_cast<int>(i);
 
+			// これの呼び出し方が違うかも?curPtr->grabbedPTr
+
 			// 描画位置を再配置
-			ModifyEnemyNodePos(curPtr);
+			ModifyEnemyNodePos(grabbedPtr);
 
 			return;
 		}

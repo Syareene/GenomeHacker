@@ -27,8 +27,10 @@ void Player::Init(Transform trans)
 
 	m_HavingNodes.push_back(std::make_unique<MoveX>());
 	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 	m_HavingNodes.push_back(std::make_unique<MoveZ>());
 	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 
 	AddTag("in_game");
 	AddTag("player");

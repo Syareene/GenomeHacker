@@ -29,8 +29,7 @@ public:
 	virtual void Clicked(); // クリックされたときの処理
 	// index基準でnodeの位置を修正
 	void ModifyNodePos(); // enemyとplayer両方修正する関数
-	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
-	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
+	void ApplyGrabNode();
 	// ノード掴んでる時に掴んだノード基準でtab内のnode見て見た目含めindexを修正
 	void ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex);
 	void ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex);
@@ -96,9 +95,12 @@ public:
 		}
 	};
 private:
+	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
+	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
 	static Player* m_PlayerPtr; // プレイヤーのポインタ
 	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
 	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
+	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
 	void ModifyTimeLine(); // タイムラインを修正する
 	bool m_IsSelected = false; // 現在選択されているタブかどうか
 	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
