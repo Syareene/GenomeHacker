@@ -222,6 +222,8 @@ void DnaScreenScript::HideDnaInfo()
 	// ここTabBase以外を消すようにしたほうがいいな
 
 
+	// ここでちゃんと子オブジェクト消せてなさそうね
+
 	// panelからfontオブジェクトを消す
 	for(auto& child : GetChildObjectsByType<Font>())
 	{
@@ -261,7 +263,7 @@ TabBase* DnaScreenScript::GetActiveTab()
 
 void DnaScreenScript::SelectedAttackTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード表示中");
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
 	m_AttackTab->SetIsSelected(true);
 	m_AttackTab->ModifyNodePos(); // ノード位置修正
 	m_MoveTab->SetIsSelected(false);
@@ -270,7 +272,7 @@ void DnaScreenScript::SelectedAttackTab()
 
 void DnaScreenScript::SelectedMoveTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード表示中");
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
 	m_AttackTab->SetIsSelected(false);
 	m_MoveTab->SetIsSelected(true);
 	m_MoveTab->ModifyNodePos(); // ノード位置修正
@@ -279,7 +281,7 @@ void DnaScreenScript::SelectedMoveTab()
 
 void DnaScreenScript::SelectedDeathTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード表示中");
+	Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
 	m_AttackTab->SetIsSelected(false);
 	m_MoveTab->SetIsSelected(false);
 	m_DeathTab->SetIsSelected(true);

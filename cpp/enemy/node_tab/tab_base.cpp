@@ -218,6 +218,13 @@ void TabBase::ApplyGrabNode()
 				}
 			}
 
+			// 探索しても何も無い場合終了
+			if(!tempNode)
+			{
+				return;
+			}
+
+
 			// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
 			state->SetGrabbingNode(tempNode.get());
 			grabNode = state->GetGrabbingNode();
@@ -271,6 +278,7 @@ void TabBase::ApplyGrabNode()
 				// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
 				if (!inserted)
 				{
+					// プレイヤーに対してノードを追加する関数が必要かも
 					playerNodes.push_back(std::move(tempNode));
 				}
 
@@ -348,14 +356,57 @@ void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 {
 	// 座標加算用に保存
 	float currentPosY = PLAYER_NODE_START.y;
+	// マウス座標を取得
+	Vector2 mousePos = Mouse::GetPosition();
+
+	bool isDownMove = false;
+	// マウスの移動方向を見てっどっち側に動いてるかを判定
+	Mouse::GetDiffPosition().y > 0.0f ? isDownMove = true : isDownMove = false;
+	if (grabPtr)
+	{
+		// 掴んでるノードのposとscaleを取得
+		Vector2 grabNodePos = Vector2(grabPtr->GetPosition().x, grabPtr->GetPosition().y);
+		Vector3 grabNodeScale = grabPtr->GetScale();
+		// 掴みノードの開始yを計算(マウス座標からscaleの半分引いた位置)
+	}
 
 	// index基準でnodeの位置を修正
+	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
 	for (auto& node : m_PlayerPtr->GetAllNodes())
 	{
+		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
+
+		// 掴みノードならマウス座標へ移動
+		if (node.get() == grabPtr)
+		{
+			// ノードの位置を修正
+			Vector3 old_pos = node->GetPosition();
+			node->SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
+			// 中身の説明文の位置も修正
+			Vector2 diff = Vector2(mousePos.x, mousePos.y) - Vector2(old_pos.x, old_pos.y);
+			node->FixFontPositions(diff);
+			continue; // 次のノードへ
+		}
+
+		// 掴んでいるノードがある場合は、そのスペースを考慮する
+		// ノードの基準が中心になっているが一旦はこれで行くしかないかな、ちらつきそうだし
+		if (!isOverGrabNode && grabPtr)
+		{
+			// 掴んでいるノードが現在のノードよりも上にあるか、
+			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
+			if (mousePos.y < node->GetPosition().y)
+			{
+				// 掴みノード分のスペースを確保
+				currentPosY += grabPtr->GetScale().y;
+				isOverGrabNode = true;
+			}
+		}
+
 		// ノードの位置を修正
 		Vector3 scale = node->GetScale();
 		Vector2 diff = Vector2(PLAYER_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
 		Vector3 old_pos = node->GetPosition();
+
 		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		// 中身の説明文の位置も修正
 		node->FixFontPositions(diff);
@@ -425,12 +476,16 @@ void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 
 	// シンプルかつ安定した実装：候補ノードとインデックスを交換する（swap）
 	// erase/insert を使うよりもポインタの移動とインデックス更新が確実
-	for (size_t i = 0; i < all_nodes.size(); ++i)
+	int currentIndex = 0;
+	for (auto& node : all_nodes)
 	{
-		if (static_cast<int>(i) == grabIndex)
+		if (currentIndex == grabIndex)
+		{
+			currentIndex++;
 			continue;
+		}
 
-		NodeBase* curPtr = m_Nodes[i].get();
+		NodeBase* curPtr = node.get();
 
 		// 判定用の位置とサイズを取得
 		Vector3 nodePos = curPtr->GetPosition();
@@ -441,16 +496,17 @@ void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 			mousePos.y > nodePos.y - (nodeScale.y * 0.5f))
 		{
 			// インデックス交換（swap）は簡潔で安全
-			std::swap(m_Nodes[grabIndex], m_Nodes[i]);
+			//std::swap(m_Nodes[grabIndex], m_Nodes[i]);
 
 			// grabIndex を移動先に合わせて更新
-			grabIndex = static_cast<int>(i);
+			//grabIndex = static_cast<int>(i);
 
 			// 描画位置を再配置
-			ModifyPlayerNodePos(curPtr);
+			ModifyPlayerNodePos(grabbedPtr);
 
 			return;
 		}
+		currentIndex++;
 	}
 }
 

@@ -61,10 +61,10 @@ void NodeBase::Update()
 			if (grabbingNode)
 			{
 				// 反映処理
-				dnaState->GetCurrentEnemyBase()->GetDnaScreen()->GetActiveTab()->ApplyGrabNode();
+				dnaState->ReleaseGrabNode();
 
 				// 既に掴んでいるノードがある場合は離す
-				dnaState->SetGrabbingNode(nullptr);
+				//dnaState->SetGrabbingNode(nullptr);
 				//return;
 			}
 			else

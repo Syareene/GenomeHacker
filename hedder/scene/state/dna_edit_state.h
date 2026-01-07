@@ -21,6 +21,7 @@ public:
 	void Draw() override;
 	void Clicked();
 	void ModifyNodePos();
+	void ReleaseGrabNode() { m_IsReleaseGrabNode = true; } // 掴んでいるノードを離す
 	EnemyBase* GetCurrentEnemyBase() const { return m_CurrentEnemyBase; } // 現在編集中の敵データを取得
 	void SetCurrentEnemyBase(EnemyBase* enemyBase) { m_CurrentEnemyBase = enemyBase; } // 現在編集中の敵データを設定
 	NodeBase* GetGrabbingNode() const { return m_GrabbingNode; } // プレイヤーが現在掴んでいるノードを取得
@@ -28,10 +29,12 @@ public:
 	//Player* GetPlayer() const { return m_Player; }
 	//void SetPlayer(Player* player) { m_Player = player; }
 private:
+	void ApplyGrabNode();
 	NodeBase* m_GrabbingNode = nullptr; // プレイヤーが現在掴んでいるノード
 	EnemyBase* m_CurrentEnemyBase = nullptr; // 現在編集中の敵データ
 	//Player* m_Player = nullptr; //->プレイヤーの所持ノードは更新しなくていいから諸々不要そう
 	constexpr static Vector2 NODE_START_POS = { 800.0f, 300.0f }; // ノードの初期配置位置
+	bool m_IsReleaseGrabNode = false;
 
 	// プレイヤーのポインタ?
 	// ポインタ->GetNodes()->Draw()とかで描画するかな

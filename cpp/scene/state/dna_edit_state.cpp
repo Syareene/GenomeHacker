@@ -65,6 +65,8 @@ void DnaEditState::Update()
 	// state内オブジェクトの更新
 	//UpdateStateObjectByTag("dna_edit");
 	UpdateStateObject();
+	// ノード掴み処理の適用
+	ApplyGrabNode();
 	DeleteGameObject();
 }
 
@@ -127,6 +129,24 @@ void DnaEditState::ModifyNodePos()
 		//node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		//// 中身の説明文の位置も修正
 		//node->FixFontPositions(diff);
+	}
+}
+
+void DnaEditState::ApplyGrabNode()
+{
+	if (m_IsReleaseGrabNode)
+	{
+		// もし掴んでるノードがあるなら挿入処理関数を実行
+		if (m_GrabbingNode)
+		{
+			auto tab = m_CurrentEnemyBase->GetDnaScreen()->GetActiveTab();
+			if (tab)
+			{
+				tab->ApplyGrabNode();
+			}
+		}
+		m_GrabbingNode = nullptr; // 掴んでいるノードを離す
+		m_IsReleaseGrabNode = false;
 	}
 }
 
