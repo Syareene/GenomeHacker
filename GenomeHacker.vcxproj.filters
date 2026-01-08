@@ -333,6 +333,9 @@
     <ClInclude Include="hedder\scene\initialize_scene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\lib\random_number.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -458,9 +461,6 @@
     <ClCompile Include="cpp\object\field.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\object\player.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\object\skydome.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
@@ -541,6 +541,12 @@
     </ClCompile>
     <ClCompile Include="cpp\scene\initialize_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\player.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\random_number.cpp">
+      <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

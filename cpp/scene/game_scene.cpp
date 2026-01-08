@@ -17,7 +17,7 @@
 #include "enemy/node_tab/togame_button.h"
 #include "object/ui/in_game/fade.h"
 #include "enemy/base_data/enemy_list.h"
-#include "enemy/node_tab/enemy_dna_list.h"
+//#include "enemy/node_tab/enemy_dna_list.h"
 
 #include <typeindex>
 // state系
@@ -40,7 +40,6 @@ void GameScene::Init()
 	AddGameObject<DNAButton>(2);
 	AddGameObject<ToGameButton>(2);
 	AddSystemObject<EnemyList>();
-	AddSystemObject<EnemyDnaList>();
 	AddSystemObject<EnemySpawner>();
 	
 	// ボタン用フォントデータ設定
@@ -59,7 +58,8 @@ void GameScene::Init()
 	AddGameObject<Button>(2)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		GetGameObject<Player>()->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
-		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(200.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "ボタン", L"asset\\texture\\debug_sprite.png", L"");
+		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(200.0f, 100.0f), 
+			Vector2(0.0f, 0.0f), fontData, "ボタン", L"asset\\texture\\debug_sprite.png", L"");
 
 	//AddGameObject<Polygon2D>(2);
 	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始

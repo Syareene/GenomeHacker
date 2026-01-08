@@ -22,12 +22,18 @@ public:
 		Death,
 	};
 
+	enum class NodeLocation
+	{
+		Enemy,
+		Player,
+	};
+
 	struct NodeTextData
 	{
 		std::string description;
 		Vector2 text_pos;
 	};
-	
+
 	// このノード内で追加でくっつけられるノード(数字系のノード等)
 	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
 
@@ -42,6 +48,8 @@ public:
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
 	inline const int GetCDMax() const { return m_CDMax; }
+	inline const NodeLocation GetNodeLocation() const { return m_NodeLocation; }
+	inline void SetNodeLocation(const NodeLocation loc) { m_NodeLocation = loc; }
 
 	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
 	constexpr static const int SHOW_DESC_TIME = 45; // 説明文を表示するまでのホバー時間(フレーム数)
@@ -49,7 +57,7 @@ public:
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
-	inline void AddInputTypeBottom(const InputType& type) {m_InputTypesBottom.push_back(type);}
+	inline void AddInputTypeBottom(const InputType& type) { m_InputTypesBottom.push_back(type); }
 	inline const std::string& GetName() const { return m_Name; }
 	inline void SetName(const std::string& name) { m_Name = name; }
 
@@ -108,6 +116,7 @@ private:
 	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
 	//std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
 	//FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
+	NodeLocation m_NodeLocation = NodeLocation::Enemy; // ノードの設置場所(敵用かプレイヤー用か)
 	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード

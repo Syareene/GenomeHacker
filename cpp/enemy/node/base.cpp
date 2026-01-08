@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "enemy/node/base.h"
+#include "enemy/base_data/enemy_base.h"
 #include "scene/state/dna_edit_state.h"
 #include "scene/manager.h"
 #include "lib/mouse.h"
@@ -19,6 +20,7 @@ void NodeBase::Init(Transform trans)
 	Vector2 scale = m_NameFont->GetWidthHeight();
 	Vector3 start_pos = m_NameFont->GetPosition();
 	SetScale(Vector3(scale.x + NODE_MARGIN.x, scale.y + NODE_MARGIN.y, 0.0f));
+	//SetScale(Vector3(400.0f, scale.y + NODE_MARGIN.y, 0.0f)); // xは固定で400->フォント真ん中揃えなので位置変えないとダメ
 	SetPosition(Vector3(scale.x * 0.5f + start_pos.x, scale.y * 0.5f + start_pos.y, 0.0f));
 
 	// ここに説明文格納する感じかな
@@ -58,8 +60,11 @@ void NodeBase::Update()
 			NodeBase* grabbingNode = dnaState->GetGrabbingNode();
 			if (grabbingNode)
 			{
+				// 反映処理
+				dnaState->ReleaseGrabNode();
+
 				// 既に掴んでいるノードがある場合は離す
-				dnaState->SetGrabbingNode(nullptr);
+				//dnaState->SetGrabbingNode(nullptr);
 				//return;
 			}
 			else

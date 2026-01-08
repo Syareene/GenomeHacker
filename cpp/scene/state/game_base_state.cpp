@@ -4,7 +4,12 @@
 
 void GameBaseState::Init()
 {
-
+	if (IsInitialized())
+	{
+		return;
+	}
+	SetIsInitialized(true);
+	State::Init();
 	// 大本のSceneの
 	//Manager::GetCurrentScene()->Init();
 }
@@ -12,10 +17,12 @@ void GameBaseState::Init()
 void GameBaseState::Uninit()
 {
 	// override後、個別で追加したいものの追加
+	State::Uninit();
 }
 
 void GameBaseState::Update()
 {
+	State::Update();
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
@@ -27,6 +34,7 @@ void GameBaseState::Update()
 
 void GameBaseState::Draw()
 {
+	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObject();
 	// このstate内オブジェクトの描画

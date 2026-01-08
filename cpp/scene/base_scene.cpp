@@ -43,8 +43,37 @@ void Scene::DeleteGameObject()
 				return false;
 			});
 	}
+}
 
-
+void Scene::DeleteAllGameObject()
+{
+	// 3dオブジェクトの終了処理
+	for (auto& objects3d : m_Objects3D)
+	{
+		for (auto& gameObject : objects3d)
+		{
+			gameObject->Uninit();
+		}
+	}
+	// 3dオブジェクトの全削除
+	m_Objects3D.clear();
+	// 2dオブジェクトの終了処理
+	for (auto& objects2d : m_Objects2D)
+	{
+		for (auto& gameObject : objects2d)
+		{
+			gameObject->Uninit();
+		}
+	}
+	// 2dオブジェクトの全削除
+	m_Objects2D.clear();
+	// システムオブジェクトの終了処理
+	for (auto& systemObject : m_SystemObjects)
+	{
+		systemObject->Uninit();
+	}
+	// システムオブジェクトの全削除
+	m_SystemObjects.clear();
 }
 
 void Scene::Init()

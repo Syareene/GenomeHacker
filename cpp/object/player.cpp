@@ -8,6 +8,8 @@
 #include "enemy/bullet.h"
 #include "manager/shader_manager.h"
 #include "collider/sphere.h"
+#include "enemy/node/move_x.h"
+#include "enemy/node/move_z.h"
 
 void Player::Init(Transform trans)
 {
@@ -22,6 +24,13 @@ void Player::Init(Transform trans)
 	transform.SetPosition(GetPosition());
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform, Vector3(0.0f, 0.85f, 0.0f));
+
+	m_HavingNodes.push_back(std::make_unique<MoveX>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.push_back(std::make_unique<MoveZ>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 
 	AddTag("in_game");
 	AddTag("player");
@@ -84,6 +93,7 @@ void Player::Update()
 	{
 		camera->Shake(Vector3(0.5f, 0.5f, 0.0f));
 	}
+
 }
 
 void Player::Draw()

@@ -4,6 +4,12 @@
 
 void SettingState::Init()
 {
+	if (IsInitialized())
+	{
+		return;
+	}
+	SetIsInitialized(true);
+	State::Init();
 	// 大本のSceneの
 	//Manager::GetCurrentScene()->Init();
 }
@@ -11,10 +17,12 @@ void SettingState::Init()
 void SettingState::Uninit()
 {
 	// override後、個別で追加したいものの追加
+	State::Uninit();
 }
 
 void SettingState::Update()
 {
+	State::Update();
 	// このstateはとりあえず通常更新+このstate限定オブジェクトの更新
 
 	// 大本のsceneの更新
@@ -26,6 +34,7 @@ void SettingState::Update()
 
 void SettingState::Draw()
 {
+	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTags(std::list<std::string>({ "in_game", "system" }));
 	// このstate内オブジェクトの描画

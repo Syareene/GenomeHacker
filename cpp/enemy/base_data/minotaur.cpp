@@ -27,6 +27,7 @@ void Minotaur::Register()
 	//SetDnaScreen(std::make_unique<DnaScreenScript>());
 	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
 	EnemyBase::Init();
+	
 
 	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
 

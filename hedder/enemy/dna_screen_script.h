@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "object/panel.h"
-#include "enemy/node_tab/tab_base.h"
 #include "enemy/node_tab/attack.h"
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
-#include <memory>
+
+class EnemyBase;
 
 class DnaScreenScript : public Panel
 {
