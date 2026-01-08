@@ -65,36 +65,8 @@ void TabBase::Update()
 		// 該当するノードをm_Nodesから探してindexを取得
 		if (node)
 		{
-			bool passed = false;
-			int count = 0;
-
-
-			for (auto& node : m_Nodes)
-			{
-				if (node.get() == state->GetGrabbingNode())
-				{
-					ModifyEnemyNodeIndexFromPos(Mouse::GetPosition(), count);
-					passed = true;
-					break;
-				}
-				count++;
-			}
-
-			// プレイヤーのノードも対象に走査
-			count = 0;
-			if (!passed)
-			{
-				for(auto& player_node : m_PlayerPtr->GetAllNodes())
-				{
-					if (&(*player_node) == node)
-					{
-						// この関数内でplayer/enemyによって呼ぶ先分けるように
-						ModifyPlayerNodeIndexFromPos(Mouse::GetPosition(), count); // プレイヤーのノードはtab内のノードではないのでindex変更しない
-						break;
-					}
-					count++;
-				}
-			}
+			ModifyEnemyNodeIndexFromPos(Mouse::GetPosition(), node);
+			ModifyPlayerNodeIndexFromPos(Mouse::GetPosition(), node);
 		}
 	}
 
@@ -298,13 +270,6 @@ void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 	bool isDownMove = false;
 	// マウスの移動方向を見てっどっち側に動いてるかを判定
 	Mouse::GetDiffPosition().y > 0.0f ? isDownMove = true : isDownMove = false;
-	if (grabPtr)
-	{
-		// 掴んでるノードのposとscaleを取得
-		Vector2 grabNodePos = Vector2(grabPtr->GetPosition().x, grabPtr->GetPosition().y);
-		Vector3 grabNodeScale = grabPtr->GetScale();
-		// 掴みノードの開始yを計算(マウス座標からscaleの半分引いた位置)
-	}
 
 	// index基準でnodeの位置を修正
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
@@ -330,7 +295,7 @@ void TabBase::ModifyEnemyNodePos(NodeBase* grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
 			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
-			if (mousePos.y < node->GetPosition().y)
+			if (mousePos.y < node->GetPosition().y && mousePos.x <= ENEMY_AREA_END.x)
 			{
 				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
@@ -362,13 +327,6 @@ void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 	bool isDownMove = false;
 	// マウスの移動方向を見てっどっち側に動いてるかを判定
 	Mouse::GetDiffPosition().y > 0.0f ? isDownMove = true : isDownMove = false;
-	if (grabPtr)
-	{
-		// 掴んでるノードのposとscaleを取得
-		Vector2 grabNodePos = Vector2(grabPtr->GetPosition().x, grabPtr->GetPosition().y);
-		Vector3 grabNodeScale = grabPtr->GetScale();
-		// 掴みノードの開始yを計算(マウス座標からscaleの半分引いた位置)
-	}
 
 	// index基準でnodeの位置を修正
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
@@ -394,7 +352,7 @@ void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
 			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
-			if (mousePos.y < node->GetPosition().y)
+			if (mousePos.y < node->GetPosition().y && mousePos.x > ENEMY_AREA_END.x)
 			{
 				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
@@ -418,72 +376,46 @@ void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 
 
 // なぜかだいたい動いてしまったけど、動かしてるnodeが一番上とかの時(自身のindexの時?)に下に動かそうとすると動かないのでこの辺はなんとかしないとかも(中身が入れ替わってない?)
-void TabBase::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
+void TabBase::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr)
 {
 	// バグはなくなったが、現在のindexの範囲の場合nodeが動かないようにしてマウス座標だけ動きマウス座標がその範囲からでたら動くような形に変更したほうがいいかな
 	// ->ちゃんとindexが変わるようになりそれベースで位置変えてるので動かしたら強制的に位置が変わるようになっているのが原因
 
-	if (grabIndex < 0 || grabIndex >= static_cast<int>(m_Nodes.size()))
-		return;
+	if (!grabPtr) return;
 
-	// 安全のため生ポインタを保持（デバッグ用にも使える）
-	NodeBase* grabbedPtr = m_Nodes[grabIndex].get();
-
-	// シンプルかつ安定した実装：候補ノードとインデックスを交換する（swap）
-	// erase/insert を使うよりもポインタの移動とインデックス更新が確実
-	for (size_t i = 0; i < m_Nodes.size(); ++i)
+	// リストを走査
+	for (auto& node : m_Nodes)
 	{
-		if (static_cast<int>(i) == grabIndex)
-			continue;
-
-		NodeBase* curPtr = m_Nodes[i].get();
+		if (!grabPtr) continue;
 
 		// 判定用の位置とサイズを取得
-		Vector3 nodePos = curPtr->GetPosition();
-		Vector3 nodeScale = curPtr->GetScale();
+		Vector3 nodePos = node->GetPosition();
+		Vector3 nodeScale = node->GetScale();
 
 		// マウスがこのノード領域内にあるか判定
 		if (mousePos.y < nodePos.y + (nodeScale.y * 0.5f) &&
 			mousePos.y > nodePos.y - (nodeScale.y * 0.5f))
 		{
-			// インデックス交換（swap）は簡潔で安全
-			//std::swap(m_Nodes[grabIndex], m_Nodes[i]);
-
-			// grabIndex を移動先に合わせて更新
-			//grabIndex = static_cast<int>(i);
-
-			// これの呼び出し方が違うかも?curPtr->grabbedPTr
-
 			// 描画位置を再配置
-			ModifyEnemyNodePos(grabbedPtr);
+			ModifyEnemyNodePos(grabPtr);
 
 			return;
 		}
 	}
 }
 
-void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
+void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr)
 {
 	std::list<std::unique_ptr<NodeBase>>& all_nodes = m_PlayerPtr->GetAllNodes();
 
-	if (grabIndex < 0 || grabIndex >= static_cast<int>(all_nodes.size()))
+	if (!grabPtr)
 		return;
 
-	// 安全のため生ポインタを保持（デバッグ用にも使える）
-	auto it = all_nodes.begin();
-	std::advance(it, grabIndex);
-	NodeBase* grabbedPtr = it->get();
-
-	// シンプルかつ安定した実装：候補ノードとインデックスを交換する（swap）
-	// erase/insert を使うよりもポインタの移動とインデックス更新が確実
-	int currentIndex = 0;
+	// リストを走査
 	for (auto& node : all_nodes)
 	{
-		if (currentIndex == grabIndex)
-		{
-			currentIndex++;
+		if (node.get() == grabPtr)
 			continue;
-		}
 
 		NodeBase* curPtr = node.get();
 
@@ -495,18 +427,11 @@ void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, int& grabIndex)
 		if (mousePos.y < nodePos.y + (nodeScale.y * 0.5f) &&
 			mousePos.y > nodePos.y - (nodeScale.y * 0.5f))
 		{
-			// インデックス交換（swap）は簡潔で安全
-			//std::swap(m_Nodes[grabIndex], m_Nodes[i]);
-
-			// grabIndex を移動先に合わせて更新
-			//grabIndex = static_cast<int>(i);
-
 			// 描画位置を再配置
-			ModifyPlayerNodePos(grabbedPtr);
+			ModifyPlayerNodePos(grabPtr);
 
 			return;
 		}
-		currentIndex++;
 	}
 }
 
