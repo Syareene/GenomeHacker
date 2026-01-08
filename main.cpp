@@ -3,6 +3,9 @@
 #include "lib/mouse.h"
 #include <thread>
 
+// 時間計測用
+#include <chrono>
+
 
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "DX11ゲーム";
@@ -76,7 +79,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	dwExecLastTime = timeGetTime();
 	dwCurrentTime = 0;
 
-
+#ifdef _DEBUG
+	// 時間測定デバッグ用
+	std::chrono::nanoseconds sec_time{0};
+	int count = 0;
+#endif
 
 	MSG msg;
 	while(1)
@@ -100,9 +107,28 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			if((dwCurrentTime - dwExecLastTime) >= (1000 / 60))
 			{
 				dwExecLastTime = dwCurrentTime;
+#ifdef _DEBUG
+				count++;
+				auto start = std::chrono::steady_clock::now();
+#endif
 
 				Manager::Update();
 				Manager::Draw();
+#ifdef _DEBUG
+				auto end = std::chrono::steady_clock::now();
+				auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+				sec_time += std::chrono::nanoseconds(ns);
+
+				if (count >= 60)
+				{
+					// 約1秒経過
+					// デバッグ用に1秒間の平均処理時間を出力
+					auto average_ms = static_cast<double>(sec_time.count()) / count / 1000000.0;
+					OutputDebugStringA((std::string("1秒間の平均処理時間(Update+Draw): ") + std::to_string(average_ms) + " ms\n").c_str());
+					sec_time = std::chrono::nanoseconds{ 0 };
+					count = 0;
+				}
+#endif
 			}
 		}
 	}
