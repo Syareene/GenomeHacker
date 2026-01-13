@@ -12,6 +12,11 @@ class FieldEnemy; // 前方宣言
 class EnemyBase
 {
 public:
+	EnemyBase() = default; // デフォルトコンストラクタ
+	virtual ~EnemyBase() {}
+	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
+	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
+
 	virtual void Register(); // 登録処理
 	void Unregister(); // 登録解除処理
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)

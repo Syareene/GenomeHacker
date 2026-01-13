@@ -14,7 +14,10 @@ class Collision
 {
 	// Gameobjectにアタッチする用のプロパティ
 public:
-	virtual ~Collision() = default; // 未定義警告解消用。基本どの継承元クラスもvirtual destructorを持つべきかなぁ。
+	Collision() = default;
+	virtual ~Collision() = default;
+	Collision(Collision&&) noexcept = default; // ムーブコンストラクタ
+	Collision& operator=(Collision&&) noexcept = default; // ムーブ代入演算子
 	virtual void Init(const Transform& trans = Transform(), const Vector3& pos_diff = { 0.0f, 0.0f, 0.0f }) 
 	{
 		SetTransform(trans);
@@ -27,11 +30,11 @@ public:
 	virtual void DrawCollider(); // デバッグ用の衝突判定の可視化
 
 	// 外部からはこっちの関数使って判定してもらう
-	std::list<GameObject*> GetHitObjectsByName(std::string name, GameObject* target);
-	std::list<GameObject*> GetHitObjectsByTag(std::string tag);
+	std::vector<GameObject*> GetHitObjectsByName(std::string name, GameObject* target);
+	std::vector<GameObject*> GetHitObjectsByTag(std::string tag);
 
 	template<typename T>
-	std::list<T*> GetHitObjectsByType()
+	std::vector<T*> GetHitObjectsByType()
 	{
 		// Collisionクラス自体がObject3Dクラスにしかないが、それをこっちから確認する方法がないため
 		// コンパイル時に評価しObject2Dからの参照があった場合にはエラーを出す
@@ -43,43 +46,29 @@ public:
 		else
 		{
 			// sceneから取得(上の条件が満たされているため安全にObject3Dとして扱える)
-			// ここ、アロー演算子の後にtemplateをつけないとエラー出たけど原因がちゃんとわかってない
-			std::list<T*> objects = Manager::GetCurrentScene()->template GetGameObjects<T>();
-			std::list<Object3D*> cast_obj;
-			for (auto obj : objects)
-			{
-				// ここでT*にキャストできるかチェック
-				Object3D* casted = static_cast<T*>(obj);
-				// nullptr(castできなかったとしても)とりあえず詰める
-				cast_obj.push_back(casted);
-			}
+			std::vector<T>& objects = Manager::GetCurrentScene()->GetGameObjects<T>();
 
 			// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
-			std::list<T*> result;
-			for (auto& obj : cast_obj)
+			std::vector<T*> result;
+			result.reserve(objects.size());
+			for (auto& obj : objects)
 			{
-				// nullptrなら(取得したobjが3dobjでない)スキップ
-				if(!obj)
-				{
-					continue;
-				}
-
 				// コライダを持ってない(nullptr)場合はスキップ
-				if (!obj->GetCollider())
+				if (!obj.GetCollider())
 				{
 					continue;
 				}
 				// 自分自身ならスキップ
-				if (obj->GetCollider() == this)
+				if (obj.GetCollider() == this)
 				{
 					continue;
 				}
 
 				// 実行
-				if (this->CheckCollision(*obj->GetCollider()))
+				if (this->CheckCollision(*obj.GetCollider()))
 				{
 					// obj=Tと確定してないことになっちゃってる
-					result.push_back(static_cast<T*>(obj));
+					result.push_back(&obj);
 				}
 			}
 			return result;

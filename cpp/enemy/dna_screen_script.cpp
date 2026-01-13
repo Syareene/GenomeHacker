@@ -227,14 +227,14 @@ void DnaScreenScript::HideDnaInfo()
 	// panelからfontオブジェクトを消す
 	for(auto& child : GetChildObjectsByType<Font>())
 	{
-		child->SetDestory(true);
+		child->SetDestroy(true);
 	}
 
 	// buttonも消す
 	// これでもDNAButtonとかも消えちゃうからタグつけないとだ
 	for(auto& child : GetChildObjectsByType<Button>())
 	{
-		child->SetDestory(true);
+		child->SetDestroy(true);
 	}
 
 	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも

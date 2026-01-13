@@ -22,6 +22,56 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	// タグ検索のオーバーライド
+	GameObject* FindObjectByTag(const std::string& tag) override
+	{
+		// 自身をチェック
+		for(auto& t : GetTagList())
+		{
+			if(t == tag)
+			{
+				return this;
+			}
+		}
+
+		// 子オブジェクトを再帰的にチェック
+		for(auto& child : m_ChildObjects)
+		{
+			for(auto& obj : child)
+			{
+				GameObject* found = obj->FindObjectByTag(tag);
+				if(found)
+				{
+					return found;
+				}
+			}
+		}
+		// 該当なし
+		return nullptr;
+	}
+	// 複数取得のオーバーライド
+	void FindObjectsByTag(const std::string& tag, std::list<GameObject*>& result) override
+	{
+		// 自身をチェック
+		for(auto& t : GetTagList())
+		{
+			if(t == tag)
+			{
+				result.push_back(this);
+				break; // 見つけたらループを抜ける
+			}
+		}
+		// 子オブジェクトを再帰的にチェック
+		for(auto& child : m_ChildObjects)
+		{
+			for(auto& obj : child)
+			{
+				obj->FindObjectsByTag(tag, result);
+			}
+		}
+	}
+
+
 	std::list<std::list<std::unique_ptr<Object2D>>>& GetAllChildObjects()
 	{
 		return m_ChildObjects;

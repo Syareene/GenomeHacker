@@ -47,7 +47,7 @@ void FieldEnemy::Update()
 		if (isDead)
 		{
 			// trueが帰ってきたら自身を削除
-			SetDestory(true);
+			SetDestroy(true);
 		}
 		// 0以下ならそれ移行の処理は実施したくないのでここでreturn
 		return;
@@ -64,13 +64,13 @@ void FieldEnemy::Update()
 	GetCollider()->Update(GetPosition());
 
 	// 当たってるコライダがあるかチェック
-	std::list<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();
+	std::vector<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();
 	if (!p_hit.empty())
 	{
 		m_IsHit = true;
 	}
 
-	std::list<FieldEnemy*> e_hit = GetCollider()->GetHitObjectsByType<FieldEnemy>();
+	std::vector<FieldEnemy*> e_hit = GetCollider()->GetHitObjectsByType<FieldEnemy>();
 	for (auto& h : e_hit)
 	{
 		// 自分自身はスルー

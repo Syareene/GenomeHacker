@@ -12,7 +12,7 @@ Scene::~Scene() = default;
 GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag);
 void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result);
 
-std::list<std::unique_ptr<SystemObject>> Scene::m_GlobalSystemObjects;
+std::vector<std::unique_ptr<ISystemObjectManager>> Scene::m_GlobalSystemObjects;
 
 void Scene::DeleteGameObject()
 {
@@ -20,60 +20,34 @@ void Scene::DeleteGameObject()
 	for (auto& objects3d : m_Objects3D)
 	{
 		// 不要になった GameObject を削除
-		objects3d.remove_if([](std::unique_ptr<Object3D>& obj)
-			{
-				if (obj && obj->Destroy())
-				{
-					return true;
-				}
-				return false;
-			});
+		objects3d->RemoveDestroyedObjects();
 	}
 
 	// 不要になった2dオブジェクトを削除
 	for (auto& objects2d : m_Objects2D)
 	{
 		// 不要になった GameObject を削除
-		objects2d.remove_if([](std::unique_ptr<Object2D>& obj)
-			{
-				if (obj && obj->Destroy())
-				{
-					return true;
-				}
-				return false;
-			});
+		objects2d->RemoveDestroyedObjects();
 	}
 }
 
 void Scene::DeleteAllGameObject()
 {
-	// 3dオブジェクトの終了処理
+	// 3dオブジェクトの全削除処理
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			gameObject->Uninit();
-		}
+		objects3d->RemoveAllObjects();
 	}
-	// 3dオブジェクトの全削除
-	m_Objects3D.clear();
-	// 2dオブジェクトの終了処理
+	// 2dオブジェクトの全削除処理
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			gameObject->Uninit();
-		}
+		objects2d->RemoveAllObjects();
 	}
-	// 2dオブジェクトの全削除
-	m_Objects2D.clear();
-	// システムオブジェクトの終了処理
+	// システムオブジェクトの全削除処理
 	for (auto& systemObject : m_SystemObjects)
 	{
-		systemObject->Uninit();
+		systemObject->RemoveAllObjects();
 	}
-	// システムオブジェクトの全削除
-	m_SystemObjects.clear();
 }
 
 void Scene::Init()
@@ -87,26 +61,15 @@ void Scene::Uninit()
 	// 3dオブジェクトの解放
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			gameObject->Uninit();
-			// smartptrに移行したので、deleteは不要
-			// delete gameObject;
-		}
+		objects3d->Uninit();
 	}
 	m_Objects3D.clear();
 
 	// 2dオブジェクトの解放
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			gameObject->Uninit();
-			// smartptrに移行したので、deleteは不要
-			// delete gameObject;
-		}
+		objects2d->Uninit();
 	}
-	m_Objects2D.clear();
 
 	// システムオブジェクトの解放
 	for (auto& systemObject : m_SystemObjects)
@@ -132,29 +95,13 @@ void Scene::UpdateObject()
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			gameObject->Update();
-		}
+		objects3d->Update();
 	}
 
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			gameObject->Update();
-		}
+		objects2d->Update();
 	}
 	// 不要なgameobjectの削除準備
 	DeleteGameObject();
@@ -164,61 +111,25 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 	// グローバルなシステムオブジェクトの更新
 	for(auto& systemObject : m_GlobalSystemObjects)
 	{
-		systemObject.get()->Update();
+		systemObject->Update();
 	}
 
-	// システムオブジェクトはSystemタグがあれば更新
+	// システムオブジェクトの更新
 	for (auto& systemObject : m_SystemObjects)
 	{
-		if(systemObject.get() == nullptr)
-		{
-			continue;
-		}
-
-		// タグチェック
-		if(!systemObject.get()->IsTagAvailable("system"))
-		{
-			continue; // 該当タグが見つからなかった場合はスルー
-		}
 		systemObject->Update();
 	}
 
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			if (!gameObject.get()->IsTagAvailable(tag))
-			{
-				continue; // 該当タグが見つからなかった場合はスルー
-			}
-			gameObject->Update();
-		}
+		objects3d->UpdateObjectByTag(tag);
 	}
 
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			if (!gameObject.get()->IsTagAvailable(tag))
-			{
-				continue; // 該当タグが見つからなかったらスルー
-			}
-			gameObject->Update();
-		}
+		objects2d->UpdateObjectByTag(tag);
 	}
 	// 不要なgameobjectの削除準備
 	DeleteGameObject();
@@ -235,62 +146,18 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
-		if (systemObject.get() == nullptr)
-		{
-			continue;
-		}
-
-		// タグチェック
-		if (!systemObject.get()->IsTagAvailable("system"))
-		{
-			continue; // 該当タグが見つからなかった場合はスルー
-		}
 		systemObject->Update();
 	}
 
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			for (const auto& tag : tags)
-			{
-				if (gameObject.get()->IsTagAvailable(tag))
-				{
-					// 見つかったら実行しこのオブジェクトに対してのこれ以上の探索はしない
-					gameObject->Update();
-					break;
-				}
-			}
-		}
+		objects3d->UpdateObjectByTags(tags);
 	}
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			for (const auto& tag : tags)
-			{
-				if (gameObject.get()->IsTagAvailable(tag))
-				{
-					// 見つかったら実行しこのオブジェクトに対してのこれ以上の探索はしない
-					gameObject->Update();
-					break;
-				}
-			}
-		}
+		objects2d->UpdateObjectByTags(tags);
 	}
 	DeleteGameObject();
 }
@@ -318,31 +185,13 @@ void Scene::DrawObject()
 	// 3dオブジェクトの描画
 	for(auto& objects3d : m_Objects3D)
 	{
-		// 3Dオブジェクトの描画
-		for (auto& gameObject : objects3d)
-		{
-			// nullチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			gameObject->Draw();
-		}
+		objects3d->Draw();
 	}
 
 	// 3dが描画し終わったので2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
-		// 2Dオブジェクトの描画
-		for (auto& gameObject : objects2d)
-		{
-			// nullチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			gameObject->Draw();
-		}
+		objects2d->Draw();
 	}
 }
 
@@ -351,39 +200,13 @@ void Scene::DrawObjectByTag(const std::string& tag)
 	// 3dオブジェクトの描画
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			if (!gameObject.get()->IsTagAvailable(tag))
-			{
-				continue; // 該当タグが見つからなかった場合はスルー
-			}
-			gameObject->Draw();
-		}
+		objects3d->DrawObjectByTag(tag);
 	}
 
 	// 2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			if (!gameObject.get()->IsTagAvailable(tag))
-			{
-				continue; // 該当タグが見つからなかったらスルー
-			}
-			gameObject->Draw();
-		}
+		objects2d->DrawObjectByTag(tag);
 	}
 }
 
@@ -392,44 +215,12 @@ void Scene::DrawObjectByTags(const std::list<std::string>& tag)
 	// 3dオブジェクトの描画
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			for (const auto& t : tag)
-			{
-				if (gameObject.get()->IsTagAvailable(t))
-				{
-					gameObject->Draw();
-					break; // 見つかったらこのオブジェクトに対してのこれ以上の探索はしない
-				}
-			}
-		}
+		objects3d->DrawObjectByTags(tag);
 	}
 	// 2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			// nullptrチェック
-			if (gameObject.get() == nullptr)
-			{
-				continue;
-			}
-			// タグチェック
-			for (const auto& t : tag)
-			{
-				if (gameObject.get()->IsTagAvailable(t))
-				{
-					gameObject->Draw();
-					break; // 見つかったらこのオブジェクトに対してのこれ以上の探索はしない
-				}
-			}
-		}
+		objects2d->DrawObjectByTags(tag);
 	}
 }
 
@@ -438,22 +229,12 @@ GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			if (auto found = FindGameObjectByTagRecursive(gameObject.get(), tag)) {
-				return found;
-			}
-		}
+		objects3d->GetObjectByTag(tag);
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
-	{
-		for (auto& gameObject : objects2d)
-		{
-			if (auto found = FindGameObjectByTagRecursive(gameObject.get(), tag)) {
-				return found;
-			}
-		}
+	{	
+		objects2d->GetObjectByTag(tag);
 	}
 	return nullptr; // 見つからなかったらnullptrを返す
 }
@@ -464,18 +245,12 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
-		for (auto& gameObject : objects3d)
-		{
-			FindGameObjectsByTagRecursive(gameObject.get(), tag, result);
-		}
+		objects3d->GetObjectsByTag(tag);
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
 	{
-		for (auto& gameObject : objects2d)
-		{
-			FindGameObjectsByTagRecursive(gameObject.get(), tag, result);
-		}
+		objects2d->GetObjectsByTag(tag);
 	}
 	return result; // タグを持つオブジェクトのリストを返す
 }
@@ -485,7 +260,7 @@ void Scene::UpdateFinal()
 	// グローバルなシステムオブジェクトの最終更新
 	for (auto& systemObject : m_GlobalSystemObjects)
 	{
-		systemObject.get()->Update();
+		systemObject.get()->UpdateFinal();
 	}
 
 	// systemオブジェクトの最終更新
@@ -495,44 +270,44 @@ void Scene::UpdateFinal()
 	}
 }
 
-// 再帰的にGameObjectを探索し、最初に見つかったものを返す
-GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag)
-{
-	if (!obj) return nullptr;
-	if (obj->IsTagAvailable(tag)) {
-		return obj;
-	}
-	// Panel型なら子オブジェクトも探索
-	if (auto panel = dynamic_cast<Panel*>(obj)) {
-		for (auto& layer : panel->GetAllChildObjects()) 
-		{
-			for (auto& child : layer)
-			{
-				if (auto found = FindGameObjectByTagRecursive(child.get(), tag))
-				{
-					return found;
-				}
-			}
-		}
-	}
-	return nullptr;
-}
-
-// 再帰的にGameObjectを探索するヘルパー関数
-void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result)
-{
-	if (!obj) return;
-	if (obj->IsTagAvailable(tag)) {
-		result.push_back(obj);
-	}
-	// Panel型なら子オブジェクトも探索
-	if (auto panel = dynamic_cast<Panel*>(obj)) {
-		for (auto& layer : panel->GetAllChildObjects()) 
-		{
-			for (auto& child : layer)
-			{
-				FindGameObjectsByTagRecursive(child.get(), tag, result);
-			}
-		}
-	}
-}
+//// 再帰的にGameObjectを探索し、最初に見つかったものを返す
+//GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag)
+//{
+//	if (!obj) return nullptr;
+//	if (obj->IsTagAvailable(tag)) {
+//		return obj;
+//	}
+//	// Panel型なら子オブジェクトも探索
+//	if (auto panel = dynamic_cast<Panel*>(obj)) {
+//		for (auto& layer : panel->GetAllChildObjects()) 
+//		{
+//			for (auto& child : layer)
+//			{
+//				if (auto found = FindGameObjectByTagRecursive(child.get(), tag))
+//				{
+//					return found;
+//				}
+//			}
+//		}
+//	}
+//	return nullptr;
+//}
+//
+//// 再帰的にGameObjectを探索するヘルパー関数
+//void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result)
+//{
+//	if (!obj) return;
+//	if (obj->IsTagAvailable(tag)) {
+//		result.push_back(obj);
+//	}
+//	// Panel型なら子オブジェクトも探索
+//	if (auto panel = dynamic_cast<Panel*>(obj)) {
+//		for (auto& layer : panel->GetAllChildObjects()) 
+//		{
+//			for (auto& child : layer)
+//			{
+//				FindGameObjectsByTagRecursive(child.get(), tag, result);
+//			}
+//		}
+//	}
+//}

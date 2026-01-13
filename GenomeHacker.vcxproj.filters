@@ -336,6 +336,9 @@
     <ClInclude Include="hedder\lib\random_number.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\manager\object_manager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -547,6 +550,9 @@
     </ClCompile>
     <ClCompile Include="cpp\lib\random_number.cpp">
       <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\manager\object_manager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

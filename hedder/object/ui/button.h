@@ -11,7 +11,10 @@ private:
 	int m_FrameTexID = -1; // フレームテクスチャID
 	std::unique_ptr<Font> m_Text = nullptr;
 public:
+	Button() = default; // デフォルトコンストラクタ
 	virtual ~Button() {}
+	Button(Button&&) noexcept = default; // ムーブコンストラクタ
+	Button& operator=(Button&&) noexcept = default; // ムーブ代入演算子
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring& filePath, const std::wstring& frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const int& texID, const std::wstring frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const FontData& fontData, const std::string& text, const std::wstring& filePath = L"", const std::wstring& frameTexPath = L"");

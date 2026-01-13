@@ -62,6 +62,7 @@
     <ClInclude Include="hedder\lib\vector3.h" />
     <ClInclude Include="hedder\lib\write_font.h" />
     <ClInclude Include="hedder\manager\default_vertex.h" />
+    <ClInclude Include="hedder\manager\object_manager.h" />
     <ClInclude Include="hedder\manager\shader_manager.h" />
     <ClInclude Include="hedder\manager\texture_manager.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="cpp\lib\renderer.cpp" />
     <ClCompile Include="cpp\lib\write_font.cpp" />
     <ClCompile Include="cpp\manager\default_vertex.cpp" />
+    <ClCompile Include="cpp\manager\object_manager.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
     <ClCompile Include="cpp\object\3d_object.cpp" />

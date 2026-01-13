@@ -17,6 +17,10 @@ private:
 	Vector3 m_ShakeVector = { 0.0f, 0.0f, 0.0f };
 	std::unique_ptr<TitleCam> m_TitleCam;
 public:
+	Camera() = default; // デフォルトコンストラクタ
+	Camera(Camera&&) noexcept = default; // ムーブコンストラクタ
+	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
+
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;

@@ -70,7 +70,7 @@ void Explosion::Update()
 	m_FrameCount++;
 	if (m_FrameCount >= 16) // 4x4のテクスチャなので16フレームで1サイクル
 	{
-		SetDestory(true); // フレームカウントが16を超えたら削除予約
+		SetDestroy(true); // フレームカウントが16を超えたら削除予約
 	}
 }
 

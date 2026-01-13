@@ -302,7 +302,7 @@ void EnemyBase::HideDnaEditButton()
 	// DNAタブへの遷移ボタンを非表示
 	if (m_ToDnaButton)
 	{
-		m_ToDnaButton->SetDestory(true); // ボタンを破棄
+		m_ToDnaButton->SetDestroy(true); // ボタンを破棄
 		m_ToDnaButton = nullptr; // ポインタをnullptrに設定
 	}
 }

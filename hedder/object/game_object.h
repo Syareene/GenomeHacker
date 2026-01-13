@@ -15,6 +15,7 @@ class GameObject
 private:
 	Transform m_Transform = Transform();
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
+	bool m_IsAliveData = true; // 実体が存在するかどうか(ObjectManagerで管理している場合は削除はせず配列上に残しておく)
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
@@ -55,6 +56,11 @@ protected:
 	void SetMaterialOnDraw(const XMFLOAT4& diff = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const XMFLOAT4& amb = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), const bool& texEnable = true);
 
 public:
+	static constexpr size_t MAX_OBJECTS = 64; // オブジェクトvector最大数。継承先クラスで変更可能。
+	GameObject() = default; // デフォルトコンストラクタ
+	GameObject(GameObject&&) noexcept = default; // ムーブコンストラクタ
+	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
+
 	virtual ~GameObject() {}
 	virtual void Init(Transform trans = Transform()) 
 	{
@@ -67,6 +73,8 @@ public:
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
+	inline void SetIsAlive(const bool& manage) { m_IsAliveData = manage; }
+	inline const bool& GetIsAlive() const { return m_IsAliveData; }
 	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
 	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
 	inline void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }
@@ -94,12 +102,38 @@ public:
 		return false; // 見つからなかった場合
 	}
 	inline void AddTag(const std::string& tag) { m_Tag.push_back(tag); }
+	// 単一検索
+	virtual GameObject* FindObjectByTag(const std::string& tag)
+	{
+		for (auto& t : m_Tag)
+		{
+			if(t == tag)
+			{
+				return this; // タグが見つかったら自分自身を返す
+			}
+		}
+		return nullptr;
+	}
+	// 複数検索
+	virtual void FindObjectsByTag(const std::string& tag, std::list<GameObject*>& outList)
+	{
+		for (auto& t : m_Tag)
+		{
+			if(t == tag)
+			{
+				outList.push_back(this); // タグが見つかったら自分自身をリストに追加
+				return;
+			}
+		}
+	}
+
+
 	inline void SetObjectSpeedMlt(const float& speedMlt) { m_ObjSpeedMlt = speedMlt; }
 	inline const float GetObjectSpeedMlt() const { return m_ObjSpeedMlt; }
 	inline const bool IsActive() const { return m_IsActive; }
 	inline void SetActive(const bool& IsActive) { m_IsActive = IsActive; }
-	inline void SetDestory(const bool& Destroy) { m_Destroy = Destroy; }
-	inline const bool IsDestory() const { return m_Destroy; }
+	inline void SetDestroy(const bool& Destroy) { m_Destroy = Destroy; }
+	inline const bool IsDestroy() const { return m_Destroy; }
 	inline bool Destroy()
 	{ 
 		if (m_Destroy)

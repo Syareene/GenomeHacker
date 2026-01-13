@@ -20,23 +20,23 @@ public:
 	//}
 
 	// 名前指定で指定した対象と衝突しているオブジェクトを取得
-	static std::list<GameObject*> GetHitObjects(std::string name, GameObject* target)
+	static std::vector<GameObject*> GetHitObjects(std::string name, GameObject* target)
 	{
 		// 実装したいならsceneに名前指定でobjectを取得できる関数を作る
 	}
 
 	// タグ指定で指定した対象と衝突しているオブジェクトを取得
-	static std::list<GameObject*> GetHitObjectsByTag(std::string tag, GameObject* target)
+	static std::vector<GameObject*> GetHitObjectsByTag(std::string tag, GameObject* target)
 	{
 
 	}
 
 	// 型指定で対象と衝突しているオブジェクトを取得
 	template<typename T>
-	static std::list<GameObject*> GetHitObjectsByType(GameObject* target)
+	static std::vector<GameObject*> GetHitObjectsByType(GameObject* target)
 	{
 		// sceneから取得
-		std::list<T*> objects = Manager::GetCurrentScene()->GetGameObjects<T>();
+		std::vector<T*> objects = Manager::GetCurrentScene()->GetGameObjects<T>();
 
 		// 取得したオブジェクト達がinputされたtargetと衝突しているかをチェック
 	}

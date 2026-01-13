@@ -16,7 +16,10 @@ concept EnemyBaseType = std::is_base_of_v <EnemyBase, T>;
 class EnemyList : public SystemObject
 {
 public:
-	EnemyList() {};
+	EnemyList() = default;
+	virtual ~EnemyList() {}
+	EnemyList(EnemyList&&) noexcept = default; // ムーブコンストラクタ
+	EnemyList& operator=(EnemyList&&) noexcept = default; // ムーブ代入演算子
 	void Init() override;
 	void Uninit() override;
 	void Update() override;

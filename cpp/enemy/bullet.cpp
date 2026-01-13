@@ -56,14 +56,14 @@ void Bullet::Update()
 	GetCollider()->Update(GetPosition());
 
 	// 敵との衝突判定
-	std::list<FieldEnemy*> enemies = GetCollider()->GetHitObjectsByType<FieldEnemy>();
+	std::vector<FieldEnemy*> enemies = GetCollider()->GetHitObjectsByType<FieldEnemy>();
 
 	for(auto& enemy : enemies)
 	{
 		// 爆発エフェクトを生成
 		Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 敵に当たったら削除
-		SetDestory(true);
+		SetDestroy(true);
 		enemy->SetCurrentHP(enemy->GetCurrentHP() - 1); // 敵の体力を減らす
 		break; // 一つの敵に当たったらループを抜ける
 	}
@@ -71,7 +71,7 @@ void Bullet::Update()
 	// 生存時間が0になったら削除
 	if(m_LifeTime <= 0)
 	{
-		SetDestory(true);
+		SetDestroy(true);
 	}
 }
 

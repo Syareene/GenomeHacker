@@ -7,6 +7,8 @@
 class SystemObject
 {
 public:
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
+
 	virtual ~SystemObject() {}
 	// エラー解消用にコメントアウト
 	virtual void Init() {};
