@@ -317,7 +317,26 @@ public:
 	// タグを使ってGameObjectのリストを取得
 	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag);
 
+
 	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<Object2D, T>
+	{
+		return Object2D::getTypeId<T>();
+	}
+
+	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<Object3D, T>
+	{
+		return Object3D::getTypeId<T>();
+	}
+
+	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<SystemObject, T>
+	{
+		return SystemObject::getTypeId<T>();
+	}
+
+	/*template <typename T>
 	inline int getTypeId() requires std::is_base_of_v<Object2D, T>
 	{
 		static int id = [] { static int id_counter = 0; return id_counter++; }();
@@ -336,7 +355,7 @@ public:
 	{
 		static int id = [] { static int id_counter = 0; return id_counter++; }();
 		return id;
-	}
+	}*/
 
 
 protected:

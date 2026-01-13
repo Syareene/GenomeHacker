@@ -35,6 +35,18 @@ public:
 		}
 		return false;
 	}
+
+	template <typename T>
+	static int getTypeId()
+	{
+		static int id = nextTypeId();
+		return id;
+	}
 private:
+	static int nextTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
 	std::list<std::string> m_Tags; // タグ
 };

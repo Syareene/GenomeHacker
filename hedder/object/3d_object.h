@@ -27,6 +27,17 @@ public:
 		return dynamic_cast<T*>(m_Collider.get());
 	};
 	inline Collision* GetCollider() const { return m_Collider.get(); }
+	template <typename T>
+	static int getTypeId()
+	{
+		static int id = nextTypeId();
+		return id;
+	}
 private:
+	static int nextTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
 	std::unique_ptr<Collision> m_Collider = nullptr; // 球か箱かのポインタを持つ
 };

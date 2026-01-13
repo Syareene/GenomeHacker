@@ -18,6 +18,7 @@ private:
 	std::unique_ptr<TitleCam> m_TitleCam;
 public:
 	Camera() = default; // デフォルトコンストラクタ
+	virtual ~Camera() {};
 	Camera(Camera&&) noexcept = default; // ムーブコンストラクタ
 	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
 

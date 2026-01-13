@@ -18,4 +18,16 @@ public:
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}
+	template <typename T>
+	static int getTypeId()
+	{
+		static int id = nextTypeId();
+		return id;
+	}
+private:
+	static int nextTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
 };
