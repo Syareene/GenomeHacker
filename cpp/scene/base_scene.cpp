@@ -19,6 +19,10 @@ void Scene::DeleteGameObject()
 	// 不要になった3dオブジェクトを削除
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		// 不要になった GameObject を削除
 		objects3d->RemoveDestroyedObjects();
 	}
@@ -26,6 +30,10 @@ void Scene::DeleteGameObject()
 	// 不要になった2dオブジェクトを削除
 	for (auto& objects2d : m_Objects2D)
 	{
+		if(!objects2d)
+		{
+			continue;
+		}
 		// 不要になった GameObject を削除
 		objects2d->RemoveDestroyedObjects();
 	}
@@ -36,16 +44,28 @@ void Scene::DeleteAllGameObject()
 	// 3dオブジェクトの全削除処理
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->RemoveAllObjects();
 	}
 	// 2dオブジェクトの全削除処理
 	for (auto& objects2d : m_Objects2D)
 	{
+		if(!objects2d)
+		{
+			continue;
+		}
 		objects2d->RemoveAllObjects();
 	}
 	// システムオブジェクトの全削除処理
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if(!systemObject)
+		{
+			continue;
+		}
 		systemObject->RemoveAllObjects();
 	}
 }
@@ -61,6 +81,10 @@ void Scene::Uninit()
 	// 3dオブジェクトの解放
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->Uninit();
 	}
 	m_Objects3D.clear();
@@ -68,12 +92,20 @@ void Scene::Uninit()
 	// 2dオブジェクトの解放
 	for (auto& objects2d : m_Objects2D)
 	{
+		if (!objects2d)
+		{
+			continue;
+		}
 		objects2d->Uninit();
 	}
 
 	// システムオブジェクトの解放
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Uninit();
 	}
 }
@@ -83,24 +115,40 @@ void Scene::UpdateObject()
 	// グローバルシステムオブジェクトの更新
 	for (auto& systemObject : m_GlobalSystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Update();
 	}
 
 	// システムオブジェクトの更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Update();
 	}
 
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->Update();
 	}
 
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
+		if (!objects2d)
+		{
+			continue;
+		}
 		objects2d->Update();
 	}
 	// 不要なgameobjectの削除準備
@@ -111,24 +159,40 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 	// グローバルなシステムオブジェクトの更新
 	for(auto& systemObject : m_GlobalSystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Update();
 	}
 
 	// システムオブジェクトの更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Update();
 	}
 
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
+		if (!objects3d)
+		{
+			continue;
+		}
 		objects3d->UpdateObjectByTag(tag);
 	}
 
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
+		if (!objects2d)
+		{
+			continue;
+		}
 		objects2d->UpdateObjectByTag(tag);
 	}
 	// 不要なgameobjectの削除準備
@@ -140,23 +204,39 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 	// グローバルなシステムオブジェクトの更新
 	for (auto& systemObject : m_GlobalSystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject.get()->Update();
 	}
 
 	// システムオブジェクトはSystemタグがあれば更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->Update();
 	}
 
 	// 3dオブジェクトの更新
 	for (auto& objects3d : m_Objects3D)
 	{
+		if (!objects3d)
+		{
+			continue;
+		}
 		objects3d->UpdateObjectByTags(tags);
 	}
 	// 2dオブジェクトの更新
 	for (auto& objects2d : m_Objects2D)
 	{
+		if(!objects2d)
+		{
+			continue;
+		}
 		objects2d->UpdateObjectByTags(tags);
 	}
 	DeleteGameObject();
@@ -185,12 +265,20 @@ void Scene::DrawObject()
 	// 3dオブジェクトの描画
 	for(auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->Draw();
 	}
 
 	// 3dが描画し終わったので2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
+		if (!objects2d)
+		{
+			continue;
+		}
 		objects2d->Draw();
 	}
 }
@@ -200,12 +288,20 @@ void Scene::DrawObjectByTag(const std::string& tag)
 	// 3dオブジェクトの描画
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->DrawObjectByTag(tag);
 	}
 
 	// 2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
+		if(!objects2d)
+		{
+			continue;
+		}
 		objects2d->DrawObjectByTag(tag);
 	}
 }
@@ -215,11 +311,19 @@ void Scene::DrawObjectByTags(const std::list<std::string>& tag)
 	// 3dオブジェクトの描画
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->DrawObjectByTags(tag);
 	}
 	// 2dオブジェクトの描画
 	for (auto& objects2d : m_Objects2D)
 	{
+		if (!objects2d)
+		{
+			continue;
+		}
 		objects2d->DrawObjectByTags(tag);
 	}
 }
@@ -229,11 +333,19 @@ GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->GetObjectByTag(tag);
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
 	{	
+		if(!objects2d)
+		{
+			continue;
+		}
 		objects2d->GetObjectByTag(tag);
 	}
 	return nullptr; // 見つからなかったらnullptrを返す
@@ -245,11 +357,19 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
+		if(!objects3d)
+		{
+			continue;
+		}
 		objects3d->GetObjectsByTag(tag);
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
 	{
+		if(!objects2d)
+		{
+			continue;
+		}
 		objects2d->GetObjectsByTag(tag);
 	}
 	return result; // タグを持つオブジェクトのリストを返す
@@ -260,12 +380,20 @@ void Scene::UpdateFinal()
 	// グローバルなシステムオブジェクトの最終更新
 	for (auto& systemObject : m_GlobalSystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject.get()->UpdateFinal();
 	}
 
 	// systemオブジェクトの最終更新
 	for (auto& systemObject : m_SystemObjects)
 	{
+		if (!systemObject)
+		{
+			continue;
+		}
 		systemObject->UpdateFinal();
 	}
 }
