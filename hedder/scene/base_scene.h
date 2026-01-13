@@ -304,7 +304,7 @@ public:
 			return manager->GetSystemObject();
 		}
 		// シーン内に存在するシステムオブジェクトから探す
-		if((int)m_GlobalSystemObjects.size() <= typeId || !m_SystemObjects[typeId])
+		if((int)m_SystemObjects.size() <= typeId || !m_SystemObjects[typeId])
 		{
 			return nullptr;
 		}
@@ -335,28 +335,6 @@ public:
 	{
 		return SystemObject::getTypeId<T>();
 	}
-
-	/*template <typename T>
-	inline int getTypeId() requires std::is_base_of_v<Object2D, T>
-	{
-		static int id = [] { static int id_counter = 0; return id_counter++; }();
-		return id;
-	}
-
-	template <typename T>
-	inline int getTypeId() requires std::is_base_of_v<Object3D, T>
-	{
-		static int id = [] { static int id_counter = 0; return id_counter++; }();
-		return id;
-	}
-
-	template <typename T>
-	inline int getTypeId() requires std::is_base_of_v<SystemObject, T>
-	{
-		static int id = [] { static int id_counter = 0; return id_counter++; }();
-		return id;
-	}*/
-
 
 protected:
 	void DeleteGameObject();
