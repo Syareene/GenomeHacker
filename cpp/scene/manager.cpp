@@ -86,6 +86,10 @@ void Manager::Draw()
 	Renderer::GetID2D1DeviceContext()->EndDraw();
 	Renderer::End();
 
+	// 待機オブジェクトの反映
+	m_CurrentScene->FlushPendingObjects();
+
+
 	// nextシーンが設定されてたらシーン切り替え
 	if (m_NextScene != nullptr)
 	{

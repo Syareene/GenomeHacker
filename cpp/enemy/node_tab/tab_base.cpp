@@ -5,7 +5,7 @@
 #include "scene/manager.h"
 #include <algorithm>
 
-Player* TabBase::m_PlayerPtr = nullptr; // プレイヤーポインタ初期化
+unsigned int TabBase::m_PlayerId = 0; // プレイヤーポインタ初期化
 
 void TabBase::Init(Transform trans)
 {
@@ -14,10 +14,10 @@ void TabBase::Init(Transform trans)
 	m_IsSelected = false;
 
 	// playerptrがnullなら取得
-	if(!m_PlayerPtr)
+	if(!m_PlayerId)
 	{
-		m_PlayerPtr = Manager::GetCurrentScene()->GetGameObject<Player>();
-		if (!m_PlayerPtr)
+		m_PlayerId = Manager::GetCurrentScene()->GetGameObject<Player>()->GetObjectID();
+		if (Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId))
 		{
 			// エラー
 			assert(false && "TabBase::Init() -> Failed to get Player pointer.");
@@ -50,7 +50,9 @@ void TabBase::Update()
 			node->Update();
 		}
 		// プレイヤーが所持しているノードの更新処理
-		for(auto& node : m_PlayerPtr->GetAllNodes())
+		Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
+
+		for(auto& node : temp->GetAllNodes())
 		{
 			node->Update();
 		}
@@ -114,7 +116,8 @@ void TabBase::Draw()
 		}
 
 		// プレイヤーが所持しているノードの描画処理
-		for (auto& node : m_PlayerPtr->GetAllNodes())
+		Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
+		for (auto& node : temp->GetAllNodes())
 		{
 			node->Draw();
 		}
@@ -176,7 +179,7 @@ void TabBase::ApplyGrabNode()
 			else if (loc == NodeBase::NodeLocation::Player)
 			{
 				// プレイヤーノード側から探す
-				auto& playerNodes = m_PlayerPtr->GetAllNodes();
+				auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
 				auto it = std::find_if(playerNodes.begin(), playerNodes.end(),
 					[&](const std::unique_ptr<NodeBase>& node) {
 						return node.get() == grabNode;
@@ -231,7 +234,7 @@ void TabBase::ApplyGrabNode()
 			else
 			{
 				// プレイヤーノード側に追加
-				auto& playerNodes = m_PlayerPtr->GetAllNodes();
+				auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
 				float grabPosY = grabNode->GetPosition().y;
 				bool inserted = false;
 
@@ -330,7 +333,7 @@ void TabBase::ModifyPlayerNodePos(NodeBase* grabPtr)
 
 	// index基準でnodeの位置を修正
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
-	for (auto& node : m_PlayerPtr->GetAllNodes())
+	for (auto& node : Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes())
 	{
 		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
@@ -406,7 +409,7 @@ void TabBase::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr)
 
 void TabBase::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr)
 {
-	std::list<std::unique_ptr<NodeBase>>& all_nodes = m_PlayerPtr->GetAllNodes();
+	std::list<std::unique_ptr<NodeBase>>& all_nodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
 
 	if (!grabPtr)
 		return;

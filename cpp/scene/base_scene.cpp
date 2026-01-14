@@ -13,6 +13,7 @@ GameObject* FindGameObjectByTagRecursive(GameObject* obj, const std::string& tag
 void FindGameObjectsByTagRecursive(GameObject* obj, const std::string& tag, std::list<GameObject*>& result);
 
 std::vector<std::unique_ptr<ISystemObjectManager>> Scene::m_GlobalSystemObjects;
+unsigned int Scene::m_ObjectIDCounter = 0;
 
 void Scene::DeleteGameObject()
 {
@@ -107,6 +108,28 @@ void Scene::Uninit()
 			continue;
 		}
 		systemObject->Uninit();
+	}
+}
+
+void Scene::FlushPendingObjects()
+{
+		// 3dオブジェクトの保留中オブジェクトをフラッシュ
+	for (auto& objects3d : m_Objects3D)
+	{
+		if(!objects3d)
+		{
+			continue;
+		}
+		objects3d->FlushPendingObjects();
+	}
+	// 2dオブジェクトの保留中オブジェクトをフラッシュ
+	for (auto& objects2d : m_Objects2D)
+	{
+		if (!objects2d)
+		{
+			continue;
+		}
+		objects2d->FlushPendingObjects();
 	}
 }
 

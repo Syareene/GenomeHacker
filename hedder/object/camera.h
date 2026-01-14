@@ -24,14 +24,14 @@ public:
 
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。
 
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
 	inline void SetTitleCam()
 	{
 		m_TitleCam = std::make_unique<TitleCam>();
-		m_TitleCam->Attach(this, Vector3(0.0f, 3.0f, -5.0f));
+		m_TitleCam->Attach(this->GetObjectID(), Vector3(0.0f, 3.0f, -5.0f));
 	}
 	inline TitleCam* GetTitleCam() const { return m_TitleCam.get(); }
 	void Shake(const Vector3& power);

@@ -18,7 +18,7 @@ public:
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring& filePath, const std::wstring& frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const int& texID, const std::wstring frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const FontData& fontData, const std::string& text, const std::wstring& filePath = L"", const std::wstring& frameTexPath = L"");
-	void Init(Transform trans = Transform()) override; // ボタン登録処理
+	virtual void Init(Transform trans = Transform()); // ボタン登録処理
 	// ボタンが押されたときに実行したいオブジェクト(コールバック登録)
 	template<typename... Args>
 	inline void SetOnClick(const std::function<void()>& func)

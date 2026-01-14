@@ -9,7 +9,7 @@ public:
 	virtual ~UI() {}
 	UI(UI&&) noexcept = default; // ムーブコンストラクタ
 	UI& operator=(UI&&) noexcept = default; // ムーブ代入演算子
-	void Init(Transform trans = Transform()) override 
+	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
 	}

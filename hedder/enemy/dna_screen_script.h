@@ -10,7 +10,7 @@ class EnemyBase;
 class DnaScreenScript : public Panel
 {
 public:
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

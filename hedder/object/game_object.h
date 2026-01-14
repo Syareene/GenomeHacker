@@ -19,6 +19,7 @@ private:
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
+	unsigned int m_ObjectID = 0; // オブジェクトID(管理用)
 	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
 
@@ -62,9 +63,10 @@ public:
 	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
 
 	virtual ~GameObject() {}
-	virtual void Init(Transform trans = Transform()) 
+	template <typename... Args>
+	void Init(Args&&... args) 
 	{
-		SetTransform(trans);
+		
 	};
 	virtual void Uninit() {};
 	virtual void Update() {};
@@ -75,6 +77,8 @@ public:
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
 	inline void SetIsAlive(const bool& manage) { m_IsAliveData = manage; }
 	inline const bool& GetIsAlive() const { return m_IsAliveData; }
+	inline void SetObjectID(const unsigned int& id) { m_ObjectID = id; }
+	inline const unsigned int& GetObjectID() const { return m_ObjectID; }
 	void AddPosition(const Vector3& Position, const bool& calcWorldSpeed = true);
 	inline const Vector3& GetPosition() const { return m_Transform.GetPosition(); }
 	inline void SetPosition(const Vector3& Position) { m_Transform.SetPosition(Position); }

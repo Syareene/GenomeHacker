@@ -22,7 +22,8 @@ class TabBase : public Button
 	// んーこれbutton+αにしたほうが良さそげ、、
 
 public:
-	void Init(Transform trans = Transform()) override;
+	//virtual void Init(const unsigned int& playerId, Transform trans = Transform());
+	virtual void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
@@ -35,7 +36,7 @@ public:
 	void ModifyPlayerNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr);
 	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
 	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
-	inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
+	//inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
@@ -97,7 +98,7 @@ public:
 private:
 	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
 	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
-	static Player* m_PlayerPtr; // プレイヤーのポインタ
+	static unsigned int m_PlayerId; // プレイヤーid
 	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
 	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
 	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置

@@ -3,7 +3,7 @@
 
 void MoveTab::Init(Transform trans)
 {
-
+	TabBase::Init(trans);
 }
 
 void MoveTab::Uninit()

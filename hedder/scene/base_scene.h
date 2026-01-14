@@ -62,6 +62,7 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update() = 0;
+	void FlushPendingObjects();
 	void UpdateObject();
 	/// @brief 指定タグを持つオブジェクトのみ更新する
 	/// @param tag タグ名
@@ -171,7 +172,7 @@ public:
 
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum, trans);
+		return manager->AddObject(layerNum, Scene::GetNextObjectID(), trans);
 	}
 
 	// 3dオブジェクト追加関数
@@ -192,7 +193,7 @@ public:
 		}
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum, trans);
+		return manager->AddObject(layerNum, Scene::GetNextObjectID(), trans);
 	}
 
 	// systemオブジェクト追加関数
@@ -312,6 +313,34 @@ public:
 		return manager->GetSystemObject();
 	}
 
+	// idを用いてGameObjectを取得
+	template <typename T>
+	T* GetGameObjectById(unsigned int id) requires std::is_base_of_v<Object2D, T>
+	{
+		// id取得
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		return manager->GetObjectById(id);
+	}
+
+	// idを用いてGameObjectを取得
+	template <typename T>
+	T* GetGameObjectById(unsigned int id) requires std::is_base_of_v<Object3D, T>
+	{
+		// id取得
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
+		return manager->GetObjectById(id);
+	}
+
 	// タグを使ってGameObjectを取得
 	GameObject* GetGameObjectByTag(const std::string& tag);
 	// タグを使ってGameObjectのリストを取得
@@ -341,6 +370,16 @@ protected:
 	void DeleteAllGameObject();
 	void UpdateFinal(); // システムオブジェクトのUpdateFinalを呼び出す
 private:
+	static unsigned int GetNextObjectID()
+	{
+		// 現在値が2147483647に達したら0に戻す
+		if (m_ObjectIDCounter == INT_MAX)
+		{
+			m_ObjectIDCounter = 0;
+		}
+		return m_ObjectIDCounter++;
+	}
+	static unsigned int m_ObjectIDCounter;
 	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects3D;
 	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects2D;
 	std::vector<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;

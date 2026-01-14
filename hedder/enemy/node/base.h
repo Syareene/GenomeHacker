@@ -37,7 +37,7 @@ public:
 	// このノード内で追加でくっつけられるノード(数字系のノード等)
 	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
 
-	void Init(Transform trans = Transform()) override;
+	virtual void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める

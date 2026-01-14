@@ -10,7 +10,7 @@ public:
 	virtual ~ToGameButton() {}
 	ToGameButton(ToGameButton&&) noexcept = default; // ムーブコンストラクタ
 	ToGameButton& operator=(ToGameButton&&) noexcept = default; // ムーブ代入演算子
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

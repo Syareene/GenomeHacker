@@ -13,7 +13,7 @@ public:
 	virtual ~Object3D();
 	Object3D(Object3D&&) noexcept; // ムーブコンストラクタ
 	Object3D& operator=(Object3D&&); // ムーブ代入演算子
-	void Init(Transform trans = Transform()) override
+	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
 	};

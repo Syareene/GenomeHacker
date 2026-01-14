@@ -14,7 +14,7 @@ public:
 	Font(Font&&) noexcept = default; // ムーブコンストラクタ
 	Font& operator=(Font&&) noexcept = default; // ムーブ代入演算子
 	void Register(const Vector2& pos, const FontData& font_data, std::string text);
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

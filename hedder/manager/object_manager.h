@@ -27,6 +27,7 @@ class IGameObjectManager : public IObjectManager
 public:
 	virtual GameObject* GetObjectByTag(const std::string& tag) = 0;
 	virtual std::list<GameObject*> GetObjectsByTag(const std::string& tag) = 0;
+	virtual void FlushPendingObjects() = 0;
 	virtual void UpdateObjectByTag(const std::string& tag) = 0;
 	virtual void UpdateObjectByTags(const std::list<std::string>& tags) = 0;
 	virtual void Draw() = 0;
@@ -77,6 +78,19 @@ public:
 		return result;
 	}
 
+	// idを用いた単体取得
+	ObjectType* GetObjectById(const unsigned int& id)
+	{
+		for (auto& obj : m_Objects)
+		{
+			if (obj.GetObjectID() == id)
+			{
+				return &obj;
+			}
+		}
+		return nullptr;
+	}
+
 	void RemoveDestroyedObjects() override
 	{
 		for (auto& object : m_Objects)
@@ -120,21 +134,34 @@ public:
 	}
 
 	template<typename... Args>
-	ObjectType* AddObject(int index, Args&&... args)
+	// ここで返ったポインタを保存しないように!
+	ObjectType* AddObject(int index, unsigned int objId, Args&&... args)
 	{
-		// scene側から実行する時、参照するオブジェクトが2d/3d/systemどれかを判断する必要あり
-
-		// キャパシティチェック
-		if (m_Objects.size() >= m_Objects.capacity())
-		{
-			// 追加スルーか?
-			assert("ObjectManager capacity exceeded! Write more value on hedder!" && false);
-		}
-
-		// vectorのメモリ上でオブジェクトを構築(emplace_backはc++17から参照を返す)
-		auto& obj = m_Objects.emplace_back();
+		// 待機リストに追加
+		auto& obj = m_PendingObjects.emplace_back();
 		obj.Init(std::forward<Args>(args)...);
+		obj.SetObjectID(objId);
 		return &obj;
+	}
+
+	void FlushPendingObjects() override
+	{
+		if(m_PendingObjects.empty())
+		{
+			return; // 保留中のオブジェクトがなければ何もしない
+		}
+		// 保留中のオブジェクトを本体リストに移動
+		for (auto& obj : m_PendingObjects)
+		{
+			// キャパシティチェック
+			if (m_Objects.size() >= m_Objects.capacity())
+			{
+				// 追加スルーか?
+				assert("ObjectManager capacity exceeded! Write more value on hedder!" && false);
+			}
+			m_Objects.emplace_back(std::move(obj));
+		}
+		m_PendingObjects.clear();
 	}
 
 	ObjectType* GetGameObject()
@@ -251,6 +278,7 @@ public:
 private:
 	//int m_Id = 0;
 	std::vector<ObjectType> m_Objects;
+	std::vector<ObjectType> m_PendingObjects; // 追加待ちオブジェクトのリスト
 };
 
 template <typename ObjectType>
