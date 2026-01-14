@@ -171,7 +171,7 @@ public:
 
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum);
+		return manager->AddObject(layerNum, trans);
 	}
 
 	// 3dオブジェクト追加関数
@@ -192,7 +192,7 @@ public:
 		}
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum);
+		return manager->AddObject(layerNum, trans);
 	}
 
 	// systemオブジェクト追加関数

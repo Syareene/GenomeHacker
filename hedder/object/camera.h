@@ -22,6 +22,8 @@ public:
 	Camera(Camera&&) noexcept = default; // ムーブコンストラクタ
 	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
 
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。
+
 	void Init(Transform trans = Transform()) override;
 	void Uninit() override;
 	void Update() override;

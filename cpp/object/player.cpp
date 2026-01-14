@@ -25,6 +25,10 @@ void Player::Init(Transform trans)
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform, Vector3(0.0f, 0.85f, 0.0f));
 
+	// 生成するであろうBulletのmanager空間予約をする
+	Manager::GetCurrentScene()->ReserveObject<Bullet>(Bullet::MAX_OBJECTS);
+
+
 	m_HavingNodes.push_back(std::make_unique<MoveX>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);

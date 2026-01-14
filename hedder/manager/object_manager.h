@@ -132,8 +132,8 @@ public:
 		}
 
 		// vectorのメモリ上でオブジェクトを構築(emplace_backはc++17から参照を返す)
-		auto& obj = m_Objects.emplace_back(std::forward<Args>(args)...);
-		obj.Init();
+		auto& obj = m_Objects.emplace_back();
+		obj.Init(std::forward<Args>(args)...);
 		return &obj;
 	}
 
