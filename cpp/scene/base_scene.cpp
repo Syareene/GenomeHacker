@@ -353,6 +353,7 @@ void Scene::DrawObjectByTags(const std::list<std::string>& tag)
 
 GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 {
+	GameObject* temp = nullptr;
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
@@ -360,7 +361,11 @@ GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 		{
 			continue;
 		}
-		objects3d->GetObjectByTag(tag);
+		temp = objects3d->GetObjectByTag(tag);
+		if (temp)
+		{
+			return temp;
+		}
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
@@ -369,7 +374,11 @@ GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 		{
 			continue;
 		}
-		objects2d->GetObjectByTag(tag);
+		temp = objects2d->GetObjectByTag(tag);
+		if (temp)
+		{
+			return temp;
+		}
 	}
 	return nullptr; // 見つからなかったらnullptrを返す
 }
@@ -377,6 +386,7 @@ GameObject* Scene::GetGameObjectByTag(const std::string& tag)
 std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 {
 	std::list<GameObject*> result;
+	std::list<GameObject*> temp;
 	// 3Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects3d : m_Objects3D)
 	{
@@ -384,7 +394,11 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 		{
 			continue;
 		}
-		objects3d->GetObjectsByTag(tag);
+		temp = objects3d->GetObjectsByTag(tag);
+		if (!temp.empty())
+		{
+			result.splice(result.end(), temp);
+		}
 	}
 	// 2Dオブジェクトからタグを持つオブジェクトを探す
 	for (auto& objects2d : m_Objects2D)
@@ -393,7 +407,11 @@ std::list<GameObject*> Scene::GetGameObjectsByTag(const std::string& tag)
 		{
 			continue;
 		}
-		objects2d->GetObjectsByTag(tag);
+		temp = objects2d->GetObjectsByTag(tag);
+		if (!temp.empty())
+		{
+			result.splice(result.end(), temp);
+		}
 	}
 	return result; // タグを持つオブジェクトのリストを返す
 }

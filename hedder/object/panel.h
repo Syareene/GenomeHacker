@@ -68,16 +68,19 @@ public:
 			}
 		}
 
+		GameObject* found = nullptr;
+
 		// 子オブジェクトを再帰的にチェック
 		for(auto& child : m_ChildObjects)
 		{
-			for(auto& obj : child)
+			if(!child)
 			{
-				GameObject* found = obj->FindObjectByTag(tag);
-				if(found)
-				{
-					return found;
-				}
+				continue;
+			}
+			found = child->GetObjectByTag(tag);
+			if (found)
+			{
+				return found; // 見つかったら返す
 			}
 		}
 		// 該当なし
@@ -95,38 +98,47 @@ public:
 				break; // 見つけたらループを抜ける
 			}
 		}
+		std::list<GameObject*> temp;
+
 		// 子オブジェクトを再帰的にチェック
 		for(auto& child : m_ChildObjects)
 		{
-			for(auto& obj : child)
+			if(!child)
 			{
-				obj->FindObjectsByTag(tag, result);
+				continue;
+			}
+			temp = child->GetObjectsByTag(tag);
+			if (!temp.empty())
+			{
+				result.splice(result.end(), temp);
 			}
 		}
 	}
 
 	// これref取るのめんどいから削除かな
-	std::list<std::list<std::unique_ptr<Object2D>>>& GetAllChildObjects()
-	{
-		return m_ChildObjects;
-	}
+	//std::list<std::list<std::unique_ptr<Object2D>>>& GetAllChildObjects()
+	//{
+	//	return m_ChildObjects;
+	//}
 
-	std::list<Object2D*> GetChildObjects(int index)
-	{
-		// index番目のレイヤーの子オブジェクトを取得
-		std::list<Object2D*> objects;
-		if (index < 0 || index >= static_cast<int>(m_ChildObjects.size()))
-		{
-			return objects; // 範囲外なら空のリストを返す
-		}
-		auto it = m_ChildObjects.begin();
-		std::advance(it, index);
-		for (const auto& child : *it)
-		{
-			objects.push_back(child.get());
-		}
-		return objects;
-	}
+
+	// 一旦コメントアウトとする(新規panel対応用)
+	//std::list<Object2D*> GetChildObjects(int index)
+	//{
+	//	// index番目のレイヤーの子オブジェクトを取得
+	//	std::list<Object2D*> objects;
+	//	if (index < 0 || index >= static_cast<int>(m_ChildObjects.size()))
+	//	{
+	//		return objects; // 範囲外なら空のリストを返す
+	//	}
+	//	auto it = m_ChildObjects.begin();
+	//	std::advance(it, index);
+	//	for (const auto& child : *it)
+	//	{
+	//		objects.push_back(child.get());
+	//	}
+	//	return objects;
+	//}
 
 	template <typename T>
 	T* GetChildObjectByType()
@@ -160,43 +172,32 @@ public:
 	template <PanelSupportedGameObject T>
 	T* AddChildObject(int layerNum, Transform trans = Transform())
 	{
-		// 中でインスタンスを作る
-		auto child = std::make_unique<T>();
-		child->Init(trans); // 初期化実行
-		T* childPtr = child.get();
-
-		// layerNumとコンテナのサイズを比べる
-		if (layerNum < 0)
+		// 対象のobjectのidを取得
+		const int typeId = getTypeId<T>();
+		// サイズが足りないので拡張
+		if ((int)m_ChildObjects.size() <= typeId)
 		{
-			// ToDo: handle error
+			m_ChildObjects.resize(typeId + 1);
 		}
-		else if (layerNum >= static_cast<int>(m_ChildObjects.size()))
+		// マネージャーない場合は作成
+		if (!m_ChildObjects[typeId])
 		{
-			// layerNumがコンテナのサイズ以上ならその数まで空の要素を追加する
-			for (int i = static_cast<int>(m_ChildObjects.size()); i <= layerNum; i++)
-			{
-				// 追加
-				m_ChildObjects.emplace_back(std::list<std::unique_ptr<Object2D>>());
-			}
+			m_ChildObjects[typeId] = std::make_unique<ObjectManager<T>>();
 		}
-		// layerNum分iteratorを進める
-		auto it = m_ChildObjects.begin();
-		std::advance(it, layerNum);
-		// layerNumの位置に追加
-		it->push_back(std::move(child));
-		// スマポで管理しつつも生ポインタで返すように
-		return childPtr; // 追加した子オブジェクトのポインタを返す
+		auto manager = static_cast<ObjectManager<T>*>(m_ChildObjects[typeId].get());
+		// 追加したオブジェクトのポインタを返す
+		return manager->AddObject(layerNum, GetNextObjectID(), trans);
 	}
 
 	void DeleteChildObject(void)
 	{
-		// destoryフラグが立っているオブジェクトを削除
-		for (auto& layer : m_ChildObjects)
+		for(auto& child : m_ChildObjects)
 		{
-			layer.remove_if([](const std::unique_ptr<Object2D>& obj) {
-				// objがnullptrでないことを確認し、Destroyメソッドを呼び出す
-				return obj && obj->Destroy();
-			});
+			if(!child)
+			{
+				continue;
+			}
+			child->RemoveDestroyedObjects();
 		}
 	}
 
