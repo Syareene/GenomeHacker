@@ -1,9 +1,9 @@
 ﻿#include "main.h"
 #include "enemy/node_tab/attack.h"
 
-void AttackTab::Init(Transform trans)
+void AttackTab::Init(const unsigned int& playerId, Transform trans)
 {
-	TabBase::Init(trans);
+	TabBase::Init(playerId, trans);
 }
 
 void AttackTab::Uninit()

@@ -1,9 +1,9 @@
 ﻿#include "main.h"
 #include "enemy/node_tab/death.h"
 
-void DeathTab::Init(Transform trans)
+void DeathTab::Init(const unsigned int& playerId, Transform trans)
 {
-	TabBase::Init(trans);
+	TabBase::Init(playerId, trans);
 }
 
 void DeathTab::Uninit()

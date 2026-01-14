@@ -1,9 +1,9 @@
 ﻿#include "main.h"
 #include "enemy/node_tab/movement.h"
 
-void MoveTab::Init(Transform trans)
+void MoveTab::Init(const unsigned int& playerId, Transform trans)
 {
-	TabBase::Init(trans);
+	TabBase::Init(playerId, trans);
 }
 
 void MoveTab::Uninit()

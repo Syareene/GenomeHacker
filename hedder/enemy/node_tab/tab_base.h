@@ -22,8 +22,7 @@ class TabBase : public Button
 	// んーこれbutton+αにしたほうが良さそげ、、
 
 public:
-	//virtual void Init(const unsigned int& playerId, Transform trans = Transform());
-	virtual void Init(Transform trans = Transform());
+	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

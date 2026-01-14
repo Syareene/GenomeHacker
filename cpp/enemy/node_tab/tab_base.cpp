@@ -7,22 +7,12 @@
 
 unsigned int TabBase::m_PlayerId = 0; // プレイヤーポインタ初期化
 
-void TabBase::Init(Transform trans)
+void TabBase::Init(const unsigned int& playerId, Transform trans)
 {
 	SetTransform(trans);
 	// タブの初期化処理
 	m_IsSelected = false;
-
-	// playerptrがnullなら取得
-	if(!m_PlayerId)
-	{
-		m_PlayerId = Manager::GetCurrentScene()->GetGameObject<Player>()->GetObjectID();
-		if (Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId))
-		{
-			// エラー
-			assert(false && "TabBase::Init() -> Failed to get Player pointer.");
-		}
-	}
+	m_PlayerId = playerId;
 
 	Button::Init();
 	
