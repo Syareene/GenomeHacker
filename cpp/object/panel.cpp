@@ -1,10 +1,9 @@
 ﻿#include "main.h"
 #include "object/panel.h"
 
-void Panel::Init(Transform trans)
+void Panel::Init()
 {
 	// パネルの初期化処理
-	Object2D::Init(trans);
 
 	// 子オブジェクトの初期化
 	for (auto& layer : m_ChildObjects)

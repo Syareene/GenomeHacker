@@ -1,8 +1,9 @@
 ﻿#pragma once
 
 #include "object/2d_object.h"
+#include "manager/object_manager.h"
+#include <vector>
 #include <memory>
-#include <list>
 
 // concept定義
 template<typename T>
@@ -12,15 +13,48 @@ concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 class Panel : public Object2D
 {
 private:
-
-	// 描画順だけどうするかだねぇ各オブジェクトの
-	std::list<std::list<std::unique_ptr<Object2D>>> m_ChildObjects; // 子オブジェクトのリスト
+	std::vector<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
+	static unsigned int m_ObjectIDCounter; // シーンのとはまた異なるカウンター->本当にこれでいいかをちょっと考えるべきかも
+	static unsigned int GetNextObjectID()
+	{
+		// 現在値が2147483647に達したら0に戻す
+		if (m_ObjectIDCounter == INT_MAX)
+		{
+			m_ObjectIDCounter = 0;
+		}
+		return m_ObjectIDCounter++;
+	}
 	// このとき子オブジェクトからdestoryとかが呼ばれた際にこのリストからちゃんと消えるか問題はあるよねぇ、、->updateのところに消す処理書いたけどunique_ptrにしてるので変える必要あり
 public:
-	void Init(Transform trans = Transform());
+	Panel() = default;
+	~Panel() override = default;
+	Panel(Panel&&) noexcept = default;
+	Panel& operator=(Panel&&) noexcept = default;
+
+	virtual void Init();
 	void Uninit() override;
 	void Update() override;
+	// sceneみたいに後付pushにするかちょい悩む
 	void Draw() override;
+
+	template <typename ObjectType>
+	void ReserveObject(size_t capacity) requires std::is_base_of_v<Object2D, ObjectType>
+	{
+		const int typeId = getTypeId<ObjectType>();
+		// サイズが足りない場合は拡張
+		if ((int)m_Objects2D.size() <= typeId)
+		{
+			m_Objects2D.resize(typeId + 1);
+		}
+		// まだマネージャーがない場合は作成
+		if (!m_Objects2D[typeId])
+		{
+			m_Objects2D[typeId] = std::make_unique<ObjectManager<ObjectType>>();
+		}
+		// キャストしてリザーブ実行
+		auto manager = static_cast<ObjectManager<ObjectType>*>(m_Objects2D[typeId].get());
+		manager->Reserve(capacity);
+	}
 
 	// タグ検索のオーバーライド
 	GameObject* FindObjectByTag(const std::string& tag) override
@@ -71,7 +105,7 @@ public:
 		}
 	}
 
-
+	// これref取るのめんどいから削除かな
 	std::list<std::list<std::unique_ptr<Object2D>>>& GetAllChildObjects()
 	{
 		return m_ChildObjects;
@@ -97,17 +131,13 @@ public:
 	template <typename T>
 	T* GetChildObjectByType()
 	{
-		for (const auto& layer : m_ChildObjects)
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
-			for (const auto& child : layer)
-			{
-				if (child && dynamic_cast<T*>(child.get()))
-				{
-					return dynamic_cast<T*>(child.get());
-				}
-			}
+			return nullptr;
 		}
-		return nullptr; // 見つからなかった場合
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		return manager->GetGameObject();
 	}
 
 	template <typename T>
@@ -168,6 +198,12 @@ public:
 				return obj && obj->Destroy();
 			});
 		}
+	}
+
+	// すべての子オブジェクトを削除
+	void DeleteAllChildObject()
+	{
+
 	}
 	
 };
