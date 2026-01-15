@@ -71,7 +71,7 @@ void DnaScreenScript::Update()
 	if (IsActive())
 	{
 		// DNAスクリーンの更新処理
-	//Panel::Update();->こっちで管理したいのでこの下に自作
+		//Panel::Update();->こっちで管理したいのでこの下に自作
 
 
 	// Debug時限定で数字キーでタブ切り替え

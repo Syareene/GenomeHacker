@@ -56,7 +56,7 @@ void TabBase::Update()
 	}
 
 	// 掴んでるノードを取得
-	DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	DnaEditState* state = dynamic_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
 	if (state)
 	{
 		NodeBase* node = state->GetGrabbingNode();
