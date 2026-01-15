@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <utility>
 #include "object/game_object.h"
 #include "object/system_object.h"
 #include "object/3d_object.h"
@@ -153,8 +154,8 @@ public:
 	}
 
 	// 2dオブジェクト追加関数
-	template<typename T>
-	T* AddGameObject(int layerNum, Transform trans = Transform()) requires std::is_base_of_v<Object2D, T>
+	template<typename T, typename... Args>
+	T* AddGameObject(int layerNum, Args&&... args) requires std::is_base_of_v<Object2D, T>
 	{
 		// 対象のobjectのidを取得
 		const int typeId = getTypeId<T>();
@@ -172,12 +173,12 @@ public:
 
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum, Scene::GetNextObjectID(), trans);
+		return manager->AddObject(layerNum, Scene::GetNextObjectID(), std::forward<Args>(args)...);
 	}
 
 	// 3dオブジェクト追加関数
-	template<typename T>
-	T* AddGameObject(int layerNum, Transform trans = Transform()) requires std::is_base_of_v<Object3D, T>
+	template<typename T, typename... Args>
+	T* AddGameObject(int layerNum, Args&&... args) requires std::is_base_of_v<Object3D, T>
 	{
 		// 対象のobjectのidを取得
 		const int typeId = getTypeId<T>();
@@ -193,12 +194,12 @@ public:
 		}
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum, Scene::GetNextObjectID(), trans);
+		return manager->AddObject(layerNum, Scene::GetNextObjectID(), std::forward<Args>(args)...);
 	}
 
 	// systemオブジェクト追加関数
-	template<typename T>
-	T* AddSystemObject(bool is_global = false) requires std::is_base_of_v<SystemObject, T>
+	template<typename T, typename... Args>
+	T* AddSystemObject(bool is_global = false, Args&&... args) requires std::is_base_of_v<SystemObject, T>
 	{
 		// 対象のobjectのidを取得
 		const int typeId = getTypeId<T>();
@@ -217,7 +218,7 @@ public:
 			}
 			auto manager = static_cast<SystemObjectManager<T>*>(m_GlobalSystemObjects[typeId].get());
 			// 追加したオブジェクトのポインタを返す
-			return manager->AddObject(is_global);
+			return manager->AddObject(std::forward<Args>(args)...);
 		}
 		// シーン内でのシステムオブジェクトとして追加する
 		// サイズが足りない場合は拡張する
@@ -232,7 +233,7 @@ public:
 		}
 		auto manager = static_cast<SystemObjectManager<T>*>(m_SystemObjects[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(is_global);
+		return manager->AddObject(std::forward<Args>(args)...);
 	}
 
 	// 2dオブジェクトを取得する関数

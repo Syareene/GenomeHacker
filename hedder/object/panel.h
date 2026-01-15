@@ -4,10 +4,15 @@
 #include "manager/object_manager.h"
 #include <vector>
 #include <memory>
+#include <type_traits>
+#include <utility>
 
 // concept定義
 template<typename T>
 concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
+
+//class IObjectManager;
+//class IGameObjectManager;
 
 // 現状パネルは2d限定
 class Panel : public Object2D
@@ -42,17 +47,17 @@ public:
 	{
 		const int typeId = getTypeId<ObjectType>();
 		// サイズが足りない場合は拡張
-		if ((int)m_Objects2D.size() <= typeId)
+		if ((int)m_ChildObjects.size() <= typeId)
 		{
-			m_Objects2D.resize(typeId + 1);
+			m_ChildObjects.resize(typeId + 1);
 		}
 		// まだマネージャーがない場合は作成
-		if (!m_Objects2D[typeId])
+		if (!m_ChildObjects[typeId])
 		{
-			m_Objects2D[typeId] = std::make_unique<ObjectManager<ObjectType>>();
+			m_ChildObjects[typeId] = std::make_unique<ObjectManager<ObjectType>>();
 		}
 		// キャストしてリザーブ実行
-		auto manager = static_cast<ObjectManager<ObjectType>*>(m_Objects2D[typeId].get());
+		auto manager = static_cast<ObjectManager<ObjectType>*>(m_ChildObjects[typeId].get());
 		manager->Reserve(capacity);
 	}
 
@@ -116,10 +121,10 @@ public:
 	}
 
 	// これref取るのめんどいから削除かな
-	//std::list<std::list<std::unique_ptr<Object2D>>>& GetAllChildObjects()
-	//{
-	//	return m_ChildObjects;
-	//}
+	std::vector<std::unique_ptr<IGameObjectManager>>& GetAllChildObjects()
+	{
+		return m_ChildObjects;
+	}
 
 
 	// 一旦コメントアウトとする(新規panel対応用)
@@ -144,33 +149,29 @@ public:
 	T* GetChildObjectByType()
 	{
 		const int typeId = getTypeId<T>();
-		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
+		if ((int)m_ChildObjects.size() <= typeId || !m_ChildObjects[typeId])
 		{
 			return nullptr;
 		}
-		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		auto manager = static_cast<ObjectManager<T>*>(m_ChildObjects[typeId].get());
 		return manager->GetGameObject();
 	}
 
 	template <typename T>
-	std::list<T*> GetChildObjectsByType()
+	std::vector<T>& GetChildObjectsByType() requires std::is_base_of_v<Object2D, T>
 	{
-		std::list<T*> objects;
-		for (const auto& layer : m_ChildObjects)
+		const int typeId = getTypeId<T>();
+		if ((int)m_ChildObjects.size() <= typeId || !m_ChildObjects[typeId])
 		{
-			for (const auto& child : layer)
-			{
-				if (child && dynamic_cast<T*>(child.get()))
-				{
-					objects.push_back(dynamic_cast<T*>(child.get()));
-				}
-			}
+			static std::vector<T> empty; // 空のベクターを返す
+			return empty;
 		}
-		return objects;
+		auto manager = static_cast<ObjectManager<T>*>(m_ChildObjects[typeId].get());
+		return manager->GetGameObjects();
 	}
 
-	template <PanelSupportedGameObject T>
-	T* AddChildObject(int layerNum, Transform trans = Transform())
+	template <typename T, typename... Args>
+	T* AddChildObject(int layerNum, Args&&... args) requires std::is_base_of_v<Object2D, T>
 	{
 		// 対象のobjectのidを取得
 		const int typeId = getTypeId<T>();
@@ -186,7 +187,7 @@ public:
 		}
 		auto manager = static_cast<ObjectManager<T>*>(m_ChildObjects[typeId].get());
 		// 追加したオブジェクトのポインタを返す
-		return manager->AddObject(layerNum, GetNextObjectID(), trans);
+		return manager->AddObject(layerNum, GetNextObjectID(), std::forward<Args>(args)...);
 	}
 
 	void DeleteChildObject(void)
@@ -204,7 +205,15 @@ public:
 	// すべての子オブジェクトを削除
 	void DeleteAllChildObject()
 	{
-
+		for(auto& child : m_ChildObjects)
+		{
+			if(!child)
+			{
+				continue;
+			}
+			child->RemoveAllObjects();
+		}
+		m_ChildObjects.clear();
 	}
 	
 };

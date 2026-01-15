@@ -22,7 +22,7 @@
 #include "scene/state/dna_table_state.h"
 
 
-void EnemyBase::Register()
+void EnemyBase::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -35,7 +35,7 @@ void EnemyBase::Register()
 	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
 	
 	m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
-	m_DnaScreen->Init(); // DNAスクリーンの初期化
+	m_DnaScreen->Init(playerId); // DNAスクリーンの初期化
 
 	// テクスチャ生成
 	
@@ -231,10 +231,10 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	return true; // 実行終わったらtrueを返す
 }
 
-void EnemyBase::Init()
+void EnemyBase::Init(const unsigned int& playerId)
 {
 	// 一旦register呼ぶ
-	EnemyBase::Register();
+	EnemyBase::Register(playerId);
 }
 
 void EnemyBase::Uninit()

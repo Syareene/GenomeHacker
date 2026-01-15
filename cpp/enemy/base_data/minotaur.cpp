@@ -19,14 +19,14 @@
 #include "enemy/node/move_x.h"
 #include "enemy/node/add_score.h"
 
-void Minotaur::Register()
+void Minotaur::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
 	// そのenemy固有の情報を登録
 	//SetDnaScreen(std::make_unique<DnaScreenScript>());
 	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
-	EnemyBase::Init();
+	EnemyBase::Init(playerId);
 	
 
 	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);

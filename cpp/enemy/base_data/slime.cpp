@@ -20,7 +20,7 @@
 
 #include "enemy/node/add_score.h"
 
-void Slime::Register()
+void Slime::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -28,7 +28,7 @@ void Slime::Register()
 	//SetDnaScreen(std::make_unique<DnaScreenScript>());
 	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
 
-	EnemyBase::Init();
+	EnemyBase::Init(playerId);
 
 	// ここでAddnodeする時にposも指定できるようにして
 	// そのposと内部にあるテキストのyで位置調整する(xは固定)

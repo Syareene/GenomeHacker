@@ -27,6 +27,13 @@ void TabBase::Uninit()
 
 void TabBase::Update()
 {
+	// dna_screen_scriptでは管理してないのでこっちで管理
+	if (!m_IsSelected)
+	{
+		return;
+	}
+
+
 	// m_IsSelectedがtrueのときにのみ子ノードに対するマウス選択処理等々を行う(描画も同じ)
 	// ただこの場合次のノードに移行するみたいな処理をどうするかっすね
 

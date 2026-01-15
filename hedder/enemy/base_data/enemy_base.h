@@ -17,7 +17,7 @@ public:
 	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
 	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
 
-	virtual void Register(); // 登録処理
+	virtual void Register(const unsigned int& playerId); // 登録処理
 	void Unregister(); // 登録解除処理
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)
 	void ExecuteAttack(FieldEnemy* enemy_ptr);
@@ -25,7 +25,7 @@ public:
 	bool ExecuteDeath(FieldEnemy* enemy_ptr);
 
 	// DnaScreenにあるオブジェクトを操作するための関数群
-	void Init();
+	void Init(const unsigned int& playerId);
 	void Uninit();
 	void Update();
 	void Draw();
@@ -84,6 +84,6 @@ private:
 	bool m_IsExitDnaEdit = false; // DNA編集画面から退出したかどうかのフラグ
 	
 	// enemy共通で見るnode以外のステータスを格納する。
-	float m_MaxHealth; // 最大体力
+	float m_MaxHealth = 0; // 最大体力
 
 };

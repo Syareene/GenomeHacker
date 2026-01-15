@@ -6,5 +6,5 @@
 class Slime : public EnemyBase
 {
 public:
-	void Register() override; // 登録処理
+	void Register(const unsigned int& playerId) override; // 登録処理
 };

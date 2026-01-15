@@ -4,7 +4,8 @@
 #include <memory>
 #include <algorithm>
 #include "object/game_object.h"
-#include "object/panel.h"
+
+class Panel; // 前方宣言
 
 
 // ObjectManagerのインターフェースとなる基底クラス
@@ -312,10 +313,8 @@ public:
 	}
 
 	template<typename... Args>
-	ObjectType* AddObject(int index, Args&&... args)
+	ObjectType* AddObject(Args&&... args)
 	{
-		// scene側から実行する時、参照するオブジェクトが2d/3d/systemどれかを判断する必要あり
-
 		// キャパシティチェック
 		if (m_Objects.size() >= m_Objects.capacity())
 		{
@@ -324,8 +323,8 @@ public:
 		}
 
 		// vectorのメモリ上でオブジェクトを構築(emplace_backはc++17から参照を返す)
-		auto& obj = m_Objects.emplace_back(std::forward<Args>(args)...);
-		obj.Init();
+		auto& obj = m_Objects.emplace_back();
+		obj.Init(std::forward<Args>(args)...);
 
 		return &obj;
 	}

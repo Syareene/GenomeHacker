@@ -21,7 +21,7 @@
 // ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
 // それぞれ処理分けてもいい説はあります
 
-void DnaScreenScript::Init(Transform trans)
+void DnaScreenScript::Init(const unsigned int& playerId, Transform trans)
 {
 	SetTransform(trans);
 	AddTag("dna_edit");
@@ -33,9 +33,9 @@ void DnaScreenScript::Init(Transform trans)
 	// 下3つはタブのボタン+タブ内部のスクリプトの描画を管理
 	// panelに足すだけじゃなく、すぐ管理できるようにポインタを自身で保持しておく。
 	// 生存管理はpanel側で行うので開放処理は必要ない(unique_ptrだしね)
-	m_AttackTab = Panel::AddChildObject<AttackTab>(1);
-	m_MoveTab = Panel::AddChildObject<MoveTab>(1);
-	m_DeathTab = Panel::AddChildObject<DeathTab>(1);
+	m_AttackTab = Panel::AddChildObject<AttackTab>(1, playerId);
+	m_MoveTab = Panel::AddChildObject<MoveTab>(1, playerId);
+	m_DeathTab = Panel::AddChildObject<DeathTab>(1, playerId);
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
@@ -87,20 +87,14 @@ void DnaScreenScript::Update()
 	}
 
 	// 子オブジェクトの更新
-	for (auto& layer : GetAllChildObjects())
+	for (auto& child : GetAllChildObjects())
 	{
-		for (auto& child : layer)
+		if (!child)
 		{
-			if (TabBase* temp = dynamic_cast<TabBase*>(child.get()))
-			{
-				// TabBaseの場合は選択されていないならskip
-				if (!temp->GetIsSelected())
-				{
-					continue;
-				}
-			}
-			child->Update();
+			continue;
 		}
+		// 更新
+		child->Update();
 	}
 
 	// パネルの更新処理
@@ -120,20 +114,13 @@ void DnaScreenScript::Draw()
 	}
 
 	// 子オブジェクトの描画
-	for (auto& layer : GetAllChildObjects())
+	for (auto& child : GetAllChildObjects())
 	{
-		for (auto& child : layer)
+		if (!child)
 		{
-			if (TabBase* temp = dynamic_cast<TabBase*>(child.get()))
-			{
-				// TabBaseの場合は選択されていないならskip
-				if (!temp->GetIsSelected())
-				{
-					continue;
-				}
-			}
-			child->Draw();
+			continue;
 		}
+		child->Draw();
 	}
 
 	// DNAスクリーンの描画処理
@@ -227,14 +214,14 @@ void DnaScreenScript::HideDnaInfo()
 	// panelからfontオブジェクトを消す
 	for(auto& child : GetChildObjectsByType<Font>())
 	{
-		child->SetDestroy(true);
+		child.SetDestroy(true);
 	}
 
 	// buttonも消す
 	// これでもDNAButtonとかも消えちゃうからタグつけないとだ
 	for(auto& child : GetChildObjectsByType<Button>())
 	{
-		child->SetDestroy(true);
+		child.SetDestroy(true);
 	}
 
 	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも

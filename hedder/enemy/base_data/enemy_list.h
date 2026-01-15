@@ -20,7 +20,7 @@ public:
 	virtual ~EnemyList() {}
 	EnemyList(EnemyList&&) noexcept = default; // ムーブコンストラクタ
 	EnemyList& operator=(EnemyList&&) noexcept = default; // ムーブ代入演算子
-	void Init() override;
+	void Init(const unsigned int& playerId);
 	void Uninit() override;
 	void Update() override;
 
