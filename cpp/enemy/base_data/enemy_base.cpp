@@ -22,7 +22,7 @@
 #include "scene/state/dna_table_state.h"
 
 
-void EnemyBase::Register(const unsigned int& playerId)
+DnaScreenScript::TabList EnemyBase::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -35,7 +35,7 @@ void EnemyBase::Register(const unsigned int& playerId)
 	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
 	
 	m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
-	m_DnaScreen->Init(playerId); // DNAスクリーンの初期化
+	return m_DnaScreen->Init(playerId); // DNAスクリーンの初期化+ポインタを返す
 
 	// テクスチャ生成
 	
@@ -63,22 +63,30 @@ void EnemyBase::Unregister()
 
 void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 {
+	// タブを取得
+	AttackTab* attackTab = m_DnaScreen->GetChildObjectById<AttackTab>(m_DnaScreen->GetAttackTabId());
+	// nullptrチェック
+	if(!attackTab)
+	{
+		return;
+	}
+
 	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
-	if(enemy_ptr->GetAttackNodeCDSum() != GetDnaScreen()->GetAttackTab()->GetCDMax())
+	if(enemy_ptr->GetAttackNodeCDSum() != attackTab->GetCDMax())
 	{
 		// 時間が伸びる場合はcdmaxだけ更新
 		// 短くなる場合は比を使い現在のcd位置も更新
-		if (enemy_ptr->GetAttackNodeCDSum() > GetDnaScreen()->GetAttackTab()->GetCDMax())
+		if (enemy_ptr->GetAttackNodeCDSum() > attackTab->GetCDMax())
 		{
 			// 現在のcd位置を更新
-			float ratio = static_cast<float>(enemy_ptr->GetAttackNodeCDSum()) / static_cast<float>(GetDnaScreen()->GetAttackTab()->GetCDMax());
+			float ratio = static_cast<float>(enemy_ptr->GetAttackNodeCDSum()) / static_cast<float>(attackTab->GetCDMax());
 			enemy_ptr->SetAttackNodeTime(static_cast<int>(enemy_ptr->GetAttackNodeTime() * ratio));
 
 			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
 		}
 
 		// 異なる場合は現在のcdmaxを保存
-		enemy_ptr->SetAttackNodeCDSum(GetDnaScreen()->GetAttackTab()->GetCDMax());
+		enemy_ptr->SetAttackNodeCDSum(attackTab->GetCDMax());
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
@@ -91,7 +99,7 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	int index = 0;
 	int beforeTime = 0;
 	bool isFinished = false;
-	for (auto& time : GetDnaScreen()->GetAttackTab()->GetNodeTimeLine())
+	for (auto& time : attackTab->GetNodeTimeLine())
 	{
 		if (enemy_ptr->GetAttackNodeTime() <= time)
 		{
@@ -101,7 +109,7 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			auto it = GetDnaScreen()->GetAttackTab()->GetNodes().begin();
+			auto it = attackTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
 
@@ -118,25 +126,33 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 
 void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 {
+	// タブを取得
+	MoveTab* moveTab = m_DnaScreen->GetChildObjectById<MoveTab>(m_DnaScreen->GetMoveTabId());
+	// nullptrチェック
+	if(!moveTab)
+	{
+		return;
+	}
+
 	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
-	if (enemy_ptr->GetMoveNodeCDSum() != GetDnaScreen()->GetMoveTab()->GetCDMax())
+	if (enemy_ptr->GetMoveNodeCDSum() != moveTab->GetCDMax())
 	{
 		// 生成時にfieldEnemyのcdmaxが更新されていないので最初はここはいる
 
 
 		// 時間が伸びる場合はcdmaxだけ更新
 		// 短くなる場合は比を使い現在のcd位置も更新
-		if (enemy_ptr->GetMoveNodeCDSum() > GetDnaScreen()->GetMoveTab()->GetCDMax())
+		if (enemy_ptr->GetMoveNodeCDSum() > moveTab->GetCDMax())
 		{
 			// 現在のcd位置を更新
-			float ratio = static_cast<float>(enemy_ptr->GetMoveNodeCDSum()) / static_cast<float>(GetDnaScreen()->GetMoveTab()->GetCDMax());
+			float ratio = static_cast<float>(enemy_ptr->GetMoveNodeCDSum()) / static_cast<float>(moveTab->GetCDMax());
 			enemy_ptr->SetMoveNodeTime(static_cast<int>(enemy_ptr->GetMoveNodeTime() * ratio));
 
 			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
 		}
 
 		// 異なる場合は現在のcdmaxを保存
-		enemy_ptr->SetMoveNodeCDSum(GetDnaScreen()->GetMoveTab()->GetCDMax());
+		enemy_ptr->SetMoveNodeCDSum(moveTab->GetCDMax());
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
@@ -151,7 +167,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	int index = 0;
 	int beforeTime = 0;
 	bool isFinished = false;
-	for (auto& time : GetDnaScreen()->GetMoveTab()->GetNodeTimeLine())
+	for (auto& time : moveTab->GetNodeTimeLine())
 	{
 		if (enemy_ptr->GetMoveNodeTime() <= time)
 		{
@@ -161,7 +177,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			GetDnaScreen()->GetMoveTab()->GetNodes()[index].get()->NodeEffect(enemy_ptr);
+			moveTab->GetNodes()[index].get()->NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -176,22 +192,30 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 
 bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 {
+	// タブを取得
+	DeathTab* deathTab = m_DnaScreen->GetChildObjectById<DeathTab>(m_DnaScreen->GetDeathTabId());
+	// nullptrチェック
+	if (!deathTab)
+	{
+		return false;
+	}
+
 	// 前のfに保存しているcdmaxと現在のcdmaxが異なるかどうか
-	if (enemy_ptr->GetDeathNodeCDSum() != GetDnaScreen()->GetDeathTab()->GetCDMax())
+	if (enemy_ptr->GetDeathNodeCDSum() != deathTab->GetCDMax())
 	{
 		// 時間が伸びる場合はcdmaxだけ更新
 		// 短くなる場合は比を使い現在のcd位置も更新
-		if (enemy_ptr->GetDeathNodeCDSum() > GetDnaScreen()->GetDeathTab()->GetCDMax())
+		if (enemy_ptr->GetDeathNodeCDSum() > deathTab->GetCDMax())
 		{
 			// 現在のcd位置を更新
-			float ratio = static_cast<float>(enemy_ptr->GetDeathNodeCDSum()) / static_cast<float>(GetDnaScreen()->GetDeathTab()->GetCDMax());
+			float ratio = static_cast<float>(enemy_ptr->GetDeathNodeCDSum()) / static_cast<float>(deathTab->GetCDMax());
 			enemy_ptr->SetDeathNodeTime(static_cast<int>(enemy_ptr->GetDeathNodeTime() * ratio));
 
 			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
 		}
 
 		// 異なる場合は現在のcdmaxを保存
-		enemy_ptr->SetDeathNodeCDSum(GetDnaScreen()->GetDeathTab()->GetCDMax());
+		enemy_ptr->SetDeathNodeCDSum(deathTab->GetCDMax());
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
@@ -205,7 +229,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	int index = 0;
 	int beforeTime = 0;
 	bool isFinished = false;
-	for (auto& time : GetDnaScreen()->GetDeathTab()->GetNodeTimeLine())
+	for (auto& time : deathTab->GetNodeTimeLine())
 	{
 		if (enemy_ptr->GetDeathNodeTime() <= time)
 		{
@@ -215,7 +239,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			auto it = GetDnaScreen()->GetDeathTab()->GetNodes().begin();
+			auto it = deathTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
 
@@ -231,10 +255,10 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	return true; // 実行終わったらtrueを返す
 }
 
-void EnemyBase::Init(const unsigned int& playerId)
+DnaScreenScript::TabList EnemyBase::Init(const unsigned int& playerId)
 {
 	// 一旦register呼ぶ
-	EnemyBase::Register(playerId);
+	return EnemyBase::Register(playerId);
 }
 
 void EnemyBase::Uninit()
@@ -244,11 +268,7 @@ void EnemyBase::Uninit()
 
 void EnemyBase::Update()
 {
-	// DNAタブが表示されている場合は更新処理を行う
-	//if (m_IsDnaScreenVisible && m_DnaScreen)
-	//{
-	//	m_DnaScreen->Update();
-	//}
+	m_DnaScreen->Update();
 }
 
 void EnemyBase::Draw()
@@ -312,6 +332,8 @@ void EnemyBase::ShowDnaScreen()
 	// DNAタブを表示
 	if (m_DnaScreen)
 	{
+		// 問題となる場所をここから呼び出している
+
 		// state変更
 		DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
 

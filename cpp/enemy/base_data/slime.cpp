@@ -20,7 +20,7 @@
 
 #include "enemy/node/add_score.h"
 
-void Slime::Register(const unsigned int& playerId)
+DnaScreenScript::TabList Slime::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -28,19 +28,23 @@ void Slime::Register(const unsigned int& playerId)
 	//SetDnaScreen(std::make_unique<DnaScreenScript>());
 	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
 
-	EnemyBase::Init(playerId);
+	DnaScreenScript::TabList tab_list = EnemyBase::Init(playerId);
 
 	// ここでAddnodeする時にposも指定できるようにして
 	// そのposと内部にあるテキストのyで位置調整する(xは固定)
 
 	// ノード登録
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
 
-	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
+	// enemy_listからregisterされてきた。enemy_baseのinitからDnaScreenのptrをもらうか
+	// これ一時objに対してpushしてるからidじゃ検索できません
+
+	tab_list.moveTab->AddNode<MoveX>(0);
+	tab_list.moveTab->AddNode<MoveZ>(-1);
+	tab_list.moveTab->AddNode<MoveX>(-1);
+	tab_list.moveTab->AddNode<MoveZ>(-1);
+	tab_list.moveTab->AddNode<MoveX>(-1);
+
+	tab_list.deathTab->AddNode<AddScore>(0)->SetAddScore(1);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\slime.png");
@@ -56,4 +60,6 @@ void Slime::Register(const unsigned int& playerId)
 
 	// 体力設定
 	SetMaxHealth(1.0f);
+
+	return tab_list;
 }

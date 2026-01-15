@@ -19,19 +19,17 @@
 #include "enemy/node/move_x.h"
 #include "enemy/node/add_score.h"
 
-void Minotaur::Register(const unsigned int& playerId)
+DnaScreenScript::TabList Minotaur::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
 	// そのenemy固有の情報を登録
 	//SetDnaScreen(std::make_unique<DnaScreenScript>());
 	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
-	EnemyBase::Init(playerId);
-	
+	DnaScreenScript::TabList tab_list = EnemyBase::Init(playerId);
 
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
-
-	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);
+	tab_list.moveTab->AddNode<MoveX>(0)->SetMoveVal(0.05f);
+	tab_list.deathTab->AddNode<AddScore>(0)->SetAddScore(10);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\minotaur.png");
@@ -42,4 +40,6 @@ void Minotaur::Register(const unsigned int& playerId)
 
 	// 体力設定
 	SetMaxHealth(3.0f);
+
+	return tab_list;
 }

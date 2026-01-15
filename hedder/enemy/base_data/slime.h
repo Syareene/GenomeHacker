@@ -6,5 +6,5 @@
 class Slime : public EnemyBase
 {
 public:
-	void Register(const unsigned int& playerId) override; // 登録処理
+	DnaScreenScript::TabList Register(const unsigned int& playerId) override; // 登録処理
 };

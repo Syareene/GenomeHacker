@@ -49,6 +49,8 @@ void Panel::Update()
 
 	// 不要な子オブジェクトの削除処理
 	DeleteChildObject();
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void Panel::Draw()
@@ -63,5 +65,18 @@ void Panel::Draw()
 			continue;
 		}
 		child->Draw();
+	}
+}
+
+void Panel::FlushPendingObjects()
+{
+	// 子オブジェクトの保留中オブジェクトをフラッシュ
+	for (auto& child : m_ChildObjects)
+	{
+		if (!child)
+		{
+			continue;
+		}
+		child->FlushPendingObjects();
 	}
 }

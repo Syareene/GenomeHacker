@@ -25,5 +25,9 @@ void EnemyList::Uninit()
 
 void EnemyList::Update()
 {
-
+	// 敵パネルの状態を更新するために実行
+	for (auto& enemy : m_EnemyBaseList)
+	{
+		enemy->Update();
+	}
 }

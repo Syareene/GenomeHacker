@@ -39,6 +39,7 @@ public:
 	virtual void Init();
 	void Uninit() override;
 	void Update() override;
+	void FlushPendingObjects();
 	// sceneみたいに後付pushにするかちょい悩む
 	void Draw() override;
 
@@ -60,6 +61,21 @@ public:
 		auto manager = static_cast<ObjectManager<ObjectType>*>(m_ChildObjects[typeId].get());
 		manager->Reserve(capacity);
 	}
+
+	// idを用いてGameObjectを取得
+	template <typename T>
+	T* GetChildObjectById(unsigned int id) requires std::is_base_of_v<Object2D, T>
+	{
+		// id取得
+		const int typeId = getTypeId<T>();
+		if ((int)m_ChildObjects.size() <= typeId || !m_ChildObjects[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_ChildObjects[typeId].get());
+		return manager->GetObjectById(id);
+	}
+
 
 	// タグ検索のオーバーライド
 	GameObject* FindObjectByTag(const std::string& tag) override

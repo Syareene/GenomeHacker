@@ -113,7 +113,7 @@ void Scene::Uninit()
 
 void Scene::FlushPendingObjects()
 {
-		// 3dオブジェクトの保留中オブジェクトをフラッシュ
+	// 3dオブジェクトの保留中オブジェクトをフラッシュ
 	for (auto& objects3d : m_Objects3D)
 	{
 		if(!objects3d)
@@ -122,6 +122,8 @@ void Scene::FlushPendingObjects()
 		}
 		objects3d->FlushPendingObjects();
 	}
+	ObjectManager<Panel>* panelManager = nullptr;
+
 	// 2dオブジェクトの保留中オブジェクトをフラッシュ
 	for (auto& objects2d : m_Objects2D)
 	{
@@ -129,7 +131,23 @@ void Scene::FlushPendingObjects()
 		{
 			continue;
 		}
+		ObjectManager<Panel>* manager = dynamic_cast<ObjectManager<Panel>*>(objects2d.get());
+		if (manager)
+		{
+			panelManager = manager;
+		}
 		objects2d->FlushPendingObjects();
+	}
+
+	// パネル内にもmanagerがあるためそちらもフラッシュ処理
+
+	// これパネル継承したやつの場合実行されんね
+	if (panelManager)
+	{
+		for (auto& panelObj : panelManager->GetGameObjects())
+		{
+			panelObj.FlushPendingObjects();
+		}
 	}
 }
 
@@ -176,6 +194,8 @@ void Scene::UpdateObject()
 	}
 	// 不要なgameobjectの削除準備
 	DeleteGameObject();
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 void Scene::UpdateObjectByTag(const std::string& tag)
 {
@@ -220,6 +240,8 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 	}
 	// 不要なgameobjectの削除準備
 	DeleteGameObject();
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
@@ -262,7 +284,10 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 		}
 		objects2d->UpdateObjectByTags(tags);
 	}
+	// 不要なgameobjectの削除準備
 	DeleteGameObject();
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void Scene::DrawObject()

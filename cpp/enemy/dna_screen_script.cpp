@@ -21,21 +21,26 @@
 // ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
 // それぞれ処理分けてもいい説はあります
 
-void DnaScreenScript::Init(const unsigned int& playerId, Transform trans)
+DnaScreenScript::TabList DnaScreenScript::Init(const unsigned int& playerId, Transform trans)
 {
 	SetTransform(trans);
 	AddTag("dna_edit");
-	
+
+	TabList tab_list;
+
 	// 一括管理するために下位オブジェクトを生成
 
 	// これ、パネルの場合表示順いじれないの問題かも?->パネル内の描画は一旦追加順で対処。全体に関してはそもそもベースが描画順コントロールできるからそこでやってくれって感じで(unityも同じだから)
-	Panel::AddChildObject<DNAButton>(0);
+	AddChildObject<DNAButton>(0);
 	// 下3つはタブのボタン+タブ内部のスクリプトの描画を管理
 	// panelに足すだけじゃなく、すぐ管理できるようにポインタを自身で保持しておく。
 	// 生存管理はpanel側で行うので開放処理は必要ない(unique_ptrだしね)
-	m_AttackTab = Panel::AddChildObject<AttackTab>(1, playerId);
-	m_MoveTab = Panel::AddChildObject<MoveTab>(1, playerId);
-	m_DeathTab = Panel::AddChildObject<DeathTab>(1, playerId);
+	tab_list.attackTab = AddChildObject<AttackTab>(1, playerId);
+	m_AttackTabId = tab_list.attackTab->GetObjectID();
+	tab_list.moveTab = AddChildObject<MoveTab>(1, playerId);
+	m_MoveTabId = tab_list.moveTab->GetObjectID();
+	tab_list.deathTab = AddChildObject<DeathTab>(1, playerId);
+	m_DeathTabId = tab_list.deathTab->GetObjectID();
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
@@ -43,7 +48,9 @@ void DnaScreenScript::Init(const unsigned int& playerId, Transform trans)
 	//m_AttackTab->SetIsSelected(true); // 最初は攻撃タブが選択されている状態にする
 
 	// デバッグ用にmoveで表示
-	m_MoveTab->SetIsSelected(true); // 最初は移動タブが選択されている状態にする
+	tab_list.moveTab->SetIsSelected(true); // 最初は移動タブが選択されている状態にする
+	// 自身のポインタを返す
+	return tab_list;
 }
 
 void DnaScreenScript::Uninit()
@@ -52,58 +59,61 @@ void DnaScreenScript::Uninit()
 	Panel::Uninit();
 	// ここで必要な終了処理を追加
 
-	// 参照元のオブジェクトは自動開放されるが参照しているポインタにアクセスしようとするとエラーになるためリスト内部をクリアする
-	m_AttackTab = nullptr;
-	m_MoveTab = nullptr;
-	m_DeathTab = nullptr;
+	// 保持IDのリセット
+	m_AttackTabId = 0;
+	m_MoveTabId = 0;
+	m_DeathTabId = 0;
 }
 
 void DnaScreenScript::Update()
 {
-	if (!IsActive())
+	// 有効時の処理
+	if (IsActive())
 	{
-		return;
-	}
-	// DNAスクリーンの更新処理
+		// DNAスクリーンの更新処理
 	//Panel::Update();->こっちで管理したいのでこの下に自作
 
 
 	// Debug時限定で数字キーでタブ切り替え
-	
+
 	// 1キー: 攻撃タブ
-	if(Input::GetKeyTrigger('1'))
-	{
-		SelectedAttackTab();
-	}
-	// 2キー: 移動タブ
-	if (Input::GetKeyTrigger('2'))
-	{
-		SelectedMoveTab();
-	}
-	// 3キー: 死亡タブ
-	if(Input::GetKeyTrigger('3'))
-	{
-		SelectedDeathTab();
-	}
-
-	// 子オブジェクトの更新
-	for (auto& child : GetAllChildObjects())
-	{
-		if (!child)
+		if (Input::GetKeyTrigger('1'))
 		{
-			continue;
+			SelectedAttackTab();
 		}
-		// 更新
-		child->Update();
+		// 2キー: 移動タブ
+		if (Input::GetKeyTrigger('2'))
+		{
+			SelectedMoveTab();
+		}
+		// 3キー: 死亡タブ
+		if (Input::GetKeyTrigger('3'))
+		{
+			SelectedDeathTab();
+		}
+
+		// 子オブジェクトの更新
+		for (auto& child : GetAllChildObjects())
+		{
+			if (!child)
+			{
+				continue;
+			}
+			// 更新
+			child->Update();
+		}
+
+		// パネルの更新処理
+		Object2D::Update();
 	}
 
-	// パネルの更新処理
-	Object2D::Update();
-
-	// ここで必要な更新処理を追加
+	// 有効でも無効でも下記処理は行う
 
 	// 不要な子オブジェクトの削除処理(最後に呼ぶ)
-	DeleteChildObject();	
+	DeleteChildObject();
+
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void DnaScreenScript::Draw()
@@ -149,15 +159,15 @@ void DnaScreenScript::ShowDnaInfo()
 	fontData.outlineWidth = 4.0f;
 
 
-	Panel:: AddChildObject<Button>(1)->Register([this]() {
+	AddChildObject<Button>(1)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		SelectedAttackTab();
 		}, Vector2(1000.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
-	Panel::AddChildObject<Button>(1)->Register([this]() {
+	AddChildObject<Button>(1)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		SelectedMoveTab();
 		}, Vector2(1100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
-	Panel::AddChildObject<Button>(1)->Register([this]() {
+	AddChildObject<Button>(1)->Register([this]() {
 		// ボタンがクリックされた時の処理
 		SelectedDeathTab();
 		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
@@ -167,7 +177,7 @@ void DnaScreenScript::ShowDnaInfo()
 
 	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
 	// 描画されてない時、game_objのリストにはあるが範囲forにてヒットしておらず描画されない?
-	Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(1024.0f, 450.0f, 0.0f), Vector3(512.0f, 540.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
+	AddChildObject<ImageDraw>(1)->Register(Vector3(1024.0f, 450.0f, 0.0f), Vector3(512.0f, 540.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
 
 
 	// 現在のノードを表示
@@ -183,19 +193,19 @@ void DnaScreenScript::ShowDnaInfo()
 
 
 	// 選択されているタブに応じてフォントを生成
-	if(m_AttackTab->GetIsSelected())
+	if(GetChildObjectById<AttackTab>(m_AttackTabId)->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード");
 		return;
 	}
-	if(m_MoveTab->GetIsSelected())
+	if(GetChildObjectById<MoveTab>(m_MoveTabId)->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "移動ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "移動ノード");
 		return;
 	}
-	if(m_DeathTab->GetIsSelected())
+	if(GetChildObjectById<DeathTab>(m_DeathTabId)->GetIsSelected())
 	{
-		Panel::AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード");
 		return;
 	}
 }
@@ -233,44 +243,58 @@ void DnaScreenScript::HideDnaInfo()
 
 TabBase* DnaScreenScript::GetActiveTab()
 {
-	if (m_AttackTab->GetIsSelected())
+	TabBase* temp = nullptr;
+	temp = GetChildObjectById<AttackTab>(m_AttackTabId);
+	//ここから下nullチェック入れるべき
+	if (temp)
 	{
-		return m_AttackTab;
+		if (temp->GetIsSelected())
+		{
+			return temp;
+		}
 	}
-	if (m_MoveTab->GetIsSelected())
+	temp = GetChildObjectById<MoveTab>(m_MoveTabId);
+	if (temp)
 	{
-		return m_MoveTab;
+		if (temp->GetIsSelected())
+		{
+			return temp;
+		}
 	}
-	if (m_DeathTab->GetIsSelected())
+	temp = GetChildObjectById<DeathTab>(m_DeathTabId);
+	if (temp)
 	{
-		return m_DeathTab;
+		if (temp->GetIsSelected())
+		{
+			return temp;
+		}
 	}
 	return nullptr;
 }
 
 void DnaScreenScript::SelectedAttackTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
-	m_AttackTab->SetIsSelected(true);
-	m_AttackTab->ModifyNodePos(); // ノード位置修正
-	m_MoveTab->SetIsSelected(false);
-	m_DeathTab->SetIsSelected(false);
+	GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
+	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(true);
+	GetChildObjectById<AttackTab>(m_AttackTabId)->ModifyNodePos(); // ノード位置修正
+	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(false);
+	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedMoveTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
-	m_AttackTab->SetIsSelected(false);
-	m_MoveTab->SetIsSelected(true);
-	m_MoveTab->ModifyNodePos(); // ノード位置修正
-	m_DeathTab->SetIsSelected(false);
+	GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
+	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(false);
+	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(true);
+	GetChildObjectById<MoveTab>(m_MoveTabId)->ModifyNodePos(); // ノード位置修正
+	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedDeathTab()
 {
-	Panel::GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
-	m_AttackTab->SetIsSelected(false);
-	m_MoveTab->SetIsSelected(false);
-	m_DeathTab->SetIsSelected(true);
-	m_DeathTab->ModifyNodePos(); // ノード位置修正
+	GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
+	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(false);
+	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(false);
+	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(true);
+	GetChildObjectById<DeathTab>(m_DeathTabId)->ModifyNodePos(); // ノード位置修正
 }

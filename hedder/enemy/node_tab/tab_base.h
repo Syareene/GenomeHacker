@@ -22,6 +22,7 @@ class TabBase : public Button
 	// んーこれbutton+αにしたほうが良さそげ、、
 
 public:
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
