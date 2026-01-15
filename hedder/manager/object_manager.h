@@ -240,7 +240,6 @@ public:
 
 		// そうなるとレイヤーはここでvector<vector>にしないとダメやなぁ
 
-		// +システムだった場合ここ描画できないのでstatic_castかなんかで弾いてあげたいね
 		for(auto& obj : m_Objects)
 		{
 			obj.Draw();
