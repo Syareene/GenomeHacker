@@ -8,6 +8,7 @@
 #include "enemy/bullet.h"
 #include "manager/shader_manager.h"
 #include "collider/sphere.h"
+#include "enemy/node/visual_base.h"
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
 
@@ -29,12 +30,21 @@ void Player::Init(Transform trans)
 	Manager::GetCurrentScene()->ReserveObject<Bullet>(Bullet::MAX_OBJECTS);
 
 
-	m_HavingNodes.push_back(std::make_unique<MoveX>());
-	m_HavingNodes.back()->Init(); // 初期化
-	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
-	m_HavingNodes.push_back(std::make_unique<MoveZ>());
-	m_HavingNodes.back()->Init(); // 初期化
-	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.push_back(MoveX());
+	m_HavingNodes.back().Init(); // 初期化
+	m_HavingNodes.back().SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.push_back(MoveZ());
+	m_HavingNodes.back().Init(); // 初期化
+	m_HavingNodes.back().SetNodeLocation(NodeBase::NodeLocation::Player);
+
+	// ノード追加後初期所持ノードに対してVisualを生成する
+	for(auto& node : m_HavingNodes)
+	{
+		VisualBase visual;
+		visual.Init(, &node);
+		m_NodeVisuals.push_back(visual);
+	}
+
 
 	AddTag("in_game");
 	AddTag("player");

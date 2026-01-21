@@ -47,6 +47,8 @@
     <ClInclude Include="hedder\enemy\node_tab\movement.h" />
     <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h" />
     <ClInclude Include="hedder\enemy\node_tab\tab_base.h" />
+    <ClInclude Include="hedder\enemy\node_tab\tab_manager.h" />
+    <ClInclude Include="hedder\enemy\node_tab\tab_visual.h" />
     <ClInclude Include="hedder\enemy\node_tab\togame_button.h" />
     <ClInclude Include="hedder\lib\2d_particle.h" />
     <ClInclude Include="hedder\lib\audio.h" />
@@ -126,6 +128,8 @@
     <ClCompile Include="cpp\enemy\node_tab\enemy_dna_list.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\movement.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\tab_base.cpp" />
+    <ClCompile Include="cpp\enemy\node_tab\tab_manager.cpp" />
+    <ClCompile Include="cpp\enemy\node_tab\tab_visual.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\togame_button.cpp" />
     <ClCompile Include="cpp\lib\2d_particle.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />

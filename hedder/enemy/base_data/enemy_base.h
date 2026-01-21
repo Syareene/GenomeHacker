@@ -2,7 +2,7 @@
 
 #include <list>
 #include <memory>
-#include "enemy/dna_screen_script.h"
+#include "enemy/node_tab/tab_manager.h"
 #include "object/ui/button.h"
 
 
@@ -39,11 +39,11 @@ public:
 
 	// DNAタブ関連の関数
 	//inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
-	inline DnaScreenScript* GetDnaScreen() 
+	inline TabManager* GetTabManager() 
 	{
-		if(m_DnaScreen) 
+		if(m_TabManager)
 		{ 
-			return m_DnaScreen.get(); 
+			return m_TabManager.get();
 		}
 		return nullptr;
 	}
@@ -67,7 +67,7 @@ public:
 	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
-	std::unique_ptr<DnaScreenScript> m_DnaScreen; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
+	std::unique_ptr<TabManager> m_TabManager; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
 	// static -> ボタン押すときの外枠テクスチャ用変数?

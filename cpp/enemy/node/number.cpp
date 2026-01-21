@@ -14,21 +14,6 @@ void NumberNode::Init(Transform trans)
 	SetCD(0);
 }
 
-void NumberNode::Uninit()
-{
-
-}
-
-void NumberNode::Update()
-{
-
-}
-
-void NumberNode::Draw()
-{
-
-}
-
 bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// moveノードなのでcdはチェックせず常に動かす

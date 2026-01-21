@@ -34,7 +34,9 @@ DnaScreenScript::TabList EnemyBase::Register(const unsigned int& playerId)
 	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
 	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
 	
-	m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
+	//m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
+	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
+
 	return m_DnaScreen->Init(playerId); // DNAスクリーンの初期化+ポインタを返す
 
 	// テクスチャ生成
@@ -51,10 +53,9 @@ DnaScreenScript::TabList EnemyBase::Register(const unsigned int& playerId)
 void EnemyBase::Unregister()
 {
 	// 登録解除処理
-	if (m_DnaScreen)
+	if(m_TabManager)
 	{
-		m_DnaScreen->Uninit(); // DNAスクリーンの終了処理
-		m_DnaScreen = nullptr; // スクリーンのポインタを開放
+		m_TabManager.reset(); // タブマネージャー解放(デストラクタ定義なのでuninitされる)
 	}
 
 	// テクスチャ解放
@@ -64,7 +65,7 @@ void EnemyBase::Unregister()
 void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 {
 	// タブを取得
-	AttackTab* attackTab = m_DnaScreen->GetChildObjectById<AttackTab>(m_DnaScreen->GetAttackTabId());
+	AttackTab* attackTab = m_TabManager->GetAttackTab();
 	// nullptrチェック
 	if(!attackTab)
 	{
@@ -127,7 +128,7 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 {
 	// タブを取得
-	MoveTab* moveTab = m_DnaScreen->GetChildObjectById<MoveTab>(m_DnaScreen->GetMoveTabId());
+	MoveTab* moveTab = m_TabManager->GetMoveTab();
 	// nullptrチェック
 	if(!moveTab)
 	{
@@ -193,7 +194,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 {
 	// タブを取得
-	DeathTab* deathTab = m_DnaScreen->GetChildObjectById<DeathTab>(m_DnaScreen->GetDeathTabId());
+	DeathTab* deathTab = m_TabManager->GetDeathTab();
 	// nullptrチェック
 	if (!deathTab)
 	{
@@ -268,7 +269,7 @@ void EnemyBase::Uninit()
 
 void EnemyBase::Update()
 {
-	m_DnaScreen->Update();
+	//m_DnaScreen->Update();
 }
 
 void EnemyBase::Draw()
@@ -330,7 +331,15 @@ void EnemyBase::HideDnaEditButton()
 void EnemyBase::ShowDnaScreen()
 {
 	// DNAタブを表示
-	if (m_DnaScreen)
+
+	// state変更
+	DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
+	// これstateも可変init引数に対応しないとここに入れらねーｗｗｗｗｗｗｗｗ
+	// とりあえずここの追加時にはenemybase*とplayeridがいる
+	will_state->AddGameObject<DnaScreenScript>(-1); // DNAスクリーンをシーンに追加
+
+
+	if (m_TabManager)
 	{
 		// 問題となる場所をここから呼び出している
 

@@ -315,9 +315,6 @@
     <ClInclude Include="hedder\enemy\node\add_score.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\visual_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\lib\particle.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -338,6 +335,15 @@
     </ClInclude>
     <ClInclude Include="hedder\manager\object_manager.h">
       <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\tab_manager.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\visual_base.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\tab_visual.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +533,6 @@
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
       <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\enemy\node\visual_base.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\lib\2d_particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
@@ -553,6 +556,15 @@
     </ClCompile>
     <ClCompile Include="cpp\manager\object_manager.cpp">
       <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\tab_manager.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\visual_base.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\tab_visual.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

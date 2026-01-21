@@ -35,12 +35,12 @@ void MoveZ::Init(Transform trans)
 	//if(GetDescFonts().size() == 0)
 	//{
 		// ノード名セット
-		SetNameFont(m_DescFontData, m_NodeName.description);
+		SetNameFont(m_DescFontData, m_NodeName.text);
 
 		// 説明文セット
 		for (auto& desc : m_Descriptions)
 		{
-			AddDescFont(m_DescFontData, desc.description);
+			AddDescFont(m_DescFontData, desc.text);
 		}
 	//}
 
@@ -51,27 +51,6 @@ void MoveZ::Init(Transform trans)
 	SetCDMax(0);
 	SetCD(0);
 	m_MoveVal = 0.02f; // 移動量
-}
-
-void MoveZ::Uninit()
-{
-	NodeBase::Uninit();
-}
-
-void MoveZ::Update()
-{
-	NodeBase::Update();
-}
-
-void MoveZ::Draw()
-{
-	NodeBase::Draw();
-
-	// テキストを描画
-	//for (auto& font_ptr : m_DescriptionFonts)
-	//{
-	//	font_ptr->Draw();
-	//}
 }
 
 bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)

@@ -9,7 +9,7 @@
 template<typename T>
 concept NodeType = std::is_base_of_v<NodeBase, T>;
 
-class TabBase : public Button
+class TabBase
 {
 	// すべてのタブが継承するタブの基底クラス
 
@@ -24,18 +24,6 @@ class TabBase : public Button
 public:
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
-	void Uninit() override;
-	void Update() override;
-	void Draw() override;
-	virtual void Clicked(); // クリックされたときの処理
-	// index基準でnodeの位置を修正
-	void ModifyNodePos(); // enemyとplayer両方修正する関数
-	void ApplyGrabNode();
-	// ノード掴んでる時に掴んだノード基準でtab内のnode見て見た目含めindexを修正
-	void ModifyEnemyNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr);
-	void ModifyPlayerNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr);
-	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
-	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
 	//inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
 	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
@@ -96,16 +84,7 @@ public:
 		}
 	};
 private:
-	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
-	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
-	static unsigned int m_PlayerId; // プレイヤーid
-	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
-	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
-	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置
-	constexpr static Vector2 PLAYER_AREA_END = { 1280.0f, 720.0f }; // プレイヤーエリアの終了位置
-	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
 	void ModifyTimeLine(); // タイムラインを修正する
-	bool m_IsSelected = false; // 現在選択されているタブかどうか
 	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン

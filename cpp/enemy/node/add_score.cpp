@@ -37,12 +37,12 @@ void AddScore::Init(Transform trans)
 	//if (GetDescFonts().size() == 0)
 	//{
 		// ノード名セット
-		SetNameFont(m_DescFontData, m_NodeName.description);
+		SetNameFont(m_DescFontData, m_NodeName.text);
 
 		// 説明文セット
 		for (auto& desc : m_Descriptions)
 		{
-			AddDescFont(m_DescFontData, desc.description);
+			AddDescFont(m_DescFontData, desc.text);
 		}
 	//}
 
@@ -59,27 +59,6 @@ void AddScore::Init(Transform trans)
 	SetCD(0);
 }
 
-void AddScore::Uninit()
-{
-	NodeBase::Uninit();
-}
-
-void AddScore::Update()
-{
-	NodeBase::Update();
-}
-
-void AddScore::Draw()
-{
-	NodeBase::Draw();
-
-	// テキストを描画
-	//for (auto& font_ptr : m_DescriptionFonts)
-	//{
-	//	font_ptr->Draw();
-	//}
-}
-
 bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// スコア加算
@@ -92,7 +71,7 @@ bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)
 void AddScore::UpdateDescriptionData()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = m_Descriptions[0].description;
+	std::string format_string = m_Descriptions[0].text;
 
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_AddScore));

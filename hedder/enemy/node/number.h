@@ -11,9 +11,6 @@ public:
 	// これ考えたけどsprite作るのがめんどくさいから形みたいな感じじゃなくて内部処理でくっつくくっつかないとかになるのかな？〇〇の場所で使えるノードみたいな感じで
 
 	void Init(Transform trans = Transform()) override;
-	void Uninit() override;
-	void Update() override; // ->基本nodeeffectで良さそうではあるが、、
-	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
 	bool NodeEffect(FieldEnemy* enemy_ptr) override;
 
 	//inline const std::vector<NodeDescription*> GetDescriptions() const override
@@ -38,7 +35,7 @@ public:
 	//	m_Description.push_back(std::move(desc_ptr));
 	//}
 
-	inline void SetDescriptionFontData(const FontData& fontData) override
+	/*inline void SetDescriptionFontData(const FontData& fontData) override
 	{
 		m_DescFontData = fontData;
 	}
@@ -46,12 +43,12 @@ public:
 	inline FontData& GetDescriptionFontData() override
 	{
 		return m_DescFontData;
-	}
+	}*/
 
 	void UpdateDescriptionData() override;
 
 private:
 	static NodeTextData m_NodeName; // ノード名
 	static std::vector<NodeTextData> m_Descriptions; // ノードの説明部分
-	static FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
+	//static FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 };

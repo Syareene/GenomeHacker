@@ -1,23 +1,19 @@
 ﻿#pragma once
 
 #include "object/panel.h"
-#include "enemy/node_tab/attack.h"
-#include "enemy/node_tab/movement.h"
-#include "enemy/node_tab/death.h"
+#include "enemy/node_tab/tab_visual.h"
 
 class EnemyBase;
 
+// 各種タブのデータを保存するクラスとして変更(名称も変えようかな)
 class DnaScreenScript : public Panel
 {
 public:
-	struct TabList
-	{
-		AttackTab* attackTab = nullptr;
-		MoveTab* moveTab = nullptr;
-		DeathTab* deathTab = nullptr;
-	};
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 
-	DnaScreenScript::TabList Init(const unsigned int& playerId, Transform trans = Transform());
+	// このクラスがenemy_baseからstateにたされてるので要らなくなったらstateからdestoryすべきかな
+
+	DnaScreenScript::TabList Init(EnemyBase* base_enemy, const unsigned int& player_id);
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
@@ -25,17 +21,30 @@ public:
 	void ShowDnaInfo();
 	void HideDnaInfo();
 
-	TabBase* GetActiveTab();
+	// タブ移動する時に掴んでるノードは解放してね!
+	inline VisualBase* GetGrabbingNode() const { return m_GrabbingNode; }
+	inline void ReleaseGrabbingNode() { m_GrabbingNode = nullptr; }
+	inline void SetGrabbingNode(VisualBase* nodePtr) { m_GrabbingNode = nodePtr; }
 
-	unsigned int GetAttackTabId() const { return m_AttackTabId; }
-	unsigned int GetMoveTabId() const { return m_MoveTabId; }
-	unsigned int GetDeathTabId() const { return m_DeathTabId; }
+	TabVisual* GetActiveTab();
+	inline TabVisual* GetAttackTabVisual() { return &m_AttackVisual; }
+	inline TabVisual* GetMoveTabVisual() { return &m_MoveVisual; }
+	inline TabVisual* GetDeathTabVisual() { return &m_DeathVisual; }
+
 private:
-	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
+	// 実体or unique
+	TabVisual m_AttackVisual;
+	TabVisual m_MoveVisual;
+	TabVisual m_DeathVisual;
+
 	void SelectedAttackTab();
 	void SelectedMoveTab();
 	void SelectedDeathTab();
-	unsigned int m_AttackTabId;
-	unsigned int m_MoveTabId;
-	unsigned int m_DeathTabId;
+
+	// プレイヤーのid(tab_visual用に保存し、playerのノードを見れるようにする)
+	unsigned int m_PlayerId = 0;
+
+	VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ
+	EnemyBase* m_EnemyBase = nullptr; // 参照しているデータ
+	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
 };

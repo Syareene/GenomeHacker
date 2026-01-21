@@ -10,8 +10,10 @@
 #include "enemy/node_tab/attack.h"
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
-
+#include "enemy/base_data/enemy_base.h"
+#include "player.h"
 #include "lib/input.h" 
+
 
 
 // panel型を継承したscript
@@ -21,26 +23,48 @@
 // ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
 // それぞれ処理分けてもいい説はあります
 
-DnaScreenScript::TabList DnaScreenScript::Init(const unsigned int& playerId, Transform trans)
+DnaScreenScript::TabList DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 {
-	SetTransform(trans);
-	AddTag("dna_edit");
+	// プレイヤーid保存
+	m_PlayerId = player_id;
 
-	TabList tab_list;
+	// EnemyBaseからTabManagerを取得
+	TabManager* manager = base_enemy->GetTabManager();
+
+	// TabManager経由で対象が所持しているノードの見た目の部分を生成する
+
+	// 初期化
+	m_AttackVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetAttackTab());
+	m_MoveVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetMoveTab());
+	m_DeathVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetDeathTab());
+
+	// プレイヤーにidをセットしてあげる
+	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(GetObjectID());
+
+
+	// 攻撃ノード
+	for(auto& node : manager->GetAttackTab()->GetNodes())
+	{
+		// nodeの見た目部分を生成
+		m_AttackVisual;
+	}
+	// んー所持しているノードを元にVisualBaseを作成すればいいんだけど、それをまとめるのをどうしようかな、、という感じ
+	// ここ自体がいい感じにデータ持って管理しないとそもそもだめというか、panelで扱ってる旨味が減少しているというか
+	// なので全体(a,m,dの有効化を管理)->タブ個別(ここに対してactiveのt/fを切り替えれば位置による表示の有無がやりやすい)
+
+
+
+
+	// playerが所持しているノードの見た目の部分を生成する
+
+	// その他UI等の生成
+
+	AddTag("dna_edit");
 
 	// 一括管理するために下位オブジェクトを生成
 
 	// これ、パネルの場合表示順いじれないの問題かも?->パネル内の描画は一旦追加順で対処。全体に関してはそもそもベースが描画順コントロールできるからそこでやってくれって感じで(unityも同じだから)
 	AddChildObject<DNAButton>(0);
-	// 下3つはタブのボタン+タブ内部のスクリプトの描画を管理
-	// panelに足すだけじゃなく、すぐ管理できるようにポインタを自身で保持しておく。
-	// 生存管理はpanel側で行うので開放処理は必要ない(unique_ptrだしね)
-	tab_list.attackTab = AddChildObject<AttackTab>(1, playerId);
-	m_AttackTabId = tab_list.attackTab->GetObjectID();
-	tab_list.moveTab = AddChildObject<MoveTab>(1, playerId);
-	m_MoveTabId = tab_list.moveTab->GetObjectID();
-	tab_list.deathTab = AddChildObject<DeathTab>(1, playerId);
-	m_DeathTabId = tab_list.deathTab->GetObjectID();
 
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
@@ -48,7 +72,7 @@ DnaScreenScript::TabList DnaScreenScript::Init(const unsigned int& playerId, Tra
 	//m_AttackTab->SetIsSelected(true); // 最初は攻撃タブが選択されている状態にする
 
 	// デバッグ用にmoveで表示
-	tab_list.moveTab->SetIsSelected(true); // 最初は移動タブが選択されている状態にする
+	m_MoveVisual.SetIsSelected(true); // 最初は移動タブが選択されている状態にする
 	// 自身のポインタを返す
 	return tab_list;
 }
@@ -59,10 +83,14 @@ void DnaScreenScript::Uninit()
 	Panel::Uninit();
 	// ここで必要な終了処理を追加
 
+	// playerで保存しているidのリセット
+	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(0);
+
+
 	// 保持IDのリセット
-	m_AttackTabId = 0;
-	m_MoveTabId = 0;
-	m_DeathTabId = 0;
+	//m_AttackTabId = 0;
+	//m_MoveTabId = 0;
+	//m_DeathTabId = 0;
 }
 
 void DnaScreenScript::Update()
@@ -193,17 +221,17 @@ void DnaScreenScript::ShowDnaInfo()
 
 
 	// 選択されているタブに応じてフォントを生成
-	if(GetChildObjectById<AttackTab>(m_AttackTabId)->GetIsSelected())
+	if(m_AttackVisual.GetIsSelected())
 	{
 		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード");
 		return;
 	}
-	if(GetChildObjectById<MoveTab>(m_MoveTabId)->GetIsSelected())
+	if(m_MoveVisual.GetIsSelected())
 	{
 		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "移動ノード");
 		return;
 	}
-	if(GetChildObjectById<DeathTab>(m_DeathTabId)->GetIsSelected())
+	if(m_DeathVisual.GetIsSelected())
 	{
 		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード");
 		return;
@@ -241,33 +269,19 @@ void DnaScreenScript::HideDnaInfo()
 	//Uninit();
 }
 
-TabBase* DnaScreenScript::GetActiveTab()
+TabVisual* DnaScreenScript::GetActiveTab()
 {
-	TabBase* temp = nullptr;
-	temp = GetChildObjectById<AttackTab>(m_AttackTabId);
-	//ここから下nullチェック入れるべき
-	if (temp)
+	if(m_AttackVisual.GetIsSelected())
 	{
-		if (temp->GetIsSelected())
-		{
-			return temp;
-		}
+		return &m_AttackVisual;
 	}
-	temp = GetChildObjectById<MoveTab>(m_MoveTabId);
-	if (temp)
+	if(m_MoveVisual.GetIsSelected())
 	{
-		if (temp->GetIsSelected())
-		{
-			return temp;
-		}
+		return &m_MoveVisual;
 	}
-	temp = GetChildObjectById<DeathTab>(m_DeathTabId);
-	if (temp)
+	if(m_DeathVisual.GetIsSelected())
 	{
-		if (temp->GetIsSelected())
-		{
-			return temp;
-		}
+		return &m_DeathVisual;
 	}
 	return nullptr;
 }
@@ -275,26 +289,26 @@ TabBase* DnaScreenScript::GetActiveTab()
 void DnaScreenScript::SelectedAttackTab()
 {
 	GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
-	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(true);
-	GetChildObjectById<AttackTab>(m_AttackTabId)->ModifyNodePos(); // ノード位置修正
-	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(false);
-	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(false);
+	m_AttackVisual.SetIsSelected(true);
+	m_AttackVisual.ModifyNodePos(); // ノード位置修正
+	m_MoveVisual.SetIsSelected(false);
+	m_DeathVisual.SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedMoveTab()
 {
 	GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
-	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(false);
-	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(true);
-	GetChildObjectById<MoveTab>(m_MoveTabId)->ModifyNodePos(); // ノード位置修正
-	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(false);
+	m_AttackVisual.SetIsSelected(false);
+	m_MoveVisual.SetIsSelected(true);
+	m_MoveVisual.ModifyNodePos(); // ノード位置修正
+	m_DeathVisual.SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedDeathTab()
 {
 	GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
-	GetChildObjectById<AttackTab>(m_AttackTabId)->SetIsSelected(false);
-	GetChildObjectById<MoveTab>(m_MoveTabId)->SetIsSelected(false);
-	GetChildObjectById<DeathTab>(m_DeathTabId)->SetIsSelected(true);
-	GetChildObjectById<DeathTab>(m_DeathTabId)->ModifyNodePos(); // ノード位置修正
+	m_AttackVisual.SetIsSelected(false);
+	m_MoveVisual.SetIsSelected(false);
+	m_DeathVisual.SetIsSelected(true);
+	m_DeathVisual.ModifyNodePos(); // ノード位置修正
 }
