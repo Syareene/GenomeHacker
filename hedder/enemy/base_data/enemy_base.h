@@ -17,7 +17,7 @@ public:
 	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
 	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
 
-	virtual DnaScreenScript::TabList Register(const unsigned int& playerId); // 登録処理
+	virtual EnemyBase* Register(const unsigned int& playerId); // 登録処理
 	void Unregister(); // 登録解除処理
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)
 	void ExecuteAttack(FieldEnemy* enemy_ptr);
@@ -25,7 +25,7 @@ public:
 	bool ExecuteDeath(FieldEnemy* enemy_ptr);
 
 	// DnaScreenにあるオブジェクトを操作するための関数群
-	DnaScreenScript::TabList Init(const unsigned int& playerId);
+	EnemyBase* Init(const unsigned int& playerId);
 	void Uninit();
 	void Update();
 	void Draw();

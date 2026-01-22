@@ -92,3 +92,9 @@ const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 	// 両方ともnullptr->チェックしなくていい場合はtrueを返す(初期状態とかこうなるしね)
 	return true;
 }
+
+void NodeBase::UpdateDescriptionData()
+{
+	// テキスト生成等
+	// これtemplate化してargs受け取ればargある場合にstd::formatsで変数埋込できるね
+}

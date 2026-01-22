@@ -12,11 +12,21 @@
 
 void TabVisual::CreateVisual(TabBase* base)
 {
+	if(m_DnaScreenId == 0 || m_PlayerId == 0)
+	{
+		// id設定されてないなら処理しない
+		// (下の段階でidが設定されてるかわからないので暫定処理)
+		assert(false, "TabVisual::CreateVisual called before IDs are set.");
+		return;
+	}
+
+	int counter = 0;
 	for (auto& node : base->GetNodes())
 	{
 		// まだ実装してないが、visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
 		m_VisualNodes.push_back(VisualBase());
-		m_VisualNodes.back().Init(this, node.get());
+		m_VisualNodes.back().Init(m_DnaScreenId, counter, node.get());
+		counter++;
 	}
 
 	// プレイヤーのvisualも生成?->player側で生成し持っておくor dna_screen側で持つ?
@@ -37,16 +47,20 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 	m_PlayerId = player_id;
 	// screen_id保存
 	m_DnaScreenId = screen_id;
+	m_Tab = tab_base;
 
 	// 属するタブのノードを元に見た目を作成
+	int counter = 0;
 	for(auto& node : tab_base->GetNodes())
 	{
 		m_VisualNodes.push_back(VisualBase());
 		// 最後尾に対してnodeを元に初期化する
 		// nodeのptr渡してあげるのが一番いいかもね
-		m_VisualNodes.back().Init(this, node.get());
-
+		m_VisualNodes.back().Init(screen_id, counter, node.get());
+		
 		// setnamefont/adddescfont->改造して一括で渡せるように?
+
+		counter++;
 	}
 }
 
@@ -68,8 +82,6 @@ void TabVisual::Update()
 	}
 	// プレイヤーが所持しているノードの更新処理
 	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
-
-	// これVisualBaseに変換しないと描画できないな、、ｗ困ったぞ
 
 	for (auto& node : temp->GetAllVisualNodes())
 	{
@@ -119,29 +131,29 @@ void TabVisual::ApplyGrabNode()
 		NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
 
 		// 所属しているノードリストから一時変数にmove
-		std::unique_ptr<NodeBase> tempNode = nullptr;
+		VisualBase tempNode;
 		if (loc == NodeBase::NodeLocation::Enemy)
 		{
 			// enemyノード側から探す
 			auto it = std::find_if(m_VisualNodes.begin(), m_VisualNodes.end(),
-				[&](const std::unique_ptr<VisualBase>& node) {
-					return node.get() == grabNode;
+				[&](const VisualBase& node) {
+					return &node == grabNode;
 				});
 			if (it != m_VisualNodes.end())
 			{
 				// 見つかったらmoveで一時変数に保存
 				tempNode = std::move(*it);
-				// リストから削除
+				// リストから削除 // (NodeBase更新版時追記: ここエラー出るかも?)
 				m_VisualNodes.erase(it);
 			}
 		}
 		else if (loc == NodeBase::NodeLocation::Player)
 		{
 			// プレイヤーノード側から探す
-			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
+			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 			auto it = std::find_if(playerNodes.begin(), playerNodes.end(),
-				[&](const std::unique_ptr<VisualBase>& node) {
-					return node.get() == grabNode;
+				[&](const VisualBase& node) {
+					return &node == grabNode;
 				});
 			if (it != playerNodes.end())
 			{
@@ -153,15 +165,15 @@ void TabVisual::ApplyGrabNode()
 		}
 
 		// 探索しても何も無い場合終了
-		if (!tempNode)
-		{
-			return;
-		}
+		//if (!tempNode)
+		//{
+		//	return;
+		//}
 
 
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
-		Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
-		grabNode = tempNode.get();
+		Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(&tempNode);
+		grabNode = &tempNode;
 		//grabNode = state->GetGrabbingNode();
 
 		// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
@@ -174,7 +186,7 @@ void TabVisual::ApplyGrabNode()
 			// iterator基準のループ処理
 			for (auto it = m_VisualNodes.begin(); it != m_VisualNodes.end(); ++it)
 			{
-				if (grabPosY < (*it)->GetPosition().y)
+				if (grabPosY < (*it).GetPosition().y)
 				{
 					// 見つかったら挿入
 					m_VisualNodes.insert(it, std::move(tempNode));
@@ -194,14 +206,14 @@ void TabVisual::ApplyGrabNode()
 		else
 		{
 			// プレイヤーノード側に追加
-			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
+			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 			float grabPosY = grabNode->GetPosition().y;
 			bool inserted = false;
 
 			// iterator基準のループ処理
 			for (auto it = playerNodes.begin(); it != playerNodes.end(); ++it)
 			{
-				if (grabPosY < (*it)->GetPosition().y)
+				if (grabPosY < (*it).GetPosition().y)
 				{
 					// 見つかったら挿入
 					playerNodes.insert(it, std::move(tempNode));
@@ -222,6 +234,56 @@ void TabVisual::ApplyGrabNode()
 	}
 }
 
+// タブ移動時or編集stateからexitした時に呼び出す
+void TabVisual::ApplyMovedResult()
+{
+	int index = 0;
+	// 割り振り前にNodeBaseに対して整列用idを振る
+	for(auto& node : m_Tab->GetNodes())
+	{
+		node->SetMoveManageId(index);
+	}
+
+	index = 0;
+	for (auto& node : m_VisualNodes)
+	{
+		// NodeBaseのindexを超過/少ない場合の処理を加える(player側から足した/減らした)
+
+		// + プレイヤーに所属している場合は更に派生がややこしくなるぞ!
+
+		// これ敵からプレイヤーに渡したことこれだけじゃ検知できないな
+		if (node.GetNodeLocation() == NodeBase::NodeLocation::Player)
+		{
+			// player側にあったノードを敵に足した
+		}
+		else
+		{
+			// enemy側にあったノードをenemy側で動かした
+		}
+
+		// 該当visualnodeの実indexを元に元データのnodeとデータが一致しているかを確認
+		int nodeBaseIndex = m_Tab->GetNodes()[index]->GetMoveManageId();
+		if (node.GetNodeBaseIndex() == nodeBaseIndex)
+		{
+			// 一致しているなら次のノードへ
+			index++;
+			continue;
+		}
+		// 一致してないので変数:indexとnode.GetNodeBaseIndex()の位置にあるNodeBaseをswap
+		
+
+		// 一致していない場合はlocationと変数に保存されているindexを元に元データのnodeの位置をswapする
+		index++;
+	}
+
+
+
+	// visualとnodeのindex比べてvisualを元にnodeを入れ替える
+	// これvisual側にもfromないとplayerとswapする場合もあるっていう
+
+	// プレイヤー側の更新はどうしようねぇ、、(この中でプレイヤーのノードも修正する形かな)
+}
+
 void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 {
 	// 座標加算用に保存
@@ -240,7 +302,7 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
 		// 掴みノードならマウス座標へ移動
-		if (node == grabPtr)
+		if (&node == grabPtr)
 		{
 			// ノードの位置を修正
 			Vector3 old_pos = node.GetPosition();
@@ -292,19 +354,19 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 
 	// index基準でnodeの位置を修正
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
-	for (auto& node : Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes())
+	for (auto& node : Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes())
 	{
 		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
 		// 掴みノードならマウス座標へ移動
-		if (node.get() == grabPtr)
+		if (&node == grabPtr)
 		{
 			// ノードの位置を修正
-			Vector3 old_pos = node->GetPosition();
-			node->SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
+			Vector3 old_pos = node.GetPosition();
+			node.SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
 			// 中身の説明文の位置も修正
 			Vector2 diff = Vector2(mousePos.x, mousePos.y) - Vector2(old_pos.x, old_pos.y);
-			node->FixFontPositions(diff);
+			node.FixFontPositions(diff);
 			continue; // 次のノードへ
 		}
 
@@ -314,7 +376,7 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
 			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
-			if (mousePos.y < node->GetPosition().y && mousePos.x > ENEMY_AREA_END.x)
+			if (mousePos.y < node.GetPosition().y && mousePos.x > ENEMY_AREA_END.x)
 			{
 				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
@@ -323,13 +385,13 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		}
 
 		// ノードの位置を修正
-		Vector3 scale = node->GetScale();
-		Vector2 diff = Vector2(PLAYER_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
-		Vector3 old_pos = node->GetPosition();
+		Vector3 scale = node.GetScale();
+		Vector2 diff = Vector2(PLAYER_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node.GetPosition().x, node.GetPosition().y);
+		Vector3 old_pos = node.GetPosition();
 
-		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
+		node.SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		// 中身の説明文の位置も修正
-		node->FixFontPositions(diff);
+		node.FixFontPositions(diff);
 
 		// 次のノード用に位置を加算
 		currentPosY += scale.y;
@@ -368,7 +430,7 @@ void TabVisual::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPt
 
 void TabVisual::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPtr)
 {
-	std::list<std::unique_ptr<NodeBase>>& all_nodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllNodes();
+	std::vector<VisualBase>& all_nodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 
 	if (!grabPtr)
 		return;
@@ -376,10 +438,10 @@ void TabVisual::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, VisualBase* grabP
 	// リストを走査
 	for (auto& node : all_nodes)
 	{
-		if (node.get() == grabPtr)
+		if (&node == grabPtr)
 			continue;
 
-		NodeBase* curPtr = node.get();
+		VisualBase* curPtr = &node;
 
 		// 判定用の位置とサイズを取得
 		Vector3 nodePos = curPtr->GetPosition();

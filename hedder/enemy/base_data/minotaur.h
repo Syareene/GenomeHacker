@@ -6,5 +6,5 @@
 class Minotaur : public EnemyBase
 {
 public:
-	DnaScreenScript::TabList Register(const unsigned int& playerId) override; // 登録処理
+	EnemyBase* Register(const unsigned int& playerId) override; // 登録処理
 };

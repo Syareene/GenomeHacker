@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "enemy/field_enemy.h"
+#include "object/ui/font.h"
 
 class NodeBase
 {
@@ -55,16 +56,23 @@ public:
 	inline const NodeLocation GetNodeLocation() const { return m_NodeLocation; }
 	inline void SetNodeLocation(const NodeLocation loc) { m_NodeLocation = loc; }
 
-	virtual void UpdateDescriptionData() = 0;
+	void UpdateDescriptionData();
 
+	// ここあくまでデータをセットしただけで実際のfontobjは生成されていない!
 	inline const NodeTextData& GetNameData() const { return m_Name; }
-	inline void SetNameData(const NodeTextData& data) { m_Name = data; }
-	inline virtual void SetDescriptionData(const NodeTextData& fontData) = 0;
-	inline virtual std::vector<NodeTextData>& GetDescriptionData() = 0;
+	inline void SetNameData(const NodeTextData& data) 
+	{ 
+		m_Name = data;
+	}
+	inline void AddDescriptionData(const NodeTextData& fontData) { m_Descriptions.clear(); m_Descriptions.push_back(fontData); }
+	inline const std::vector<NodeTextData>& GetDescriptionData() const { return m_Descriptions; };
+	inline const int GetMoveManageId() const { return m_MoveManageId; }
+	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
 	inline void AddInputTypeBottom(const InputType& type) { m_InputTypesBottom.push_back(type); }
+
 
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
@@ -85,10 +93,13 @@ private:
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
 	std::vector<NodeTextData> m_Descriptions; // ノードの説明文群
+	Font m_NameFont;
+	std::vector<Font> m_DescriptionFonts;
 
 
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	NodeLocation m_NodeLocation = NodeLocation::Enemy; // ノードの設置場所(敵用かプレイヤー用か)
+	int m_MoveManageId = 0; // VisualBase->NodeBase変換時に使用する割り振り用id変数
 	int m_ID; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)

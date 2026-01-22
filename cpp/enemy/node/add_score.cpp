@@ -5,46 +5,18 @@
 #include "enemy/node/base.h"
 #include <format>
 
-NodeBase::NodeTextData AddScore::m_NodeName; // ノード名
-std::vector<NodeBase::NodeTextData> AddScore::m_Descriptions; // ノードの説明部分
-FontData AddScore::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
-
 void AddScore::Init(Transform trans)
 {
 	Transform defaultTrans = Transform();
 	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
 	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
-	// 初期値セット
-	m_DescFontData.fontSize = 24;
-	m_DescFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	m_DescFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
-	m_DescFontData.font = DirectWriteCustomFont::GetFontName(0);
-	m_DescFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_DescFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	m_DescFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	m_DescFontData.outlineWidth = 2.5f;
-
 	// ベースデータセット
-	m_NodeName = { "AddScore", Vector2(10.0f, 10.0f) };
-	// 生成されていないなら説明文をセット
-	if (m_Descriptions.size() == 0)
-	{
-		m_Descriptions.push_back({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f) });
-	}
 
-	// 生成されていないなら説明文をセット
-	//if (GetDescFonts().size() == 0)
-	//{
-		// ノード名セット
-		SetNameFont(m_DescFontData, m_NodeName.text);
-
-		// 説明文セット
-		for (auto& desc : m_Descriptions)
-		{
-			AddDescFont(m_DescFontData, desc.text);
-		}
-	//}
+	// 名前
+	SetNameData({ "AddScore", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal });
+	// 説明文
+	AddDescriptionData({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f), NodeBase::TextType::Normal });
 
 	m_AddScore = 1.0f; // スコア加算量
 

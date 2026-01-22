@@ -11,13 +11,17 @@
 
 
 
-void VisualBase::Init(const unsigned int& screen_id, TabVisual* parent_tab, NodeBase* node)
+void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* node)
 {
-	// 登録->Playerがこれを追加したい時にこれ参照できん
-	m_ParentTab = parent_tab;
-
 	// screen_id保存
 	m_ScreenID = screen_id;
+
+	m_NodeBaseIndex = base_index;
+
+	// 場所もコピー
+	m_NodeLocation = node->GetNodeLocation();
+
+	m_BaseNodePtr = node;
 
 	// 名前部分生成
 	SetNameFont(node->GetNameData());
@@ -163,13 +167,14 @@ const FontData& VisualBase::GetFontDataFromTextType(const NodeBase::TextType& ty
 	// 仮実装
 	static FontData normalFontData;
 	normalFontData.fontSize = 24;
-	normalFontData.fontWeight = DWRITE_FONT_WEIGHT_REGULAR;
-	normalFontData.Color = D2D1::ColorF(D2D1::ColorF::Black);
+	normalFontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	normalFontData.Color = D2D1::ColorF(D2D1::ColorF::Red);
 	normalFontData.font = DirectWriteCustomFont::GetFontName(0);
 	normalFontData.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
-	normalFontData.shadowOffset = D2D1::Point2F(2.0f, -2.0f);
+	normalFontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
 	normalFontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	normalFontData.outlineWidth = 1.0f;
+	normalFontData.outlineWidth = 2.5f;
+
 	static FontData rareFontData;
 	rareFontData.fontSize = 28;
 	rareFontData.fontWeight = DWRITE_FONT_WEIGHT_BOLD;

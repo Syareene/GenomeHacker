@@ -13,7 +13,7 @@ public:
 
 	// このクラスがenemy_baseからstateにたされてるので要らなくなったらstateからdestoryすべきかな
 
-	DnaScreenScript::TabList Init(EnemyBase* base_enemy, const unsigned int& player_id);
+	void Init(EnemyBase* base_enemy, const unsigned int& player_id);
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

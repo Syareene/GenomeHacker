@@ -36,9 +36,6 @@ void DnaEditState::Init()
 
 void DnaEditState::Uninit()
 {
-	// 掴んでいるノードを離す
-	m_GrabbingNode = nullptr;
-
 	// override後、個別で追加したいものの追加
 	State::Uninit();
 }
@@ -50,8 +47,6 @@ void DnaEditState::Update()
 
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
-
-	m_CurrentEnemyBase->GetDnaScreen()->Update();
 
 	// ノード更新前にプレイヤーが所有しているノードの位置を修正
 	//ModifyNodePos();
@@ -66,7 +61,7 @@ void DnaEditState::Update()
 	//UpdateStateObjectByTag("dna_edit");
 	UpdateStateObject();
 	// ノード掴み処理の適用
-	ApplyGrabNode();
+	//ApplyGrabNode();
 	DeleteGameObject();
 }
 
@@ -75,7 +70,6 @@ void DnaEditState::Draw()
 	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
-	m_CurrentEnemyBase->GetDnaScreen()->Draw();
 
 	//for (auto& node : m_Player->GetAllNodes())
 	//{
@@ -132,23 +126,23 @@ void DnaEditState::ModifyNodePos()
 	}
 }
 
-void DnaEditState::ApplyGrabNode()
-{
-	if (m_IsReleaseGrabNode)
-	{
-		// もし掴んでるノードがあるなら挿入処理関数を実行
-		if (m_GrabbingNode)
-		{
-			auto tab = m_CurrentEnemyBase->GetDnaScreen()->GetActiveTab();
-			if (tab)
-			{
-				tab->ApplyGrabNode();
-			}
-		}
-		m_GrabbingNode = nullptr; // 掴んでいるノードを離す
-		m_IsReleaseGrabNode = false;
-	}
-}
+//void DnaEditState::ApplyGrabNode()
+//{
+//	if (m_IsReleaseGrabNode)
+//	{
+//		// もし掴んでるノードがあるなら挿入処理関数を実行
+//		if (m_GrabbingNode)
+//		{
+//			auto tab = m_CurrentEnemyBase->GetDnaScreen()->GetActiveTab();
+//			if (tab)
+//			{
+//				tab->ApplyGrabNode();
+//			}
+//		}
+//		m_GrabbingNode = nullptr; // 掴んでいるノードを離す
+//		m_IsReleaseGrabNode = false;
+//	}
+//}
 
 /*
 void DnaEditState::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, int& grabIndex)

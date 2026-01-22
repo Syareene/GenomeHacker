@@ -23,7 +23,7 @@
 // ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
 // それぞれ処理分けてもいい説はあります
 
-DnaScreenScript::TabList DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
+void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 {
 	// プレイヤーid保存
 	m_PlayerId = player_id;
@@ -39,15 +39,30 @@ DnaScreenScript::TabList DnaScreenScript::Init(EnemyBase* base_enemy, const unsi
 	m_DeathVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetDeathTab());
 
 	// プレイヤーにidをセットしてあげる
-	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(GetObjectID());
-
-
-	// 攻撃ノード
-	for(auto& node : manager->GetAttackTab()->GetNodes())
+	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
+	player->SetDnaScreenId(GetObjectID());
+	// プレイヤーに関しても所持しているノードの見た目部分を生成する
+	for(auto& node : player->GetAllNodes())
 	{
 		// nodeの見た目部分を生成
-		m_AttackVisual;
+		VisualBase visual = VisualBase();
+		visual.Init(GetObjectID(), m_PlayerId, &node);
+
+		player->AddVisualNode(visual);
 	}
+
+
+	// 各種ノード
+	m_AttackVisual.CreateVisual(manager->GetAttackTab());
+	m_MoveVisual.CreateVisual(manager->GetMoveTab());
+	m_DeathVisual.CreateVisual(manager->GetDeathTab());
+
+
+	//for(auto& node : base_enemy->GetTabManager()->GetAttackTab()->GetNodes())
+	//{
+	//	// nodeの見た目部分を生成
+	//	m_AttackVisual.CreateVisual(node.get());
+	//}
 	// んー所持しているノードを元にVisualBaseを作成すればいいんだけど、それをまとめるのをどうしようかな、、という感じ
 	// ここ自体がいい感じにデータ持って管理しないとそもそもだめというか、panelで扱ってる旨味が減少しているというか
 	// なので全体(a,m,dの有効化を管理)->タブ個別(ここに対してactiveのt/fを切り替えれば位置による表示の有無がやりやすい)
@@ -73,8 +88,6 @@ DnaScreenScript::TabList DnaScreenScript::Init(EnemyBase* base_enemy, const unsi
 
 	// デバッグ用にmoveで表示
 	m_MoveVisual.SetIsSelected(true); // 最初は移動タブが選択されている状態にする
-	// 自身のポインタを返す
-	return tab_list;
 }
 
 void DnaScreenScript::Uninit()
@@ -82,6 +95,10 @@ void DnaScreenScript::Uninit()
 	// DNAスクリーンの終了処理
 	Panel::Uninit();
 	// ここで必要な終了処理を追加
+
+	// 最終的に動いた分を反映
+	GetActiveTab()->ApplyMovedResult();
+
 
 	// playerで保存しているidのリセット
 	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(0);

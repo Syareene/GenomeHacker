@@ -1,13 +1,9 @@
 ﻿#include "main.h"
 #include "enemy/node/number.h"
 
-std::vector<NodeBase::NodeTextData> NumberNode::m_Descriptions; // ノードの説明部分
-FontData NumberNode::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
-
 
 void NumberNode::Init(Transform trans)
 {
-	SetTransform(trans);
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
@@ -24,9 +20,4 @@ bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 	//enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
-}
-
-void NumberNode::UpdateDescriptionData()
-{
-
 }

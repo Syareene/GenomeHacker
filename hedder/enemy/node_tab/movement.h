@@ -6,7 +6,4 @@ class MoveTab : public TabBase
 {
 public:
 	void Init(const unsigned int& playerId, Transform trans = Transform()) override;
-	void Uninit() override;
-	void Update() override;
-	void Draw() override;
 };

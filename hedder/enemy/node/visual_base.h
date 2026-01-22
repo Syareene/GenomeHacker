@@ -13,8 +13,12 @@ class TabVisual; // 前方宣言
 class VisualBase : public Object2D
 {
 public:
+	VisualBase() = default;
+	virtual ~VisualBase() {}
+	VisualBase(VisualBase&&) noexcept = default; // ムーブコンストラクタ
+	VisualBase& operator=(VisualBase&&) noexcept = default; // ムーブ代入演算子
 
-	void Init(const unsigned int& screen_id, TabVisual* parent_tab, NodeBase* node);
+	void Init(const unsigned int& screen_id, int base_index, NodeBase* node);
 	void UpdateVisual(NodeBase* node_ptr); // nodeのデータを引っ張ってきて更新する
 	void Uninit() override;
 	void Update() override;
@@ -57,8 +61,11 @@ public:
 	}
 	inline Font* GetDescFontAt(const int index) { return &m_DescriptionFonts[index]; }
 
+	inline NodeBase* GetBaseNodePtr() const { return m_BaseNodePtr; }
+
 	inline void SetNodeLocation(const NodeBase::NodeLocation loc) { m_NodeLocation = loc; }
 	inline const NodeBase::NodeLocation GetNodeLocation() const { return m_NodeLocation; }
+	inline const int GetNodeBaseIndex() const { return m_NodeBaseIndex; }
 
 private:
 	// nodebaseからもってきたやつ
@@ -69,10 +76,11 @@ private:
 
 
 	unsigned int m_ScreenID = 0; // dna_screenのID
-	// と思ったがほしいのtab_visualに保存してあるgrabを見たいので、属しているtab_visualのptrでもよいかな(dna_screenが残っている限り残されいるのが確約されているので)
-	TabVisual* m_ParentTab = nullptr; // 属しているtab_visualのポインタ
-	NodeBase* m_NodeBase = nullptr;
+	//TabVisual* m_ParentTab = nullptr; // 属しているtab_visualのポインタ
+	//NodeBase* m_NodeBase = nullptr;
+	int m_NodeBaseIndex = -1; // 変換する前のnodebaseのindex
 
+	NodeBase* m_BaseNodePtr = nullptr; // 元となるノードのポインタ
 	NodeBase::NodeLocation m_NodeLocation = NodeBase::NodeLocation::Enemy; // ノードの配置場所(敵orプレイヤー)
 
 	Transform m_Transform = Transform();

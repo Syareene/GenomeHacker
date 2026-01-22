@@ -22,7 +22,7 @@
 #include "scene/state/dna_table_state.h"
 
 
-DnaScreenScript::TabList EnemyBase::Register(const unsigned int& playerId)
+EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -37,7 +37,7 @@ DnaScreenScript::TabList EnemyBase::Register(const unsigned int& playerId)
 	//m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
-	return m_DnaScreen->Init(playerId); // DNAスクリーンの初期化+ポインタを返す
+	return Init(playerId); // DNAスクリーンの初期化+ポインタを返す
 
 	// テクスチャ生成
 	
@@ -256,7 +256,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	return true; // 実行終わったらtrueを返す
 }
 
-DnaScreenScript::TabList EnemyBase::Init(const unsigned int& playerId)
+EnemyBase* EnemyBase::Init(const unsigned int& playerId)
 {
 	// 一旦register呼ぶ
 	return EnemyBase::Register(playerId);
@@ -336,35 +336,21 @@ void EnemyBase::ShowDnaScreen()
 	DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
 	// これstateも可変init引数に対応しないとここに入れらねーｗｗｗｗｗｗｗｗ
 	// とりあえずここの追加時にはenemybase*とplayeridがいる
-	will_state->AddGameObject<DnaScreenScript>(-1); // DNAスクリーンをシーンに追加
-
-
-	if (m_TabManager)
-	{
-		// 問題となる場所をここから呼び出している
-
-		// state変更
-		DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
-
-		m_DnaScreen->SetActive(true); // DNAスクリーンをアクティブにする
-		will_state->SetCurrentEnemyBase(this); // 現在編集中の敵データを設定
-
-		m_DnaScreen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
-		m_DnaScreen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
-	}
+	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(-1); // DNAスクリーンをシーンに追加
+	screen->Init(this, 0); // 敵データとプレイヤーidを渡して初期化(応急措置)
+	screen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
+	screen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 }
 
 void EnemyBase::HideDnaScreen()
 {
 	// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
 	m_IsExitDnaEdit = true;
-	DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
-	if (state)
-	{
-		state->SetCurrentEnemyBase(nullptr); // 現在編集中の敵データをクリア
-	}
-
-	m_DnaScreen->SetActive(false); // DNAスクリーンを非アクティブにする
+	//DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
+	//if (state)
+	//{
+		//state->SetCurrentEnemyBase(nullptr); // 現在編集中の敵データをクリア
+	//}
 
 	// state変更
 	Manager::GetCurrentScene()->SetState<DnaTableState>();
