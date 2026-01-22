@@ -16,7 +16,7 @@ void AddScore::Init(Transform trans)
 	// 名前
 	SetNameData({ "AddScore", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal });
 	// 説明文
-	AddDescriptionData({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f), NodeBase::TextType::Normal });
+	SetDescriptionData({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f), NodeBase::TextType::Normal });
 
 	m_AddScore = 1.0f; // スコア加算量
 

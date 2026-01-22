@@ -64,8 +64,8 @@ public:
 	{ 
 		m_Name = data;
 	}
-	inline void AddDescriptionData(const NodeTextData& fontData) { m_Descriptions.clear(); m_Descriptions.push_back(fontData); }
-	inline const std::vector<NodeTextData>& GetDescriptionData() const { return m_Descriptions; };
+	inline void SetDescriptionData(const NodeTextData& textData) { m_Description = textData; }
+	inline const NodeTextData& GetDescriptionData() const { return m_Description; };
 	inline const int GetMoveManageId() const { return m_MoveManageId; }
 	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
 protected:
@@ -92,7 +92,7 @@ private:
 	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
-	std::vector<NodeTextData> m_Descriptions; // ノードの説明文群
+	NodeTextData m_Description; // ノードの説明文群
 	Font m_NameFont;
 	std::vector<Font> m_DescriptionFonts;
 

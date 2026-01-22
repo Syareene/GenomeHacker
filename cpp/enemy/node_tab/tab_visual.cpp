@@ -243,6 +243,7 @@ void TabVisual::ApplyMovedResult()
 	{
 		node->SetMoveManageId(index);
 	}
+	// プレイヤーのノードに対しても振る
 
 	index = 0;
 	for (auto& node : m_VisualNodes)
@@ -250,6 +251,13 @@ void TabVisual::ApplyMovedResult()
 		// NodeBaseのindexを超過/少ない場合の処理を加える(player側から足した/減らした)
 
 		// + プレイヤーに所属している場合は更に派生がややこしくなるぞ!
+
+		// player側にノードを移した事をどうやって検知する?(sizeだとちゃんとは取れないよね)
+
+
+		// これ今の判定変えて、NodeBaseから探すようにするか？nodeBaseのindexとVisualBaseのindexが同じかどうか
+		// それならサイズ変更されたかもわかるし
+
 
 		// これ敵からプレイヤーに渡したことこれだけじゃ検知できないな
 		if (node.GetNodeLocation() == NodeBase::NodeLocation::Player)

@@ -36,17 +36,7 @@ void Player::Init(Transform trans)
 	m_HavingNodes.push_back(MoveZ());
 	m_HavingNodes.back().Init(); // 初期化
 	m_HavingNodes.back().SetNodeLocation(NodeBase::NodeLocation::Player);
-
-	// ノード追加後初期所持ノードに対してVisualを生成する
-	int index = 0;
-	for(auto& node : m_HavingNodes)
-	{
-		VisualBase visual;
-		// screenのid入れられないやんけーーーー
-		visual.Init(index, &node);
-		m_NodeVisuals.push_back(visual);
-		index++;
-	}
+	// プレイヤー側にもVisualを管理する配列があるが生成はDnaScreenScript側のinitで行う。
 
 
 	AddTag("in_game");

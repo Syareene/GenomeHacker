@@ -13,7 +13,7 @@ void MoveX::Init(Transform trans)
 	// 名前
 	SetNameData({ "MoveX", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal});
 	// 説明文
-	AddDescriptionData({ "このノードがある敵は毎フレームn分だけX軸に対し移動します。", Vector2(10.0f, 350.0f), NodeBase::TextType::Normal });
+	SetDescriptionData({ "このノードがある敵は毎フレームn分だけX軸に対し移動します。", Vector2(10.0f, 350.0f), NodeBase::TextType::Normal });
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
