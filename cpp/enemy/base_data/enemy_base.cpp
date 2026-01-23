@@ -37,6 +37,7 @@ EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 	//m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
+	// これ無限ループしてるわな->いや派生クラスのinitが呼ばれる?
 	return Init(playerId); // DNAスクリーンの初期化+ポインタを返す
 
 	// テクスチャ生成
@@ -336,7 +337,7 @@ void EnemyBase::ShowDnaScreen()
 	DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
 	// これstateも可変init引数に対応しないとここに入れらねーｗｗｗｗｗｗｗｗ
 	// とりあえずここの追加時にはenemybase*とplayeridがいる
-	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(-1); // DNAスクリーンをシーンに追加
+	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(1, this, Manager::GetCurrentScene()->getTypeId<Player>()); // DNAスクリーンをシーンに追加
 	screen->Init(this, 0); // 敵データとプレイヤーidを渡して初期化(応急措置)
 	screen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
 	screen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す

@@ -21,3 +21,10 @@ bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 
 	return true;
 }
+
+std::string NumberNode::GenerateDescriptionText()
+{
+	// 説明文のテンプレートを取得
+	std::string format_string = "このノードは数字ノードです。";
+	return format_string;
+}

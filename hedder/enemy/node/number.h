@@ -12,5 +12,6 @@ public:
 
 	void Init(Transform trans = Transform()) override;
 	bool NodeEffect(FieldEnemy* enemy_ptr) override;
+	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
 private:
 };

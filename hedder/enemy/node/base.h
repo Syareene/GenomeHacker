@@ -64,7 +64,7 @@ public:
 	{ 
 		m_Name = data;
 	}
-	inline void SetDescriptionData(const NodeTextData& textData) { m_Description = textData; }
+	//inline void SetDescriptionData(const NodeTextData& textData) { m_Description = textData; }
 	inline const NodeTextData& GetDescriptionData() const { return m_Description; };
 	inline const int GetMoveManageId() const { return m_MoveManageId; }
 	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
@@ -73,6 +73,13 @@ protected:
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
 	inline void AddInputTypeBottom(const InputType& type) { m_InputTypesBottom.push_back(type); }
 
+	// 説明文系はこっちに変える
+	inline void SetDescriptionData(const NodeTextData& data)
+	{
+		// セット
+		m_Description = data;
+	}
+	virtual std::string GenerateDescriptionText() = 0; // ノードごとの説明文設定関数(override後この中でSetDescriptionDataを呼ぶ必要あり)
 
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }

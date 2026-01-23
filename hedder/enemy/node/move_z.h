@@ -14,6 +14,8 @@ public:
 		UpdateDescriptionData();
 	}
 
+	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
+
 private:
 	float m_MoveVal = 1.0f; // 動く量
 };

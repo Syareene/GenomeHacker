@@ -4,10 +4,18 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <vector>
 #include "object/game_object.h"
 #include "object/system_object.h"
 #include "object/3d_object.h"
 #include "object/2d_object.h"
+#include "manager/object_manager.h"
+
+// concept(c++20~)はクラス外で定義する必要あり
+template<typename T>
+concept SupportedGameObject = std::is_base_of_v<Object2D, T> || std::is_base_of_v<Object3D, T>;
+template<typename T>
+concept SystemObj = std::is_base_of_v<SystemObject, T>;
 
 class State
 {
@@ -22,259 +30,251 @@ public:
 	virtual void Draw();
 	void UpdateFinal();
 
-	template<typename T>
-	T* AddGameObject(int layerNum, Transform trans = Transform())
+	// 2d版リザーブ関数
+	template <typename ObjectType>
+	void ReserveObject(size_t capacity) requires std::is_base_of_v<Object2D, ObjectType>
 	{
-		if constexpr (!std::is_base_of_v<Object3D, T> && !std::is_base_of_v<Object2D, T>)
+		const int typeId = getTypeId<ObjectType>();
+		// サイズが足りない場合は拡張
+		if ((int)m_Objects2D.size() <= typeId)
 		{
-			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
-			return nullptr; // 型が違う場合はnullptrを返す
+			m_Objects2D.resize(typeId + 1);
 		}
-		// 初期化処理実行
-		std::unique_ptr<T> game_obj = std::make_unique<T>();
-		game_obj->Init(trans);
-
-		if constexpr (std::is_base_of_v<Object2D, T>)
+		// まだマネージャーがない場合は作成
+		if (!m_Objects2D[typeId])
 		{
-			if (layerNum < 0)
-			{
-				//
-			}
-			else if (layerNum >= static_cast<int>(m_Objects2D.size()))
-			{
-				for (int i = static_cast<int>(m_Objects2D.size()); i <= layerNum; i++)
-				{
-					m_Objects2D.emplace_back(std::list<std::unique_ptr<Object2D>>());
-				}
-			}
-			auto it = m_Objects2D.begin();
-			std::advance(it, layerNum);
-			it->push_back(std::unique_ptr<Object2D>(std::move(game_obj)));
-			return static_cast<T*>(it->back().get());
+			m_Objects2D[typeId] = std::make_unique<ObjectManager<ObjectType>>();
 		}
-		else if constexpr (std::is_base_of_v<Object3D, T>)
-		{
-			if (layerNum < 0)
-			{
-				//
-			}
-			else if (layerNum >= static_cast<int>(m_Objects3D.size()))
-			{
-				for (int i = static_cast<int>(m_Objects3D.size()); i <= layerNum; i++)
-				{
-					m_Objects3D.emplace_back(std::list<std::unique_ptr<Object3D>>());
-				}
-			}
-			auto it = m_Objects3D.begin();
-			std::advance(it, layerNum);
-			it->push_back((std::move(game_obj)));
-			return static_cast<T*>(it->back().get());
-		}
-		return nullptr; // ここに来ることはないはず
+		// キャストしてリザーブ実行
+		auto manager = static_cast<ObjectManager<ObjectType>*>(m_Objects2D[typeId].get());
+		manager->Reserve(capacity);
 	}
 
-	template<typename T>
-	// すでにあるunique_ptrを元に追加するパターン。あらかじめ初期化処理を読んだ物を渡すようにしてください。
-	T* AddGameObject(std::unique_ptr<T>&& object, int layerNum, Transform trans = Transform())
+	// 3d版リザーブ関数
+	template <typename ObjectType>
+	void ReserveObject(size_t capacity) requires std::is_base_of_v<Object3D, ObjectType>
 	{
-		// 型チェック
-		if constexpr (!std::is_base_of_v<Object3D, T> && !std::is_base_of_v<Object2D, T>)
+		const int typeId = getTypeId<ObjectType>();
+		// サイズが足りない場合は拡張
+		if ((int)m_Objects3D.size() <= typeId)
 		{
-			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
-			return nullptr; // 型が違う場合はnullptrを返す
+			m_Objects3D.resize(typeId + 1);
 		}
-		// unique_ptrで受け取っているため初期化処理は実行しているものとみなす
-
-		if constexpr (std::is_base_of_v<Object2D, T>)
+		// まだマネージャーがない場合は作成
+		if (!m_Objects3D[typeId])
 		{
-			if (layerNum < 0)
-			{
-				//
-			}
-			else if (layerNum >= static_cast<int>(m_Objects2D.size()))
-			{
-				for (int i = static_cast<int>(m_Objects2D.size()); i <= layerNum; i++)
-				{
-					m_Objects2D.emplace_back(std::list<std::unique_ptr<Object2D>>());
-				}
-			}
-			auto it = m_Objects2D.begin();
-			std::advance(it, layerNum);
-			it->push_back(std::unique_ptr<Object2D>(std::move(object)));
-			return static_cast<T*>(it->back().get());
+			m_Objects3D[typeId] = std::make_unique<ObjectManager<ObjectType>>();
 		}
-		else if constexpr (std::is_base_of_v<Object3D, T>)
-		{
-			if (layerNum < 0)
-			{
-				//
-			}
-			else if (layerNum >= static_cast<int>(m_Objects3D.size()))
-			{
-				for (int i = static_cast<int>(m_Objects3D.size()); i <= layerNum; i++)
-				{
-					m_Objects3D.emplace_back(std::list<std::unique_ptr<Object3D>>());
-				}
-			}
-			auto it = m_Objects3D.begin();
-			std::advance(it, layerNum);
-			it->push_back((std::move(object)));
-			return static_cast<T*>(it->back().get());
-		}
-		return nullptr; // ここに来ることはないはず
+		// キャストしてリザーブ実行
+		auto manager = static_cast<ObjectManager<ObjectType>*>(m_Objects3D[typeId].get());
+		manager->Reserve(capacity);
 	}
 
-	template<typename T>
-	T* AddSystemObject()
+	// システム版リザーブ関数
+	template <typename ObjectType>
+	void ReserveSystemObject(size_t capacity) requires std::is_base_of_v<SystemObject, ObjectType>
 	{
-		static_assert(std::is_base_of_v<SystemObject, T>, "Unsupported SystemObject type");
-		std::unique_ptr<T> system_obj = std::make_unique<T>();
-		system_obj->Init();
-		m_SystemObjects.push_back(std::move(system_obj));
-		return static_cast<T*>(m_SystemObjects.back().get());
+		const int typeId = getTypeId<ObjectType>();
+		// シーン内でのシステムオブジェクトとしてリザーブする
+		// サイズが足りない場合は拡張
+		if ((int)m_SystemObjects.size() <= typeId)
+		{
+			m_SystemObjects.resize(typeId + 1);
+		}
+		// まだマネージャーがない場合は作成
+		if (!m_SystemObjects[typeId])
+		{
+			m_SystemObjects[typeId] = std::make_unique<SystemObjectManager<ObjectType>>();
+		}
+		// キャストしてリザーブ実行
+		auto manager = static_cast<SystemObjectManager<ObjectType>*>(m_SystemObjects[typeId].get());
+		manager->Reserve(capacity);
 	}
 
-	template<typename T>
-	std::unique_ptr<T> GetGameObjectUniquePtr(T* rawPtr)
+	// 2dオブジェクト追加関数
+	template<typename T, typename... Args>
+	T* AddGameObject(int layerNum, Args&&... args) requires std::is_base_of_v<Object2D, T>
 	{
-		static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
+		// 対象のobjectのidを取得
+		const int typeId = getTypeId<T>();
+		// サイズが足りない場合は拡張する
+		if ((int)m_Objects2D.size() <= typeId)
+		{
+			m_Objects2D.resize(typeId + 1);
+		}
 
-		if constexpr (std::is_base_of_v<Object2D, T>)
+		// まだマネージャーがない場合は作成
+		if (!m_Objects2D[typeId])
 		{
-			for (auto& layer : m_Objects2D)
-			{
-				for (auto it = layer.begin(); it != layer.end(); ++it)
-				{
-					if (it->get() == rawPtr)
-					{
-						// 型安全にチェックしてから所有権を移す
-						if (dynamic_cast<T*>(rawPtr) == nullptr)
-						{
-							return nullptr; // 型違い: 所有権は移さない
-						}
-						T* raw = static_cast<T*>(it->release()); // ownership を手放させる
-						layer.erase(it);	// コンテナから削除
-						return std::unique_ptr<T>(raw);	// 新しい unique_ptr<T> を返す
-					}
-				}
-			}
+			m_Objects2D[typeId] = std::make_unique<ObjectManager<T>>();
 		}
-		else if constexpr (std::is_base_of_v<Object3D, T>)
-		{
-			for (auto& layer : m_Objects3D)
-			{
-				for (auto it = layer.begin(); it != layer.end(); ++it)
-				{
-					if (it->get() == rawPtr)
-					{
-						if (dynamic_cast<T*>(rawPtr) == nullptr)
-						{
-							return nullptr;
-						}
-						T* raw = static_cast<T*>(it->release());
-						layer.erase(it);
-						return std::unique_ptr<T>(raw);
-					}
-				}
-			}
-		}
-		return nullptr;
+
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		// 追加したオブジェクトのポインタを返す
+		return manager->AddObject(layerNum, GetNextObjectID(), std::forward<Args>(args)...);
 	}
 
+	// 3dオブジェクト追加関数
+	template<typename T, typename... Args>
+	T* AddGameObject(int layerNum, Args&&... args) requires std::is_base_of_v<Object3D, T>
+	{
+		// 対象のobjectのidを取得
+		const int typeId = getTypeId<T>();
+		// サイズが足りない場合は拡張する
+		if ((int)m_Objects3D.size() <= typeId)
+		{
+			m_Objects3D.resize(typeId + 1);
+		}
+		// まだマネージャーがない場合は作成
+		if (!m_Objects3D[typeId])
+		{
+			m_Objects3D[typeId] = std::make_unique<ObjectManager<T>>();
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
+		// 追加したオブジェクトのポインタを返す
+		return manager->AddObject(layerNum, GetNextObjectID(), std::forward<Args>(args)...);
+	}
+
+	// systemオブジェクト追加関数
+	template<typename T, typename... Args>
+	T* AddSystemObject(Args&&... args) requires std::is_base_of_v<SystemObject, T>
+	{
+		// 対象のobjectのidを取得
+		const int typeId = getTypeId<T>();
+		// シーン内でのシステムオブジェクトとして追加する
+		// サイズが足りない場合は拡張する
+		if ((int)m_SystemObjects.size() <= typeId)
+		{
+			m_SystemObjects.resize(typeId + 1);
+		}
+		// まだマネージャーがない場合は作成
+		if (!m_SystemObjects[typeId])
+		{
+			m_SystemObjects[typeId] = std::make_unique<SystemObjectManager<T>>();
+		}
+		auto manager = static_cast<SystemObjectManager<T>*>(m_SystemObjects[typeId].get());
+		// 追加したオブジェクトのポインタを返す
+		return manager->AddObject(std::forward<Args>(args)...);
+	}
+
+	// 2dオブジェクトを取得する関数
 	template <typename T>
-	T* GetGameObject()
+	T* GetGameObject() requires std::is_base_of_v<Object2D, T>
 	{
-		if constexpr (std::is_base_of_v<Object3D, T>)
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
-			for (auto& objects3d : m_Objects3D)
-			{
-				for (auto& gameObject : objects3d)
-				{
-					if (auto ptr = dynamic_cast<T*>(gameObject.get()))
-					{
-						return ptr;
-					}
-				}
-			}
-		}
-		else if constexpr (std::is_base_of_v<Object2D, T>)
-		{
-			for (auto& objects2d : m_Objects2D)
-			{
-				for (auto& gameObject : objects2d)
-				{
-					if (auto ptr = dynamic_cast<T*>(gameObject.get()))
-					{
-						return ptr;
-					}
-				}
-			}
-		}
-		else
-		{
-			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
 			return nullptr;
 		}
-		return nullptr;
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		return manager->GetGameObject();
 	}
 
+	// 2dオブジェクトをまとめて取得する関数
 	template <typename T>
-	std::list<T*> GetGameObjects()
+	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object2D, T>
 	{
-		if constexpr (std::is_base_of_v<Object3D, T>)
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
-			std::list<T*> result;
-			for (auto& objects3d : m_Objects3D)
-			{
-				for (auto& gameObject : objects3d)
-				{
-					if (auto ptr = dynamic_cast<T*>(gameObject.get()))
-					{
-						result.push_back(ptr);
-					}
-				}
-			}
-			return result;
+			static std::vector<T> empty; // 空のベクターを返す
+			return empty;
 		}
-		else if constexpr (std::is_base_of_v<Object2D, T>)
-		{
-			std::list<T*> result;
-			for (auto& objects2d : m_Objects2D)
-			{
-				for (auto& gameObject : objects2d)
-				{
-					if (auto ptr = dynamic_cast<T*>(gameObject.get()))
-					{
-						result.push_back(ptr);
-					}
-				}
-			}
-			return result;
-		}
-		else
-		{
-			static_assert(std::is_base_of_v<Object3D, T> || std::is_base_of_v<Object2D, T>, "Unsupported GameObject type");
-			return std::list<T*>();
-		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		return manager->GetGameObjects();
 	}
 
-	template<typename T>
-	T* GetSystemObject()
+	// 3dオブジェクトを取得する関数
+	template <typename T>
+	T* GetGameObject() requires std::is_base_of_v<Object3D, T>
 	{
-		for (auto& system : m_SystemObjects)
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
 		{
-			if (auto ptr = dynamic_cast<T*>(system.get()))
-			{
-				return ptr;
-			}
+			return nullptr;
 		}
-		return nullptr;
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
+		return manager->GetGameObject();
+	}
+
+	// 3dオブジェクトをまとめて取得する関数
+	template <typename T>
+	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object3D, T>
+	{
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
+		{
+			static std::vector<T> empty; // 空のベクターを返す
+			return empty;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
+		return manager->GetGameObjects();
+	}
+
+	// システムオブジェクト取得関数
+	template <typename T>
+	T* GetSystemObject() requires std::is_base_of_v<SystemObject, T>
+	{
+		const int typeId = getTypeId<T>();
+		// シーン内に存在するシステムオブジェクトから探す
+		if ((int)m_SystemObjects.size() <= typeId || !m_SystemObjects[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<SystemObjectManager<T>*>(m_SystemObjects[typeId].get());
+		return manager->GetSystemObject();
+	}
+
+	// idを用いてGameObjectを取得
+	template <typename T>
+	T* GetGameObjectById(unsigned int id) requires std::is_base_of_v<Object2D, T>
+	{
+		// id取得
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
+		return manager->GetObjectById(id);
+	}
+
+	// idを用いてGameObjectを取得
+	template <typename T>
+	T* GetGameObjectById(unsigned int id) requires std::is_base_of_v<Object3D, T>
+	{
+		// id取得
+		const int typeId = getTypeId<T>();
+		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
+		{
+			return nullptr;
+		}
+		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
+		return manager->GetObjectById(id);
 	}
 
 	// タグを使ってGameObjectを取得
 	GameObject* GetGameObjectByTag(const std::string& tag);
 	// タグを使ってGameObjectのリストを取得
 	std::list<GameObject*> GetGameObjectsByTag(const std::string& tag);
+
+	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<Object2D, T>
+	{
+		return Object2D::getTypeId<T>();
+	}
+
+	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<Object3D, T>
+	{
+		return Object3D::getTypeId<T>();
+	}
+
+	template <typename T>
+	inline int getTypeId() requires std::is_base_of_v<SystemObject, T>
+	{
+		return SystemObject::getTypeId<T>();
+	}
 
 protected:
 	inline bool IsInitialized() const { return m_IsInitialized; }
@@ -289,8 +289,18 @@ protected:
 	void DrawStateObjectByTags(const std::list<std::string>& tags);
 
 private:
+	static unsigned int GetNextObjectID()
+	{
+		// 現在値が2147483647に達したら0に戻す
+		if (m_ObjectIDCounter == INT_MAX)
+		{
+			m_ObjectIDCounter = 0;
+		}
+		return m_ObjectIDCounter++;
+	}
+	static unsigned int m_ObjectIDCounter;
 	bool m_IsInitialized = false;
-	std::list<std::list<std::unique_ptr<Object3D>>> m_Objects3D;
-	std::list<std::list<std::unique_ptr<Object2D>>> m_Objects2D;
-	std::list<std::unique_ptr<SystemObject>> m_SystemObjects; // システムオブジェクトを保存するリスト
+	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects3D;
+	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects2D;
+	std::vector<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
 };

@@ -14,12 +14,6 @@
 
 class Object3D; // 前方宣言
 
-// concept(c++20~)はクラス外で定義する必要あり
-template<typename T>
-concept SupportedGameObject = std::is_base_of_v<Object2D, T> || std::is_base_of_v<Object3D, T>;
-template<typename T>
-concept SystemObj = std::is_base_of_v<SystemObject, T>;
-
 class Scene
 {
 public:

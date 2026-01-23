@@ -16,7 +16,10 @@ void AddScore::Init(Transform trans)
 	// 名前
 	SetNameData({ "AddScore", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal });
 	// 説明文
-	SetDescriptionData({ "このノードを通過するとスコアが{}だけ加算されます。", Vector2(10.0f, 300.0f), NodeBase::TextType::Normal });
+	SetDescriptionData({ GenerateDescriptionText(), Vector2(10.0f, 300.0f), NodeBase::TextType::Normal});
+
+	// ここでSetDescriptionData(GenerateDescriptionText))
+
 
 	m_AddScore = 1.0f; // スコア加算量
 
@@ -40,17 +43,13 @@ bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)
 }
 
 // この関数init時とeditにきた瞬間に呼ぶようにしようね
-void AddScore::UpdateDescriptionData()
+std::string AddScore::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = m_Descriptions[0].text;
+	std::string format_string = "このノードを通過するとスコアが{}だけ加算されます。";
 
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_AddScore));
 
-	// Fontオブジェクトのテキストを更新
-	if (GetDescFonts().size() > 0)
-	{
-		GetDescFontAt(0).SetDisplayText(formatted_text);
-	}
+	return formatted_text;
 }

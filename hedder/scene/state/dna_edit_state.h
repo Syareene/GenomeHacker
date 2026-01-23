@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-#include <list>
-#include <memory>
-#include <string>
 #include "scene/state/base_state.h"
 #include "player.h"
 

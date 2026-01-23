@@ -26,10 +26,7 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 	// 名前部分生成
 	SetNameFont(node->GetNameData());
 	// 説明文部分生成
-	for(auto& desc : node->GetDescriptionData())
-	{
-		AddDescFont(desc);
-	}
+	AddDescFont(node->GetDescriptionData());
 
 	// ここどこから座標持ってくるのかはっきりしておくこと(ぶっちゃけ後で整列するから今いらないのかもしれないけど)
 	SetTransform(Transform());
