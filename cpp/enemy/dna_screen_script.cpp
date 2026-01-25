@@ -41,6 +41,10 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	// プレイヤーにidをセットしてあげる
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
 	player->SetDnaScreenId(GetObjectID());
+
+	// これら見た目関数実行した時に元ノードにフラグonにしてこれ以上無駄なノードの生成を防ぐとかはありっす
+	// でもそれできるのplayerだけだね
+
 	// プレイヤーに関しても所持しているノードの見た目部分を生成する
 	for(auto& node : player->GetAllNodes())
 	{

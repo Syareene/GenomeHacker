@@ -23,7 +23,11 @@ public:
 	// tab_baseからもってきたやつ
 	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
 	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
-	virtual void Clicked(); // クリックされたときの処理
+	// クリックされたときの処理
+	virtual void Clicked()
+	{
+		// 今のところ特に何もしない
+	}
 
 	// index基準でnodeの位置を修正
 	void ModifyNodePos(); // enemyとplayer両方修正する関数

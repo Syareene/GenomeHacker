@@ -30,10 +30,10 @@ void Player::Init(Transform trans)
 	Manager::GetCurrentScene()->ReserveObject<Bullet>(Bullet::MAX_OBJECTS);
 
 
-	m_HavingNodes.push_back(MoveX());
+	m_HavingNodes.emplace_back();
 	m_HavingNodes.back().Init(); // 初期化
 	m_HavingNodes.back().SetNodeLocation(NodeBase::NodeLocation::Player);
-	m_HavingNodes.push_back(MoveZ());
+	m_HavingNodes.emplace_back();
 	m_HavingNodes.back().Init(); // 初期化
 	m_HavingNodes.back().SetNodeLocation(NodeBase::NodeLocation::Player);
 	// プレイヤー側にもVisualを管理する配列があるが生成はDnaScreenScript側のinitで行う。

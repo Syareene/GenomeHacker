@@ -45,7 +45,8 @@ public:
 	// この関数引数&なのと、init入れるかどうか
 	void AddVisualNode(const VisualBase& visual)
 	{
-		m_NodeVisuals.push_back(visual);
+		m_NodeVisuals.emplace_back();
+		m_NodeVisuals.back().Init(m_DnaScreenId, static_cast<int>(m_NodeVisuals.size() - 1), visual.GetBaseNodePtr());
 	}
 private:
 	class ModelRenderer* m_ModelRenderer = nullptr;

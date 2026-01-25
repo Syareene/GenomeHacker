@@ -38,6 +38,11 @@ public:
 		Vector2 text_pos;
 		NodeBase::TextType text_type = NodeBase::TextType::Normal; // ここ参照してテンプレートとして使用
 	};
+	NodeBase() = default;
+	virtual ~NodeBase() = default;
+	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
+	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
+
 	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
 	// text_typeを元にFontData返す関数欲しいな
 
@@ -79,7 +84,14 @@ protected:
 		// セット
 		m_Description = data;
 	}
-	virtual std::string GenerateDescriptionText() = 0; // ノードごとの説明文設定関数(override後この中でSetDescriptionDataを呼ぶ必要あり)
+
+	// ノードごとの説明文設定関数(override後この中でSetDescriptionDataを呼ぶ必要あり)
+	// ここで抽象クラスになってるからplayerでエラーでてるっぽいね
+	virtual std::string GenerateDescriptionText()
+	{
+		assert(false && "GenerateDescriptionText not overridden");
+		return "";
+	}
 
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
