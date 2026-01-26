@@ -113,7 +113,7 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
 			auto it = attackTab->GetNodes().begin();
 			std::advance(it, index);
-			(*it)->NodeEffect(enemy_ptr);
+			(*it).NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -179,7 +179,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			moveTab->GetNodes()[index].get()->NodeEffect(enemy_ptr);
+			moveTab->GetNodes()[index].NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -243,7 +243,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
 			auto it = deathTab->GetNodes().begin();
 			std::advance(it, index);
-			(*it)->NodeEffect(enemy_ptr);
+			(*it).NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -347,11 +347,9 @@ void EnemyBase::HideDnaScreen()
 {
 	// 変更するよーっていう変数用意し、enemy_dna_listのupdatefinalでチェック
 	m_IsExitDnaEdit = true;
-	//DnaEditState* state = static_cast<DnaEditState*>(Manager::GetCurrentScene()->GetStatePtr());
-	//if (state)
-	//{
-		//state->SetCurrentEnemyBase(nullptr); // 現在編集中の敵データをクリア
-	//}
+
+	// 終了処理呼び出してstateから消す
+	Manager::GetCurrentScene()->GetGameObject<DnaScreenScript>()->Uninit();
 
 	// state変更
 	Manager::GetCurrentScene()->SetState<DnaTableState>();

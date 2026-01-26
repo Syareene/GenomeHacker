@@ -25,7 +25,7 @@ public:
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
 	//inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
-	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	std::vector<NodeBase>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
 	template <NodeType T>
@@ -39,53 +39,48 @@ public:
 			return nullptr;
 		}
 
-		// インスタンス作る(これmove必要にはなっちゃうからmoveコンストラクタをそのうち作る必要あり)
-		std::unique_ptr<T> newNode = std::make_unique<T>();
+		// 挿入位置のイテレーターを取得
+		auto it = (index == -1) ? m_Nodes.end() : m_Nodes.begin() + index;
+
+		// ノードを直接構築
+		NodeBase& newNode = *m_Nodes.emplace(it);
+		
 		// 初期化
-		newNode.get()->Init(trans);
+		newNode.Init(trans);
 		NodeBase* upperNode = nullptr;
 		NodeBase* lowerNode = nullptr;
+
+		// 挿入したノードの実際のインデックスを取得
+		int actualIndex = std::distance(m_Nodes.begin(), m_Nodes.begin() + index);
+
 		// 上側ノード挿入判定
-		if (index > 0)
+		if (actualIndex > 0)
 		{
-			upperNode = m_Nodes[index - 1].get();
+			upperNode = &m_Nodes[actualIndex - 1];
 		}
 		// 下側ノード挿入判定
-		if (index < static_cast<int>(m_Nodes.size()) && index != -1)
+		if (actualIndex < static_cast<int>(m_Nodes.size()) - 1)
 		{
-			lowerNode = m_Nodes[index].get();
+			lowerNode = &m_Nodes[actualIndex + 1];
 		}
-		// これで配列の範囲外にアクセスすることはなくなったため安全にアクセスできる
+
 		// くっつけられるか判定
-		if (newNode.get()->CanAttach(upperNode, lowerNode))
+		if (newNode.CanAttach(upperNode, lowerNode))
 		{
-			// 追加する
-			if (index == -1 || index == static_cast<int>(m_Nodes.size()))
-			{
-				// 最後尾に追加
-				m_Nodes.push_back(std::move(newNode));
-				// タイムライン変更処理
-				ModifyTimeLine();
-				return static_cast<T*>(m_Nodes.back().get());
-			}
-			else
-			{
-				// 任意の位置に追加
-				m_Nodes.insert(m_Nodes.begin() + index, std::move(newNode));
-				// タイムライン変更処理
-				ModifyTimeLine();
-				return static_cast<T*>(m_Nodes[index].get());
-			}
+			// タイムライン変更処理
+			ModifyTimeLine();
+			return static_cast<T*>(&newNode);
 		}
 		else
 		{
-			// 追加しない
+			// 追加できない場合は、構築した要素を削除
+			m_Nodes.erase(m_Nodes.begin() + actualIndex);
 			return nullptr;
 		}
 	};
 private:
 	void ModifyTimeLine(); // タイムラインを修正する
-	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
+	std::vector<NodeBase> m_Nodes; // 現在タブ内でくっついているノードのリスト
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン
 	std::list<int> m_NodeTimeLine; // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリスト

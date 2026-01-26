@@ -6,6 +6,8 @@
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 
+#include <ranges>
+
 
 // ノード入れ替え処理時、index基準でswapしつつposition修正かな。
 
@@ -25,7 +27,7 @@ void TabVisual::CreateVisual(TabBase* base)
 	{
 		// まだ実装してないが、visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
 		m_VisualNodes.push_back(VisualBase());
-		m_VisualNodes.back().Init(m_DnaScreenId, counter, node.get());
+		m_VisualNodes.back().Init(m_DnaScreenId, counter, &node);
 		counter++;
 	}
 
@@ -56,7 +58,7 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 		m_VisualNodes.push_back(VisualBase());
 		// 最後尾に対してnodeを元に初期化する
 		// nodeのptr渡してあげるのが一番いいかもね
-		m_VisualNodes.back().Init(screen_id, counter, node.get());
+		m_VisualNodes.back().Init(screen_id, counter, &node);
 		
 		// setnamefont/adddescfont->改造して一括で渡せるように?
 
@@ -241,55 +243,71 @@ void TabVisual::ApplyMovedResult()
 	// 割り振り前にNodeBaseに対して整列用idを振る
 	for(auto& node : m_Tab->GetNodes())
 	{
-		node->SetMoveManageId(index);
+		node.SetMoveManageId(index);
 	}
 	// プレイヤーのノードに対しても振る
+	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
+	for(auto& node : temp->GetAllNodes())
+	{
+		node.SetMoveManageId(index);
+	}
+	// VisualBaseは生成時にid振ってあるので不要。
 
 	index = 0;
-	for (auto& node : m_VisualNodes)
+
+	// 順序としては、、、
+	// dnaに入った段階でNodeBaseとVisualBaseにidを割り振る(識別用として、元が同じindexからならidはおなじになる) -ok
+	// exit時にこの関数が実行される -ok
+	// NodeBaseのリストをenemy+playerでまとめる - ok
+	// EnemyのVisualのidを元にNodeBaseのリストと突き合わせてindexを修正する -ok
+
+	std::vector<NodeBase> allNodes;
+	allNodes.reserve(m_Tab->GetNodes().size() + temp->GetAllNodes().size());
+
+	// player/enemyの両方のデータを一つの配列にまとめる
+	std::move(m_Tab->GetNodes().begin(), m_Tab->GetNodes().end(), std::back_inserter(allNodes));
+	std::move(temp->GetAllNodes().begin(), temp->GetAllNodes().end(), std::back_inserter(allNodes));
+
+	// データ消す
+	m_Tab->GetNodes().clear();
+	temp->GetAllNodes().clear();
+
+	// ラムダ式：IDからデータを引き抜くヘルパー関数
+	auto extractAndMove = [&](int id, std::vector<NodeBase>& targetList) 
 	{
-		// NodeBaseのindexを超過/少ない場合の処理を加える(player側から足した/減らした)
-
-		// + プレイヤーに所属している場合は更に派生がややこしくなるぞ!
-
-		// player側にノードを移した事をどうやって検知する?(sizeだとちゃんとは取れないよね)
-
-
-		// これ今の判定変えて、NodeBaseから探すようにするか？nodeBaseのindexとVisualBaseのindexが同じかどうか
-		// それならサイズ変更されたかもわかるし
-
-
-		// これ敵からプレイヤーに渡したことこれだけじゃ検知できないな
-		if (node.GetNodeLocation() == NodeBase::NodeLocation::Player)
+		auto it = std::ranges::find_if(allNodes, [id](const NodeBase& d) 
 		{
-			// player側にあったノードを敵に足した
-		}
-		else
-		{
-			// enemy側にあったノードをenemy側で動かした
-		}
+			return d.GetMoveManageId() == id;
+		});
 
-		// 該当visualnodeの実indexを元に元データのnodeとデータが一致しているかを確認
-		int nodeBaseIndex = m_Tab->GetNodes()[index]->GetMoveManageId();
-		if (node.GetNodeBaseIndex() == nodeBaseIndex)
+		if (it != allNodes.end()) 
 		{
-			// 一致しているなら次のノードへ
-			index++;
-			continue;
+			// 見つかったら新しいリストへmoveで移動
+			targetList.push_back(std::move(*it));
 		}
-		// 一致してないので変数:indexとnode.GetNodeBaseIndex()の位置にあるNodeBaseをswap
-		
+		else 
+		{
+			// idなし
+		}
+	};
 
-		// 一致していない場合はlocationと変数に保存されているindexを元に元データのnodeの位置をswapする
-		index++;
+
+	// ラムダ式を用いてデータをplayer/enemyに設定
+	for (auto& v_node : m_VisualNodes)
+	{
+		// 参照したいid, 移動先配列を渡す
+		extractAndMove(v_node.GetNodeBaseIndex(), m_Tab->GetNodes());
 	}
+	for (auto& v_node : temp->GetAllVisualNodes())
+	{
+		// 参照したいid, 移動先配列を渡す
+		extractAndMove(v_node.GetNodeBaseIndex(), temp->GetAllNodes());
+	}
+	// 不要になったため生成したVisualNodeを消す
+	m_VisualNodes.clear();
+	temp->GetAllNodes().clear();
 
 
-
-	// visualとnodeのindex比べてvisualを元にnodeを入れ替える
-	// これvisual側にもfromないとplayerとswapする場合もあるっていう
-
-	// プレイヤー側の更新はどうしようねぇ、、(この中でプレイヤーのノードも修正する形かな)
 }
 
 void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)

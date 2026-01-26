@@ -46,13 +46,15 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	// でもそれできるのplayerだけだね
 
 	// プレイヤーに関しても所持しているノードの見た目部分を生成する
+	int counter = 0;
 	for(auto& node : player->GetAllNodes())
 	{
 		// nodeの見た目部分を生成
 		VisualBase visual = VisualBase();
-		visual.Init(GetObjectID(), m_PlayerId, &node);
+		visual.Init(GetObjectID(), counter, &node);
 
 		player->AddVisualNode(visual);
+		counter++;
 	}
 
 
@@ -60,21 +62,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	m_AttackVisual.CreateVisual(manager->GetAttackTab());
 	m_MoveVisual.CreateVisual(manager->GetMoveTab());
 	m_DeathVisual.CreateVisual(manager->GetDeathTab());
-
-
-	//for(auto& node : base_enemy->GetTabManager()->GetAttackTab()->GetNodes())
-	//{
-	//	// nodeの見た目部分を生成
-	//	m_AttackVisual.CreateVisual(node.get());
-	//}
-	// んー所持しているノードを元にVisualBaseを作成すればいいんだけど、それをまとめるのをどうしようかな、、という感じ
-	// ここ自体がいい感じにデータ持って管理しないとそもそもだめというか、panelで扱ってる旨味が減少しているというか
-	// なので全体(a,m,dの有効化を管理)->タブ個別(ここに対してactiveのt/fを切り替えれば位置による表示の有無がやりやすい)
-
-
-
-
-	// playerが所持しているノードの見た目の部分を生成する
 
 	// その他UI等の生成
 
@@ -88,14 +75,14 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
 
-	//m_AttackTab->SetIsSelected(true); // 最初は攻撃タブが選択されている状態にする
-
 	// デバッグ用にmoveで表示
 	m_MoveVisual.SetIsSelected(true); // 最初は移動タブが選択されている状態にする
 }
 
 void DnaScreenScript::Uninit()
 {
+	// TODO: 残り動いた分の反映処理
+
 	// DNAスクリーンの終了処理
 	Panel::Uninit();
 	// ここで必要な終了処理を追加
@@ -108,10 +95,12 @@ void DnaScreenScript::Uninit()
 	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(0);
 
 
-	// 保持IDのリセット
-	//m_AttackTabId = 0;
-	//m_MoveTabId = 0;
-	//m_DeathTabId = 0;
+	// uninit呼び出し
+	m_AttackVisual.Uninit();
+	m_MoveVisual.Uninit();
+	m_DeathVisual.Uninit();
+
+	SetDestroy(true);
 }
 
 void DnaScreenScript::Update()

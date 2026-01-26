@@ -15,8 +15,10 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 {
 	// screen_id保存
 	m_ScreenID = screen_id;
-
+	
+	// 管理用index保存(ノード変更後の実配列適応用データ)
 	m_NodeBaseIndex = base_index;
+	node->SetMoveManageId(base_index);
 
 	// 場所もコピー
 	m_NodeLocation = node->GetNodeLocation();
@@ -32,7 +34,7 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 	SetTransform(Transform());
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\debug_sprite.png"));
 
-
+	// データ系更新
 	UpdateVisual(node);
 }
 
