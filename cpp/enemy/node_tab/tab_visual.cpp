@@ -26,8 +26,8 @@ void TabVisual::CreateVisual(TabBase* base)
 	for (auto& node : base->GetNodes())
 	{
 		// まだ実装してないが、visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
-		m_VisualNodes.push_back(VisualBase());
-		m_VisualNodes.back().Init(m_DnaScreenId, counter, node.get());
+		std::unique_ptr<VisualBase>& temp = m_VisualNodes.emplace_back(std::make_unique<VisualBase>());
+		temp->Init(m_DnaScreenId, counter, node.get());
 		counter++;
 	}
 
@@ -55,11 +55,9 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 	int counter = 0;
 	for(auto& node : tab_base->GetNodes())
 	{
-		m_VisualNodes.push_back(VisualBase());
-		// 最後尾に対してnodeを元に初期化する
-		// nodeのptr渡してあげるのが一番いいかもね
-		m_VisualNodes.back().Init(screen_id, counter,node.get());
-		
+		std::unique_ptr<VisualBase>& temp = m_VisualNodes.emplace_back(std::make_unique<VisualBase>());
+		temp->Init(screen_id, counter, node.get());
+
 		// setnamefont/adddescfont->改造して一括で渡せるように?
 
 		counter++;
@@ -80,14 +78,14 @@ void TabVisual::Update()
 	// タブ内にあるノードに対する更新処理
 	for (auto& node : m_VisualNodes)
 	{
-		node.Update();
+		node->Update();
 	}
 	// プレイヤーが所持しているノードの更新処理
 	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
 
 	for (auto& node : temp->GetAllVisualNodes())
 	{
-		node.Update();
+		node->Update();
 	}
 
 
@@ -105,14 +103,14 @@ void TabVisual::Draw()
 	// タブ内にあるノードに対する描画処理
 	for (auto& node : m_VisualNodes)
 	{
-		node.Draw();
+		node->Draw();
 	}
 
 	// プレイヤーが所持しているノードの描画処理
 	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
 	for (auto& node : temp->GetAllVisualNodes())
 	{
-		node.Draw();
+		node->Draw();
 	}
 }
 
@@ -296,12 +294,12 @@ void TabVisual::ApplyMovedResult()
 	for (auto& v_node : m_VisualNodes)
 	{
 		// 参照したいid, 移動先配列を渡す
-		extractAndMove(v_node.GetNodeBaseIndex(), m_Tab->GetNodes());
+		extractAndMove(v_node->GetNodeBaseIndex(), m_Tab->GetNodes());
 	}
 	for (auto& v_node : temp->GetAllVisualNodes())
 	{
 		// 参照したいid, 移動先配列を渡す
-		extractAndMove(v_node.GetNodeBaseIndex(), temp->GetAllNodes());
+		extractAndMove(v_node->GetNodeBaseIndex(), temp->GetAllNodes());
 	}
 	// 不要になったため生成したVisualNodeを消す
 	m_VisualNodes.clear();
@@ -328,14 +326,14 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
 		// 掴みノードならマウス座標へ移動
-		if (&node == grabPtr)
+		if (node.get() == grabPtr)
 		{
 			// ノードの位置を修正
-			Vector3 old_pos = node.GetPosition();
-			node.SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
+			Vector3 old_pos = node->GetPosition();
+			node->SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
 			// 中身の説明文の位置も修正
 			Vector2 diff = Vector2(mousePos.x, mousePos.y) - Vector2(old_pos.x, old_pos.y);
-			node.FixFontPositions(diff);
+			node->FixFontPositions(diff);
 			continue; // 次のノードへ
 		}
 
@@ -345,7 +343,7 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
 			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
-			if (mousePos.y < node.GetPosition().y && mousePos.x <= ENEMY_AREA_END.x)
+			if (mousePos.y < node->GetPosition().y && mousePos.x <= ENEMY_AREA_END.x)
 			{
 				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
@@ -354,13 +352,13 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		}
 
 		// ノードの位置を修正
-		Vector3 scale = node.GetScale();
-		Vector2 diff = Vector2(ENEMY_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node.GetPosition().x, node.GetPosition().y);
-		Vector3 old_pos = node.GetPosition();
+		Vector3 scale = node->GetScale();
+		Vector2 diff = Vector2(ENEMY_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
+		Vector3 old_pos = node->GetPosition();
 
-		node.SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
+		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		// 中身の説明文の位置も修正
-		node.FixFontPositions(diff);
+		node->FixFontPositions(diff);
 
 		// 次のノード用に位置を加算
 		currentPosY += scale.y;
@@ -385,14 +383,14 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
 
 		// 掴みノードならマウス座標へ移動
-		if (&node == grabPtr)
+		if (node.get() == grabPtr)
 		{
 			// ノードの位置を修正
-			Vector3 old_pos = node.GetPosition();
-			node.SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
+			Vector3 old_pos = node->GetPosition();
+			node->SetPosition(Vector3(mousePos.x, mousePos.y, old_pos.z));
 			// 中身の説明文の位置も修正
 			Vector2 diff = Vector2(mousePos.x, mousePos.y) - Vector2(old_pos.x, old_pos.y);
-			node.FixFontPositions(diff);
+			node->FixFontPositions(diff);
 			continue; // 次のノードへ
 		}
 
@@ -402,7 +400,7 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
 			// または現在のノードの中心を掴んでいるノードの上端が超えた場合にスペースを空ける
-			if (mousePos.y < node.GetPosition().y && mousePos.x > ENEMY_AREA_END.x)
+			if (mousePos.y < node->GetPosition().y && mousePos.x > ENEMY_AREA_END.x)
 			{
 				// 掴みノード分のスペースを確保
 				currentPosY += grabPtr->GetScale().y;
@@ -411,13 +409,13 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		}
 
 		// ノードの位置を修正
-		Vector3 scale = node.GetScale();
-		Vector2 diff = Vector2(PLAYER_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node.GetPosition().x, node.GetPosition().y);
-		Vector3 old_pos = node.GetPosition();
+		Vector3 scale = node->GetScale();
+		Vector2 diff = Vector2(PLAYER_NODE_START.x + (scale.x * 0.5f), currentPosY + (scale.y * 0.5f)) - Vector2(node->GetPosition().x, node->GetPosition().y);
+		Vector3 old_pos = node->GetPosition();
 
-		node.SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
+		node->SetPosition(Vector3(old_pos.x + diff.x, old_pos.y + diff.y, old_pos.z));
 		// 中身の説明文の位置も修正
-		node.FixFontPositions(diff);
+		node->FixFontPositions(diff);
 
 		// 次のノード用に位置を加算
 		currentPosY += scale.y;
@@ -439,8 +437,8 @@ void TabVisual::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPt
 		if (!grabPtr) continue;
 
 		// 判定用の位置とサイズを取得
-		Vector3 nodePos = node.GetPosition();
-		Vector3 nodeScale = node.GetScale();
+		Vector3 nodePos = node->GetPosition();
+		Vector3 nodeScale = node->GetScale();
 
 		// マウスがこのノード領域内にあるか判定
 		if (mousePos.y < nodePos.y + (nodeScale.y * 0.5f) &&
@@ -456,7 +454,7 @@ void TabVisual::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPt
 
 void TabVisual::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPtr)
 {
-	std::vector<VisualBase>& all_nodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
+	std::list<std::unique_ptr<VisualBase>>& all_nodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 
 	if (!grabPtr)
 		return;
@@ -464,10 +462,10 @@ void TabVisual::ModifyPlayerNodeIndexFromPos(Vector2 mousePos, VisualBase* grabP
 	// リストを走査
 	for (auto& node : all_nodes)
 	{
-		if (&node == grabPtr)
+		if (node.get() == grabPtr)
 			continue;
 
-		VisualBase* curPtr = &node;
+		VisualBase* curPtr = node.get();
 
 		// 判定用の位置とサイズを取得
 		Vector3 nodePos = curPtr->GetPosition();

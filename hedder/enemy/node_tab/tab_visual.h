@@ -71,7 +71,7 @@ private:
 	unsigned int m_PlayerId = 0; // プレイヤーID
 	unsigned int m_DnaScreenId = 0; // dna_screenのID
 
-	std::vector<std::unique_ptr<VisualBase>> m_VisualNodes; // 見た目用ノードのリスト
+	std::list<std::unique_ptr<VisualBase>> m_VisualNodes; // 見た目用ノードのリスト
 
 	TabBase* m_Tab = nullptr;
 };
