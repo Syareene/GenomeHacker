@@ -106,7 +106,7 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
 			auto it = attackTab->GetNodes().begin();
 			std::advance(it, index);
-			(*it).NodeEffect(enemy_ptr);
+			(*it)->NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -172,7 +172,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			moveTab->GetNodes()[index].NodeEffect(enemy_ptr);
+			moveTab->GetNodes()[index]->NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;
@@ -236,7 +236,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
 			auto it = deathTab->GetNodes().begin();
 			std::advance(it, index);
-			(*it).NodeEffect(enemy_ptr);
+			(*it)->NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;

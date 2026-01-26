@@ -27,7 +27,7 @@ void TabVisual::CreateVisual(TabBase* base)
 	{
 		// まだ実装してないが、visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
 		m_VisualNodes.push_back(VisualBase());
-		m_VisualNodes.back().Init(m_DnaScreenId, counter, &node);
+		m_VisualNodes.back().Init(m_DnaScreenId, counter, node.get());
 		counter++;
 	}
 
@@ -58,7 +58,7 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 		m_VisualNodes.push_back(VisualBase());
 		// 最後尾に対してnodeを元に初期化する
 		// nodeのptr渡してあげるのが一番いいかもね
-		m_VisualNodes.back().Init(screen_id, counter, &node);
+		m_VisualNodes.back().Init(screen_id, counter,node.get());
 		
 		// setnamefont/adddescfont->改造して一括で渡せるように?
 
@@ -243,13 +243,13 @@ void TabVisual::ApplyMovedResult()
 	// 割り振り前にNodeBaseに対して整列用idを振る
 	for(auto& node : m_Tab->GetNodes())
 	{
-		node.SetMoveManageId(index);
+		node->SetMoveManageId(index);
 	}
 	// プレイヤーのノードに対しても振る
 	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
 	for(auto& node : temp->GetAllNodes())
 	{
-		node.SetMoveManageId(index);
+		node->SetMoveManageId(index);
 	}
 	// VisualBaseは生成時にid振ってあるので不要。
 

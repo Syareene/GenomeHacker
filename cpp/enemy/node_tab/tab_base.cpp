@@ -23,7 +23,7 @@ void TabBase::ModifyTimeLine()
 	int currentTime = 0;
 	for (const auto& node : m_Nodes)
 	{
-		currentTime += node.GetCDMax();
+		currentTime += node->GetCDMax();
 		m_NodeTimeLine.push_back(currentTime);
 	}
 

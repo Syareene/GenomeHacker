@@ -25,7 +25,7 @@ public:
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
 	//inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
-	std::vector<NodeBase>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
 	template <NodeType T>
@@ -43,8 +43,10 @@ public:
 		auto it = (index == -1) ? m_Nodes.end() : m_Nodes.begin() + index;
 
 		// ノードを直接構築し、そのイテレータを取得
-		auto newNodeIt = m_Nodes.emplace(it);
+		auto newNodeIt = m_Nodes.emplace(it, std::make_unique<T>());
 		NodeBase& newNode = *newNodeIt;
+
+		// やっぱ初期登録時にちゃんと登録できてないねぇ
 		
 		// 初期化
 		newNode.Init(trans);
@@ -57,12 +59,12 @@ public:
 		// 上側ノード挿入判定
 		if (actualIndex > 0)
 		{
-			upperNode = &m_Nodes[actualIndex - 1];
+			upperNode = m_Nodes[actualIndex - 1].get();
 		}
 		// 下側ノード挿入判定
 		if (actualIndex < static_cast<int>(m_Nodes.size()) - 1)
 		{
-			lowerNode = &m_Nodes[actualIndex + 1];
+			lowerNode = m_Nodes[actualIndex + 1].get();
 		}
 
 		// くっつけられるか判定
@@ -81,7 +83,7 @@ public:
 	};
 private:
 	void ModifyTimeLine(); // タイムラインを修正する
-	std::vector<NodeBase> m_Nodes; // 現在タブ内でくっついているノードのリスト
+	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト   ->ポリモーフィズム消えるためポインタで保存
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン
 	std::list<int> m_NodeTimeLine; // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリスト

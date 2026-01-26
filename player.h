@@ -28,7 +28,7 @@ public:
 		std::advance(it, index);
 		return &(*it);
 	}
-	std::vector<VisualBase>& GetAllVisualNodes()
+	std::vector<std::unique_ptr<VisualBase>>& GetAllVisualNodes()
 	{
 		return m_NodeVisuals;
 	}
@@ -45,12 +45,12 @@ public:
 	// この関数引数&なのと、init入れるかどうか
 	void AddVisualNode(const VisualBase& visual)
 	{
-		m_NodeVisuals.emplace_back();
-		m_NodeVisuals.back().Init(m_DnaScreenId, static_cast<int>(m_NodeVisuals.size() - 1), visual.GetBaseNodePtr());
+		m_NodeVisuals.emplace_back(std::make_unique<VisualBase>());
+		m_NodeVisuals.back()->Init(m_DnaScreenId, static_cast<int>(m_NodeVisuals.size() - 1), visual.GetBaseNodePtr());
 	}
 private:
 	class ModelRenderer* m_ModelRenderer = nullptr;
-	std::vector<NodeBase>m_HavingNodes;
-	std::vector<VisualBase> m_NodeVisuals;
+	std::vector<std::unique_ptr<NodeBase>>m_HavingNodes;
+	std::vector<std::unique_ptr<VisualBase>> m_NodeVisuals;
 	unsigned int m_DnaScreenId = 0; // dna_screenのID(生成されたタイミングでセットする)
 };
