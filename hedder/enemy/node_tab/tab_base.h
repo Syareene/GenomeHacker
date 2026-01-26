@@ -40,39 +40,42 @@ public:
 		}
 
 		// 挿入位置のイテレーターを取得
-		auto it = (index == -1) ? m_Nodes.end() : m_Nodes.begin() + index;
+		auto it = m_Nodes.end();
+		if (index != -1)
+		{
+			it = m_Nodes.begin();
+			std::advance(it, index);
+		}
 
 		// ノードを直接構築し、そのイテレータを取得
 		auto newNodeIt = m_Nodes.emplace(it, std::make_unique<T>());
-		NodeBase& newNode = *newNodeIt;
-
-		// やっぱ初期登録時にちゃんと登録できてないねぇ
+		T* newNode = static_cast<T*>((*newNodeIt).get());
 		
 		// 初期化
-		newNode.Init(trans);
+		newNode->Init(trans);
 		NodeBase* upperNode = nullptr;
 		NodeBase* lowerNode = nullptr;
 
 		// 挿入したノードの実際のインデックスを取得
-		int actualIndex = std::distance(m_Nodes.begin(), newNodeIt);
+		int actualIndex = static_cast<int>(std::distance(m_Nodes.begin(), newNodeIt));
 
 		// 上側ノード挿入判定
-		if (actualIndex > 0)
+		if (newNodeIt != m_Nodes.begin())
 		{
-			upperNode = m_Nodes[actualIndex - 1].get();
+			upperNode = (*std::prev(newNodeIt)).get();
 		}
 		// 下側ノード挿入判定
-		if (actualIndex < static_cast<int>(m_Nodes.size()) - 1)
+		if (std::next(newNodeIt) != m_Nodes.end())
 		{
-			lowerNode = m_Nodes[actualIndex + 1].get();
+			lowerNode = (*std::next(newNodeIt)).get();
 		}
 
 		// くっつけられるか判定
-		if (newNode.CanAttach(upperNode, lowerNode))
+		if (newNode->CanAttach(upperNode, lowerNode))
 		{
 			// タイムライン変更処理
 			ModifyTimeLine();
-			return static_cast<T*>(&newNode);
+			return newNode;
 		}
 		else
 		{

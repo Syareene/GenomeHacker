@@ -51,7 +51,7 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	{
 		// nodeの見た目部分を生成
 		VisualBase visual = VisualBase();
-		visual.Init(GetObjectID(), counter, &node);
+		visual.Init(GetObjectID(), counter, node.get());
 
 		player->AddVisualNode(visual);
 		counter++;

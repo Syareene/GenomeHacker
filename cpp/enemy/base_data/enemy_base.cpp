@@ -172,7 +172,9 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 				break;
 			}
 			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
-			moveTab->GetNodes()[index]->NodeEffect(enemy_ptr);
+			auto it = moveTab->GetNodes().begin();
+			std::advance(it, index);
+			(*it)->NodeEffect(enemy_ptr);
 
 			// ループ抜ける前に色々設定
 			beforeTime = time;

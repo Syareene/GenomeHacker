@@ -6,6 +6,7 @@
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 
+#include <unordered_map>
 #include <ranges>
 
 
@@ -18,7 +19,7 @@ void TabVisual::CreateVisual(TabBase* base)
 	{
 		// id設定されてないなら処理しない
 		// (下の段階でidが設定されてるかわからないので暫定処理)
-		assert(false, "TabVisual::CreateVisual called before IDs are set.");
+		assert(false && "TabVisual::CreateVisual called before IDs are set.");
 		return;
 	}
 
@@ -131,13 +132,13 @@ void TabVisual::ApplyGrabNode()
 		NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
 
 		// 所属しているノードリストから一時変数にmove
-		VisualBase tempNode;
+		std::unique_ptr<VisualBase> tempNode;
 		if (loc == NodeBase::NodeLocation::Enemy)
 		{
 			// enemyノード側から探す
 			auto it = std::find_if(m_VisualNodes.begin(), m_VisualNodes.end(),
-				[&](const VisualBase& node) {
-					return &node == grabNode;
+				[&](const std::unique_ptr<VisualBase>& node) {
+					return node.get() == grabNode;
 				});
 			if (it != m_VisualNodes.end())
 			{
@@ -152,8 +153,8 @@ void TabVisual::ApplyGrabNode()
 			// プレイヤーノード側から探す
 			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 			auto it = std::find_if(playerNodes.begin(), playerNodes.end(),
-				[&](const VisualBase& node) {
-					return &node == grabNode;
+				[&](const std::unique_ptr<VisualBase>& node) {
+					return node.get() == grabNode;
 				});
 			if (it != playerNodes.end())
 			{
@@ -172,8 +173,8 @@ void TabVisual::ApplyGrabNode()
 
 
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
-		Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(&tempNode);
-		grabNode = &tempNode;
+		Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
+		grabNode = tempNode.get();
 		//grabNode = state->GetGrabbingNode();
 
 		// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
@@ -186,7 +187,7 @@ void TabVisual::ApplyGrabNode()
 			// iterator基準のループ処理
 			for (auto it = m_VisualNodes.begin(); it != m_VisualNodes.end(); ++it)
 			{
-				if (grabPosY < (*it).GetPosition().y)
+				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
 					m_VisualNodes.insert(it, std::move(tempNode));
@@ -213,7 +214,7 @@ void TabVisual::ApplyGrabNode()
 			// iterator基準のループ処理
 			for (auto it = playerNodes.begin(); it != playerNodes.end(); ++it)
 			{
-				if (grabPosY < (*it).GetPosition().y)
+				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
 					playerNodes.insert(it, std::move(tempNode));
@@ -259,53 +260,53 @@ void TabVisual::ApplyMovedResult()
 	// NodeBaseのリストをenemy+playerでまとめる - ok
 	// EnemyのVisualのidを元にNodeBaseのリストと突き合わせてindexを修正する -ok
 
-	std::vector<NodeBase> allNodes;
-	allNodes.reserve(m_Tab->GetNodes().size() + temp->GetAllNodes().size());
+	std::unordered_map<int, std::unique_ptr<NodeBase>> allNodes;
 
-	// player/enemyの両方のデータを一つの配列にまとめる
-	std::move(m_Tab->GetNodes().begin(), m_Tab->GetNodes().end(), std::back_inserter(allNodes));
-	std::move(temp->GetAllNodes().begin(), temp->GetAllNodes().end(), std::back_inserter(allNodes));
-
-	// データ消す
+	// playerのデータを移動
+	for(auto& node : temp->GetAllNodes())
+	{
+		if (node)
+		{
+			int id = node->GetMoveManageId();
+			allNodes[id] = std::move(node);
+		}
+	}
+	temp->GetAllNodes().clear();
+	// enemyのデータを移動
+	for(auto& node : m_Tab->GetNodes())
+	{
+		if (node)
+		{
+			int id = node->GetMoveManageId();
+			allNodes[id] = std::move(node);
+		}
+	}
 	m_Tab->GetNodes().clear();
-	temp->GetAllNodes().clear();
 
-	// ラムダ式：IDからデータを引き抜くヘルパー関数
-	auto extractAndMove = [&](int id, std::vector<NodeBase>& targetList) 
+	// player/enemyのVisualBaseを元にNodeBaseを再配置する
+
+	// player
+	for(const auto& v_node : temp->GetAllVisualNodes())
 	{
-		auto it = std::ranges::find_if(allNodes, [id](const NodeBase& d) 
+		if(allNodes.count(v_node->GetNodeBaseIndex()) > 0)
 		{
-			return d.GetMoveManageId() == id;
-		});
-
-		if (it != allNodes.end()) 
-		{
-			// 見つかったら新しいリストへmoveで移動
-			targetList.push_back(std::move(*it));
+			// 見つかったら移動
+			m_Tab->GetNodes().push_back(std::move(allNodes[v_node->GetNodeBaseIndex()]));
+			// 移動したのでmapから削除
+			allNodes.erase(v_node->GetNodeBaseIndex());
 		}
-		else 
+	}
+	// enemy
+	for(const auto& v_node : m_VisualNodes)
+	{
+		if(allNodes.count(v_node->GetNodeBaseIndex()) > 0)
 		{
-			// idなし
+			// 見つかったら移動
+			temp->GetAllNodes().push_back(std::move(allNodes[v_node->GetNodeBaseIndex()]));
+			// 移動したのでmapから削除
+			allNodes.erase(v_node->GetNodeBaseIndex());
 		}
-	};
-
-
-	// ラムダ式を用いてデータをplayer/enemyに設定
-	for (auto& v_node : m_VisualNodes)
-	{
-		// 参照したいid, 移動先配列を渡す
-		extractAndMove(v_node->GetNodeBaseIndex(), m_Tab->GetNodes());
 	}
-	for (auto& v_node : temp->GetAllVisualNodes())
-	{
-		// 参照したいid, 移動先配列を渡す
-		extractAndMove(v_node->GetNodeBaseIndex(), temp->GetAllNodes());
-	}
-	// 不要になったため生成したVisualNodeを消す
-	m_VisualNodes.clear();
-	temp->GetAllNodes().clear();
-
-
 }
 
 void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
