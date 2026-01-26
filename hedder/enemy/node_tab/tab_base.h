@@ -42,8 +42,9 @@ public:
 		// 挿入位置のイテレーターを取得
 		auto it = (index == -1) ? m_Nodes.end() : m_Nodes.begin() + index;
 
-		// ノードを直接構築
-		NodeBase& newNode = *m_Nodes.emplace(it);
+		// ノードを直接構築し、そのイテレータを取得
+		auto newNodeIt = m_Nodes.emplace(it);
+		NodeBase& newNode = *newNodeIt;
 		
 		// 初期化
 		newNode.Init(trans);
@@ -51,7 +52,7 @@ public:
 		NodeBase* lowerNode = nullptr;
 
 		// 挿入したノードの実際のインデックスを取得
-		int actualIndex = std::distance(m_Nodes.begin(), m_Nodes.begin() + index);
+		int actualIndex = std::distance(m_Nodes.begin(), newNodeIt);
 
 		// 上側ノード挿入判定
 		if (actualIndex > 0)
@@ -74,7 +75,7 @@ public:
 		else
 		{
 			// 追加できない場合は、構築した要素を削除
-			m_Nodes.erase(m_Nodes.begin() + actualIndex);
+			m_Nodes.erase(newNodeIt);
 			return nullptr;
 		}
 	};

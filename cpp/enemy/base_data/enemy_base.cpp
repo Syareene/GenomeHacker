@@ -37,18 +37,11 @@ EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 	//m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
-	// これ無限ループしてるわな->いや派生クラスのinitが呼ばれる?
-	return Init(playerId); // DNAスクリーンの初期化+ポインタを返す
+	// これ無限ループしてるわなってことでエラーっす
+	return this;
 
 	// テクスチャ生成
 	
-	//m_TextureID = TextureManager::LoadTexture(L"asset\\texture\\");
-	// uvテクスチャの場合はuvのデータも変数に設定する。
-	
-	// タブが作られたので各ノードに対してenemyの初期ノードを登録しておく。
-	
-	// ポインタに対して初期ノードを追加する。
-	//m_DnaScreen->GetAttackTab()->AddNode<NodeBase>(-1);
 }
 
 void EnemyBase::Unregister()
