@@ -30,10 +30,10 @@ void StateManager::MoveState()
 		std::rotate(m_StateStack.begin(), it, it + 1);
 
 		// キャッシュ廃止に尽きIsInitializedフラグをfalseにする
-		m_StateStack.front()->SetIsInitialized(false);
+		//m_StateStack.front()->SetIsInitialized(false);
 
 		// 新しいステートでInitを呼び出す
-		m_StateStack.front()->Init();
+		//m_StateStack.front()->Init();
 		m_StateChanged = true;
 
 		m_WillState.reset(); // state変更予約をクリア
