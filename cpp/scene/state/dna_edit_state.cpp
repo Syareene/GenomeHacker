@@ -51,18 +51,9 @@ void DnaEditState::Update()
 	// ノード更新前にプレイヤーが所有しているノードの位置を修正
 	//ModifyNodePos();
 
-	//for(auto& node : m_Player->GetAllNodes())
-	//{
-	//	// ノードの更新
-	//	node->Update();
-	//}
-
-	// state内オブジェクトの更新
-	//UpdateStateObjectByTag("dna_edit");
 	UpdateStateObject();
 	// ノード掴み処理の適用
 	//ApplyGrabNode();
-	DeleteGameObject();
 }
 
 void DnaEditState::Draw()
