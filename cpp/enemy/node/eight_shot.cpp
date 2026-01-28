@@ -1,0 +1,87 @@
+﻿#include "main.h"
+#include "enemy/node/eight_shot.h"
+#include "enemy/field_enemy.h"
+#include "scene/manager.h"
+#include "collider/collision.h"
+#include "enemy/base_data/enemy_base.h"
+
+// 敵専用の弾クラス
+#include "enemy/enemy_bullet.h"
+
+#include <format>
+
+void EightShot::Init(Transform trans)
+{
+	Transform defaultTrans = Transform();
+	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+
+	// ベースデータセット
+
+	// 名前
+	SetNameData({ "EightShot", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal });
+	// 説明文
+	SetDescriptionData({ GenerateDescriptionText(), Vector2(10.0f, 350.0f), NodeBase::TextType::Normal });
+
+	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
+	NodeBase::Init(defaultTrans);
+	AddInputTypeTop(InputType::Move);
+	AddInputTypeBottom(InputType::Move);
+
+	m_MoveVal = -0.035f; // 球速度
+	m_ShotInterval = 60.0f;
+
+	// CDMaxを発射間隔に設定
+	SetCDMax(static_cast<int>(m_ShotInterval));
+	SetCD(0);
+}
+
+bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
+{
+	// cd加算
+	SetCD(GetCD() + 1);
+	// 発射間隔来てないなら終了
+	if (GetCD() < GetCDMax())
+	{
+		return false;
+	}
+
+	// CDをリセット
+	SetCD(0);
+
+	// 発射処理
+	// 8方向に球を出す
+	for (int i = 0; i < 8; ++i)
+	{
+		// 敵専用の弾の生成処理
+		EnemyBullet* bullet = Manager::GetCurrentScene()->AddGameObject<EnemyBullet>(1);
+		// 弾の初期位置を敵の位置にセット
+		bullet->SetTransform(enemy_ptr->GetTransform());
+
+		// 弾の発射元の敵種類IDを設定
+		if (enemy_ptr->GetEnemyBase())
+		{
+			bullet->SetOwnerEnemyID(enemy_ptr->GetEnemyBase()->GetEnemyID());
+		}
+
+		// 角度に応じてvelocityをセット
+		float angle = i * (3.14159f / 4.0f); // 45度刻み
+		Vector3 velocity;
+		velocity.x = cosf(angle) * m_MoveVal;
+		velocity.y = sinf(angle) * m_MoveVal;
+		velocity.z = 0.0f;
+		// 弾の速度を設定
+		bullet->SetVelocity(velocity);
+	}
+
+	return true;
+}
+
+std::string EightShot::GenerateDescriptionText()
+{
+	// 説明文のテンプレートを取得
+	std::string format_string = "このノードがある敵は{}フレーム毎に8方向に進む球を出します。";
+	// std::formatを使用して最終的な文字列を生成
+	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval));
+	return formatted_text;
+}

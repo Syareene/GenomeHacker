@@ -345,6 +345,12 @@
     <ClInclude Include="hedder\enemy\node_tab\tab_visual.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\eight_shot.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\enemy_bullet.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -565,6 +571,12 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node_tab\tab_visual.cpp">
       <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\eight_shot.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\ememy_bullet.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -246,12 +246,15 @@ void TabVisual::ApplyMovedResult()
 	for(auto& node : m_Tab->GetNodes())
 	{
 		node->SetMoveManageId(index);
+		index++;
 	}
+	index = 0;
 	// プレイヤーのノードに対しても振る
 	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
 	for(auto& node : temp->GetAllNodes())
 	{
 		node->SetMoveManageId(index);
+		index++;
 	}
 	// VisualBaseは生成時にid振ってあるので不要。
 
@@ -263,7 +266,7 @@ void TabVisual::ApplyMovedResult()
 	// NodeBaseのリストをenemy+playerでまとめる - ok
 	// EnemyのVisualのidを元にNodeBaseのリストと突き合わせてindexを修正する -ok
 
-	std::unordered_map<int, std::unique_ptr<NodeBase>> allNodes;
+	std::unordered_map<std::string, std::unique_ptr<NodeBase>> allNodes;
 
 	// playerのデータを移動
 	for(auto& node : temp->GetAllNodes())
@@ -271,7 +274,7 @@ void TabVisual::ApplyMovedResult()
 		if (node)
 		{
 			int id = node->GetMoveManageId();
-			allNodes[id] = std::move(node);
+			allNodes["p" + std::to_string(id)] = std::move(node);
 		}
 	}
 	temp->GetAllNodes().clear();
@@ -281,33 +284,61 @@ void TabVisual::ApplyMovedResult()
 		if (node)
 		{
 			int id = node->GetMoveManageId();
-			allNodes[id] = std::move(node);
+			allNodes["e" + std::to_string(id)] = std::move(node);
 		}
 	}
 	m_Tab->GetNodes().clear();
+
+
+	// この段階でノードが一個しかallnodesに入ってねぇ
+	// GetMoveManageIdが全部0で圧縮されて0になってる
+	// んーっとindexがインクリメントされてなかったからダメだった、これで解決ではあるんだけど
+	// enemy/playerごとの判定ではない+playerとenemy足したindexなのでplayerとenemyでそれぞれid振らないといけない
+	// なのでmapのキーを文字列にしてe/p + indexにすれば解決かな(or先頭に識別子)
+	// visualnodeの元がenemy/playerかの変数があるからそれを取得してGetNodeBaseIndexと組み合わせてキーとして取得する
 
 	// player/enemyのVisualBaseを元にNodeBaseを再配置する
 
 	// player
 	for(const auto& v_node : temp->GetAllVisualNodes())
 	{
-		if(allNodes.count(v_node->GetNodeBaseIndex()) > 0)
+		std::string key = "";
+		if(v_node->GetNodeLocation() == NodeBase::NodeLocation::Player)
+		{
+			key = "p" + std::to_string(v_node->GetNodeBaseIndex());
+		}
+		else
+		{
+			key = "e" + std::to_string(v_node->GetNodeBaseIndex());
+		}
+
+		if(allNodes.count(key) > 0)
 		{
 			// 見つかったら移動
-			m_Tab->GetNodes().push_back(std::move(allNodes[v_node->GetNodeBaseIndex()]));
+			m_Tab->GetNodes().push_back(std::move(allNodes[key]));
 			// 移動したのでmapから削除
-			allNodes.erase(v_node->GetNodeBaseIndex());
+			allNodes.erase(key);
 		}
 	}
 	// enemy
 	for(const auto& v_node : m_VisualNodes)
 	{
-		if(allNodes.count(v_node->GetNodeBaseIndex()) > 0)
+		std::string key = "";
+		if (v_node->GetNodeLocation() == NodeBase::NodeLocation::Player)
+		{
+			key = "p" + std::to_string(v_node->GetNodeBaseIndex());
+		}
+		else
+		{
+			key = "e" + std::to_string(v_node->GetNodeBaseIndex());
+		}
+
+		if(allNodes.count(key) > 0)
 		{
 			// 見つかったら移動
-			temp->GetAllNodes().push_back(std::move(allNodes[v_node->GetNodeBaseIndex()]));
+			temp->GetAllNodes().push_back(std::move(allNodes[key]));
 			// 移動したのでmapから削除
-			allNodes.erase(v_node->GetNodeBaseIndex());
+			allNodes.erase(key);
 		}
 	}
 }
