@@ -9,7 +9,6 @@ class EnemyBase;
 class DnaScreenScript : public Panel
 {
 public:
-	static constexpr size_t MAX_OBJECTS = 2; // オブジェクトvector最大数。継承先クラスで変更可能。
 
 	// このクラスがenemy_baseからstateにたされてるので要らなくなったらstateからdestoryすべきかな
 

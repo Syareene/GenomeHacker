@@ -7,8 +7,6 @@ class State;
 class EnemyDnaList : public SystemObject
 {
 public:
-	// 何故か1でエラーはいたので一旦16に
-	static constexpr size_t MAX_OBJECTS = 16; // オブジェクトvector最大数。継承先クラスで変更可能。
 
 	// dnaタブからゲーム側に行く処理
 	void Init(State* ptr);
