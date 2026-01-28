@@ -207,17 +207,43 @@ void DnaScreenScript::ShowDnaInfo()
 	fontData.outlineWidth = 4.0f;
 
 
-	AddChildObject<Button>(1)->Register([this]() {
-		// ボタンがクリックされた時の処理
-		SelectedAttackTab();
+	// ラムダ式のキャプチャにthisを入れていたが、pendingでmoveする関係上thisだと動かない
+	// そのためオブジェクトに設定されているidを用いて再取得する形に変更しボタンのコールバックを設定
+
+	unsigned int myID = GetObjectID();
+	// コールバック関数
+	auto buttonCallback = [myID](int type) 
+	{
+		// 現在のシーンからIDを使って自身を再取得
+		auto scene = Manager::GetCurrentScene().get();
+		if (auto script = scene->GetStatePtr()->GetGameObjectById<DnaScreenScript>(myID))
+		{
+			// 有効なインスタンスに対して処理を実行
+			switch (type) 
+			{
+				case 0: 
+					script->SelectedAttackTab(); 
+					break;
+				case 1: 
+					script->SelectedMoveTab(); 
+					break;
+				case 2: 
+					script->SelectedDeathTab(); 
+					break;
+			}
+		}
+	};
+
+	AddChildObject<Button>(1)->Register([buttonCallback]() {
+		buttonCallback(0); // 攻撃
 		}, Vector2(1000.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
-	AddChildObject<Button>(1)->Register([this]() {
-		// ボタンがクリックされた時の処理
-		SelectedMoveTab();
+
+	AddChildObject<Button>(1)->Register([buttonCallback]() {
+		buttonCallback(1); // 移動
 		}, Vector2(1100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
-	AddChildObject<Button>(1)->Register([this]() {
-		// ボタンがクリックされた時の処理
-		SelectedDeathTab();
+
+	AddChildObject<Button>(1)->Register([buttonCallback]() {
+		buttonCallback(2); // 死亡
 		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
 
 	// 右側の追加したいノード郡
@@ -308,6 +334,8 @@ TabVisual* DnaScreenScript::GetActiveTab()
 
 void DnaScreenScript::SelectedAttackTab()
 {
+	Font* ptr = GetChildObjectByType<Font>();
+
 	GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
 	m_AttackVisual.SetIsSelected(true);
 	m_AttackVisual.ModifyNodePos(); // ノード位置修正
