@@ -5,7 +5,7 @@
 class EnemyBullet : public Object3D
 {
 public:
-	static constexpr int MAX_OBJECTS = 500; // 敵の弾の最大数
+	static constexpr size_t MAX_OBJECTS = 1000; // オブジェクトvector最大数。継承先クラスで変更可能。
 
 	void Init(Transform trans = Transform());
 	void Uninit() override;

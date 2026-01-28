@@ -29,7 +29,7 @@ void EightShot::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 
 	m_MoveVal = -0.035f; // 球速度
-	m_ShotInterval = 60.0f;
+	m_ShotInterval = 150.0f;
 
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
@@ -56,7 +56,12 @@ bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 		// 敵専用の弾の生成処理
 		EnemyBullet* bullet = Manager::GetCurrentScene()->AddGameObject<EnemyBullet>(1);
 		// 弾の初期位置を敵の位置にセット
-		bullet->SetTransform(enemy_ptr->GetTransform());
+		Transform trans;
+		trans.SetPosition(enemy_ptr->GetPosition());
+		trans.SetScale(bullet->GetScale());
+		trans.SetRotation(bullet->GetRotation());
+
+		bullet->SetTransform(trans);
 
 		// 弾の発射元の敵種類IDを設定
 		if (enemy_ptr->GetEnemyBase())

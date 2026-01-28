@@ -17,6 +17,7 @@
 #include "enemy/node_tab/togame_button.h"
 #include "object/ui/in_game/fade.h"
 #include "enemy/base_data/enemy_list.h"
+#include "enemy/enemy_bullet.h"
 //#include "enemy/node_tab/enemy_dna_list.h"
 
 #include <typeindex>
@@ -41,6 +42,9 @@ void GameScene::Init()
 	AddGameObject<ToGameButton>(2);
 	AddSystemObject<EnemyList>(false, id);
 	AddSystemObject<EnemySpawner>();
+
+	// 敵の弾を予約
+	ReserveObject<EnemyBullet>(EnemyBullet::MAX_OBJECTS);
 	
 	// ボタン用フォントデータ設定
 	FontData fontData;
