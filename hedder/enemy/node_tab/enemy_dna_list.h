@@ -2,11 +2,13 @@
 
 #include "object/system_object.h"
 
+class State;
+
 class EnemyDnaList : public SystemObject
 {
 public:
 	// dnaタブからゲーム側に行く処理
-	void Init() override;
+	void Init(State* ptr);
 	void Uninit() override;
 	void Update() override;
 	void UpdateFinal() override;

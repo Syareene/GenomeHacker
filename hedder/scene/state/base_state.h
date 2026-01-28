@@ -29,6 +29,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	void UpdateFinal();
+	void FlushPendingObjects();
 
 	// 2d版リザーブ関数
 	template <typename ObjectType>

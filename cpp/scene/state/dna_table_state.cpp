@@ -11,8 +11,9 @@ void DnaTableState::Init()
 		return;
 	}
 	SetIsInitialized(true);
+
 	State::Init();
-	AddSystemObject<EnemyDnaList>();
+	AddSystemObject<EnemyDnaList>(this);
 }
 
 void DnaTableState::Uninit()
@@ -37,7 +38,7 @@ void DnaTableState::Update()
 
 void DnaTableState::Draw()
 {
-	State::Update();
+	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTag("dna");
 	// このstate内オブジェクトの描画

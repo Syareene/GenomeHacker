@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "scene/state/base_state.h"
+#include "object/panel.h"
 
 unsigned int State::m_ObjectIDCounter = 0;
 
@@ -43,6 +44,46 @@ void State::UpdateFinal()
         if (systemObject)
         {
             systemObject->UpdateFinal();
+        }
+    }
+}
+
+void State::FlushPendingObjects()
+{
+    // 3dオブジェクトの保留中オブジェクトをフラッシュ
+    for (auto& objects3d : m_Objects3D)
+    {
+        if (!objects3d)
+        {
+            continue;
+        }
+        objects3d->FlushPendingObjects();
+    }
+    ObjectManager<Panel>* panelManager = nullptr;
+
+    // 2dオブジェクトの保留中オブジェクトをフラッシュ
+    for (auto& objects2d : m_Objects2D)
+    {
+        if (!objects2d)
+        {
+            continue;
+        }
+        ObjectManager<Panel>* manager = dynamic_cast<ObjectManager<Panel>*>(objects2d.get());
+        if (manager)
+        {
+            panelManager = manager;
+        }
+        objects2d->FlushPendingObjects();
+    }
+
+    // パネル内にもmanagerがあるためそちらもフラッシュ処理
+
+    // これパネル継承したやつの場合実行されんね
+    if (panelManager)
+    {
+        for (auto& panelObj : panelManager->GetGameObjects())
+        {
+            panelObj.FlushPendingObjects();
         }
     }
 }
@@ -130,8 +171,9 @@ void State::UpdateStateObject()
             objects2d->Update();
         }
     }
-
     DeleteGameObject();
+    // 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void State::UpdateStateObjectByTag(const std::string& tag)
@@ -161,6 +203,8 @@ void State::UpdateStateObjectByTag(const std::string& tag)
         }
     }
     DeleteGameObject();
+    // 待機オブジェクトの反映
+    FlushPendingObjects();
 }
 
 void State::UpdateStateObjectByTags(const std::list<std::string>& tags)
@@ -191,6 +235,8 @@ void State::UpdateStateObjectByTags(const std::list<std::string>& tags)
     }
 
     DeleteGameObject();
+    // 待機オブジェクトの反映
+    FlushPendingObjects();
 }
 
 void State::DrawStateObject()

@@ -296,11 +296,13 @@ int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> tex
 	return m_TextureID; // 成功した場合はテクスチャIDを返す
 }
 
-void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID)
+void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID, State* ptr)
 {
 	// DNAタブへの遷移ボタンを表示
 	// ここでボタンを生成して表示する処理を実装
-	m_ToDnaButton = Manager::GetCurrentScene()->GetStatePtr()->AddGameObject<Button>(2);
+
+	// state、GameStateになってたわね
+	m_ToDnaButton = ptr->AddGameObject<Button>(2);
 
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
@@ -323,7 +325,7 @@ void EnemyBase::HideDnaEditButton()
 		m_ToDnaButton = nullptr; // ポインタをnullptrに設定
 	}
 }
-
+	
 void EnemyBase::ShowDnaScreen()
 {
 	// DNAタブを表示
@@ -332,8 +334,7 @@ void EnemyBase::ShowDnaScreen()
 	DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
 	// これstateも可変init引数に対応しないとここに入れらねーｗｗｗｗｗｗｗｗ
 	// とりあえずここの追加時にはenemybase*とplayeridがいる
-	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(1, this, Manager::GetCurrentScene()->getTypeId<Player>()); // DNAスクリーンをシーンに追加
-	screen->Init(this, 0); // 敵データとプレイヤーidを渡して初期化(応急措置)
+	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(1, this, Manager::GetCurrentScene()->GetGameObject<Player>()->GetObjectID()); // DNAスクリーンをシーンに追加
 	screen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
 	screen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す
 }

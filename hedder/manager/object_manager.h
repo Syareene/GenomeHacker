@@ -140,8 +140,8 @@ public:
 	{
 		// 待機リストに追加
 		auto& obj = m_PendingObjects.emplace_back();
-		obj.Init(std::forward<Args>(args)...);
 		obj.SetObjectID(objId);
+		obj.Init(std::forward<Args>(args)...);
 		return &obj;
 	}
 

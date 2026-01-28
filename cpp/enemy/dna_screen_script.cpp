@@ -33,6 +33,9 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 
 	// TabManager経由で対象が所持しているノードの見た目の部分を生成する
 
+
+	// screenのidちゃんと発行されてない
+
 	// 初期化
 	m_AttackVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetAttackTab());
 	m_MoveVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetMoveTab());
@@ -41,9 +44,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	// プレイヤーにidをセットしてあげる
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
 	player->SetDnaScreenId(GetObjectID());
-
-	// これら見た目関数実行した時に元ノードにフラグonにしてこれ以上無駄なノードの生成を防ぐとかはありっす
-	// でもそれできるのplayerだけだね
 
 	// プレイヤーに関しても所持しているノードの見た目部分を生成する
 	int counter = 0;

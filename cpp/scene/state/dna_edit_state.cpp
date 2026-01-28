@@ -69,7 +69,7 @@ void DnaEditState::Draw()
 {
 	State::Draw();
 	// updateと同じ
-	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
+	Manager::GetCurrentScene()->DrawObjectByTag("dna_edit");
 
 	//for (auto& node : m_Player->GetAllNodes())
 	//{

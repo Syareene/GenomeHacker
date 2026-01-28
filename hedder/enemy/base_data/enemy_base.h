@@ -7,6 +7,7 @@
 
 
 class FieldEnemy; // 前方宣言
+class State;
 
 
 class EnemyBase
@@ -33,7 +34,7 @@ public:
 
 	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
 	// ただ関数としてはここにほしいかな
-	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID);
+	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID, State* ptr);
 	void HideDnaEditButton();
 	// テクスチャid版がほしい
 
