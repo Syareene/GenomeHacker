@@ -39,15 +39,15 @@ void EightShot::Init(Transform trans)
 bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// cd加算
-	SetCD(GetCD() + 1);
+	//SetCD(GetCD() + 1);
 	// 発射間隔来てないなら終了
-	if (GetCD() < GetCDMax())
-	{
-		return false;
-	}
+	//if (GetCD() < GetCDMax())
+	//{
+	//	return false;
+	//}
 
 	// CDをリセット
-	SetCD(0);
+	//SetCD(0);
 
 	// 発射処理
 	// 8方向に球を出す
