@@ -15,6 +15,7 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
+#include "enemy/node/eight_shot.h"
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
 
@@ -28,6 +29,7 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	
 	// 初期化処理
 	EnemyBase::Init(playerId);
+	SetEnemyID(GetEnemyTypeId<Slime>());
 
 	// ここでAddnodeする時にposも指定できるようにして
 	// そのposと内部にあるテキストのyで位置調整する(xは固定)
@@ -36,6 +38,9 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 
 	// enemy_listからregisterされてきた。enemy_baseのinitからDnaScreenのptrをもらうか
 	// これ一時objに対してpushしてるからidじゃ検索できません
+
+	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+
 
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
 	GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);

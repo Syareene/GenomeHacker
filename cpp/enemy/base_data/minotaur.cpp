@@ -28,6 +28,8 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 	// 初期化処理
 	EnemyBase::Init(playerId);
 
+	SetEnemyID(GetEnemyTypeId<Minotaur>());
+
 	// 初期ノードノード登録
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);

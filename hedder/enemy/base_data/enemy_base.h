@@ -53,6 +53,13 @@ public:
 
 	inline void SetEnemyID(int id) { m_EnemyID = id; }
 	inline int GetEnemyID() const { return m_EnemyID; }
+	// 型ごとに一意なIDを生成
+	template <typename T>
+	static int GetEnemyTypeId()
+	{
+		static int id = NextEnemyTypeId();
+		return id;
+	}
 
 	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
 	inline const int GetEnemyTextureID() const { return m_TextureID; }
@@ -68,6 +75,13 @@ public:
 	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
 private:
+	// 敵種類IDのカウンターを管理する静的関数
+	static int NextEnemyTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
+
 	std::unique_ptr<TabManager> m_TabManager; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
