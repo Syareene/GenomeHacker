@@ -29,7 +29,7 @@ public:
 		}
 		// ない場合は新規作成してデキューに追加
 		auto new_state = std::make_unique<T>();
-		new_state->Init();
+		//new_state->Init();
 		m_StateStack.emplace_back(std::move(new_state));
 		// 追加した要素（末尾）のイテレータを予約
 		m_WillState = std::prev(m_StateStack.end());

@@ -72,46 +72,49 @@ void TabVisual::Uninit()
 
 void TabVisual::Update()
 {
-	// 更新時dna_screen_scriptからplayer_idをもらう
-	// でもpanel継承だからupdateの引数変えられないし、保存するしかないかねぇ、考えないとダメだこれ
-
-
-	// タブ内にあるノードに対する更新処理
-	for (auto& node : m_VisualNodes)
+	if (m_IsSelected)
 	{
-		node->Update();
-	}
-	// プレイヤーが所持しているノードの更新処理
-	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
 
-	for (auto& node : temp->GetAllVisualNodes())
-	{
-		node->Update();
-	}
+		// タブ内にあるノードに対する更新処理
+		for (auto& node : m_VisualNodes)
+		{
+			node->Update();
+		}
+		// プレイヤーが所持しているノードの更新処理
+		Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
+
+		for (auto& node : temp->GetAllVisualNodes())
+		{
+			node->Update();
+		}
 
 
-	VisualBase* grabNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
-	// 該当するノードをm_Nodesから探してindexを取得
-	if (grabNode)
-	{
-		ModifyEnemyNodeIndexFromPos(Mouse::GetPosition(), grabNode);
-		ModifyPlayerNodeIndexFromPos(Mouse::GetPosition(), grabNode);
+		VisualBase* grabNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+		// 該当するノードをm_Nodesから探してindexを取得
+		if (grabNode)
+		{
+			ModifyEnemyNodeIndexFromPos(Mouse::GetPosition(), grabNode);
+			ModifyPlayerNodeIndexFromPos(Mouse::GetPosition(), grabNode);
+		}
 	}
 }
 
 void TabVisual::Draw()
 {
-	// タブ内にあるノードに対する描画処理
-	for (auto& node : m_VisualNodes)
+	if (m_IsSelected)
 	{
-		node->Draw();
-	}
+		// タブ内にあるノードに対する描画処理
+		for (auto& node : m_VisualNodes)
+		{
+			node->Draw();
+		}
 
-	// プレイヤーが所持しているノードの描画処理
-	Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
-	for (auto& node : temp->GetAllVisualNodes())
-	{
-		node->Draw();
+		// プレイヤーが所持しているノードの描画処理
+		Player* temp = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId);
+		for (auto& node : temp->GetAllVisualNodes())
+		{
+			node->Draw();
+		}
 	}
 }
 

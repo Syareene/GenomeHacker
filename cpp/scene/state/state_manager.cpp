@@ -29,6 +29,9 @@ void StateManager::MoveState()
 		// 予約されたイテレータが指す要素を先頭に持ってくる
 		std::rotate(m_StateStack.begin(), it, it + 1);
 
+		// キャッシュ廃止に尽きIsInitializedフラグをfalseにする
+		m_StateStack.front()->SetIsInitialized(false);
+
 		// 新しいステートでInitを呼び出す
 		m_StateStack.front()->Init();
 		m_StateChanged = true;

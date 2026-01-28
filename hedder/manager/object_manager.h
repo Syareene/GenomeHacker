@@ -3,6 +3,11 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+// debugmsg用
+#include <typeinfo>
+#include <string>
+#include "Windows.h"
+
 #include "object/game_object.h"
 
 class Panel; // 前方宣言
@@ -157,8 +162,16 @@ public:
 			// キャパシティチェック
 			if (m_Objects.size() >= m_Objects.capacity())
 			{
-				// 追加スルーか?
-				assert("ObjectManager capacity exceeded! Write more value on hedder!" && false);
+				// エラーメッセージを作成
+				std::string errorMsg = "[Error] ObjectManager capacity exceeded! Target Type: ";
+				errorMsg += typeid(ObjectType).name();
+				errorMsg += "\nWrite more value on hedder!\n";
+
+				// Visual Studioの出力ウィンドウに表示
+				OutputDebugStringA(errorMsg.c_str());
+
+				// 停止
+				assert(!"Capacity exceeded! Check Output Window for the object type.");
 			}
 			m_Objects.emplace_back(std::move(obj));
 		}
@@ -317,8 +330,16 @@ public:
 		// キャパシティチェック
 		if (m_Objects.size() >= m_Objects.capacity())
 		{
-			// 追加スルーか?
-			assert("ObjectManager capacity exceeded! Write more value on hedder!" && false);
+			// エラーメッセージを作成
+			std::string errorMsg = "[Error] ObjectManager capacity exceeded! Target Type: ";
+			errorMsg += typeid(ObjectType).name();
+			errorMsg += "\nWrite more value on hedder!\n";
+
+			// Visual Studioの出力ウィンドウに表示
+			OutputDebugStringA(errorMsg.c_str());
+
+			// 停止
+			assert(!"Capacity exceeded! Check Output Window for the object type.");
 		}
 
 		// vectorのメモリ上でオブジェクトを構築(emplace_backはc++17から参照を返す)

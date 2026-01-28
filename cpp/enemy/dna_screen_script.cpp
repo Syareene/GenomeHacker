@@ -59,9 +59,9 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 
 
 	// 各種ノード
-	m_AttackVisual.CreateVisual(manager->GetAttackTab());
-	m_MoveVisual.CreateVisual(manager->GetMoveTab());
-	m_DeathVisual.CreateVisual(manager->GetDeathTab());
+	//m_AttackVisual.CreateVisual(manager->GetAttackTab());
+	//m_MoveVisual.CreateVisual(manager->GetMoveTab());
+	//m_DeathVisual.CreateVisual(manager->GetDeathTab());
 
 	// その他UI等の生成
 
@@ -130,6 +130,11 @@ void DnaScreenScript::Update()
 			SelectedDeathTab();
 		}
 
+		// タブ更新(内部でアクティブなタブのみ更新される)
+		m_AttackVisual.Update();
+		m_MoveVisual.Update();
+		m_DeathVisual.Update();
+
 		// 子オブジェクトの更新
 		for (auto& child : GetAllChildObjects())
 		{
@@ -160,6 +165,11 @@ void DnaScreenScript::Draw()
 	{
 		return;
 	}
+
+	// タブ描画(内部でアクティブなタブのみ描画される)
+	m_AttackVisual.Draw();
+	m_MoveVisual.Draw();
+	m_DeathVisual.Draw();
 
 	// 子オブジェクトの描画
 	for (auto& child : GetAllChildObjects())

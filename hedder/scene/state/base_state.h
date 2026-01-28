@@ -276,10 +276,9 @@ public:
 	{
 		return SystemObject::getTypeId<T>();
 	}
-
+	inline void SetIsInitialized(const bool& isInitialized) { m_IsInitialized = isInitialized; }
 protected:
 	inline bool IsInitialized() const { return m_IsInitialized; }
-	inline void SetIsInitialized(const bool& isInitialized) { m_IsInitialized = isInitialized; }
 	void DeleteGameObject();
 	void DeleteAllGameObject();
 	void UpdateStateObject();
