@@ -14,15 +14,13 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	SetEnemyBase(base);
 
 	// 初期座標で設定する
-	SetPosition(trans.GetPosition());
-	SetRotation(trans.GetRotation());
-	SetScale(trans.GetScale());
+	SetTransform(trans);
 
 	// 初期化処理
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(Vector3(0.30f, 0.30f, 0.30f));
+	transform.SetScale(Vector3(0.5f, 0.5f, 0.5f));
 
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);

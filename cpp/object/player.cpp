@@ -17,8 +17,8 @@ void Player::Init(Transform trans)
 {
 	// 画像が小さいため相対的に拡大する
 	Transform player_trans;
-	player_trans.SetPosition(trans.GetPosition() + Vector3(0.0f, 2.0f, 0.0f));
-	player_trans.SetScale(trans.GetScale().mul(Vector3(2.0f, 2.0f, 1.0f)));
+	player_trans.SetScale(trans.GetScale().mul(Vector3(1.5f, 1.5f, 1.0f)));
+	player_trans.SetPosition(trans.GetPosition() + Vector3(0.0f, player_trans.GetScale().y * 0.5f, 0.0f));
 
 	SetTransform(player_trans);
 
@@ -28,6 +28,7 @@ void Player::Init(Transform trans)
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
+	transform.SetScale(GetScale().mul(Vector3(0.5f, 0.5f, 0.5f)));
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform, Vector3(GetScale().x * 0.05f, 0.0f, 0.0f));
 
@@ -98,7 +99,7 @@ void Player::Update()
 		// 初期座標設定v
 		//bullet->SetPosition(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 弾の速度を設定
-		bullet->SetVelocity(GetForward() * 0.2f);
+		bullet->SetVelocity(GetForward() * 0.15f);
 	}
 
 	if (Input::GetKeyTrigger('R'))

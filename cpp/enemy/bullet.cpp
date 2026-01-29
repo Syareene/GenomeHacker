@@ -23,6 +23,8 @@ void Bullet::Init(Transform trans)
 	AddTag("bullet");
 
 	SetTransform(trans);
+	// posだけ少し下げる
+	SetPosition(GetPosition() - Vector3(0.0f, 1.0f, 0.0f));
 
 	// コリジョンを有効化する
 	Transform transform;
