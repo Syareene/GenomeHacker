@@ -99,7 +99,7 @@ void Player::Update()
 		// 初期座標設定v
 		//bullet->SetPosition(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 弾の速度を設定
-		bullet->SetVelocity(GetForward() * 0.15f);
+		bullet->SetVelocity(Manager::GetCurrentScene()->GetGameObject<Camera>()->GetForward() * 0.15f);
 	}
 
 	if (Input::GetKeyTrigger('R'))
