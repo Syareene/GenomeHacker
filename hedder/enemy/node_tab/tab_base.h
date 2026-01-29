@@ -74,8 +74,8 @@ public:
 			return nullptr;
 		}
 	};
-private:
 	void ModifyTimeLine(); // タイムラインを修正する
+private:
 	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト->ポリモーフィズム消えるため実態ではなくポインタで保存
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン

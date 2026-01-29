@@ -28,7 +28,7 @@ public:
 		return m_StateManager.SetState<T>();
 	}
 
-	inline State* GetStatePtr() const
+	inline State* GetCurrentState() const
 	{
 		return m_StateManager.GetState();
 	}

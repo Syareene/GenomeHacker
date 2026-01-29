@@ -89,7 +89,7 @@ void TabVisual::Update()
 		}
 
 
-		VisualBase* grabNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+		VisualBase* grabNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 		// 該当するノードをm_Nodesから探してindexを取得
 		if (grabNode)
 		{
@@ -128,7 +128,7 @@ void TabVisual::ModifyNodePos()
 void TabVisual::ApplyGrabNode()
 {
 	// 掴んでいるノードの位置を見て適切な場所に挿入
-	VisualBase* grabNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+	VisualBase* grabNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 	if (grabNode)
 	{
 		// 掴みノードがenemy/playerどっちに所属しているかを取得
@@ -176,7 +176,7 @@ void TabVisual::ApplyGrabNode()
 
 
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
-		Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
+		Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
 		grabNode = tempNode.get();
 		//grabNode = state->GetGrabbingNode();
 
@@ -315,7 +315,10 @@ void TabVisual::ApplyMovedResult()
 		if(allNodes.count(key) > 0)
 		{
 			// 見つかったら移動
-			m_Tab->GetNodes().push_back(std::move(allNodes[key]));
+			temp->GetAllNodes().push_back(std::move(allNodes[key]));
+			// 所在地変更
+			temp->GetAllNodes().back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+
 			// 移動したのでmapから削除
 			allNodes.erase(key);
 		}
@@ -336,11 +339,20 @@ void TabVisual::ApplyMovedResult()
 		if(allNodes.count(key) > 0)
 		{
 			// 見つかったら移動
-			temp->GetAllNodes().push_back(std::move(allNodes[key]));
+			m_Tab->GetNodes().push_back(std::move(allNodes[key]));
+			// 所在地変更
+			m_Tab->GetNodes().back()->SetNodeLocation(NodeBase::NodeLocation::Enemy);
 			// 移動したのでmapから削除
 			allNodes.erase(key);
 		}
 	}
+	// 敵ノード側に対してTimeline更新関数を呼ぶ(ノードの更新が入ったため)
+	m_Tab->ModifyTimeLine();
+
+	// プレイヤーのVisualBaseは消す
+	temp->GetAllVisualNodes().clear();
+
+	return;
 }
 
 void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)

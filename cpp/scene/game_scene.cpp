@@ -77,7 +77,7 @@ void GameScene::Init()
 
 void GameScene::Uninit()
 {
-	GetStatePtr()->Uninit();
+	GetCurrentState()->Uninit();
 	// ゲームシーンの終了処理
 	Scene::Uninit();
 	// BGMの解放
@@ -92,7 +92,7 @@ void GameScene::Uninit()
 void GameScene::Update()
 {
 	// 現在のstateに応じてupdateを実行
-	GetStatePtr()->Update();
+	GetCurrentState()->Update();
 
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
@@ -107,10 +107,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	// 現在のstateに応じてdrawを実行
-	GetStatePtr()->Draw();
+	GetCurrentState()->Draw();
 
 	Scene::UpdateFinal();
-	GetStatePtr()->UpdateFinal();
+	GetCurrentState()->UpdateFinal();
 
 	// stateの移行を実行
 	MoveState();

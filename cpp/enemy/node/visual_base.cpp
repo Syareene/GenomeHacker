@@ -79,14 +79,14 @@ void VisualBase::Update()
 		{
 			m_HoverTimer = 0; // ホバータイマーリセット
 			// 現在掴んでいるノードがあるかどうかを確認
-			VisualBase* grabbingNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+			VisualBase* grabbingNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 
-			Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>();
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
 
 			if (grabbingNode)
 			{
 				// 反映処理
-				Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
+				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
 
 				// 既に掴んでいるノードがある場合は離す
 				//dnaState->SetGrabbingNode(nullptr);
@@ -95,7 +95,7 @@ void VisualBase::Update()
 			else
 			{
 				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
+				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ void VisualBase::Update()
 		m_HoverTimer = 0;
 	}
 
-	if (VisualBase* grabbingNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode())
+	if (VisualBase* grabbingNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode())
 	{
 		m_HoverTimer = 0; // ホバータイマーリセット
 		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
@@ -224,7 +224,7 @@ void VisualBase::MoveNodeToMouse()
 
 
 	// 現在dna_edit state上で掴んでいるノードがあるかどうかを確認
-	VisualBase* grabbingNode = Manager::GetCurrentScene()->GetStatePtr()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+	VisualBase* grabbingNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 	if (grabbingNode)
 	{
 		// 自身でないノードが掴まれている場合は処理しない

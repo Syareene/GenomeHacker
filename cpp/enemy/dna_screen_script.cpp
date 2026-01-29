@@ -216,7 +216,7 @@ void DnaScreenScript::ShowDnaInfo()
 	{
 		// 現在のシーンからIDを使って自身を再取得
 		auto scene = Manager::GetCurrentScene().get();
-		if (auto script = scene->GetStatePtr()->GetGameObjectById<DnaScreenScript>(myID))
+		if (auto script = scene->GetCurrentState()->GetGameObjectById<DnaScreenScript>(myID))
 		{
 			// 有効なインスタンスに対して処理を実行
 			switch (type) 
