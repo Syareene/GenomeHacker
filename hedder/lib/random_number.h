@@ -13,6 +13,7 @@ public:
 		{
 			// インスタンスがなければ生成
 			m_Instance = std::make_unique<RandomNumber>();
+			m_Instance->Init();
 		}
 		return m_Instance.get();
 	}
