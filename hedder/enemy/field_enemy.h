@@ -7,7 +7,7 @@ class EnemyBase; // 前方宣言
 class FieldEnemy : public Object3D
 {
 public:
-	void Init(Transform trans = Transform());
+	void Init(EnemyBase* base, Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;

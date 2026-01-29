@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <list>
+#include <deque>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -300,7 +300,7 @@ private:
 	}
 	static unsigned int m_ObjectIDCounter;
 	bool m_IsInitialized = false;
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects3D;
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects2D;
-	std::vector<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
+	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
 };

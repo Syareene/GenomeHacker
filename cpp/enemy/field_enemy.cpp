@@ -8,8 +8,11 @@
 #include "collider/sphere.h"
 #include "player.h"
 
-void FieldEnemy::Init(Transform trans)
+void FieldEnemy::Init(EnemyBase* base, Transform trans)
 {
+	// 基礎データをセット
+	SetEnemyBase(base);
+
 	// 初期座標で設定する
 	SetPosition(trans.GetPosition());
 	SetRotation(trans.GetRotation());

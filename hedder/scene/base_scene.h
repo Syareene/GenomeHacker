@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <list>
+#include <deque>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -375,12 +375,10 @@ private:
 		return m_ObjectIDCounter++;
 	}
 	static unsigned int m_ObjectIDCounter;
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects3D;
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects2D;
-	std::vector<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
-	static std::vector<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
-	// これ2d/3d/systemそれぞれで作るか?
-	// systemの場合はIObjectManagerを通じてdrawを呼ばない?
-
+	// vector->dequeへ、resize実行されると更新中にイテレーターが無効化されてしまうため
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
+	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
+	static std::deque<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
 	StateManager m_StateManager;
 };

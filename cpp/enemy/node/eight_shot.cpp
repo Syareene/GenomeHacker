@@ -28,7 +28,7 @@ void EightShot::Init(Transform trans)
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 
-	m_MoveVal = -0.035f; // 球速度
+	m_MoveVal = 0.05f; // 球速度
 	m_ShotInterval = 150.0f;
 
 	// CDMaxを発射間隔に設定
@@ -73,8 +73,8 @@ bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 		float angle = i * (3.14159f / 4.0f); // 45度刻み
 		Vector3 velocity;
 		velocity.x = cosf(angle) * m_MoveVal;
-		velocity.y = sinf(angle) * m_MoveVal;
-		velocity.z = 0.0f;
+		velocity.y = 0.0f;
+		velocity.z = sinf(angle) * m_MoveVal;
 		// 弾の速度を設定
 		bullet->SetVelocity(velocity);
 	}

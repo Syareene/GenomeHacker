@@ -64,7 +64,7 @@ private:
 		//return false;
 	}
 
-	bool SpawnEnemyByData(Vector3 spawn_pos = { 0.0f, 0.0f, 0.0f })
+	bool SpawnEnemyByData(EnemyBase* target_data, Vector3 spawn_pos = { 0.0f, 0.0f, 0.0f })
 	{
 		// 一時的処理として一定以上でないようにする
 		if (m_SpawnedCount >= ENEMY_MAX_AMOUNT) return false;
@@ -75,17 +75,16 @@ private:
 		trans.SetRotation({ 0.0f, 0.0f, 0.0f });
 		trans.SetScale({ 1.0f, 1.0f, 1.0f });
 
-		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0, trans);
+		FieldEnemy* enemy = Manager::GetCurrentScene()->AddGameObject<FieldEnemy>(0, target_data, trans);
 
 		// fieldenemyに欲しいデータ上げておく
 		// base_dataへのリファレンス(不動及びnodeデータはここから引っ張ってくる)
 		// 後は変動するステータス: 現在HP
 
-		enemy->SetEnemyBase(m_EnemyBaseData);
-		enemy->SetCurrentHP(m_EnemyBaseData->GetMaxHealth());
+		enemy->SetCurrentHP(target_data->GetMaxHealth());
 
 		// スポーン時の座標及びテクスチャによるズレを補正->一旦上に移行したので書くならそっちに書く形
-		enemy->SetScale(enemy->GetScale().mul(m_EnemyBaseData->GetDrawScaleDiff()));
+		enemy->SetScale(enemy->GetScale().mul(target_data->GetDrawScaleDiff()));
 
 		// コライダをセット
 

@@ -65,7 +65,7 @@ void EnemySpawner::Update()
 		{
 			// 敵出現処理
 			Vector3 spawn_pos = { RandomNumber::GetInstance()->GetRandomFloat(-5.0f, 5.0f), 1.0f, RandomNumber::GetInstance()->GetRandomFloat(-5.0f, 5.0f) };
-			SpawnEnemyByData(spawn_pos);
+			SpawnEnemyByData(m_EnemyBaseData, spawn_pos);
 
 			// 出現後諸々をセットし直す
 			m_SpawnedCount++;

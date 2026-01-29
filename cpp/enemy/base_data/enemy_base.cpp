@@ -85,7 +85,8 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
-	if (enemy_ptr->GetAttackNodeTime() >= enemy_ptr->GetAttackNodeCDSum())
+	// ここを>=から>に変更(一生最大の値にならん)
+	if (enemy_ptr->GetAttackNodeTime() > enemy_ptr->GetAttackNodeCDSum())
 	{
 		// 超えている場合は最大値分引く
 		enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() - enemy_ptr->GetAttackNodeCDSum());
@@ -94,9 +95,12 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	int index = 0;
 	int beforeTime = 0;
 	bool isFinished = false;
+
 	for (auto& time : attackTab->GetNodeTimeLine())
 	{
-		if (enemy_ptr->GetAttackNodeTime() <= time)
+		// ここ<=から>=に、他のタブも必要かも変更が
+		// というかここ2つとか3つノードあった時に本来実行されるべきでない前のノードも実行されるような気がするんですけど、気の所為っすか?
+		if (enemy_ptr->GetAttackNodeTime() >= time)
 		{
 			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
 			if (isFinished && beforeTime != time)

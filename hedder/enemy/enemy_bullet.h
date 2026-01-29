@@ -25,6 +25,6 @@ private:
 
 	class ModelRenderer* m_ModelRenderer = nullptr;
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
-	int m_LifeTime = 300; // 敵の弾は少し長めに設定
+	int m_LifeTime = 180; // 弾の生存時間
 	int m_OwnerEnemyID = -1; // この弾を発射した敵の種類ID
 };

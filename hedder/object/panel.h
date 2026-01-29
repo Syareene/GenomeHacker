@@ -2,7 +2,7 @@
 
 #include "object/2d_object.h"
 #include "manager/object_manager.h"
-#include <vector>
+#include <deque>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -18,7 +18,7 @@ concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 class Panel : public Object2D
 {
 private:
-	std::vector<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
+	std::deque<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
 	static unsigned int m_ObjectIDCounter; // シーンのとはまた異なるカウンター->本当にこれでいいかをちょっと考えるべきかも
 	static unsigned int GetNextObjectID()
 	{
@@ -137,7 +137,7 @@ public:
 	}
 
 	// これref取るのめんどいから削除かな
-	std::vector<std::unique_ptr<IGameObjectManager>>& GetAllChildObjects()
+	std::deque<std::unique_ptr<IGameObjectManager>>& GetAllChildObjects()
 	{
 		return m_ChildObjects;
 	}

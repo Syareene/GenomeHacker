@@ -28,7 +28,7 @@ public:
 	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
-	template <NodeType T>
+	template <NodeType T>	
 	T* AddNode(const int& index, Transform trans = Transform()) // ノードを追加
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
