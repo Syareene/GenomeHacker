@@ -18,10 +18,33 @@ void DnaEditState::Init()
 
 	State::Init();
 
-	AddGameObject<Button>(0)->Register([this]() {
-		// ボタンがクリックされた時の処理
-			Clicked();
-			}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
+	// 下記デバッグ用のコード
+	// テクスチャの事前確認
+	int textureId = TextureManager::LoadTexture(L"asset/texture/return_temp.png");
+	if (textureId == -1)
+	{
+		// デフォルトテクスチャまたは色付き四角形で代替
+		assert(false);
+	}
+
+	Button* button_ptr = AddGameObject<Button>(0);
+	if (!button_ptr)
+	{
+		// 取得できなかった
+		assert(false);
+	}
+
+	button_ptr->Register([]()
+		{
+			// 現在のStateを取る
+			auto currentState = Manager::GetCurrentScene()->GetCurrentState();
+			// このstateならそれを用いてクリック処理
+			if (auto dnaEditState = dynamic_cast<DnaEditState*>(currentState))
+			{
+				// ボタンがクリックされた時の処理
+				dnaEditState->Clicked();
+			}
+		}, Vector2(125.0f, 40.0f), Vector2(250.0f, 80.0f), Vector2(0.0f, 0.0f), TextureManager::LoadTexture(L"asset/texture/return_temp.png"));
 
 	//m_Player = Manager::GetCurrentScene()->GetGameObject<Player>();
 	//if (!m_Player)
