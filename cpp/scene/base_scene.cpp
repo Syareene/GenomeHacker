@@ -216,7 +216,7 @@ void Scene::UpdateObjectByTag(const std::string& tag)
 		{
 			continue;
 		}
-		systemObject->Update();
+		systemObject->UpdateObjectByTag(tag);
 	}
 
 	// 3dオブジェクトの更新
@@ -263,7 +263,7 @@ void Scene::UpdateObjectByTags(const std::list<std::string>& tags)
 		{
 			continue;
 		}
-		systemObject->Update();
+		systemObject->UpdateObjectByTags(tags);
 	}
 
 	// 3dオブジェクトの更新

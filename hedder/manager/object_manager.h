@@ -20,6 +20,8 @@ public:
 	virtual ~IObjectManager() = default;
 	virtual void Uninit() = 0;
 	virtual void Update() = 0;
+	virtual void UpdateObjectByTag(const std::string& tag) = 0;
+	virtual void UpdateObjectByTags(const std::list<std::string>& tags) = 0;
 	// 破棄関数
 	virtual void RemoveDestroyedObjects() = 0;
 	virtual void RemoveAllObjects() = 0;
@@ -34,8 +36,6 @@ public:
 	virtual GameObject* GetObjectByTag(const std::string& tag) = 0;
 	virtual std::list<GameObject*> GetObjectsByTag(const std::string& tag) = 0;
 	virtual void FlushPendingObjects() = 0;
-	virtual void UpdateObjectByTag(const std::string& tag) = 0;
-	virtual void UpdateObjectByTags(const std::list<std::string>& tags) = 0;
 	virtual void Draw() = 0;
 	virtual void DrawObjectByTag(const std::string& tag) = 0;
 	virtual void DrawObjectByTags(const std::list<std::string>& tags) = 0;
@@ -375,9 +375,37 @@ public:
 		}
 	}
 
+	void UpdateObjectByTag(const std::string& tag) override
+	{
+		// 指定タグを持つオブジェクトのみ更新
+		for (auto& obj : m_Objects)
+		{
+			if (obj.IsTagAvailable(tag))
+			{
+				obj.Update();
+			}
+		}
+	}
+
+	void UpdateObjectByTags(const std::list<std::string>& tags) override
+	{
+		// 指定タグを持つオブジェクトのみ更新
+		for (auto& obj : m_Objects)
+		{
+			for (const auto& tag : tags)
+			{
+				if (obj.IsTagAvailable(tag))
+				{
+					obj.Update();
+					break; // タグが見つかったら次のオブジェクトへ
+				}
+			}
+		}
+	}
+
 	void UpdateFinal() override
 	{
-		for(auto& object : m_Objects)
+		for (auto& object : m_Objects)
 		{
 			object.UpdateFinal();
 		}

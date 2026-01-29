@@ -35,13 +35,14 @@ void GameScene::Init()
 
 	AddGameObject<Camera>(0);
 	AddGameObject<Field>(0);
-	const unsigned int id = AddGameObject<Player>(0)->GetObjectID();
+	Player* player_ptr = AddGameObject<Player>(0);
+	const unsigned int id = player_ptr->GetObjectID();
 	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
 	AddGameObject<Score>(1);
 	AddGameObject<DNAButton>(2);
 	AddGameObject<ToGameButton>(2);
 	AddSystemObject<EnemyList>(false, id);
-	AddSystemObject<EnemySpawner>();
+	AddSystemObject<EnemySpawner>(false);
 
 	// 敵の弾を予約
 	ReserveObject<EnemyBullet>(EnemyBullet::MAX_OBJECTS);
