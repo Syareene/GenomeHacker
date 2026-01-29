@@ -85,7 +85,6 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
-	// ここを>=から>に変更(一生最大の値にならん)
 	if (enemy_ptr->GetAttackNodeTime() > enemy_ptr->GetAttackNodeCDSum())
 	{
 		// 超えている場合は最大値分引く
@@ -98,8 +97,9 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 
 	for (auto& time : attackTab->GetNodeTimeLine())
 	{
-		// ここ<=から>=に、他のタブも必要かも変更が
+		// ここ<=から>=に、他のタブも必要かも変更が->他タブも変えた
 		// というかここ2つとか3つノードあった時に本来実行されるべきでない前のノードも実行されるような気がするんですけど、気の所為っすか?
+
 		if (enemy_ptr->GetAttackNodeTime() >= time)
 		{
 			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
@@ -155,7 +155,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
-	if (enemy_ptr->GetMoveNodeTime() >= enemy_ptr->GetMoveNodeCDSum())
+	if (enemy_ptr->GetMoveNodeTime() > enemy_ptr->GetMoveNodeCDSum())
 	{
 		// 超えている場合は最大値分引く
 		enemy_ptr->SetMoveNodeTime(enemy_ptr->GetMoveNodeTime() - enemy_ptr->GetMoveNodeCDSum());
@@ -168,7 +168,7 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	bool isFinished = false;
 	for (auto& time : moveTab->GetNodeTimeLine())
 	{
-		if (enemy_ptr->GetMoveNodeTime() <= time)
+		if (enemy_ptr->GetMoveNodeTime() >= time)
 		{
 			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
 			if (isFinished && beforeTime != time)
@@ -220,7 +220,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	}
 
 	// 今のcdカウントが最大値を超えているかどうかのチェック
-	if (enemy_ptr->GetDeathNodeTime() >= enemy_ptr->GetDeathNodeCDSum())
+	if (enemy_ptr->GetDeathNodeTime() > enemy_ptr->GetDeathNodeCDSum())
 	{
 		// 超えている場合は最大値分引く
 		enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() - enemy_ptr->GetDeathNodeCDSum());
@@ -232,7 +232,7 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	bool isFinished = false;
 	for (auto& time : deathTab->GetNodeTimeLine())
 	{
-		if (enemy_ptr->GetDeathNodeTime() <= time)
+		if (enemy_ptr->GetDeathNodeTime() >= time)
 		{
 			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
 			if (isFinished && beforeTime != time)

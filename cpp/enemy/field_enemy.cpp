@@ -52,9 +52,17 @@ void FieldEnemy::Update()
 			// trueが帰ってきたら自身を削除
 			SetDestroy(true);
 		}
-		// 0以下ならそれ移行の処理は実施したくないのでここでreturn
+		// 0以下ならそれ以降の処理は実施したくないのでここでreturn
 		return;
 	}
+	// x,zが-30>=か30<=なら削除
+	if (GetPosition().x <= -30.0f || GetPosition().x >= 30.0f ||
+		GetPosition().z <= -30.0f || GetPosition().z >= 30.0f)
+	{
+		SetDestroy(true);
+		return;
+	}
+
 
 	// 更新処理
 	Object3D::Update();
