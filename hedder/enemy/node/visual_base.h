@@ -9,7 +9,7 @@ class NodeBase; // 前方宣言
 class TabVisual; // 前方宣言
 
 // nodeのedit時に使用する見た目用のクラス
-// 基礎データはNodeBase側から引っ張ってくる形に。
+// 基礎データはNodeBase側から引っ張ってくる形
 class VisualBase : public Object2D
 {
 public:
@@ -68,16 +68,12 @@ public:
 	inline const int GetNodeBaseIndex() const { return m_NodeBaseIndex; }
 
 private:
-	// nodebaseからもってきたやつ
 	Font m_Font;
 	std::vector<Font> m_DescriptionFonts;
 	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
 	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
 
-
 	unsigned int m_ScreenID = 0; // dna_screenのID
-	//TabVisual* m_ParentTab = nullptr; // 属しているtab_visualのポインタ
-	//NodeBase* m_NodeBase = nullptr;
 	int m_NodeBaseIndex = -1; // 変換する前のnodebaseのindex
 
 	NodeBase* m_BaseNodePtr = nullptr; // 元となるノードのポインタ

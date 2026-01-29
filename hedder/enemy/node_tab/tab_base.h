@@ -12,19 +12,9 @@ concept NodeType = std::is_base_of_v<NodeBase, T>;
 class TabBase
 {
 	// すべてのタブが継承するタブの基底クラス
-
-
-	// 中身としては、
-	// タブ部分の描画
-	// 中に設置されているスクリプトのlist->中のリストに対して更新処理実行。
-	// 背景の描画->dna_screen_scriptに情報を渡せば良い
-	// タブの切り替え処理(button?)
-	// んーこれbutton+αにしたほうが良さそげ、、
-
 public:
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
-	//inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
 	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
@@ -86,10 +76,8 @@ public:
 	};
 private:
 	void ModifyTimeLine(); // タイムラインを修正する
-	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト   ->ポリモーフィズム消えるためポインタで保存
+	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト->ポリモーフィズム消えるため実態ではなくポインタで保存
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン
 	std::list<int> m_NodeTimeLine; // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリスト
-	// あと上記変数のめんどいところはすでに使われているか否かをどうにかしないといけない
-	// プレイヤー側に実態は持っておいて、ここはあくまでポインタとして持っておき、実態にフラグ変数を設けることで管理しやすい、、、みたいな構造が望ましい。
 };

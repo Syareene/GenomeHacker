@@ -10,11 +10,9 @@
 #include "enemy/base_data/enemy_base.h"
 #include "collider/sphere.h"
 
+// 敵を一定間隔で召喚するクラス
 class EnemySpawner : public SystemObject
 {
-	// 基本はgameSceneにおいて、呼び出したときにオブジェクトを生成するだけのクラス
-	// 今後機能が拡張するとウェーブ管理とかもするので敵の召喚をgameScene側から関数を通じて指定するのではなく
-	// こっち側で判断するように
 public:
 	void Init() override;
 	void Uninit() override;
@@ -27,7 +25,7 @@ private:
 	{
 		// 敵を出す処理
 
-		// 一時的処理として一定以上でないようにする
+		// 一定以上でないようにする
 		if (m_SpawnedCount >= ENEMY_MAX_AMOUNT) return false;
 
 		// objectをフィールドに追加
@@ -40,8 +38,6 @@ private:
 
 
 		// 受け取った引数のポインタの型を確認し、変数に保存されている敵の元データを参照しセットする
-
-
 		EnemyBase* base_data = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBase<T>();
 
 		// fieldenemyに欲しいデータ上げておく
@@ -56,17 +52,13 @@ private:
 
 		// コライダをセット
 
-
 		// データセットしたのでループから抜ける
 		return true;
-		// データが見つからなかった
-		//assert(0 && "敵のデータが登録されておらず、インスタンス化できませんでした");
-		//return false;
 	}
 
 	bool SpawnEnemyByData(EnemyBase* target_data, Vector3 spawn_pos = { 0.0f, 0.0f, 0.0f })
 	{
-		// 一時的処理として一定以上でないようにする
+		// 一定以上でないようにする
 		if (m_SpawnedCount >= ENEMY_MAX_AMOUNT) return false;
 
 		// objectをフィールドに追加

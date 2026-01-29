@@ -10,7 +10,6 @@ class TabVisual : public Panel
 {
 public:
 	// 途中で変更はいるからそのタイミングをどうしようかなって感じだ
-
 	void CreateVisual(TabBase* base);
 	// 再生成する関数(更新したい対象だけに対して作動)
 	void UpdateVisual(TabBase* base);
@@ -19,8 +18,6 @@ public:
 	void Update() override;
 	void Draw() override;
 
-
-	// tab_baseからもってきたやつ
 	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
 	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
 	// クリックされたときの処理
@@ -42,12 +39,6 @@ public:
 
 private:
 	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
-
-	// 直接TabBase保有するってよりは見た目のノードの状態とを区別したいため更新時のみ保有みたいな形でも良いかなーとは。
-
-
-
-	// tab_baseからもってきたやつ
 	void ModifyEnemyNodePos(VisualBase* grabPtr = nullptr);
 	void ModifyPlayerNodePos(VisualBase* grabPtr = nullptr);
 	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
@@ -55,18 +46,6 @@ private:
 	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置
 	constexpr static Vector2 PLAYER_AREA_END = { 1280.0f, 720.0f }; // プレイヤーエリアの終了位置
 	bool m_IsSelected = false; // 現在選択されているタブかどうか
-
-
-
-	// ちなみに見た目で欲しいデータ(VisualBaseに格納)
-	// - transform
-	// - テクスチャID
-	// - Fontptr
-	// - 更新したかどうか的なフラグ変数
-
-	// 掴みノード、タブ変わる時に離す処理を入れないといけない
-	//VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ ->state管理からこっちに変更
-	// ->結局player側から取得できないという問題があったためdna_screen_scriptへ最終的に移動。
 
 	unsigned int m_PlayerId = 0; // プレイヤーID
 	unsigned int m_DnaScreenId = 0; // dna_screenのID

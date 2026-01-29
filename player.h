@@ -42,7 +42,7 @@ public:
 		std::advance(it, index);
 		return (*it).get();
 	}
-	// この関数引数&なのと、init入れるかどうか
+	// 見た目ノード追加
 	void AddVisualNode(const VisualBase& visual)
 	{
 		m_NodeVisuals.emplace_back(std::make_unique<VisualBase>());

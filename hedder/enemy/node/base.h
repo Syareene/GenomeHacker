@@ -8,7 +8,7 @@ class NodeBase
 	// 
 
 public:
-	// これ考えたけどsprite作るのがめんどくさいから形みたいな感じじゃなくて内部処理でくっつくくっつかないとかになるのかな？〇〇の場所で使えるノードみたいな感じで
+	// ノードの入力タイプ
 	enum InputType
 	{
 		None, // くっつかない	
@@ -54,7 +54,6 @@ public:
 
 	virtual void Init(Transform trans = Transform());
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
-	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
 	inline const int GetCDMax() const { return m_CDMax; }
@@ -69,7 +68,6 @@ public:
 	{ 
 		m_Name = data;
 	}
-	//inline void SetDescriptionData(const NodeTextData& textData) { m_Description = textData; }
 	inline const NodeTextData& GetDescriptionData() const { return m_Description; };
 	inline const int GetMoveManageId() const { return m_MoveManageId; }
 	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
@@ -86,7 +84,6 @@ protected:
 	}
 
 	// ノードごとの説明文設定関数(override後この中でSetDescriptionDataを呼ぶ必要あり)
-	// ここで抽象クラスになってるからplayerでエラーでてるっぽいね
 	virtual std::string GenerateDescriptionText()
 	{
 		assert(false && "GenerateDescriptionText not overridden");
@@ -107,8 +104,6 @@ private:
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
-	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
-	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
 	NodeTextData m_Description; // ノードの説明文群

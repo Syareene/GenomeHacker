@@ -5,7 +5,7 @@
 
 class EnemyBase;
 
-// 各種タブのデータを保存するクラスとして変更(名称も変えようかな)
+// 見た目部分を管理するクラス
 class DnaScreenScript : public Panel
 {
 public:
@@ -31,7 +31,6 @@ public:
 	inline TabVisual* GetDeathTabVisual() { return &m_DeathVisual; }
 
 private:
-	// 実体or unique
 	TabVisual m_AttackVisual;
 	TabVisual m_MoveVisual;
 	TabVisual m_DeathVisual;

@@ -11,15 +11,12 @@
 template<typename T>
 concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 
-//class IObjectManager;
-//class IGameObjectManager;
-
 // 現状パネルは2d限定
 class Panel : public Object2D
 {
 private:
 	std::deque<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
-	static unsigned int m_ObjectIDCounter; // シーンのとはまた異なるカウンター->本当にこれでいいかをちょっと考えるべきかも
+	static unsigned int m_ObjectIDCounter; // シーンのとはまた異なるカウンター
 	static unsigned int GetNextObjectID()
 	{
 		// 現在値が2147483647に達したら0に戻す

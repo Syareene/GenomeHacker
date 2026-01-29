@@ -4,7 +4,7 @@
 #include "lib/write_font.h"
 #include <memory>
 
-// これ、仮に3d空間上に出したいとかならちょっと仕組み変えないといけないけど
+// これ、3d空間上に出したいとかならちょっと仕組み変えないといけないけど
 // とりあえずui用フォントなため2d継承で実装。
 class Font : public UI
 {
@@ -24,7 +24,6 @@ public:
 private:
 	Vector2 m_WidthHeight = Vector2(0.0f, 0.0f);
 	FontData m_FontData;
-	//std::unique_ptr<DirectWriteCustomFont> m_Write = nullptr;
 	std::string m_DisplayText = ""; // 直接中身いじらず関数使っていじってね(自クラス内でも)
 	bool m_IsShadow = false;
 	bool m_IsOutline = false;

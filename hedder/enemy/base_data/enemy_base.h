@@ -32,14 +32,12 @@ public:
 	void Draw();
 
 
-	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
-	// ただ関数としてはここにほしいかな
+	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数
 	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID, State* ptr);
 	void HideDnaEditButton();
 	// テクスチャid版がほしい
 
 	// DNAタブ関連の関数
-	//inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
 	inline TabManager* GetTabManager() 
 	{
 		if(m_TabManager)

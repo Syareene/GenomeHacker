@@ -9,7 +9,7 @@
 #include "object/system_object.h"
 #include "object/3d_object.h"
 #include "object/2d_object.h"
-#include "scene/state/state_manager.h" // StateManager in base scene
+#include "scene/state/state_manager.h"
 #include "manager/object_manager.h"
 
 class Object3D; // 前方宣言

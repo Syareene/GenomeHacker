@@ -108,18 +108,9 @@ public:
 		}
 
 		std::erase_if(m_Objects, [](const ObjectType& obj) 
-			{
+		{
 			return obj.IsDestroy(); // 削除する条件
-			});
-
-
-		// 削除すべきでない要素を前方に集める
-		//auto partition_iter = std::partition(m_Objects.begin(), m_Objects.end(), [](const ObjectType& obj) {
-		//	return !obj.IsDestroy(); // 削除しない条件
-		//});
-
-		// 削除すべき要素（パーティションの後方）をまとめて削除
-		//m_Objects.erase(partition_iter, m_Objects.end());
+		});
 	}
 
 	void RemoveAllObjects() override

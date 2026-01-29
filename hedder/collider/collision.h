@@ -41,7 +41,6 @@ public:
 		if constexpr (!std::is_base_of_v<Object3D, T>)
 		{
 			static_assert(std::is_base_of_v<Object3D, T>, "GetHitObjectsByType: T must be derived from Object3D");
-			//return std::list<T*>();
 		}
 		else
 		{
