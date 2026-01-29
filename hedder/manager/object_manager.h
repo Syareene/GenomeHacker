@@ -280,7 +280,6 @@ public:
 
 
 private:
-	//int m_Id = 0;
 	std::vector<ObjectType> m_Objects;
 	std::vector<ObjectType> m_PendingObjects; // 追加待ちオブジェクトのリスト
 };

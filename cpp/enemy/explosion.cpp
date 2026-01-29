@@ -47,10 +47,6 @@ void Explosion::Init(Transform trans)
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\explosion.png"));
 
-	// シェーダー設定
-	//Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
-	//Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
-
 	// 変数初期化
 	m_FrameCount = 0;
 

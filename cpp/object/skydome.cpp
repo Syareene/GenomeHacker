@@ -31,14 +31,9 @@ void SkyDome::Uninit()
 
 void SkyDome::Update()
 {
-	// vector3が間違ってる可能性とかもある?
-
 	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
 	
 	SetPosition(camera->GetPosition()); // カメラの位置にドームを合わせる
-
-	// ここonとM_PIでバグるね->いらない?
-	//camera->SetTarget(GetPosition() + Vector3(0.0f, 1.5f, 0.0f));
 }
 
 void SkyDome::Draw()

@@ -47,7 +47,6 @@ void Enemy3D::Draw()
 	// 移動、回転マトリックス設定
 	XMMATRIX trans, world, rot, scale;
 	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
-	//rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y + XM_PI, GetRotation().z);
 	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 	world = scale * rot * trans;

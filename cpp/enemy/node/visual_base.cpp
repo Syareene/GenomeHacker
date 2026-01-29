@@ -87,10 +87,6 @@ void VisualBase::Update()
 			{
 				// 反映処理
 				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
-
-				// 既に掴んでいるノードがある場合は離す
-				//dnaState->SetGrabbingNode(nullptr);
-				//return;
 			}
 			else
 			{
@@ -134,8 +130,6 @@ void VisualBase::Draw()
 {
 	// 描画
 	Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale());
-
-	//Renderer::GetD2DRenderTarget()->Draw
 
 	// フォント描画
 	m_Font.Draw();
@@ -200,13 +194,6 @@ void VisualBase::FixFontPositions(Vector2 diff)
 
 	Vector3 pos = m_Font.GetPosition();
 	m_Font.SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
-
-
-	//for(auto& fontPtr : m_Fonts)
-	//{
-	//	Vector3 pos = fontPtr->GetPosition();
-	//	fontPtr->SetPosition(Vector3(pos.x + diff.x, pos.y + diff.y, pos.z));
-	//}
 }
 
 void VisualBase::MoveNodeToMouse()

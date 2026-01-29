@@ -78,17 +78,4 @@ void EnemySpawner::Update()
 	{
 		m_TimeNextWave--;
 	}
-
-
-	// とりあえず一定frame事に敵を出す
-	//if(m_SpawnTimer > 90)
-	//{
-	//	m_SpawnTimer = 0;
-	//	// どの敵を出すかはとりあえず固定
-	//	SpawnEnemy<Slime>({0.0f, 1.0f, static_cast<float>(m_SpawnedCount) * 0.75f});
-	//	SpawnEnemy<Minotaur>({ 2.0f, 1.0f, static_cast<float>(m_SpawnedCount) * 0.75f });
-	//	m_SpawnedCount++;
-	//}
-
-	//m_SpawnTimer++;
 }

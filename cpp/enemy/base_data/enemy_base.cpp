@@ -34,7 +34,6 @@ EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
 	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
 	
-	//m_DnaScreen = std::make_unique<DnaScreenScript>(); // 作りたてはこっちでインスタンスを管理する
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
 	// これ無限ループしてるわなってことでエラーっす
@@ -274,11 +273,7 @@ void EnemyBase::Update()
 
 void EnemyBase::Draw()
 {
-	// DNAタブが表示されている場合は描画処理を行う
-	//if (m_IsDnaScreenVisible && m_DnaScreen)
-	//{
-	//	m_DnaScreen->Draw();
-	//}
+
 }
 
 int EnemyBase::SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget, std::pair<int, int> texCount)

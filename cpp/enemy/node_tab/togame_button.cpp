@@ -13,13 +13,6 @@ void ToGameButton::Init(Transform trans)
 	Button::Init(trans);
 	// 一旦固定値でセット
 
-	// 登録
-	/*
-	Button::Register(std::bind(&ToGameButton::ToGame, this), Vector2(trans.GetPosition().x, trans.GetPosition().y), 
-		Vector2(trans.GetScale().x, trans.GetScale().y),Vector2(trans.GetRotation().x, trans.GetRotation().y), 
-		L"resources/textures/ui/to_game_button.png");
-	*/
-
 	Button::Register(std::bind(&ToGameButton::ToGame, this), ToGameButton::BUTTON_POS,
 		ToGameButton::BUTTON_SIZE, Vector2(0.0f, 0.0f),
 		L"asset/texture/return_temp.png");

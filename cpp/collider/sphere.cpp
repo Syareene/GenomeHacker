@@ -56,8 +56,6 @@ void Sphere::DrawCollider()
 #ifdef _DEBUG
 	// 生成した頂点を使用し描画
 
-	// シェーダーは一旦セットしない。後々デバッグ用に色を変えるシェーダー作成する。
-
 	// 入力レイアウト設定(シェーダーのレイアウトなのでこれもシェーダー使用するときに用意)
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::DebugVertexLayout);
 	// シェーダー設定->とりあえずunlitだがデバッグ用のを後々用意。

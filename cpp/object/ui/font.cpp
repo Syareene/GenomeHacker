@@ -1,10 +1,6 @@
-﻿// 実際に使用する環境でのヘッダーは適宜追加してください
-#include "main.h"
+﻿#include "main.h"
 #include "lib/renderer.h"
 #include "object/ui/font.h"
-
-// DirectWrite描画クラス
-//DirectWriteCustomFont* Write;
 
 void Font::Register(const Vector2& pos, const FontData& font_data, std::string text)
 {

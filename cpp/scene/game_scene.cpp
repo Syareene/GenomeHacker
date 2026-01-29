@@ -18,7 +18,6 @@
 #include "object/ui/in_game/fade.h"
 #include "enemy/base_data/enemy_list.h"
 #include "enemy/enemy_bullet.h"
-//#include "enemy/node_tab/enemy_dna_list.h"
 
 #include <typeindex>
 // state系

@@ -301,11 +301,6 @@ void Scene::DrawObject()
 	//	return a->GetDistance(cameraPosition) > b->GetDistance(cameraPosition);
 	//});
 
-	// 2dobj、3dobj用のクラスを作成
-	// 2dobjは最後に行くようにする。
-	// 3dobjはカメラの位置を考慮し並び替える。
-	// ないしは2dと3dobjでそもそも格納する配列を分ける?
-
 	// 3dオブジェクトの描画
 	// 描画前にソートし、その後に描画するようにする
 	// というか3dobjはそもそもレイヤーいらない説がある(ソートしにくい)

@@ -12,12 +12,6 @@ void NumberNode::Init(Transform trans)
 
 bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 {
-	// moveノードなのでcdはチェックせず常に動かす
-	// 通常のノードならcdチェックし動かす形に
-	// んで実行したらtrueを返す
-
-	// 定期的に動かす
-	//enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
 }

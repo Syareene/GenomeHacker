@@ -1,8 +1,4 @@
-﻿// 敵データ基底クラス
-// このデータはシーン側かなんかで常に持っといて、ノードの最新適応状態を見れるようにしておく、あとリソースも使い回せるので疑似flyweightとしても使用可能。
-// 敵を出す際はこのデータのポインタを渡して出す感じになる。
-// ノードに関してはdnaのボタンを押したときにこのクラスからデータを取ってくる形になるかな。
-#include "main.h"
+﻿#include "main.h"
 
 #include "enemy/base_data/minotaur.h"
 
@@ -30,8 +26,10 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 
 	SetEnemyID(GetEnemyTypeId<Minotaur>());
 
-	// 初期ノードノード登録
+	// ノード登録
+	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
+	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);
 
 	// テクスチャ生成

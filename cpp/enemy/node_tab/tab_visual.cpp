@@ -11,8 +11,6 @@
 
 
 // ノード入れ替え処理時、index基準でswapしつつposition修正かな。
-
-
 void TabVisual::CreateVisual(TabBase* base)
 {
 	if(m_DnaScreenId == 0 || m_PlayerId == 0)
@@ -168,17 +166,9 @@ void TabVisual::ApplyGrabNode()
 			}
 		}
 
-		// 探索しても何も無い場合終了
-		//if (!tempNode)
-		//{
-		//	return;
-		//}
-
-
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
 		Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
 		grabNode = tempNode.get();
-		//grabNode = state->GetGrabbingNode();
 
 		// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
 		if (grabNode->GetPosition().x < 768.0f)

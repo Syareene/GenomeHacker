@@ -82,10 +82,6 @@ void Button::Register(const std::function<void()>& func, const Vector2& pos, con
 		m_FrameTexID = -1; // フレームテクスチャがない場合は-1に設定
 	}
 	// テキストオブジェクトを作成
-	// ->これ操体市で生成できるようにしてないから位置がどうかなーといったところ
-	// 試したところボタンの中心posとして左上から描画なのでそれを中央から描画に変更したい
-
-	// ｳｰﾝこのへん改善の余地あり、真ん中揃えにしてもテキストの実装によってズレてたりしてて困る
 
 	m_Text = std::make_unique<Font>();
 	m_Text->Init();
@@ -147,10 +143,7 @@ void Button::Draw()
 	Renderer::SetWorldViewProjection2D();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw(); //->こっちだとuv変えるときに反映できないので下記に
-	//SetVertexBufferOnDraw(); // ボタンの頂点バッファを設定(こっちにすると描画されなくなるよーん、なのでデフォルトで頂点いれるように設定直さないといけない)
-	// プロジェクションマトリックス設定
-	//SetProjectionMatrixOnDraw();
+	SetDefaultVertexBufferOnDraw();
 	// ビューマトリックス設定
 	SetViewMatrixOnDraw();
 	// 移動、回転マトリックス設定
