@@ -41,7 +41,7 @@ bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)
 std::string MoveZ::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = "このノードがある敵は毎フレーム{}分だけZ軸に対し移動します。";
+	std::string format_string = "このノードがある敵は毎フレーム{}だけZ軸に対し移動します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_MoveVal));
 	return formatted_text;

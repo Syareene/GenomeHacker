@@ -41,7 +41,7 @@ bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)
 std::string MoveX::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = "このノードがある敵は毎フレーム{}分だけX軸に対し移動します。";
+	std::string format_string = "このノードがある敵は毎フレーム{}だけX軸に対し移動します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_MoveVal));
 	return formatted_text;
