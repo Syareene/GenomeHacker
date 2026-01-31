@@ -18,6 +18,10 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void UpdateFinal() override {};
+	void EnemyKilled()
+	{
+		m_SpawnedCount--;
+	}
 private:
 	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>

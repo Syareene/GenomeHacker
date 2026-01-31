@@ -55,9 +55,6 @@
     <Filter Include="ヘッダー ファイル\manager">
       <UniqueIdentifier>{57e6f74b-b236-4338-919d-46107479d2c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\node">
-      <UniqueIdentifier>{6292120a-12b6-44b8-b399-c1c09c40d017}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\enemy\node_tab">
       <UniqueIdentifier>{62031bad-4ded-4086-ae21-b9b90e90d537}</UniqueIdentifier>
     </Filter>

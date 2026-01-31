@@ -5,6 +5,7 @@
 #include "enemy/base_data/enemy_base.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
+#include "enemy/enemy_spawner.h"
 #include "collider/sphere.h"
 #include "player.h"
 
@@ -31,6 +32,9 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 
 void FieldEnemy::Uninit()
 {
+	// Spawner側に消えたことを伝える
+	Manager::GetCurrentScene()->GetSystemObject<EnemySpawner>()->EnemyKilled();
+
 	// 終了処理
 	Object3D::Uninit();
 }
