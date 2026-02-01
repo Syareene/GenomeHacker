@@ -348,6 +348,9 @@
     <ClInclude Include="hedder\enemy\enemy_bullet.h">
       <Filter>ヘッダー ファイル\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_circular.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -574,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\ememy_bullet.cpp">
       <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_circular.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
