@@ -16,6 +16,7 @@
 #include "enemy/node/move_z.h"
 
 #include "enemy/node/add_score.h"
+#include "enemy/node/move_circular.h"
 
 EnemyBase* Slime::Register(const unsigned int& playerId)
 {
@@ -30,6 +31,7 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	// ノード登録
 	// 攻撃タブ
 	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+	GetTabManager()->GetAttackTab()->AddNode<EightShot>(-1);
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
 	GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);

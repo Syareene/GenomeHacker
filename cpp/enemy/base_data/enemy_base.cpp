@@ -90,30 +90,18 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 		enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() - enemy_ptr->GetAttackNodeCDSum());
 	}
 
+	int currentTime = enemy_ptr->GetAttackNodeTime();
 	int index = 0;
-	int beforeTime = 0;
-	bool isFinished = false;
 
 	for (auto& time : attackTab->GetNodeTimeLine())
 	{
-		// ここ<=から>=に、他のタブも必要かも変更が->他タブも変えた
-		// というかここ2つとか3つノードあった時に本来実行されるべきでない前のノードも実行されるような気がするんですけど、気の所為っすか?
-
-		if (enemy_ptr->GetAttackNodeTime() >= time)
+		// 現在のフレームで実行すべきノードのみ実行
+		if (currentTime == time)
 		{
-			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
-			if (isFinished && beforeTime != time)
-			{
-				break;
-			}
-			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
 			auto it = attackTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
-
-			// ループ抜ける前に色々設定
-			beforeTime = time;
-			isFinished = true;
+			break; // 1フレームで1つのノードのみ実行
 		}
 		index++;
 	}
