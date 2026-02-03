@@ -41,6 +41,9 @@ void FieldEnemy::Uninit()
 
 void FieldEnemy::Update()
 {
+	// 生存時間をインクリメント
+	m_LiveTime++;
+
 	// 判定リセット
 	m_IsHit = false;
 
@@ -68,6 +71,9 @@ void FieldEnemy::Update()
 
 	// 更新処理
 	Object3D::Update();
+
+	// 前fの座標を保存
+	UpdatePreviousPosition();
 	
 	// 各敵のnodeを実行。
 	m_EnemyBase->ExecuteAttack(this);

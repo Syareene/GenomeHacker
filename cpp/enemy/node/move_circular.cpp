@@ -22,12 +22,8 @@ void MoveCircular::Init(Transform trans)
 	SetCD(0);
 
 	// 円形移動パラメータの初期化
-	m_Radius = 2.0f;
-	m_Duration = 3.0f;
-	m_CurrentTime = 0.0f;
-	m_StartPosition = Vector3(0.0f, 0.0f, 0.0f);
-	m_IsInitialized = false;
-	m_LastCircularPosition = Vector3(0.0f, 0.0f, 0.0f);
+	m_Radius = 3.0f;
+	m_Duration = 180;
 }
 
 bool MoveCircular::NodeEffect(FieldEnemy* enemy_ptr)
@@ -40,48 +36,44 @@ bool MoveCircular::NodeEffect(FieldEnemy* enemy_ptr)
 
 Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 {
-	// 初回実行時の初期化
-	if (!m_IsInitialized)
+	// 生存時間を取得
+	unsigned int liveTime = enemy_ptr->GetLiveTime();
+	
+	// 初回フレーム（生存時間1）では移動しない
+	if (liveTime <= 1)
 	{
-		m_StartPosition = enemy_ptr->GetPosition();
-		m_IsInitialized = true;
-		m_CurrentTime = 0.0f;
-
-		// 初期円形位置を計算（半径分右にずれた位置から開始）
-		m_LastCircularPosition = Vector3(m_Radius, 0.0f, 0.0f);
-		return Vector3(0.0f, 0.0f, 0.0f); // 初回は移動しない
+		return Vector3(0.0f, 0.0f, 0.0f);
 	}
 
-	// 時間更新（60FPS想定）
-	float deltaTime = 1.0f / 60.0f;
-	m_CurrentTime += deltaTime;
+	// 円形移動の進行度を計算
+	float progress = static_cast<float>(liveTime % m_Duration) / static_cast<float>(m_Duration);
+	float prevProgress = static_cast<float>((liveTime - 1) % m_Duration) / static_cast<float>(m_Duration);
 
-	// 一周したらリセット
-	if (m_CurrentTime >= m_Duration)
-	{
-		m_CurrentTime = 0.0f;
-	}
+	// 現在と前フレームの円形オフセットを計算
+	float currentAngle = progress * 2.0f * 3.14159265f;
+	float prevAngle = prevProgress * 2.0f * 3.14159265f;
 
-	// 現在の円形座標を計算
-	float angle = (m_CurrentTime / m_Duration) * 2.0f * 3.14159265f;
-	Vector3 currentCircularPosition = Vector3(
-		m_Radius * cosf(angle),
+	Vector3 currentOffset = Vector3(
+		m_Radius * cosf(currentAngle),
 		0.0f,
-		m_Radius * sinf(angle)
+		m_Radius * sinf(currentAngle)
 	);
 
-	// 円形移動の差分ベクトルを計算
-	Vector3 circularMovement = currentCircularPosition - m_LastCircularPosition;
+	Vector3 prevOffset = Vector3(
+		m_Radius * cosf(prevAngle),
+		0.0f,
+		m_Radius * sinf(prevAngle)
+	);
 
-	// 次フレームのために保存
-	m_LastCircularPosition = currentCircularPosition;
+	// 円形移動による差分を計算
+	Vector3 circularDelta = currentOffset - prevOffset;
 
-	return circularMovement;
+	return circularDelta;
 }
 
 std::string MoveCircular::GenerateDescriptionText()
 {
-	std::string format_string = "このノードがある敵は半径{}、{}秒で円形に移動します。他の移動ノードと組み合わせ可能です。";
+	std::string format_string = "このノードがある敵は半径{}、{}フレームで円形に移動します。他の移動ノードと組み合わせ可能です。";
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_Radius, m_Duration));
 	return formatted_text;
 }

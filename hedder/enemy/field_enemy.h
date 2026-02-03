@@ -14,6 +14,7 @@ public:
 	
 	inline void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
 	inline EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
+	inline unsigned int GetLiveTime() const { return m_LiveTime; }
 	inline void SetCurrentHP(const float hp) { m_CurrentHP = hp; }
 	inline const float GetCurrentHP() const { return m_CurrentHP; }
 	inline void SetAttackNodeTime(const int time) { m_AttackNodeTime = time; }
@@ -28,9 +29,12 @@ public:
 	inline const int GetMoveNodeCDSum() const { return m_MoveNodeCDSum; }
 	inline void SetDeathNodeCDSum(const int cd) { m_DeathNodeCDSum = cd; }
 	inline const int GetDeathNodeCDSum() const { return m_DeathNodeCDSum; }
+	inline Vector3 GetPreviousPosition() const { return m_PreviousPosition; }
+	inline void UpdatePreviousPosition() { m_PreviousPosition = GetPosition(); }	
 private:
 	bool m_IsHit = false; // 当たったかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 自身の元データへのポインタ
+	unsigned int m_LiveTime = 0; // 生存時間(フレーム)
 	int m_AttackNodeTime = 0;
 	int m_AttackNodeCDSum = 0;
 	int m_MoveNodeTime = 0;
@@ -38,4 +42,5 @@ private:
 	int m_DeathNodeTime = 0;
 	int m_DeathNodeCDSum = 0;
 	float m_CurrentHP = 0.0f; // 現在のHP
+	Vector3 m_PreviousPosition = Vector3(0.0f, 0.0f, 0.0f); // 前フレームの位置
 };

@@ -29,7 +29,7 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 移動タブ
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
+	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
 	GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
 	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);
