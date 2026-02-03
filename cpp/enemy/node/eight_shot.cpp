@@ -25,8 +25,10 @@ void EightShot::Init(Transform trans)
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
 	NodeBase::Init(defaultTrans);
-	AddInputTypeTop(InputType::Move);
-	AddInputTypeBottom(InputType::Move);
+	AddInputTypeTop(InputType::Attack);
+	AddInputTypeTop(InputType::Death);
+	AddInputTypeBottom(InputType::Attack);
+	AddInputTypeBottom(InputType::Death);
 
 	m_MoveVal = 0.05f; // 球速度
 	m_ShotInterval = 150.0f;

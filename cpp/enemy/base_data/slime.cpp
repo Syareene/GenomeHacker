@@ -31,7 +31,6 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	// ノード登録
 	// 攻撃タブ
 	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
-	GetTabManager()->GetAttackTab()->AddNode<EightShot>(-1);
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
 	GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
@@ -40,6 +39,7 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
 	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
+	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\slime.png");
