@@ -575,7 +575,7 @@
     <ClCompile Include="cpp\enemy\node\eight_shot.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\enemy\ememy_bullet.cpp">
+    <ClCompile Include="cpp\enemy\enemy_bullet.cpp">
       <Filter>ソース ファイル\enemy</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\move_circular.cpp">

@@ -117,7 +117,7 @@
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
-    <ClCompile Include="cpp\enemy\ememy_bullet.cpp" />
+    <ClCompile Include="cpp\enemy\enemy_bullet.cpp" />
     <ClCompile Include="cpp\enemy\enemy_3d.cpp" />
     <ClCompile Include="cpp\enemy\enemy_spawner.cpp" />
     <ClCompile Include="cpp\enemy\explosion.cpp" />
