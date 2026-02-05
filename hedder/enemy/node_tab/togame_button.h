@@ -15,7 +15,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void ToGame();
+	static constexpr Vector2 BUTTON_SIZE = Vector2(200.0f, 75.0f);
+	static constexpr Vector2 BUTTON_POS = Vector2(BUTTON_SIZE.x * 0.5f, BUTTON_SIZE.y * 0.5f);
 private:
-	static constexpr Vector2 BUTTON_SIZE = Vector2(250.0f, 75.0f);
-	static constexpr Vector2 BUTTON_POS = Vector2(BUTTON_SIZE.x / 2, BUTTON_SIZE.y / 2);
 };

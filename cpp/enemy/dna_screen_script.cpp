@@ -57,12 +57,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 		counter++;
 	}
 
-
-	// 各種ノード
-	//m_AttackVisual.CreateVisual(manager->GetAttackTab());
-	//m_MoveVisual.CreateVisual(manager->GetMoveTab());
-	//m_DeathVisual.CreateVisual(manager->GetDeathTab());
-
 	// その他UI等の生成
 
 	AddTag("dna_edit");
@@ -108,10 +102,6 @@ void DnaScreenScript::Update()
 	// 有効時の処理
 	if (IsActive())
 	{
-		// DNAスクリーンの更新処理
-		//Panel::Update();->こっちで管理したいのでこの下に自作
-
-
 	// Debug時限定で数字キーでタブ切り替え
 
 	// 1キー: 攻撃タブ
