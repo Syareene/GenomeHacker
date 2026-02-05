@@ -31,6 +31,6 @@ void TabBase::ModifyTimeLine()
 	m_CDMax = currentTime;
 	if(m_CDMax == 0)
 	{
-		m_CDMax = 1; // 0だと困るので1に
+		//m_CDMax = 1; // 0だと困るので1に
 	}
 }

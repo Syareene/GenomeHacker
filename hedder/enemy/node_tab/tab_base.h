@@ -18,6 +18,7 @@ public:
 	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
+	inline std::list<int>& GetNodeTimeLineNotConst() { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得(非const版)
 	template <NodeType T>	
 	T* AddNode(const int& index, Transform trans = Transform()) // ノードを追加
 	{
@@ -74,7 +75,9 @@ public:
 			return nullptr;
 		}
 	};
-	void ModifyTimeLine(); // タイムラインを修正する
+	virtual void ModifyTimeLine(); // タイムラインを修正する
+protected:
+	inline void SetCDMax(const int& cdMax) { m_CDMax = cdMax; } // タブ内にあるノードをすべて合計したクールダウンをセット
 private:
 	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト->ポリモーフィズム消えるため実態ではなくポインタで保存
 	int m_Index = 0; // タブのインデックス

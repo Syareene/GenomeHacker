@@ -56,6 +56,7 @@ public:
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
+	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCDMax() const { return m_CDMax; }
 	inline const NodeLocation GetNodeLocation() const { return m_NodeLocation; }
 	inline void SetNodeLocation(const NodeLocation loc) { m_NodeLocation = loc; }
@@ -71,6 +72,7 @@ public:
 	inline const NodeTextData& GetDescriptionData() const { return m_Description; };
 	inline const int GetMoveManageId() const { return m_MoveManageId; }
 	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
+	inline const bool GetInstantCastOnDead() const { return m_InstantCastOnDead; }
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -94,9 +96,10 @@ protected:
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
 	inline void SetKeyword(const std::string& key) { m_Keyword = key; }
-	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
+	// 死亡時に即座に発動するかどうか(順に発動するため間にfalseなものがあったらそれが実行されるまで保留されます)
+	inline void SetInstantCastOnDead(const bool instant) { m_InstantCastOnDead = instant; }
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
@@ -118,5 +121,6 @@ private:
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)
 	int m_CD = 0; // ノードのクールダウン(フレーム数)
+	bool m_InstantCastOnDead = true; // 死亡時、cdを無視して即座に発動するかどうか
 	bool m_IsUpdated = true; // ノードが追加されたり変更されたものかどうか(visual_baseの再生成時にこれがtrueのものだけ再生成すれば良いかなといった感じ)
 };

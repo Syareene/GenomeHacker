@@ -86,8 +86,8 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 	// 今のcdカウントが最大値を超えているかどうかのチェック
 	if (enemy_ptr->GetAttackNodeTime() > enemy_ptr->GetAttackNodeCDSum())
 	{
-		// 超えている場合は最大値分引く
-		enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() - enemy_ptr->GetAttackNodeCDSum());
+		// 超えている場合は最大値+1分引く
+		enemy_ptr->SetAttackNodeTime(enemy_ptr->GetAttackNodeTime() - enemy_ptr->GetAttackNodeCDSum() - 1);
 	}
 
 	int currentTime = enemy_ptr->GetAttackNodeTime();
@@ -95,13 +95,18 @@ void EnemyBase::ExecuteAttack(FieldEnemy* enemy_ptr)
 
 	for (auto& time : attackTab->GetNodeTimeLine())
 	{
+		if (currentTime < time)
+		{
+			// これ以上探索する必要がない
+			break;
+		}
+
 		// 現在のフレームで実行すべきノードのみ実行
 		if (currentTime == time)
 		{
 			auto it = attackTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
-			break; // 1フレームで1つのノードのみ実行
 		}
 		index++;
 	}
@@ -144,32 +149,29 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	// 今のcdカウントが最大値を超えているかどうかのチェック
 	if (enemy_ptr->GetMoveNodeTime() > enemy_ptr->GetMoveNodeCDSum())
 	{
-		// 超えている場合は最大値分引く
-		enemy_ptr->SetMoveNodeTime(enemy_ptr->GetMoveNodeTime() - enemy_ptr->GetMoveNodeCDSum());
+		// 超えている場合は最大値+1分引く
+		enemy_ptr->SetMoveNodeTime(enemy_ptr->GetMoveNodeTime() - enemy_ptr->GetMoveNodeCDSum() - 1);
 	}
 
 	// 移動ノードの処理を実行
 
+	int currentTime = enemy_ptr->GetMoveNodeTime();
 	int index = 0;
-	int beforeTime = 0;
-	bool isFinished = false;
+
 	for (auto& time : moveTab->GetNodeTimeLine())
 	{
-		if (enemy_ptr->GetMoveNodeTime() >= time)
+		if (currentTime < time)
 		{
-			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
-			if (isFinished && beforeTime != time)
-			{
-				break;
-			}
-			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
+			// これ以上探索する必要がない
+			break;
+		}
+
+		// 現在のフレームで実行すべきノードのみ実行
+		if (currentTime == time)
+		{
 			auto it = moveTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
-
-			// ループ抜ける前に色々設定
-			beforeTime = time;
-			isFinished = true;
 		}
 		index++;
 	}
@@ -209,38 +211,40 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 	// 今のcdカウントが最大値を超えているかどうかのチェック
 	if (enemy_ptr->GetDeathNodeTime() > enemy_ptr->GetDeathNodeCDSum())
 	{
-		// 超えている場合は最大値分引く
-		enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() - enemy_ptr->GetDeathNodeCDSum());
+		// 超えている場合は最大値+1分引く
+		enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() - enemy_ptr->GetDeathNodeCDSum() - 1);
 	}
 
 	// 死亡ノードの処理を実行
+	int currentTime = enemy_ptr->GetDeathNodeTime();
 	int index = 0;
-	int beforeTime = 0;
-	bool isFinished = false;
+
 	for (auto& time : deathTab->GetNodeTimeLine())
 	{
-		if (enemy_ptr->GetDeathNodeTime() >= time)
+		if (currentTime < time)
 		{
-			// 既に判定が終わっており、前のタイムと現在の時間が同じでない(=次のノードのcdが0でない)場合はループを抜ける
-			if (isFinished && beforeTime != time)
-			{
-				break;
-			}
-			// シンプルに実行対象or前のノード実行後cdが0のノードを実行
+			// これ以上探索する必要がない
+			break;
+		}
+
+		// 現在のフレームで実行すべきノードのみ実行
+		if (currentTime == time)
+		{
 			auto it = deathTab->GetNodes().begin();
 			std::advance(it, index);
 			(*it)->NodeEffect(enemy_ptr);
-
-			// ループ抜ける前に色々設定
-			beforeTime = time;
-			isFinished = true;
 		}
 		index++;
+	}
+	if(currentTime >= deathTab->GetCDMax())
+	{
+		// 最大値超えてたら終わり
+		return true;
 	}
 
 	// カウントインクリメント
 	enemy_ptr->SetDeathNodeTime(enemy_ptr->GetDeathNodeTime() + 1);
-	return true; // 実行終わったらtrueを返す
+	return false;
 }
 
 EnemyBase* EnemyBase::Init(const unsigned int& playerId)
