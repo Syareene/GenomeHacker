@@ -32,11 +32,15 @@ void GameScene::Init()
 	// 明示的にstateをセットして遷移実行
 	MoveState();
 
-	AddGameObject<Camera>(0);
+	Vector3 camRot = AddGameObject<Camera>(0)->GetRotation();
 	AddGameObject<Field>(0);
-	Player* player_ptr = AddGameObject<Player>(0);
+	Transform playerTrans;
+	// プレイヤーの向きをカメラの向きに合わせる
+	playerTrans.SetRotation(camRot);
+	// 生成した角度を元にプレイヤーを生成
+	Player* player_ptr = AddGameObject<Player>(0, playerTrans);
 	const unsigned int id = player_ptr->GetObjectID();
-	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
+
 	AddGameObject<Score>(1);
 	AddGameObject<DNAButton>(2);
 	AddGameObject<ToGameButton>(2);
