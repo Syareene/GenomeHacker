@@ -5,6 +5,7 @@
 #include "scene/manager.h"
 #include "manager/texture_manager.h"
 #include "manager/shader_manager.h"
+#include "lib/random_number.h"
 
 void Particle2D::Register(int maxCount)
 {
@@ -104,7 +105,7 @@ void Particle2D::Update()
 			color.z = 1.0f;
 		}
 
-		Emit(1, Vector2(static_cast<float>(std::rand() % SCREEN_WIDTH), 0.0f), 50.0f, color);
+		Emit(1, Vector2(RandomNumber::GetInstance()->GetRandomInt(0, SCREEN_WIDTH), 0.0f), 50.0f, color);
 		m_Count = 0;
 	}
 	UpdateParticle();

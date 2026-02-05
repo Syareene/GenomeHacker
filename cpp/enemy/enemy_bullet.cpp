@@ -24,6 +24,8 @@ void EnemyBullet::Init(Transform trans)
 	AddTag("enemy_bullet");
 
 	SetTransform(trans);
+	// posだけ少し下げる
+	SetPosition(GetPosition() + POSITION_OFFSET);
 
 	// コリジョンを有効化する
 	Transform transform;

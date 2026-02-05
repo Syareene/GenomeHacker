@@ -6,6 +6,10 @@
 class Camera : public Object3D
 {
 private:
+	constexpr static Vector3 DEFAULT_POSITION = Vector3(0.0f, 1.0f, -5.0f);
+	constexpr static Vector3 DEFAULT_TARGET_OFFSET = Vector3(0.0f, 1.5f, 0.0f);
+	constexpr static float ROTATION_VALUE = 2.0f;
+	constexpr static float CULLING_RANGE = 30.0f; // カリング判定範囲
 	Vector3 m_Target{ 0.0f, 0.0f, 0.0f };
 	XMMATRIX m_ViewMatrix;
 	XMMATRIX m_ProjectionMatrix;

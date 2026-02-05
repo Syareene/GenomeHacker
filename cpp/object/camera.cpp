@@ -9,7 +9,7 @@ void Camera::Init(Transform trans)
 {
 	SetTransform(trans);
 	// 初期位置は少し後ろに
-	SetPosition(Vector3(0.0f, 1.0f, -5.0f));
+	SetPosition(DEFAULT_POSITION);
 }
 
 void Camera::Uninit()
@@ -21,12 +21,12 @@ void Camera::Update()
 {
 	if (Input::GetKeyPress(VK_LEFT))
 	{
-		SetRotation(GetRotation() + Vector3(0.0f, -2.0f, 0.0f));
+		SetRotation(GetRotation() + Vector3(0.0f, -ROTATION_VALUE, 0.0f));
 	}
 
 	if (Input::GetKeyPress(VK_RIGHT))
 	{
-		SetRotation(GetRotation() + Vector3(0.0f, 2.0f, 0.0f));
+		SetRotation(GetRotation() + Vector3(0.0f, ROTATION_VALUE, 0.0f));
 	}
 
 	/*
@@ -54,7 +54,7 @@ void Camera::Update()
 		return;
 	}
 
-	m_Target = player->GetPosition() + Vector3(0.0f, 1.5f, 0.0f);
+	m_Target = player->GetPosition() + DEFAULT_TARGET_OFFSET;
 	// カメラシェイク(ここ汎用的じゃないから後々書き直そうかな)
 	m_Target += m_ShakeVector * sinf(m_ShakeTime);
 	m_ShakeTime += XM_2PI / 3.0f; // 揺らす速さ
@@ -167,7 +167,7 @@ bool Camera::CheckView(const Vector3& position, const float radius)
 	// 距離カリング
 
 	float length = (position - GetPosition()).length();
-	if (length > 30.0f)
+	if (length > CULLING_RANGE)
 	{
 		return false;
 	}
