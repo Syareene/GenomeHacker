@@ -57,8 +57,6 @@ void DnaEditState::Update()
 
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna_edit");
 	UpdateStateObject();
-	// ノード掴み処理の適用
-	//ApplyGrabNode();
 }
 
 void DnaEditState::Draw()
@@ -67,11 +65,6 @@ void DnaEditState::Draw()
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTag("dna_edit");
 
-	//for (auto& node : m_Player->GetAllNodes())
-	//{
-	//	// ノードの更新
-	//	node->Draw();
-	//}
 	// state内オブジェクトの描画
 	DrawStateObject();
 

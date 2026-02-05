@@ -20,9 +20,6 @@
 // 初期化時に属するクラスを勝手に登録する形に
 // あとは全体を管理するスクリプトを記載。
 
-// ここのinit、ゲーム開始時の実行と、stateでの初期化とあるので
-// それぞれ処理分けてもいい説はあります
-
 void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 {
 	// プレイヤーid保存
@@ -138,6 +135,18 @@ void DnaScreenScript::Update()
 
 		// パネルの更新処理
 		Object2D::Update();
+
+		// ノードを離したかどうかのフラグ確認
+		if (m_IsReleaseGrabNode)
+		{
+			// もし掴んでるノードがあるなら挿入処理関数を実行
+			if (m_GrabbingNode)
+			{
+					GetActiveTab()->ApplyGrabNode();
+			}
+			m_GrabbingNode = nullptr; // 掴んでいるノードを離す
+			m_IsReleaseGrabNode = false;
+		}
 	}
 
 	// 有効でも無効でも下記処理は行う
@@ -294,6 +303,11 @@ void DnaScreenScript::HideDnaInfo()
 	// buttonも消す
 	// これでもDNAButtonとかも消えちゃうからタグつけないとだ
 	for(auto& child : GetChildObjectsByType<Button>())
+	{
+		child.SetDestroy(true);
+	}
+
+	for(auto& child : GetChildObjectsByType<ImageDraw>())
 	{
 		child.SetDestroy(true);
 	}

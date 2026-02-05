@@ -22,7 +22,7 @@ public:
 
 	// タブ移動する時に掴んでるノードは解放してね!
 	inline VisualBase* GetGrabbingNode() const { return m_GrabbingNode; }
-	inline void ReleaseGrabbingNode() { m_GrabbingNode = nullptr; }
+	inline void ReleaseGrabbingNode() { m_IsReleaseGrabNode = true; }
 	inline void SetGrabbingNode(VisualBase* nodePtr) { m_GrabbingNode = nodePtr; }
 
 	TabVisual* GetActiveTab();
@@ -43,6 +43,7 @@ private:
 	unsigned int m_PlayerId = 0;
 
 	VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ
+	bool m_IsReleaseGrabNode = false; // ノードを離したかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 参照しているデータ
 	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
 };
