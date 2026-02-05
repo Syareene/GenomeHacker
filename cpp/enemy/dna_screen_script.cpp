@@ -58,11 +58,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 
 	AddTag("dna_edit");
 
-	// 一括管理するために下位オブジェクトを生成
-
-	// これ、パネルの場合表示順いじれないの問題かも?->パネル内の描画は一旦追加順で対処。全体に関してはそもそもベースが描画順コントロールできるからそこでやってくれって感じで(unityも同じだから)
-	AddChildObject<DNAButton>(0);
-
 	// 下位オブジェクトをPanelのInitを呼び出し初期化
 	Panel::Init();
 
