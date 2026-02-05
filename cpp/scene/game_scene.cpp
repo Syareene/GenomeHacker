@@ -49,18 +49,6 @@ void GameScene::Init()
 
 	// 敵の弾を予約
 	ReserveObject<EnemyBullet>(EnemyBullet::MAX_OBJECTS);
-	
-	// ボタン用フォントデータ設定
-	FontData fontData;
-	fontData.fontSize = 50;
-	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
-	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
-	fontData.font = DirectWriteCustomFont::GetFontName(0);
-	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
-	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	fontData.outlineWidth = 4.0f;
 
 	//AddGameObject<Polygon2D>(2);
 	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始
