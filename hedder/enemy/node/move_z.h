@@ -17,5 +17,6 @@ public:
 	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
 
 private:
-	float m_MoveVal = 1.0f; // 動く量
+	constexpr static float DEFAULT_MOVE_VAL = 0.02f; // デフォルトの移動量
+	float m_MoveVal; // 動く量
 };

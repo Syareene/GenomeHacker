@@ -230,22 +230,23 @@ void DnaScreenScript::ShowDnaInfo()
 
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(0); // 攻撃
-		}, Vector2(1000.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
+		}, Vector2(NODE_TAB_TEXT_POS), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
 
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(1); // 移動
-		}, Vector2(1100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
+		}, Vector2(NODE_TAB_TEXT_POS.x + 100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
 
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(2); // 死亡
-		}, Vector2(1200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
+		}, Vector2(NODE_TAB_TEXT_POS.x + 200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
 
 	// 右側の追加したいノード郡
 	//Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(950.0f, 50.0f, 0.0f), Vector3(400.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\debug_sprite.png");
 
 	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
 	// 描画されてない時、game_objのリストにはあるが範囲forにてヒットしておらず描画されない?
-	AddChildObject<ImageDraw>(1)->Register(Vector3(1024.0f, 450.0f, 0.0f), Vector3(512.0f, 540.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
+	AddChildObject<ImageDraw>(1)->Register(Vector3(PLAYER_NODE_LIST_POS.x, PLAYER_NODE_LIST_POS.y, 0.0f), 
+		Vector3(PLAYER_NODE_LIST_SCALE.x, PLAYER_NODE_LIST_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
 
 
 	// 現在のノードを表示

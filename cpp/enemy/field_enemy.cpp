@@ -21,10 +21,15 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(Vector3(0.5f, 0.5f, 0.5f));
+	transform.SetScale(COLLIDER_SCALE);
 
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
+
+	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
+	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
+	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
+	//ChangeTexUV(12, 13, 0, 0);
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
@@ -61,8 +66,8 @@ void FieldEnemy::Update()
 		return;
 	}
 	// x,zが-30>=か30<=なら削除
-	if (GetPosition().x <= -30.0f || GetPosition().x >= 30.0f ||
-		GetPosition().z <= -30.0f || GetPosition().z >= 30.0f)
+	if (GetPosition().x <= -DELETE_POS.x || GetPosition().x >= DELETE_POS.x ||
+		GetPosition().z <= -DELETE_POS.y || GetPosition().z >= DELETE_POS.y)
 	{
 		SetDestroy(true);
 		return;
@@ -122,6 +127,7 @@ void FieldEnemy::Draw()
 
 	// 頂点バッファ設定
 	SetDefaultVertexBufferBillboardOnDraw();
+	// SetVertexBufferOnDraw();->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする

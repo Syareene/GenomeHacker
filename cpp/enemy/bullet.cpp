@@ -24,12 +24,12 @@ void Bullet::Init(Transform trans)
 
 	SetTransform(trans);
 	// posだけ少し下げる
-	SetPosition(GetPosition() - Vector3(0.0f, 1.0f, 0.0f));
+	SetPosition(GetPosition() + POSITION_OFFSET);
 
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(Vector3(0.225f, 0.225f, 0.225f));
+	transform.SetScale(SCALE);
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
 }

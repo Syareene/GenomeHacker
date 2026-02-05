@@ -45,5 +45,8 @@ private:
 	VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ
 	bool m_IsReleaseGrabNode = false; // ノードを離したかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 参照しているデータ
+	static constexpr Vector2 NODE_TAB_TEXT_POS = { 1000.0f, 35.0f }; // ノードタブのテキスト位置
+	static constexpr Vector2 PLAYER_NODE_LIST_POS = { 1024.0f, 450.0f }; // プレイヤーノード欄の位置
+	static constexpr Vector2 PLAYER_NODE_LIST_SCALE = { 512.0f, 540.0f }; // プレイヤーノード欄のスケール
 	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
 };

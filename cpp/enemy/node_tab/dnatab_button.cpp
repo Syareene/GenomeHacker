@@ -20,8 +20,8 @@ void DNAButton::Init(Transform trans)
 	fontData.outlineWidth = 4.0f;
 
 	// 一旦固定値でセット
-	Button::Register(std::bind(&DNAButton::ToDNATab, this), Vector2(200.0f * 0.5f, SCREEN_HEIGHT - (100.0f * 0.5f)),
-		Vector2(200.0f, 100.0f), Vector2(0.0f, 0.0f), fontData, "DNA編集",
+	Button::Register(std::bind(&DNAButton::ToDNATab, this), BUTTON_POS,
+		BUTTON_SIZE, Vector2(0.0f, 0.0f), fontData, "DNA編集",
 		L"asset\\texture\\alpha_texture.png");
 }
 

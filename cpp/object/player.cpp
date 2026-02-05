@@ -17,7 +17,7 @@ void Player::Init(Transform trans)
 {
 	// 画像が小さいため相対的に拡大する
 	Transform player_trans;
-	player_trans.SetScale(trans.GetScale().mul(Vector3(1.5f, 1.5f, 1.0f)));
+	player_trans.SetScale(trans.GetScale().mul(MODEL_SCALE));
 	player_trans.SetPosition(trans.GetPosition() + Vector3(0.0f, player_trans.GetScale().y * 0.5f, 0.0f));
 
 	SetTransform(player_trans);
@@ -28,7 +28,7 @@ void Player::Init(Transform trans)
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(GetScale().mul(Vector3(0.5f, 0.5f, 0.5f)));
+	transform.SetScale(GetScale().mul(COLLIDER_SCALE));
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform, Vector3(GetScale().x * 0.05f, 0.0f, 0.0f));
 
@@ -64,25 +64,25 @@ void Player::Update()
 	// キーで移動
 	if (Input::GetKeyPress('W'))
 	{
-		SetPosition(GetPosition() + (camera->GetForward() * 0.1f));
+		SetPosition(GetPosition() + (camera->GetForward() * PLAYER_MOVE_SPEED));
 		SetRotation(Vector3(GetRotation().x, rotation.y, GetRotation().z));
 	}
 	
 	if (Input::GetKeyPress('S'))
 	{
-		SetPosition(GetPosition() + (camera->GetForward() * -0.1f));
+		SetPosition(GetPosition() + (camera->GetForward() * -PLAYER_MOVE_SPEED));
 		SetRotation(Vector3(GetRotation().x, rotation.y + 180.0f, GetRotation().z)); // yもともとはXM_PI
 	}
 
 	if (Input::GetKeyPress('A'))
 	{
-		SetPosition(GetPosition() + (camera->GetRight() * -0.1f));
+		SetPosition(GetPosition() + (camera->GetRight() * -PLAYER_MOVE_SPEED));
 		SetRotation(Vector3(GetRotation().x, rotation.y - 90.0f, GetRotation().z)); // yもともとは-XM_PI/2
 	}
 
 	if (Input::GetKeyPress('D'))
 	{
-		SetPosition(GetPosition() + (camera->GetRight() * 0.1f));
+		SetPosition(GetPosition() + (camera->GetRight() * PLAYER_MOVE_SPEED));
 		SetRotation(Vector3(GetRotation().x, rotation.y + 90.0f, GetRotation().z)); // yもともとはXM_PI/2
 	}
 
@@ -92,14 +92,14 @@ void Player::Update()
 	if (Input::GetKeyTrigger(VK_SPACE))
 	{
 		Transform trans = Transform();
-		trans.SetPosition(GetPosition() + Vector3(0.0f, 1.0f ,0.0f));
+		trans.SetPosition(GetPosition() + Vector3(0.0f, BULLET_SPAWN_OFFSET_Y ,0.0f));
 
 		// 弾発射
 		Bullet* bullet = Manager::GetCurrentScene()->AddGameObject<Bullet>(0, trans);
 		// 初期座標設定v
 		//bullet->SetPosition(GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 弾の速度を設定
-		bullet->SetVelocity(Manager::GetCurrentScene()->GetGameObject<Camera>()->GetForward() * 0.15f);
+		bullet->SetVelocity(Manager::GetCurrentScene()->GetGameObject<Camera>()->GetForward() * BULLET_MOVE_SPEED);
 	}
 
 	if (Input::GetKeyTrigger('R'))

@@ -23,7 +23,7 @@ void EnemyDnaList::Init(State* ptr)
 
 	for (auto& enemyBase : enemy_base_list)
 	{
-		enemyBase->ShowDnaEditButton(Vector2(200.0f + (width_count * (WIDTH_SIZE + WIDTH_SIZE / 8.0f)), 300.0f + (height_count * (HEIGHT_SIZE + HEIGHT_SIZE / 12.0f))), Vector2(WIDTH_SIZE, HEIGHT_SIZE), enemyBase->GetEnemyTextureID(), ptr);
+		enemyBase->ShowDnaEditButton(Vector2(START_POS.x + (width_count * (WIDTH_SIZE + BUTTON_PADDING.x)), START_POS.y + (height_count * (HEIGHT_SIZE + BUTTON_PADDING.y))), Vector2(WIDTH_SIZE, HEIGHT_SIZE), enemyBase->GetEnemyTextureID(), ptr);
 		// カウント更新
 		width_count++;
 		if (width_count >= COLUMN_NUM)

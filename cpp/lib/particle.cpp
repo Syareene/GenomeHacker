@@ -5,6 +5,7 @@
 #include "scene/manager.h"
 #include "manager/texture_manager.h"
 #include "manager/shader_manager.h"
+#include "lib/random_number.h"
 
 
 void Particle::Init(Transform trans)
@@ -52,11 +53,11 @@ void Particle::Init(Transform trans)
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
 
-	for(int i = 0; i < MaxParticles; ++i)
+	for(int i = 0; i < MaxParticles; i++)
 	{
 		m_Particles[i].Enable = false; // 初期化
 	}
-	SetScale(Vector3(0.3f, 0.3f, 0.3f)); // パーティクルのスケールを設定
+	SetScale(PARTICLE_SCALE); // パーティクルのスケールを設定
 }
 
 void Particle::Uninit()
@@ -73,12 +74,12 @@ void Particle::Update()
 		if (m_Particles[i].Enable == false)
 		{
 			m_Particles[i].Enable = true; // パーティクルを有効化
-			m_Particles[i].LifeTime = 60; // 寿命を設定
+			m_Particles[i].LifeTime = PARTICLE_LIFETIME; // 寿命を設定
 			m_Particles[i].Position = GetPosition(); // パーティクルの位置を設定
 			m_Particles[i].Velocity = Vector3(
-				(static_cast<float>(rand() % 100 - 50) / 1000.0f), // -1.0f ~ 1.0f のランダム値
-				(static_cast<float>(rand() % 100 + 50) / 1000.0f),
-				(static_cast<float>(rand() % 100 - 50) / 1000.0f)
+				RandomNumber::GetInstance()->GetRandomFloat(-VELOCITY_RANDOM_RANGE, VELOCITY_RANDOM_RANGE), // x
+				RandomNumber::GetInstance()->GetRandomFloat(-VELOCITY_RANDOM_RANGE, VELOCITY_RANDOM_RANGE), // y
+				RandomNumber::GetInstance()->GetRandomFloat(-VELOCITY_RANDOM_RANGE, VELOCITY_RANDOM_RANGE)  // z
 			); // ランダムな速度を設定
 			break; // 新しいパーティクルを生成したらループを抜ける
 		}

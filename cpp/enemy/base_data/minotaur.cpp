@@ -29,20 +29,20 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 移動タブ
-	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
+	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
 	GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
 	// 死亡タブ
-	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\minotaur.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
-	SetDrawPosDiff({ 0.0f, 0.0f, 0.0f });
-	SetDrawScaleDiff({ 1.5f, 1.5f, 1.5f });
+	SetDrawPosDiff(DRAW_POS_DIFF);
+	SetDrawScaleDiff(DRAW_SCALE_DIFF);
 
 	// 体力設定
-	SetMaxHealth(3.0f);
+	SetMaxHealth(HEALTH);
 
 	return this;
 }

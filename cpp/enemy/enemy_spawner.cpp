@@ -42,7 +42,7 @@ void EnemySpawner::Update()
 		// コストを元に出現数と間隔を決定
 
 		// 出現数(とりあえず固定)
-		m_SpawnCount = 10;
+		m_SpawnCount = DEFAULT_SPAWN_COUNT;
 		// 敵が出現する事の間隔とウェーブ間隔は1:2で一旦設定
 		int between_time = m_TimeCost / 3;
 		m_EnemySpawnInterval = between_time / m_SpawnCount;
@@ -64,7 +64,7 @@ void EnemySpawner::Update()
 		if (m_SpawnTimer <= 0)
 		{
 			// 敵出現処理
-			Vector3 spawn_pos = { RandomNumber::GetInstance()->GetRandomFloat(-5.0f, 5.0f), 1.0f, RandomNumber::GetInstance()->GetRandomFloat(-5.0f, 5.0f) };
+			Vector3 spawn_pos = { RandomNumber::GetInstance()->GetRandomFloat(SPAWN_POSITION_RANGE.x, SPAWN_POSITION_RANGE.y), 1.0f, RandomNumber::GetInstance()->GetRandomFloat(SPAWN_POSITION_RANGE.x, SPAWN_POSITION_RANGE.y) };
 			SpawnEnemyByData(m_EnemyBaseData, spawn_pos);
 
 			// 出現後諸々をセットし直す

@@ -21,7 +21,7 @@ public:
 	bool CheckCollisionAABB(const Collision& other) const override;
 	bool CheckCollisionOBB(const Collision& other) const override;
 private:
-	constexpr static int m_CircleVertexCount = 12; // 円を描く頂点数
+	constexpr static int CIRCLE_VERTEX_COUNT = 12; // 円を描く頂点数
 	void MakeCircleVertex(int vertex_count, std::vector<Vector3>& outVertex);
 	static ID3D11Buffer* m_VertexBuffer; // 頂点バッファ
 

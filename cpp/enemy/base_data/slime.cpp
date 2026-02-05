@@ -38,18 +38,18 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
 	// 死亡タブ
-	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\slime.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
-	SetDrawPosDiff({ 0.0f, 0.0f, 0.0f });
-	SetDrawScaleDiff({ 2.0f, 2.0f, 2.0f });
+	SetDrawPosDiff(DRAW_POS_DIFF);
+	SetDrawScaleDiff(DRAW_SCALE_DIFF);
 
 	// 体力設定
-	SetMaxHealth(1.0f);
+	SetMaxHealth(HEALTH);
 
 	return this;
 }

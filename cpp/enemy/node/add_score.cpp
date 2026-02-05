@@ -7,16 +7,16 @@
 
 void AddScore::Init(Transform trans)
 {
-	Transform defaultTrans = Transform();
-	defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
-	defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
+	//Transform defaultTrans = Transform();
+	//defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
+	//defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
 
 	// ベースデータセット
 
 	// 名前
-	SetNameData({ "AddScore", Vector2(10.0f, 10.0f), NodeBase::TextType::Normal });
+	SetNameData({ "AddScore", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	// 説明文
-	SetDescriptionData({ GenerateDescriptionText(), Vector2(10.0f, 300.0f), NodeBase::TextType::Normal});
+	SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal});
 
 	// ここでSetDescriptionData(GenerateDescriptionText))
 
@@ -27,7 +27,7 @@ void AddScore::Init(Transform trans)
 	UpdateDescriptionData();
 
 	// フォント作られてから基底クラスのinitを呼ぶ(textのポインタを取得したいので)
-	NodeBase::Init(defaultTrans);
+	NodeBase::Init();
 	AddInputTypeTop(InputType::Death);
 	AddInputTypeBottom(InputType::Death);
 	SetCDMax(0);

@@ -10,5 +10,6 @@ public:
 	void Update() override;
 	void Draw() override;
 private:
+	constexpr static int FRAME_MAX = 16; // 最大フレーム数
 	int m_FrameCount = 0; // フレームカウント
 };

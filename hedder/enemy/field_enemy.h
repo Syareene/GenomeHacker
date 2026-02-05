@@ -32,6 +32,8 @@ public:
 	inline Vector3 GetPreviousPosition() const { return m_PreviousPosition; }
 	inline void UpdatePreviousPosition() { m_PreviousPosition = GetPosition(); }	
 private:
+	constexpr static Vector3 COLLIDER_SCALE = Vector3(0.5f, 0.5f, 0.5f);
+	constexpr static Vector2 DELETE_POS = Vector2(30.0f, 30.0f);
 	bool m_IsHit = false; // 当たったかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 自身の元データへのポインタ
 	unsigned int m_LiveTime = 0; // 生存時間(フレーム)

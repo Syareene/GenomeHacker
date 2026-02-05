@@ -19,6 +19,8 @@ public:
 	const int GetOwnerEnemyID() const { return m_OwnerEnemyID; }
 
 private:
+	constexpr static Vector3 POSITION_OFFSET = Vector3(0.0f, -1.0f, 0.0f);
+	constexpr static Vector3 SCALE = Vector3(0.225f, 0.225f, 0.225f);
 	ID3D11VertexShader* m_VertexShader = nullptr;
 	ID3D11PixelShader* m_PixelShader = nullptr;
 	ID3D11InputLayout* m_VertexLayout = nullptr;

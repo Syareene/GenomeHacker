@@ -28,7 +28,7 @@ void EnemyBullet::Init(Transform trans)
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(Vector3(0.225f, 0.225f, 0.225f));
+	transform.SetScale(SCALE);
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
 }
