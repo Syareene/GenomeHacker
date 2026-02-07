@@ -40,6 +40,5 @@ void DnaTableState::Draw()
 	Manager::GetCurrentScene()->DrawObjectByTag("dna");
 	// このstate内オブジェクトの描画
 	DrawStateObject();
-	//DrawStateObjectByTag("dna");
 	State::UpdateFinal();
 }

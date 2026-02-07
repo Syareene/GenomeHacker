@@ -38,9 +38,6 @@ void LoadState::Init()
 
 	// これ以外にもvsのプロパティ変更したので#pragma omp parallel forで並列化できるかも
 
-
-	// 大本のSceneの
-	//Manager::GetCurrentScene()->Init();
 }
 
 void LoadState::Uninit()
@@ -57,7 +54,6 @@ void LoadState::Update()
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObjectByTag("setting");
 
-	//UpdateStateObjectByTag("setting");
 	UpdateStateObject();
 
 
@@ -69,8 +65,6 @@ void LoadState::Draw()
 	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTags(std::list<std::string>({ "in_game", "system" }));
-	// このstate内オブジェクトの描画
-	//DrawStateObjectByTag("setting");
 	DrawStateObject();
 
 	State::UpdateFinal();
