@@ -129,14 +129,18 @@ void TabVisual::ApplyGrabNode()
 	VisualBase* grabNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 	if (grabNode)
 	{
+		// 現在、掴みノードはplayer->enemyやenemy->playerで移動した時にlocationが更新されていない
+		// そのためここで比較しても正確な位置ではない。
+		// 掴んだ時に更新するようにしたほうがバグfix大変だったため、こちらでは両方とも配列を探索することで事なきを得ることとする。
+
 		// 掴みノードがenemy/playerどっちに所属しているかを取得
-		NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
+		//NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
 
 		// 所属しているノードリストから一時変数にmove
 		std::unique_ptr<VisualBase> tempNode;
-		if (loc == NodeBase::NodeLocation::Enemy)
+
+		// enemyノード側から探す
 		{
-			// enemyノード側から探す
 			auto it = std::find_if(m_VisualNodes.begin(), m_VisualNodes.end(),
 				[&](const std::unique_ptr<VisualBase>& node) {
 					return node.get() == grabNode;
@@ -149,9 +153,9 @@ void TabVisual::ApplyGrabNode()
 				m_VisualNodes.erase(it);
 			}
 		}
-		else if (loc == NodeBase::NodeLocation::Player)
+
+		// プレイヤーノード側から探す
 		{
-			// プレイヤーノード側から探す
 			auto& playerNodes = Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes();
 			auto it = std::find_if(playerNodes.begin(), playerNodes.end(),
 				[&](const std::unique_ptr<VisualBase>& node) {
@@ -183,6 +187,7 @@ void TabVisual::ApplyGrabNode()
 				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
+					//tempNode->SetNodeLocation(NodeBase::NodeLocation::Enemy);
 					m_VisualNodes.insert(it, std::move(tempNode));
 					inserted = true;
 					break;
@@ -192,6 +197,7 @@ void TabVisual::ApplyGrabNode()
 			// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
 			if (!inserted)
 			{
+				//tempNode->SetNodeLocation(NodeBase::NodeLocation::Enemy);
 				m_VisualNodes.push_back(std::move(tempNode));
 			}
 
@@ -210,6 +216,7 @@ void TabVisual::ApplyGrabNode()
 				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
+					//tempNode->SetNodeLocation(NodeBase::NodeLocation::Player);
 					playerNodes.insert(it, std::move(tempNode));
 					inserted = true;
 					break;
@@ -220,6 +227,7 @@ void TabVisual::ApplyGrabNode()
 			if (!inserted)
 			{
 				// プレイヤーに対してノードを追加する関数が必要かも
+				//tempNode->SetNodeLocation(NodeBase::NodeLocation::Player);
 				playerNodes.push_back(std::move(tempNode));
 			}
 
@@ -341,6 +349,9 @@ void TabVisual::ApplyMovedResult()
 
 	// プレイヤーのVisualBaseは消す
 	temp->GetAllVisualNodes().clear();
+
+	// これenemyに対しても消す?player->enemyしてedit_state抜けるとenemy側のノード消えるのがよくわからない
+	// 処理はちゃんと動いてそうなんだよね
 
 	return;
 }
