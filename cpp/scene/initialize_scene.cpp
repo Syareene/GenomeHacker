@@ -7,6 +7,8 @@
 
 #include <memory>
 
+// 起動時画面作りたいよねってことで作ったやつ(現状未使用)
+
 void InitializeScene::Init()
 {
 	// タイマーリセット

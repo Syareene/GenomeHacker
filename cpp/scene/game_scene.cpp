@@ -50,7 +50,6 @@ void GameScene::Init()
 	// 敵の弾を予約
 	ReserveObject<EnemyBullet>(EnemyBullet::MAX_OBJECTS);
 
-	//AddGameObject<Polygon2D>(2);
 	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始
 
 	m_BGM = new Audio();

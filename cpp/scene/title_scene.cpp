@@ -21,16 +21,16 @@ void TitleScene::Init()
 	// タイトルシーンの初期化処理
 
 	Camera* cam = AddGameObject<Camera>(0);
-	cam->SetPosition(Vector3(0.0f, 3.0f, -5.0f));
+	cam->SetPosition(CAMERA_START_POS);
 	cam->SetTitleCam();
 	AddGameObject<Field>(1);
 	// タイトル
-	AddGameObject<ImageDraw>(3)->Register(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - SCREEN_HEIGHT / 8, 0.0f), Vector3(1024.0f, 576.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\genome_hacker.png", false);
+	AddGameObject<ImageDraw>(3)->Register(TITLE_IMAGE_POS, TITLE_IMAGE_SCALE, Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\genome_hacker.png", false);
 
 	AddGameObject<Button>(2)->Register([]() {
 		// ボタンがクリックされた時の処理
 		Manager::SetScene<GameScene>();
-		}, Vector2(SCREEN_WIDTH / 2, 600.0f), Vector2(500.0f, 140.0f), 
+		}, BUTTON_POS, BUTTON_SCALE, 
 			Vector2(0.0f, 0.0f), L"asset\\texture\\start_button.png");
 
 	AddGameObject<Particle2D>(1)->Register(1000);
