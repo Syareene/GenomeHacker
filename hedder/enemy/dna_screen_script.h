@@ -35,6 +35,8 @@ private:
 	TabVisual m_MoveVisual;
 	TabVisual m_DeathVisual;
 
+	void GeneratePlayerVisualNodes();
+
 	void SelectedAttackTab();
 	void SelectedMoveTab();
 	void SelectedDeathTab();

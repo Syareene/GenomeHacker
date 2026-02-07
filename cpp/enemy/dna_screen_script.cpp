@@ -22,6 +22,8 @@
 
 void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 {
+	m_EnemyBase = base_enemy;
+
 	// プレイヤーid保存
 	m_PlayerId = player_id;
 
@@ -43,16 +45,7 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	player->SetDnaScreenId(GetObjectID());
 
 	// プレイヤーに関しても所持しているノードの見た目部分を生成する
-	int counter = 0;
-	for(auto& node : player->GetAllNodes())
-	{
-		// nodeの見た目部分を生成
-		VisualBase visual = VisualBase();
-		visual.Init(GetObjectID(), counter, node.get());
-
-		player->AddVisualNode(visual);
-		counter++;
-	}
+	GeneratePlayerVisualNodes();
 
 	// その他UI等の生成
 
@@ -85,6 +78,8 @@ void DnaScreenScript::Uninit()
 	m_AttackVisual.Uninit();
 	m_MoveVisual.Uninit();
 	m_DeathVisual.Uninit();
+
+	m_EnemyBase = nullptr;
 
 	SetDestroy(true);
 }
@@ -332,9 +327,27 @@ TabVisual* DnaScreenScript::GetActiveTab()
 	return nullptr;
 }
 
+void DnaScreenScript::GeneratePlayerVisualNodes()
+{
+	// プレイヤーに関しても所持しているノードの見た目部分を生成する
+	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
+	int counter = 0;
+	for(auto& node : player->GetAllNodes())
+	{
+		// nodeの見た目部分を生成
+		VisualBase visual = VisualBase();
+		visual.Init(GetObjectID(), counter, node.get());
+		player->AddVisualNode(visual);
+		counter++;
+	}
+}
+
 void DnaScreenScript::SelectedAttackTab()
 {
-	Font* ptr = GetChildObjectByType<Font>();
+	// 現在のタブに対して移動反映を行う->これ必要なんだけどこれするとplayerのノードが消えてしまう
+	GetActiveTab()->ApplyMovedResult();
+	// プレイヤーノード再生成
+	GeneratePlayerVisualNodes();
 
 	GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
 	m_AttackVisual.SetIsSelected(true);
@@ -345,6 +358,11 @@ void DnaScreenScript::SelectedAttackTab()
 
 void DnaScreenScript::SelectedMoveTab()
 {
+	// 現在のタブに対して移動反映を行う
+	GetActiveTab()->ApplyMovedResult();
+
+	GeneratePlayerVisualNodes();
+
 	GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(true);
@@ -354,6 +372,11 @@ void DnaScreenScript::SelectedMoveTab()
 
 void DnaScreenScript::SelectedDeathTab()
 {
+	// 現在のタブに対して移動反映を行う
+	GetActiveTab()->ApplyMovedResult();
+
+	GeneratePlayerVisualNodes();
+
 	GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(false);
