@@ -29,7 +29,8 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
 	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
 	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
-	//ChangeTexUV(12, 13, 0, 0);
+	SetCanChangeVertex(); // 多分これ呼ばないとダメ
+	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y);
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
@@ -119,6 +120,7 @@ void FieldEnemy::Draw()
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
+
 	// 移動、回転マトリックス設定
 	SetWorldMatrixOnDrawBillboard();
 
@@ -126,8 +128,8 @@ void FieldEnemy::Draw()
 	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferBillboardOnDraw();
-	// SetVertexBufferOnDraw();->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
+	//SetDefaultVertexBufferBillboardOnDraw();
+	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする

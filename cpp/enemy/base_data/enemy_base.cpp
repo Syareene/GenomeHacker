@@ -295,14 +295,18 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 	// state、GameStateになってたわね
 	m_ToDnaButton = ptr->AddGameObject<Button>(2);
 
+	// これ、敵のテクスチャをuv化したけど、ボタンがuv化できてない
+	// また、button側にuvを格納する変数がないから余計に大変なことに、、
+	// 内部で保存しておかないとそれようのuvで作成されないので困ったもんですよこれ
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();
 		}, pos, size, Vector2(0.0f, 0.0f), texID, L"asset/texture/test_frame.png");
 
 
-	// uv変えるのはいいけど、頂点変更モードになってるかだけが疑問やね
-	//m_ToDnaButton->ChangeTexUV(12, 13, 0, 0); // 保存した変数から値を参照するように変更する。
+	// UV変更モードに設定
+	m_ToDnaButton->SetCanChangeVertex(); // ->これbutton共通だからdrawの時にこっち使ってくれねぇ
+	m_ToDnaButton->ChangeTexUV(m_TextureSplitCount.x, m_TextureSplitCount.y, m_UVPos.x, m_UVPos.y); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("dna");
 
 }
@@ -323,8 +327,7 @@ void EnemyBase::ShowDnaScreen()
 
 	// state変更
 	DnaEditState* will_state = Manager::GetCurrentScene()->SetState<DnaEditState>();
-	// これstateも可変init引数に対応しないとここに入れらねーｗｗｗｗｗｗｗｗ
-	// とりあえずここの追加時にはenemybase*とplayeridがいる
+
 	DnaScreenScript* screen = will_state->AddGameObject<DnaScreenScript>(1, this, Manager::GetCurrentScene()->GetGameObject<Player>()->GetObjectID()); // DNAスクリーンをシーンに追加
 	screen->GetActiveTab()->ModifyNodePos(); // ノード位置修正
 	screen->ShowDnaInfo(); // DNA情報を表示する関数を呼び出す

@@ -11,7 +11,7 @@ public:
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
-	
+
 	inline void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
 	inline EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
 	inline unsigned int GetLiveTime() const { return m_LiveTime; }

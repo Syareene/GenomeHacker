@@ -35,8 +35,11 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\minotaur.png");
+	SetTextureID(L"asset\\texture\\monsters_v2.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
+	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
+	SetUVPos(Vector2(3.0f, 7.0f));
+
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
 	SetDrawPosDiff(DRAW_POS_DIFF);
 	SetDrawScaleDiff(DRAW_SCALE_DIFF);

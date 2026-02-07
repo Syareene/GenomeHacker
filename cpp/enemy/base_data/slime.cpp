@@ -42,8 +42,10 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\slime.png");
+	SetTextureID(L"asset\\texture\\monsters_v2.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
+	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
+	SetUVPos(Vector2(1.0f, 2.0f));
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
 	SetDrawPosDiff(DRAW_POS_DIFF);
 	SetDrawScaleDiff(DRAW_SCALE_DIFF);

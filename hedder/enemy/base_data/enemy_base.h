@@ -62,6 +62,11 @@ public:
 	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
 	inline const int GetEnemyTextureID() const { return m_TextureID; }
 
+	inline void SetTextureSplitCount(const Vector2& count) { m_TextureSplitCount = count; }
+	inline const Vector2& GetTextureSplitCount() const { return m_TextureSplitCount; }
+	inline void SetUVPos(const Vector2& uv) { m_UVPos = uv; }
+	inline const Vector2& GetUVPos() const { return m_UVPos; }
+
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
 	inline void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
 	inline const float GetMaxHealth() const { return m_MaxHealth; }
@@ -72,6 +77,8 @@ public:
 	inline const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
 	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
+protected:
+	constexpr static Vector2 DEFAULT_TEXTURE_COUNT = Vector2(12.0f, 13.0f); // デフォルトのテクスチャ分割数
 private:
 	// 敵種類IDのカウンターを管理する静的関数
 	static int NextEnemyTypeId()
@@ -87,6 +94,8 @@ private:
 	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、
 	int m_TextureID = -1; // 敵のテクスチャID
 	int m_EnemyID = -1; // 敵のID
+	Vector2 m_TextureSplitCount = DEFAULT_TEXTURE_COUNT; // テクスチャの分割数
+	Vector2 m_UVPos = Vector2(0.0f, 0.0f); // UVの位置
 	std::pair<int, int> m_TextureTarget{ 0, 0 }; // 対象となるテクスチャの場所(幅、高さ)
 	std::pair<int, int> m_TextureCount{ 1, 1 }; // テクスチャの分割数(横、縦) -> これでuvを計算する
 

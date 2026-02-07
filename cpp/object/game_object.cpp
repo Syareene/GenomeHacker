@@ -35,24 +35,29 @@ void GameObject::UninitDrawMember()
 
 void GameObject::SetCanChangeVertex()
 {
+	// 既に中身がある場合は何もしない
+	if (m_VertexBuffer)
+	{
+		return;
+	}
 	VERTEX_3D vertex[4];
 
-	vertex[0].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(0.0f, 0.0f);
 
-	vertex[1].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
+	vertex[1].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(1.0f, 0.0f);
 
-	vertex[2].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
+	vertex[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(0.0f, 1.0f);
 
-	vertex[3].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
+	vertex[3].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(1.0f, 1.0f);
@@ -85,22 +90,22 @@ void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTar
 	float offset_x = widthTarget * texture_width; // フレームに応じたXオフセット
 	float offset_y = heightTarget * texture_height; // フレームに応じたYオフセット
 
-	vertex[0].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
+	vertex[0].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
 	vertex[0].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(offset_x, offset_y);
 
-	vertex[1].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
+	vertex[1].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
 	vertex[1].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y);
 
-	vertex[2].Position = XMFLOAT3(-0.5f, 0.5f, 0.0f);
+	vertex[2].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	vertex[2].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[2].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(offset_x, offset_y + texture_height);
 
-	vertex[3].Position = XMFLOAT3(0.5f, 0.5f, 0.0f);
+	vertex[3].Position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[3].Normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(offset_x + texture_width, offset_y + texture_height);

@@ -44,7 +44,6 @@ protected:
 	inline ID3D11InputLayout* GetVertexLayout() const { return m_VertexLayout; }
 	inline ID3D11InputLayout** GetVertexLayoutPointer() { return &m_VertexLayout; }
 	void UninitDrawMember();
-	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 
 	// 頂点バッファを描画時に設定する関数
 	void SetDefaultVertexBufferOnDraw() const;
@@ -72,6 +71,7 @@ public:
 	virtual void Update() {};
 	virtual void Draw() {};
 
+	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
