@@ -19,8 +19,8 @@ private:
 	static unsigned int m_ObjectIDCounter; // シーンのとはまた異なるカウンター
 	static unsigned int GetNextObjectID()
 	{
-		// 現在値が2147483647に達したら0に戻す
-		if (m_ObjectIDCounter == INT_MAX)
+		// 現在値が最大に達したら0に戻す
+		if (m_ObjectIDCounter == UINT_MAX)
 		{
 			m_ObjectIDCounter = 0;
 		}
