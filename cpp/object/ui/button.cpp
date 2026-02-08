@@ -168,8 +168,22 @@ void Button::Draw()
 	// テクスチャがあるときだけ描画
 	if(GetTextureID() != -1)
 	{
+		// ここのテクスチャに関してはuvで描画される可能性があるためvertexbufferがある場合は変更する
+		if (GetVertexBuffer())
+		{
+			// 頂点バッファ設定
+			SetVertexBufferOnDraw();
+			//// ビューマトリックス設定
+			//SetViewMatrixOnDraw();
+			//// 移動、回転マトリックス設定
+			//SetWorldMatrixOnDraw();
+			//// マテリアル設定
+			//SetMaterialOnDraw();
+		}
+
+
 		// テクスチャ設定
-	// 一時変数に入れないと参照取得できないのでこうする
+		// 一時変数に入れないと参照取得できないのでこうする
 		ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 		Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 

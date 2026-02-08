@@ -29,8 +29,8 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
 	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
 	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
-	SetCanChangeVertex(); // 多分これ呼ばないとダメ
-	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y);
+	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
+	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y, false);
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない

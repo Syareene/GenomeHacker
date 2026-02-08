@@ -71,8 +71,8 @@ public:
 	virtual void Update() {};
 	virtual void Draw() {};
 
-	void SetCanChangeVertex(); // 頂点データが変更可能にできるプリセット
-	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget);
+	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
+	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
 	inline void SetIsAlive(const bool& manage) { m_IsAliveData = manage; }

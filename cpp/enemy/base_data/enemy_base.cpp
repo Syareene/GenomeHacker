@@ -296,8 +296,6 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 	m_ToDnaButton = ptr->AddGameObject<Button>(2);
 
 	// これ、敵のテクスチャをuv化したけど、ボタンがuv化できてない
-	// また、button側にuvを格納する変数がないから余計に大変なことに、、
-	// 内部で保存しておかないとそれようのuvで作成されないので困ったもんですよこれ
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();
@@ -305,8 +303,8 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 
 
 	// UV変更モードに設定
-	m_ToDnaButton->SetCanChangeVertex(); // ->これbutton共通だからdrawの時にこっち使ってくれねぇ
-	m_ToDnaButton->ChangeTexUV(m_TextureSplitCount.x, m_TextureSplitCount.y, m_UVPos.x, m_UVPos.y); // 保存した変数から値を参照するように変更する。
+	m_ToDnaButton->SetCanChangeVertex(true); // ->これbutton共通だからdrawの時にこっち使ってくれねぇ
+	m_ToDnaButton->ChangeTexUV(m_TextureSplitCount.x, m_TextureSplitCount.y, m_UVPos.x, m_UVPos.y, true); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("dna");
 
 }
