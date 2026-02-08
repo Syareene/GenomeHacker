@@ -6,10 +6,6 @@
 
 void MoveCircular::Init(Transform trans)
 {
-	//Transform defaultTrans = Transform();
-	//defaultTrans.SetScale(Vector3(500.0f, 100.0f, 0.0f));
-	//defaultTrans.SetPosition(Vector3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.0f));
-
 	// ベースデータセット
 	SetNameData({ "MoveCircular", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
@@ -73,7 +69,7 @@ Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 
 std::string MoveCircular::GenerateDescriptionText()
 {
-	std::string format_string = "このノードがある敵は半径{}、{}フレームで円形に移動します。他の移動ノードと組み合わせ可能です。";
+	std::string format_string = "このノードがある敵は半径{}の円上を、{}フレームで移動します。";
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_Radius, m_Duration));
 	return formatted_text;
 }
