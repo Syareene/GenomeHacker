@@ -8,6 +8,8 @@
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
 
+unsigned int NodeBase::m_UniqueIDCounter = 0;
+
 void NodeBase::Init(Transform trans)
 {
 

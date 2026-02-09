@@ -354,6 +354,9 @@
     <ClInclude Include="hedder\enemy\node\move_to_player.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_random.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -585,6 +588,9 @@
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\move_to_player.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_random.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>

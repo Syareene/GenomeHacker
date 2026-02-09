@@ -38,7 +38,11 @@ public:
 		Vector2 text_pos;
 		NodeBase::TextType text_type = NodeBase::TextType::Normal; // ここ参照してテンプレートとして使用
 	};
-	NodeBase() = default;
+	NodeBase()
+	{
+		// idを発行
+		m_UniqueID = GetNextUniqueID();
+	}
 	virtual ~NodeBase() = default;
 	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
 	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
@@ -92,6 +96,7 @@ protected:
 		return "";
 	}
 
+	inline const unsigned int GetNodeID() const { return m_UniqueID; }
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
@@ -104,6 +109,16 @@ private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }
+	static unsigned int m_UniqueIDCounter;
+	static unsigned int GetNextUniqueID()
+	{
+		if(m_UniqueIDCounter == UINT_MAX)
+		{
+			m_UniqueIDCounter = 0; // リセット
+		}
+		return m_UniqueIDCounter++;
+	}
+
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
@@ -117,7 +132,8 @@ private:
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
 	NodeLocation m_NodeLocation = NodeLocation::Enemy; // ノードの設置場所(敵用かプレイヤー用か)
 	int m_MoveManageId = 0; // VisualBase->NodeBase変換時に使用する割り振り用id変数
-	int m_ID; // ノードのid(内部利用用)
+	unsigned int m_UniqueID = 0; // ノードインスタンスごとのユニークid
+	int m_ID = -1; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)
 	int m_CD = 0; // ノードのクールダウン(フレーム数)

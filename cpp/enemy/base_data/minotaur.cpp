@@ -15,6 +15,7 @@
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_circular.h"
 #include "enemy/node/add_score.h"
+#include "enemy/node/move_random.h"
 
 EnemyBase* Minotaur::Register(const unsigned int& playerId)
 {
@@ -30,6 +31,7 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 	// ノード登録
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
 	GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
 	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
