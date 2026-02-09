@@ -42,11 +42,29 @@ public:
 		XMFLOAT4 UVOffset; // xy: offset, zw: scale
 	};
 
+	struct RenderQueueData
+	{
+		int Layer; // layerNo
+		float Depth; // カメラからの距離
+		std::function<void()> DrawCall; // 実際の描画関数
+
+		// 自作構造体なため、ソート用の比較演算子を定義
+		bool operator<(const RenderQueueData& other) const
+		{
+			if (Layer != other.Layer)
+			{
+				return Layer < other.Layer; // レイヤーで比較
+			}
+			return Depth < other.Depth; // レイヤーが同じ場合は深度で比較
+		}
+	};
+
 	virtual void UpdateGPUData() = 0;
 
 	virtual GameObject* GetObjectByTag(const std::string& tag) = 0;
 	virtual std::list<GameObject*> GetObjectsByTag(const std::string& tag) = 0;
 	virtual void FlushPendingObjects() = 0;
+	virtual void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) = 0;
 	virtual void Draw() = 0;
 	virtual void DrawObjectByTag(const std::string& tag) = 0;
 	virtual void DrawObjectByTags(const std::list<std::string>& tags) = 0;
@@ -226,6 +244,41 @@ public:
 	// 全部のupdate終わった後に呼ぶことで他オブジェクトによって座標が動かされても大丈夫
 	void UpdateGPUData() override
 	{
+		// AI提案まま
+		if constexpr (ObjectType::ENABLE_INSTANCING)
+		{
+			m_InstanceDataList.clear();
+
+			// 1. まずアクティブなオブジェクトへのポインタを集める
+			std::vector<ObjectType*> activeObjects;
+			for (auto& obj : m_Objects) 
+			{
+				if (obj.IsActive() && !obj.IsDestroy()) 
+				{
+					activeObjects.push_back(&obj);
+				}
+			}
+
+			// 2. レイヤー順（昇順）にソートする
+			// これにより、GPUバッファ内でレイヤーごとにデータが連続するようになる
+			std::sort(activeObjects.begin(), activeObjects.end(),
+				[](const ObjectType* a, const ObjectType* b) 
+				{
+					return a->GetLayer() < b->GetLayer();
+				});
+
+			// 3. ソート順通りにGPU用データを作成
+			for (auto* obj : activeObjects) 
+			{
+				m_InstanceDataList.emplace_back(obj->GetInstanceData());
+			}
+
+			// 4. GPUバッファ転送 (Map/Unmap)
+			// ... (省略: 前回のコードと同じ) ...
+		}
+
+
+		// 過去のやつ
 		int index = 0;
 		for(auto& obj : m_Objects)
 		{
@@ -258,6 +311,102 @@ public:
 				{
 					obj.Update();
 					break; // タグが見つかったら次のオブジェクトへ
+				}
+			}
+		}
+	}
+
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) override
+	{
+		// インスタンシングレンダリングの場合は処理を追加(AIまるまるコピーなので検証してね)
+		// === インスタンシングの場合 ===
+		if constexpr (requires { ObjectType::ENABLE_INSTANCING; }&& ObjectType::ENABLE_INSTANCING)
+		{
+			if (m_InstanceDataList.empty()) return;
+
+			// ソート済みの m_InstanceDataList を走査し、レイヤーの切れ目を見つけてリクエストを発行する
+			// activeObjectsはUpdateGPUDataでソート済みなので、同じレイヤーは連続している前提
+
+			int currentStartIndex = 0;
+			int currentLayer = -9999; // ありえない値
+
+			// レイヤー情報を復元するために、再度m_Objectsを走査するのは非効率なので、
+			// UpdateGPUDataでソートした時の情報をキャッシュしておくか、
+			// InstanceData構造体にLayerを含めるのが簡単です（描画には使いませんがcpu側で使う）。
+
+			// ★簡略化のため、再走査ロジックのイメージで書きます
+			// 実際は UpdateGPUData で「どの範囲がどのレイヤーか」のリストを作っておくのがベストです。
+
+			struct BatchRange { int Layer; int Start; int Count; };
+			std::vector<BatchRange> batches;
+
+			// バッチ情報の構築 (UpdateGPUData内でやるとより高速)
+			// ※ここでは概念説明のため都度計算します
+			std::vector<ObjectType*> sortedObjs;
+			for (auto& obj : m_Objects) if (obj.IsActive() && !obj.IsDestroy()) sortedObjs.push_back(&obj);
+			std::sort(sortedObjs.begin(), sortedObjs.end(), [](auto* a, auto* b) { return a->GetLayer() < b->GetLayer(); });
+
+			if (sortedObjs.empty()) return;
+
+			int start = 0;
+			int layer = sortedObjs[0]->GetLayer();
+			for (int i = 0; i < sortedObjs.size(); ++i)
+			{
+				if (sortedObjs[i]->GetLayer() != layer)
+				{
+					// レイヤーが変わったので前のバッチを登録
+					batches.push_back({ layer, start, i - start });
+					layer = sortedObjs[i]->GetLayer();
+					start = i;
+				}
+			}
+			// 最後のバッチ
+			batches.push_back({ layer, start, (int)sortedObjs.size() - start });
+
+
+			// リクエストの発行
+			for (const auto& batch : batches)
+			{
+				RenderRequest req;
+				req.Layer = batch.Layer;
+				req.Depth = 0.0f; // インスタンシング内での深度ソートはZバッファ任せ
+
+				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
+				req.DrawCall = [this, batch]() {
+					ObjectType::SetPipelineState();
+
+					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(typename ObjectType::InstanceData) };
+					UINT offsets[2] = { 0, 0 };
+					ID3D11Buffer* pBuffers[2] = { m_Objects[0].GetVertexBuffer(), m_InstanceBuffer };
+
+					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 2, pBuffers, strides, offsets);
+					Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+					// ★ここが重要: DrawInstancedの引数で「開始位置(StartInstanceLocation)」を指定
+					// 引数: VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation
+					Renderer::GetDeviceContext()->DrawInstanced(4, batch.Count, 0, batch.Start);
+					};
+
+				renderQueue.push_back(req);
+			}
+		}
+		// === インスタンシングではない場合 ===
+		else
+		{
+			// 個別にリクエストを投げる
+			for (auto& obj : m_Objects)
+			{
+				if (obj.IsActive() && !obj.IsDestroy())
+				{
+					RenderRequest req;
+					req.Layer = obj.GetLayer(); // GameObjectにGetLayerが必要
+					// カメラからの距離を計算（簡易）
+					req.Depth = obj.GetPosition().z;
+
+					req.DrawCall = [&obj]() {
+						obj.Draw();
+						};
+					renderQueue.push_back(req);
 				}
 			}
 		}

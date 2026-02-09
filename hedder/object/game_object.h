@@ -58,6 +58,7 @@ protected:
 
 public:
 	static constexpr size_t MAX_OBJECTS = 64; // オブジェクトvector最大数。継承先クラスで変更可能。
+	static constexpr bool ENABLE_INSTANCING = true;
 	GameObject()
 	{
 		if(m_NextObjectID >= UINT_MAX)

@@ -91,7 +91,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	// 現在のstateに応じてdrawを実行
-	GetCurrentState()->Draw();
+	//GetCurrentState()->Draw();
+
+	// renderキュー形式になった際はこうなる
+	DrawObjectsByQueue();
 
 	Scene::UpdateFinal();
 	GetCurrentState()->UpdateFinal();
