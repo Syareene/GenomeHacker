@@ -3,43 +3,23 @@
 #include "object/ui/button.h"
 #include "player.h"
 #include "enemy/node/base.h"
-#include <vector>
+#include <list>
 #include <memory>
 
 template<typename T>
 concept NodeType = std::is_base_of_v<NodeBase, T>;
 
-class TabBase : public Button
+class TabBase
 {
 	// すべてのタブが継承するタブの基底クラス
-
-
-	// 中身としては、
-	// タブ部分の描画
-	// 中に設置されているスクリプトのlist->中のリストに対して更新処理実行。
-	// 背景の描画->dna_screen_scriptに情報を渡せば良い
-	// タブの切り替え処理(button?)
-	// んーこれbutton+αにしたほうが良さそげ、、
-
 public:
-	void Init(Transform trans = Transform()) override;
-	void Uninit() override;
-	void Update() override;
-	void Draw() override;
-	virtual void Clicked(); // クリックされたときの処理
-	// index基準でnodeの位置を修正
-	void ModifyNodePos(); // enemyとplayer両方修正する関数
-	void ApplyGrabNode();
-	// ノード掴んでる時に掴んだノード基準でtab内のnode見て見た目含めindexを修正
-	void ModifyEnemyNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr);
-	void ModifyPlayerNodeIndexFromPos(Vector2 mousePos, NodeBase* grabPtr);
-	inline void SetIsSelected(const bool isSelected) { m_IsSelected = isSelected; } // 現在選択されているタブかどうかを設定
-	inline const bool GetIsSelected() const { return m_IsSelected; } // 現在選択されているタブかどうかを取得
-	inline Player* GetPlayerPtr() { return m_PlayerPtr; } // プレイヤーのポインタを取得
-	std::vector<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
+	virtual void Init(const unsigned int& playerId, Transform trans = Transform());
+	std::list<std::unique_ptr<NodeBase>>& GetNodes() { return m_Nodes; } // 現在タブ内でくっついているノードのリストを取得
 	inline const int GetCDMax() const { return m_CDMax; } // タブ内にあるノードをすべて合計したクールダウンを取得
 	inline const std::list<int>& GetNodeTimeLine() const { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得
-	template <NodeType T>
+	inline std::list<int>& GetNodeTimeLineNotConst() { return m_NodeTimeLine; } // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリストを取得(非const版)
+	template <NodeType T>	
 	T* AddNode(const int& index, Transform trans = Transform()) // ノードを追加
 	{
 		// indexは-1の場合最後尾へ、そうでない場合は任意の位置へ。
@@ -50,65 +30,57 @@ public:
 			return nullptr;
 		}
 
-		// インスタンス作る(これmove必要にはなっちゃうからmoveコンストラクタをそのうち作る必要あり)
-		std::unique_ptr<T> newNode = std::make_unique<T>();
+		// 挿入位置のイテレーターを取得
+		auto it = m_Nodes.end();
+		if (index != -1)
+		{
+			it = m_Nodes.begin();
+			std::advance(it, index);
+		}
+
+		// ノードを直接構築し、そのイテレータを取得
+		auto newNodeIt = m_Nodes.emplace(it, std::make_unique<T>());
+		T* newNode = static_cast<T*>((*newNodeIt).get());
+		
 		// 初期化
-		newNode.get()->Init(trans);
+		newNode->Init(trans);
 		NodeBase* upperNode = nullptr;
 		NodeBase* lowerNode = nullptr;
+
+		// 挿入したノードの実際のインデックスを取得
+		int actualIndex = static_cast<int>(std::distance(m_Nodes.begin(), newNodeIt));
+
 		// 上側ノード挿入判定
-		if (index > 0)
+		if (newNodeIt != m_Nodes.begin())
 		{
-			upperNode = m_Nodes[index - 1].get();
+			upperNode = (*std::prev(newNodeIt)).get();
 		}
 		// 下側ノード挿入判定
-		if (index < static_cast<int>(m_Nodes.size()) && index != -1)
+		if (std::next(newNodeIt) != m_Nodes.end())
 		{
-			lowerNode = m_Nodes[index].get();
+			lowerNode = (*std::next(newNodeIt)).get();
 		}
-		// これで配列の範囲外にアクセスすることはなくなったため安全にアクセスできる
+
 		// くっつけられるか判定
-		if (newNode.get()->CanAttach(upperNode, lowerNode))
+		if (newNode->CanAttach(upperNode, lowerNode))
 		{
-			// 追加する
-			if (index == -1 || index == static_cast<int>(m_Nodes.size()))
-			{
-				// 最後尾に追加
-				m_Nodes.push_back(std::move(newNode));
-				// タイムライン変更処理
-				ModifyTimeLine();
-				return static_cast<T*>(m_Nodes.back().get());
-			}
-			else
-			{
-				// 任意の位置に追加
-				m_Nodes.insert(m_Nodes.begin() + index, std::move(newNode));
-				// タイムライン変更処理
-				ModifyTimeLine();
-				return static_cast<T*>(m_Nodes[index].get());
-			}
+			// タイムライン変更処理
+			ModifyTimeLine();
+			return newNode;
 		}
 		else
 		{
-			// 追加しない
+			// 追加できない場合は、構築した要素を削除
+			m_Nodes.erase(newNodeIt);
 			return nullptr;
 		}
 	};
+	virtual void ModifyTimeLine(); // タイムラインを修正する
+protected:
+	inline void SetCDMax(const int& cdMax) { m_CDMax = cdMax; } // タブ内にあるノードをすべて合計したクールダウンをセット
 private:
-	void ModifyEnemyNodePos(NodeBase* grabPtr = nullptr);
-	void ModifyPlayerNodePos(NodeBase* grabPtr = nullptr);
-	static Player* m_PlayerPtr; // プレイヤーのポインタ
-	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
-	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
-	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置
-	constexpr static Vector2 PLAYER_AREA_END = { 1280.0f, 720.0f }; // プレイヤーエリアの終了位置
-	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
-	void ModifyTimeLine(); // タイムラインを修正する
-	bool m_IsSelected = false; // 現在選択されているタブかどうか
-	std::vector<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト
+	std::list<std::unique_ptr<NodeBase>> m_Nodes; // 現在タブ内でくっついているノードのリスト->ポリモーフィズム消えるため実態ではなくポインタで保存
 	int m_Index = 0; // タブのインデックス
 	int m_CDMax = 0; // タブ内にあるノードをすべて合計したクールダウン
 	std::list<int> m_NodeTimeLine; // タブ内にあるノードのcdが終わるタイミングを開始時から数えたときのリスト
-	// あと上記変数のめんどいところはすでに使われているか否かをどうにかしないといけない
-	// プレイヤー側に実態は持っておいて、ここはあくまでポインタとして持っておき、実態にフラグ変数を設けることで管理しやすい、、、みたいな構造が望ましい。
 };

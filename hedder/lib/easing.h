@@ -2,8 +2,6 @@
 
 #include "main.h"
 
-//#include "lib/renderer.h"
-
 // 参考
 // https://easings.net/ja
 // 説明

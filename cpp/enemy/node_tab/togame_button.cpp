@@ -11,18 +11,22 @@
 void ToGameButton::Init(Transform trans)
 {
 	Button::Init(trans);
+
+	FontData fontData;
+	fontData.fontSize = 50;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::Gold);
+	fontData.font = DirectWriteCustomFont::GetFontName(0);
+	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
+	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.outlineWidth = 6.0f;
+
 	// 一旦固定値でセット
-
-	// 登録
-	/*
-	Button::Register(std::bind(&ToGameButton::ToGame, this), Vector2(trans.GetPosition().x, trans.GetPosition().y), 
-		Vector2(trans.GetScale().x, trans.GetScale().y),Vector2(trans.GetRotation().x, trans.GetRotation().y), 
-		L"resources/textures/ui/to_game_button.png");
-	*/
-
 	Button::Register(std::bind(&ToGameButton::ToGame, this), ToGameButton::BUTTON_POS,
-		ToGameButton::BUTTON_SIZE, Vector2(0.0f, 0.0f),
-		L"asset/texture/return_temp.png");
+		ToGameButton::BUTTON_SIZE, Vector2(0.0f, 0.0f), fontData, "戻る",
+		L"asset\\texture\\alpha_texture.png");
 
 	// このボタンは最初見えてほしくないので非アクティブ
 	SetActive(false);

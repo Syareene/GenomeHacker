@@ -9,7 +9,7 @@ class NumberSocket : public Object2D
 public:
 	// これ考えたけどsprite作るのがめんどくさいから形みたいな感じじゃなくて内部処理でくっつくくっつかないとかになるのかな？〇〇の場所で使えるノードみたいな感じで
 
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める

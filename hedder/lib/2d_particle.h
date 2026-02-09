@@ -9,7 +9,7 @@ class Particle2D : public Object2D
 {
 public:
 	void Register(int maxCount);
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void UpdateParticle();

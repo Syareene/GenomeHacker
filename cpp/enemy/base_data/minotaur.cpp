@@ -1,8 +1,4 @@
-﻿// 敵データ基底クラス
-// このデータはシーン側かなんかで常に持っといて、ノードの最新適応状態を見れるようにしておく、あとリソースも使い回せるので疑似flyweightとしても使用可能。
-// 敵を出す際はこのデータのポインタを渡して出す感じになる。
-// ノードに関してはdnaのボタンを押したときにこのクラスからデータを取ってくる形になるかな。
-#include "main.h"
+﻿#include "main.h"
 
 #include "enemy/base_data/minotaur.h"
 
@@ -17,29 +13,41 @@
 #include "enemy/node_tab/death.h"
 
 #include "enemy/node/move_x.h"
+#include "enemy/node/move_circular.h"
 #include "enemy/node/add_score.h"
+#include "enemy/node/move_random.h"
 
-void Minotaur::Register()
+EnemyBase* Minotaur::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
 	// そのenemy固有の情報を登録
-	//SetDnaScreen(std::make_unique<DnaScreenScript>());
-	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
-	EnemyBase::Init();
-	
 
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(0.05f);
+	// 初期化処理
+	EnemyBase::Init(playerId);
 
-	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(10);
+	SetEnemyID(GetEnemyTypeId<Minotaur>());
+
+	// ノード登録
+	// 移動タブ
+	GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
+	GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
+	// 死亡タブ
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\minotaur.png");
+	SetTextureID(L"asset\\texture\\monsters_v2.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
+	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
+	SetUVPos(Vector2(3.0f, 7.0f));
+
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
-	SetDrawPosDiff({ 0.0f, 0.0f, 0.0f });
-	SetDrawScaleDiff({ 1.5f, 1.5f, 1.5f });
+	SetDrawPosDiff(DRAW_POS_DIFF);
+	SetDrawScaleDiff(DRAW_SCALE_DIFF);
 
 	// 体力設定
-	SetMaxHealth(3.0f);
+	SetMaxHealth(HEALTH);
+
+	return this;
 }

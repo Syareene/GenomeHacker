@@ -1,12 +1,15 @@
 ﻿#include "main.h"
 #include "manager/shader_manager.h"
 
+// 影なしシェーダー
 ID3D11VertexShader* ShaderManager::UnlitVertexShader = nullptr;
 ID3D11PixelShader* ShaderManager::UnlitPixelShader = nullptr;
 ID3D11InputLayout* ShaderManager::UnlitVertexLayout = nullptr;
+// 影なしシェーダー(アルファ値描画しない)
 ID3D11VertexShader* ShaderManager::NoAlphaVertexShader = nullptr;
 ID3D11PixelShader* ShaderManager::NoAlphaPixelShader = nullptr;
 ID3D11InputLayout* ShaderManager::NoAlphaVertexLayout = nullptr;
+// デバッグ用シェーダー
 ID3D11VertexShader* ShaderManager::DebugVertexShader = nullptr;
 ID3D11PixelShader* ShaderManager::DebugPixelShader = nullptr;
 ID3D11InputLayout* ShaderManager::DebugVertexLayout = nullptr;

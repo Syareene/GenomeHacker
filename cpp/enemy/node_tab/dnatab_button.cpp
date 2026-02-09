@@ -8,11 +8,21 @@
 void DNAButton::Init(Transform trans)
 {
 	Button::Init(trans);
-	// 一旦固定値でセット
+	FontData fontData;
+	fontData.fontSize = 40;
+	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightSteelBlue);
+	fontData.font = DirectWriteCustomFont::GetFontName(0);
+	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
+	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+	fontData.outlineWidth = 4.0f;
 
-	Button::Register(std::bind(&DNAButton::ToDNATab, this), Vector2(SCREEN_WIDTH / 2 - (SCREEN_WIDTH / 4), SCREEN_HEIGHT / 2),
-		Vector2(200.0f, 100.0f), Vector2(0.0f, 0.0f),
-		L"asset/texture/debug_sprite.png");
+	// 一旦固定値でセット
+	Button::Register(std::bind(&DNAButton::ToDNATab, this), BUTTON_POS,
+		BUTTON_SIZE, Vector2(0.0f, 0.0f), fontData, "DNA編集",
+		L"asset\\texture\\alpha_texture.png");
 }
 
 void DNAButton::Uninit()

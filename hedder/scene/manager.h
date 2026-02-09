@@ -36,7 +36,7 @@ public:
 		return m_GameSpeed;
 	}
 
-	static float m_DeltaTime; // 前回からの経過時間（ミリ秒）
+	static float m_DeltaTime; // 前回からの経過時間(ミリ秒)
 
 private:
 	static std::unique_ptr<Scene> m_CurrentScene; // 現在のシーン

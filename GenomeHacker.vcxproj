@@ -31,11 +31,19 @@
     <ClInclude Include="hedder\enemy\bullet.h" />
     <ClInclude Include="hedder\enemy\dna_screen_script.h" />
     <ClInclude Include="hedder\enemy\enemy_3d.h" />
+    <ClInclude Include="hedder\enemy\enemy_bullet.h" />
     <ClInclude Include="hedder\enemy\enemy_spawner.h" />
     <ClInclude Include="hedder\enemy\explosion.h" />
     <ClInclude Include="hedder\enemy\field_enemy.h" />
     <ClInclude Include="hedder\enemy\node\add_score.h" />
     <ClInclude Include="hedder\enemy\node\base.h" />
+    <ClInclude Include="hedder\enemy\node\eight_shot.h">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_circular.h" />
+    <ClInclude Include="hedder\enemy\node\move_random.h" />
+    <ClInclude Include="hedder\enemy\node\move_to_player.h" />
     <ClInclude Include="hedder\enemy\node\move_x.h" />
     <ClInclude Include="hedder\enemy\node\move_z.h" />
     <ClInclude Include="hedder\enemy\node\number.h" />
@@ -47,6 +55,8 @@
     <ClInclude Include="hedder\enemy\node_tab\movement.h" />
     <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h" />
     <ClInclude Include="hedder\enemy\node_tab\tab_base.h" />
+    <ClInclude Include="hedder\enemy\node_tab\tab_manager.h" />
+    <ClInclude Include="hedder\enemy\node_tab\tab_visual.h" />
     <ClInclude Include="hedder\enemy\node_tab\togame_button.h" />
     <ClInclude Include="hedder\lib\2d_particle.h" />
     <ClInclude Include="hedder\lib\audio.h" />
@@ -62,6 +72,7 @@
     <ClInclude Include="hedder\lib\vector3.h" />
     <ClInclude Include="hedder\lib\write_font.h" />
     <ClInclude Include="hedder\manager\default_vertex.h" />
+    <ClInclude Include="hedder\manager\object_manager.h" />
     <ClInclude Include="hedder\manager\shader_manager.h" />
     <ClInclude Include="hedder\manager\texture_manager.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
@@ -108,12 +119,19 @@
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
+    <ClCompile Include="cpp\enemy\enemy_bullet.cpp" />
     <ClCompile Include="cpp\enemy\enemy_3d.cpp" />
     <ClCompile Include="cpp\enemy\enemy_spawner.cpp" />
     <ClCompile Include="cpp\enemy\explosion.cpp" />
     <ClCompile Include="cpp\enemy\field_enemy.cpp" />
     <ClCompile Include="cpp\enemy\node\add_score.cpp" />
     <ClCompile Include="cpp\enemy\node\base.cpp" />
+    <ClCompile Include="cpp\enemy\node\eight_shot.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_circular.cpp" />
+    <ClCompile Include="cpp\enemy\node\move_random.cpp" />
+    <ClCompile Include="cpp\enemy\node\move_to_player.cpp" />
     <ClCompile Include="cpp\enemy\node\move_x.cpp" />
     <ClCompile Include="cpp\enemy\node\move_z.cpp" />
     <ClCompile Include="cpp\enemy\node\number.cpp" />
@@ -125,6 +143,8 @@
     <ClCompile Include="cpp\enemy\node_tab\enemy_dna_list.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\movement.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\tab_base.cpp" />
+    <ClCompile Include="cpp\enemy\node_tab\tab_manager.cpp" />
+    <ClCompile Include="cpp\enemy\node_tab\tab_visual.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\togame_button.cpp" />
     <ClCompile Include="cpp\lib\2d_particle.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />
@@ -137,6 +157,7 @@
     <ClCompile Include="cpp\lib\renderer.cpp" />
     <ClCompile Include="cpp\lib\write_font.cpp" />
     <ClCompile Include="cpp\manager\default_vertex.cpp" />
+    <ClCompile Include="cpp\manager\object_manager.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
     <ClCompile Include="cpp\object\3d_object.cpp" />

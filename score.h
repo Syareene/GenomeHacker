@@ -5,7 +5,7 @@
 class Score : public Object2D
 {
 public:
-	void Init(Transform trans = Transform()) override; // 
+	void Init(Transform trans = Transform());
 	void Uninit() override; // 
 	void Update() override; // 
 	void Draw() override; // 
@@ -13,6 +13,8 @@ public:
 	void SetScore(int score) { m_Score = score; } // スコア設定
 private:
 	int m_Score = 0;
-	const static int ShowableDigits = 5; // 表示可能な桁数
+	constexpr static Vector3 SHOW_POSITION = Vector3(50.0f, 50.0f, 0.0f); // スコア表示位置
+	constexpr static Vector3 SHOW_SCALE = Vector3(75.0f, 75.0f, 1.0f); // スコア表示スケール
+	constexpr static int SHOWABLE_DIGITS = 5; // 表示可能な桁数
 
 };

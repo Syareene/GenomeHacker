@@ -11,8 +11,9 @@ void DnaTableState::Init()
 		return;
 	}
 	SetIsInitialized(true);
+
 	State::Init();
-	AddSystemObject<EnemyDnaList>();
+	AddSystemObject<EnemyDnaList>(this);
 }
 
 void DnaTableState::Uninit()
@@ -30,18 +31,14 @@ void DnaTableState::Update()
 	Manager::GetCurrentScene()->UpdateObjectByTag("dna");
 	// このstate内オブジェクトの更新
 	UpdateStateObject();
-	//UpdateStateObjectByTag("dna");
-
-	// このstateのobjectの更新(これここで基底の変数にアクセスできないから基底に対して更新処理する関数を作成する必要あり)
 }
 
 void DnaTableState::Draw()
 {
-	State::Update();
+	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTag("dna");
 	// このstate内オブジェクトの描画
 	DrawStateObject();
-	//DrawStateObjectByTag("dna");
 	State::UpdateFinal();
 }

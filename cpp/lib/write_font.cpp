@@ -563,56 +563,6 @@ HRESULT DirectWriteCustomFont::DrawString(const std::string& str, int presetId, 
     return S_OK;
 }
 
-/*
-// DrawString: 矩形バージョン(多分使わないのでコメントアウト)
-HRESULT DirectWriteCustomFont::DrawString(std::string str, D2D1_RECT_F rect, D2D1_DRAW_TEXT_OPTIONS options, bool shadow, bool outline)
-{
-    HRESULT result = S_OK;
-    std::wstring wstr = StringToWString(str);
-
-    WRL::ComPtr<IDWriteTextLayout> layoutToUse;
-    if (!cachedText.empty() && str == cachedText && pTextLayout)
-    {
-        layoutToUse = pTextLayout;
-    }
-    else
-    {
-        result = pDWriteFactory->CreateTextLayout(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), rect.right - rect.left, rect.bottom - rect.top, layoutToUse.GetAddressOf());
-        if (FAILED(result)) return result;
-    }
-
-    if (shadow)
-    {
-        pRenderTarget->BeginDraw();
-        pRenderTarget->DrawText(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), D2D1::RectF(rect.left - Setting.shadowOffset.x, rect.top - Setting.shadowOffset.y, rect.right - Setting.shadowOffset.x, rect.bottom - Setting.shadowOffset.y), pShadowBrush.Get(), options);
-        result = pRenderTarget->EndDraw();
-        if (FAILED(result)) return result;
-    }
-
-    if (outline && Setting.outlineWidth > 0.0f && pOutlineBrush)
-    {
-        OutlineTextRenderer* renderer = new (std::nothrow) OutlineTextRenderer(pD2DFactory.Get(), pRenderTarget.Get(), pBrush.Get(), pOutlineBrush.Get(), Setting.outlineWidth);
-        if (!renderer) return E_OUTOFMEMORY;
-
-        pRenderTarget->BeginDraw();
-        result = layoutToUse->Draw(nullptr, renderer, rect.left, rect.top);
-        if (FAILED(result)) pRenderTarget->DrawText(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), rect, pBrush.Get(), options);
-        HRESULT endHr = pRenderTarget->EndDraw();
-        renderer->Release();
-        if (FAILED(endHr)) return endHr;
-    }
-    else
-    {
-        pRenderTarget->BeginDraw();
-        pRenderTarget->DrawText(wstr.c_str(), (UINT32)wstr.size(), pTextFormat.Get(), rect, pBrush.Get(), options);
-        result = pRenderTarget->EndDraw();
-        if (FAILED(result)) return result;
-    }
-
-    return S_OK;
-}
-*/
-
 HRESULT DirectWriteCustomFont::GetFontFamilyName(IDWriteFontCollection* customFontCollection, const WCHAR* locale)
 {
     HRESULT result = S_OK;

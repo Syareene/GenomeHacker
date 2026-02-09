@@ -2,17 +2,23 @@
 
 #include <list>
 #include <memory>
-#include "enemy/dna_screen_script.h"
+#include "enemy/node_tab/tab_manager.h"
 #include "object/ui/button.h"
 
 
 class FieldEnemy; // 前方宣言
+class State;
 
 
 class EnemyBase
 {
 public:
-	virtual void Register(); // 登録処理
+	EnemyBase() = default; // デフォルトコンストラクタ
+	virtual ~EnemyBase() {}
+	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
+	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
+
+	virtual EnemyBase* Register(const unsigned int& playerId); // 登録処理
 	void Unregister(); // 登録解除処理
 	// ノードの内容を下に行動させる関数(攻撃、動き、死亡時)
 	void ExecuteAttack(FieldEnemy* enemy_ptr);
@@ -20,25 +26,23 @@ public:
 	bool ExecuteDeath(FieldEnemy* enemy_ptr);
 
 	// DnaScreenにあるオブジェクトを操作するための関数群
-	void Init();
+	EnemyBase* Init(const unsigned int& playerId);
 	void Uninit();
 	void Update();
 	void Draw();
 
 
-	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数->これボタンインスタンスを生成しないといけないから構造については考える必要あり
-	// ただ関数としてはここにほしいかな
-	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID);
+	// 敵リストタブ->DNAタブに遷移するボタンを表示するための関数
+	void ShowDnaEditButton(const Vector2& pos, const Vector2& size, const int texID, State* ptr);
 	void HideDnaEditButton();
 	// テクスチャid版がほしい
 
 	// DNAタブ関連の関数
-	//inline void SetDnaScreen(std::unique_ptr<DnaScreenScript> dnaScreen) { m_DnaScreen = std::move(dnaScreen); }
-	inline DnaScreenScript* GetDnaScreen() 
+	inline TabManager* GetTabManager() 
 	{
-		if(m_DnaScreen) 
+		if(m_TabManager)
 		{ 
-			return m_DnaScreen.get(); 
+			return m_TabManager.get();
 		}
 		return nullptr;
 	}
@@ -47,9 +51,21 @@ public:
 
 	inline void SetEnemyID(int id) { m_EnemyID = id; }
 	inline int GetEnemyID() const { return m_EnemyID; }
+	// 型ごとに一意なIDを生成
+	template <typename T>
+	static int GetEnemyTypeId()
+	{
+		static int id = NextEnemyTypeId();
+		return id;
+	}
 
 	int SetTextureID(const std::wstring filePath, std::pair<int, int> texTarget = {0, 0}, std::pair<int, int> texCount = {1, 1});
 	inline const int GetEnemyTextureID() const { return m_TextureID; }
+
+	inline void SetTextureSplitCount(const Vector2& count) { m_TextureSplitCount = count; }
+	inline const Vector2& GetTextureSplitCount() const { return m_TextureSplitCount; }
+	inline void SetUVPos(const Vector2& uv) { m_UVPos = uv; }
+	inline const Vector2& GetUVPos() const { return m_UVPos; }
 
 	// setはとりあえずglobalに。今は使わないかもだけど後々scaleに応じて体力設定とかしたいなら使う。
 	inline void SetMaxHealth(const float& maxHealth) { m_MaxHealth = maxHealth; }
@@ -61,14 +77,25 @@ public:
 	inline const Vector3& GetDrawPosDiff() const { return m_PosDiff; }
 	inline void SetDrawScaleDiff(const Vector3& scaleDiff) {m_ScaleDiff = scaleDiff;}
 	inline const Vector3& GetDrawScaleDiff() const { return m_ScaleDiff; }
+protected:
+	constexpr static Vector2 DEFAULT_TEXTURE_COUNT = Vector2(12.0f, 13.0f); // デフォルトのテクスチャ分割数
 private:
-	std::unique_ptr<DnaScreenScript> m_DnaScreen; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
+	// 敵種類IDのカウンターを管理する静的関数
+	static int NextEnemyTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
+
+	std::unique_ptr<TabManager> m_TabManager; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
 	// static -> ボタン押すときの外枠テクスチャ用変数?
 	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、
 	int m_TextureID = -1; // 敵のテクスチャID
 	int m_EnemyID = -1; // 敵のID
+	Vector2 m_TextureSplitCount = DEFAULT_TEXTURE_COUNT; // テクスチャの分割数
+	Vector2 m_UVPos = Vector2(0.0f, 0.0f); // UVの位置
 	std::pair<int, int> m_TextureTarget{ 0, 0 }; // 対象となるテクスチャの場所(幅、高さ)
 	std::pair<int, int> m_TextureCount{ 1, 1 }; // テクスチャの分割数(横、縦) -> これでuvを計算する
 
@@ -79,6 +106,6 @@ private:
 	bool m_IsExitDnaEdit = false; // DNA編集画面から退出したかどうかのフラグ
 	
 	// enemy共通で見るnode以外のステータスを格納する。
-	float m_MaxHealth; // 最大体力
+	float m_MaxHealth = 0; // 最大体力
 
 };

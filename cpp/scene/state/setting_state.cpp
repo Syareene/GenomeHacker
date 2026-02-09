@@ -10,8 +10,6 @@ void SettingState::Init()
 	}
 	SetIsInitialized(true);
 	State::Init();
-	// 大本のSceneの
-	//Manager::GetCurrentScene()->Init();
 }
 
 void SettingState::Uninit()
@@ -28,7 +26,6 @@ void SettingState::Update()
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObjectByTag("setting");
 
-	//UpdateStateObjectByTag("setting");
 	UpdateStateObject();
 }
 
@@ -37,8 +34,6 @@ void SettingState::Draw()
 	State::Draw();
 	// updateと同じ
 	Manager::GetCurrentScene()->DrawObjectByTags(std::list<std::string>({ "in_game", "system" }));
-	// このstate内オブジェクトの描画
-	//DrawStateObjectByTag("setting");
 	DrawStateObject();
 
 	State::UpdateFinal();

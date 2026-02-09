@@ -7,9 +7,12 @@
 #include "scene/game_scene.h"
 #include "scene/state/dna_table_state.h"
 
-void EnemyDnaList::Init()
+void EnemyDnaList::Init(State* ptr)
 {
 	AddTag("system");
+
+
+	// これ一覧取得できてないのでid or ptrもらって取得できるようにする形に
 
 	// 敵一覧を取得
 	std::list<std::unique_ptr<EnemyBase>>& enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
@@ -20,7 +23,7 @@ void EnemyDnaList::Init()
 
 	for (auto& enemyBase : enemy_base_list)
 	{
-		enemyBase->ShowDnaEditButton(Vector2(200.0f + (width_count * (WIDTH_SIZE + WIDTH_SIZE / 8.0f)), 300.0f + (height_count * (HEIGHT_SIZE + HEIGHT_SIZE / 12.0f))), Vector2(WIDTH_SIZE, HEIGHT_SIZE), enemyBase->GetEnemyTextureID());
+		enemyBase->ShowDnaEditButton(Vector2(START_POS.x + (width_count * (WIDTH_SIZE + BUTTON_PADDING.x)), START_POS.y + (height_count * (HEIGHT_SIZE + BUTTON_PADDING.y))), Vector2(WIDTH_SIZE, HEIGHT_SIZE), enemyBase->GetEnemyTextureID(), ptr);
 		// カウント更新
 		width_count++;
 		if (width_count >= COLUMN_NUM)

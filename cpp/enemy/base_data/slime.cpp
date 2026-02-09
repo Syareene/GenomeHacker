@@ -1,8 +1,4 @@
-﻿// 敵データ基底クラス
-// このデータはシーン側かなんかで常に持っといて、ノードの最新適応状態を見れるようにしておく、あとリソースも使い回せるので疑似flyweightとしても使用可能。
-// 敵を出す際はこのデータのポインタを渡して出す感じになる。
-// ノードに関してはdnaのボタンを押したときにこのクラスからデータを取ってくる形になるかな。
-#include "main.h"
+﻿#include "main.h"
 #include "enemy/base_data/slime.h"
 
 #include "manager/texture_manager.h"
@@ -15,45 +11,49 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
+#include "enemy/node/eight_shot.h"
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
+#include "enemy/node/move_to_player.h"
 
 #include "enemy/node/add_score.h"
+#include "enemy/node/move_circular.h"
 
-void Slime::Register()
+EnemyBase* Slime::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
 	// そのenemy固有の情報を登録
-	//SetDnaScreen(std::make_unique<DnaScreenScript>());
-	//GetDnaScreen()->Init(); // DNAスクリーンの初期化->ここで各種タブの作成が行われる。
-
-	EnemyBase::Init();
-
-	// ここでAddnodeする時にposも指定できるようにして
-	// そのposと内部にあるテキストのyで位置調整する(xは固定)
+	
+	// 初期化処理
+	EnemyBase::Init(playerId);
+	SetEnemyID(GetEnemyTypeId<Slime>());
 
 	// ノード登録
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(0);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveZ>(-1);
-	GetDnaScreen()->GetMoveTab()->AddNode<MoveX>(-1);
-
-	GetDnaScreen()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(1);
+	// 攻撃タブ
+	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+	// 移動タブ
+	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
+	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
+	// 死亡タブ
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
+	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\slime.png");
+	SetTextureID(L"asset\\texture\\monsters_v2.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
+	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
+	SetUVPos(Vector2(1.0f, 2.0f));
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
-	SetDrawPosDiff({ 0.0f, 0.0f, 0.0f });
-	SetDrawScaleDiff({ 2.0f, 2.0f, 2.0f });
-
-	
-	// ポインタに対して初期ノードを追加する。
-	//GetDnaScreen()->GetAttackTab()->AddNode<NodeBase>(-1);
-
+	SetDrawPosDiff(DRAW_POS_DIFF);
+	SetDrawScaleDiff(DRAW_SCALE_DIFF);
 
 	// 体力設定
-	SetMaxHealth(1.0f);
+	SetMaxHealth(HEALTH);
+
+	return this;
 }

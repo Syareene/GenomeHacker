@@ -1,10 +1,12 @@
 ﻿#include "main.h"
 #include "object/movement/title_cam.h"
+#include "scene/manager.h"
+#include "object/camera.h"
 
-void TitleCam::Attach(GameObject* pointer, const Vector3& start_pos)
+void TitleCam::Attach(unsigned int objId, const Vector3& start_pos)
 {
 	// pointerを元にアタッチ処理
-	m_AttachObject = pointer;
+	m_AttachObjectID = objId;
 
 	// リストクリアしてリスト作成
 	m_MovementList.clear();
@@ -22,7 +24,7 @@ void TitleCam::Attach(GameObject* pointer, const Vector3& start_pos)
 void TitleCam::Detach()
 {
 	// アタッチ解除処理
-	m_AttachObject = nullptr;
+	m_AttachObjectID = 0;
 }
 
 void TitleCam::Move(const float& speed)
@@ -64,6 +66,6 @@ void TitleCam::Move(const float& speed)
 	lerped_pos.y = std::lerp(start_pos.y, end_pos.y, t);
 	lerped_pos.z = std::lerp(start_pos.z, end_pos.z, t);
 
-	m_AttachObject->SetPosition(lerped_pos);
+	Manager::GetCurrentScene()->GetGameObjectById<Camera>(m_AttachObjectID)->SetPosition(lerped_pos);
 
 }

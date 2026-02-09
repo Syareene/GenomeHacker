@@ -21,10 +21,10 @@ void Sphere::Init(const Transform& trans, const Vector3& pos_diff)
 	// 頂点バッファ生成
 	// 頂点は12頂点で円を描く
 	std::vector<Vector3> circleVertex;
-	MakeCircleVertex(m_CircleVertexCount, circleVertex);
+	MakeCircleVertex(CIRCLE_VERTEX_COUNT, circleVertex);
 	D3D11_BUFFER_DESC bd{};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(Vector3) * static_cast<UINT>(m_CircleVertexCount + 1); // (+1は円閉じるための描画用)
+	bd.ByteWidth = sizeof(Vector3) * static_cast<UINT>(CIRCLE_VERTEX_COUNT + 1); // (+1は円閉じるための描画用)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 
@@ -55,8 +55,6 @@ void Sphere::DrawCollider()
 	// デバッグ時のみコライダを描画
 #ifdef _DEBUG
 	// 生成した頂点を使用し描画
-
-	// シェーダーは一旦セットしない。後々デバッグ用に色を変えるシェーダー作成する。
 
 	// 入力レイアウト設定(シェーダーのレイアウトなのでこれもシェーダー使用するときに用意)
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::DebugVertexLayout);
@@ -99,7 +97,7 @@ void Sphere::DrawCollider()
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 	// 描画(+1は円閉じるための描画用)
-	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
+	Renderer::GetDeviceContext()->Draw(CIRCLE_VERTEX_COUNT + 1, 0);
 
 	// 縦には生成できたので回転し横向きにも描画
 	
@@ -114,7 +112,7 @@ void Sphere::DrawCollider()
 	Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
 	// 他は再利用するのでそのまま描画(+1は円閉じるための描画用)
-	Renderer::GetDeviceContext()->Draw(m_CircleVertexCount + 1, 0);
+	Renderer::GetDeviceContext()->Draw(CIRCLE_VERTEX_COUNT + 1, 0);
 
 	// hitリセット
 	SetIsHit(false);

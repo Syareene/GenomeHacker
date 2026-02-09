@@ -1,16 +1,14 @@
 ﻿#pragma once
 
-//#include <list>
-#include "object/2d_object.h"
 #include "enemy/field_enemy.h"
 #include "object/ui/font.h"
 
-class NodeBase : public Object2D
+class NodeBase
 {
 	// 
 
 public:
-	// これ考えたけどsprite作るのがめんどくさいから形みたいな感じじゃなくて内部処理でくっつくくっつかないとかになるのかな？〇〇の場所で使えるノードみたいな感じで
+	// ノードの入力タイプ
 	enum InputType
 	{
 		None, // くっつかない	
@@ -28,98 +26,117 @@ public:
 		Player,
 	};
 
+	enum class TextType
+	{
+		Normal,
+		Rare,
+	};
+
 	struct NodeTextData
 	{
-		std::string description;
+		std::string text;
 		Vector2 text_pos;
+		NodeBase::TextType text_type = NodeBase::TextType::Normal; // ここ参照してテンプレートとして使用
 	};
+	NodeBase()
+	{
+		// idを発行
+		m_UniqueID = GetNextUniqueID();
+	}
+	virtual ~NodeBase() = default;
+	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
+	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
+
+	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
+	// text_typeを元にFontData返す関数欲しいな
+
+	FontData& GetFontDataFromTextType(const TextType& type) const;
+
 
 	// このノード内で追加でくっつけられるノード(数字系のノード等)
 	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
 
-	void Init(Transform trans = Transform()) override;
-	void Uninit() override;
-	void Update() override;
-	void Draw() override; // 描画時はサイズのプロパティ見てテクスチャとサイズを決める
-	void MoveNodeToMouse();
-	void FixFontPositions(Vector2 diff); // フォントの位置を説明文の位置に合わせて修正する
+	virtual void Init(Transform trans = Transform());
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
-	// 更新処理(ノード持ったときにくっつけられるならくっつける等)->insertするみたいな処理がちょいめんどそうか。
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
+	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCDMax() const { return m_CDMax; }
 	inline const NodeLocation GetNodeLocation() const { return m_NodeLocation; }
 	inline void SetNodeLocation(const NodeLocation loc) { m_NodeLocation = loc; }
 
-	inline static const Vector2 NODE_MARGIN = { 10.0f, 10.0f }; // ノードと文字の余白
-	constexpr static const int SHOW_DESC_TIME = 45; // 説明文を表示するまでのホバー時間(フレーム数)
-	virtual void UpdateDescriptionData() = 0;
+	void UpdateDescriptionData();
+
+	// ここあくまでデータをセットしただけで実際のfontobjは生成されていない!
+	inline const NodeTextData& GetNameData() const { return m_Name; }
+	inline void SetNameData(const NodeTextData& data) 
+	{ 
+		m_Name = data;
+	}
+	inline const NodeTextData& GetDescriptionData() const { return m_Description; };
+	inline const int GetMoveManageId() const { return m_MoveManageId; }
+	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
+	inline const bool GetInstantCastOnDead() const { return m_InstantCastOnDead; }
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
 	inline void AddInputTypeBottom(const InputType& type) { m_InputTypesBottom.push_back(type); }
-	inline const std::string& GetName() const { return m_Name; }
-	inline void SetName(const std::string& name) { m_Name = name; }
 
-	inline virtual void SetDescriptionFontData(const FontData& fontData) = 0;
-	inline virtual FontData& GetDescriptionFontData() = 0;
-
-	// dna_editに行った時に表示するフォントオブジェクト郡(Fontの詳細な色とかはm_DescFontDataから引っ張る)
-	void SetNameFont(FontData& font_data, std::string text)
+	// 説明文系はこっちに変える
+	inline void SetDescriptionData(const NodeTextData& data)
 	{
-		// フォントを作成
-		m_NameFont = std::make_unique<Font>();
-		m_NameFont->Init(Transform());
-		m_NameFont->Register(Vector2(0.0f, 0.0f), font_data, text);
-	}
-	inline const std::unique_ptr<Font>& GetNameFont() const
-	{
-		return m_NameFont;
+		// セット
+		m_Description = data;
 	}
 
-	void AddDescFont(FontData& font_data, std::string text)
+	// ノードごとの説明文設定関数(override後この中でSetDescriptionDataを呼ぶ必要あり)
+	virtual std::string GenerateDescriptionText()
 	{
-		// フォントを作成
-		std::unique_ptr<Font> font_ptr = std::make_unique<Font>();
-		font_ptr->Init(Transform());
-		font_ptr->Register(Vector2(0.0f, 0.0f), font_data, text);
-		m_DescriptionFonts.push_back(std::move(font_ptr));
+		assert(false && "GenerateDescriptionText not overridden");
+		return "";
 	}
-	inline const std::vector<std::unique_ptr<Font>>& GetDescFonts() const
-	{
-		return m_DescriptionFonts;
-	}
-	inline Font& GetDescFontAt(const int index) const { return *(m_DescriptionFonts[index]); }
 
+	inline const unsigned int GetNodeID() const { return m_UniqueID; }
 	inline const int GetID() const { return m_ID; }
 	inline void SetID(const int id) { m_ID = id; }
 	inline const std::string& GetKeyword() const { return m_Keyword; }
 	inline void SetKeyword(const std::string& key) { m_Keyword = key; }
-	inline void SetCDMax(const int cdMax) { m_CDMax = cdMax; }
 	inline const int GetCD() const { return m_CD; }
 	inline void SetCD(const int cd) { m_CD = cd; }
-	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
+	// 死亡時に即座に発動するかどうか(順に発動するため間にfalseなものがあったらそれが実行されるまで保留されます)
+	inline void SetInstantCastOnDead(const bool instant) { m_InstantCastOnDead = instant; }
 private:
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }
+	static unsigned int m_UniqueIDCounter;
+	static unsigned int GetNextUniqueID()
+	{
+		if(m_UniqueIDCounter == UINT_MAX)
+		{
+			m_UniqueIDCounter = 0; // リセット
+		}
+		return m_UniqueIDCounter++;
+	}
+
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
-	//std::list<NodeBase*> m_AttachedNodes; // くっつけられたノードのリスト->どの形が入るかを制限する必要がありそうだから既定クラスではなく派生クラスにするのはありかな
-	// ないしは、ここで何も無い関数だけ作っておいてoverrideできるようにしておくとかね->内部だけで参照し完結する処理で作成。
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
-	std::unique_ptr<Font> m_NameFont; // ノードのフォント実態
-	std::vector<std::unique_ptr<Font>> m_DescriptionFonts;
-	std::string m_Name; // ノードの名前(表示名、いらないかも)
+	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
+	NodeTextData m_Description; // ノードの説明文群
+	Font m_NameFont;
+	std::vector<Font> m_DescriptionFonts;
+
+
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
-	//std::vector<std::unique_ptr<NodeDescription>> m_Description; // ノードの説明部分
-	//std::vector<std::unique_ptr<Font>> m_DescriptionFonts; // dna_editに行った時に表示するフォントオブジェクト郡
-	//FontData m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
 	NodeLocation m_NodeLocation = NodeLocation::Enemy; // ノードの設置場所(敵用かプレイヤー用か)
-	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
-	int m_ID; // ノードのid(内部利用用)
+	int m_MoveManageId = 0; // VisualBase->NodeBase変換時に使用する割り振り用id変数
+	unsigned int m_UniqueID = 0; // ノードインスタンスごとのユニークid
+	int m_ID = -1; // ノードのid(内部利用用)
 	std::string m_Keyword; // ノードのキーワード
 	int m_CDMax = 0; // ノードのクールダウン最大値(フレーム数)
 	int m_CD = 0; // ノードのクールダウン(フレーム数)
+	bool m_InstantCastOnDead = true; // 死亡時、cdを無視して即座に発動するかどうか
+	bool m_IsUpdated = true; // ノードが追加されたり変更されたものかどうか(visual_baseの再生成時にこれがtrueのものだけ再生成すれば良いかなといった感じ)
 };

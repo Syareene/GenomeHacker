@@ -24,11 +24,15 @@ public:
 			{
 				// 見つかった場合、そのイテレータを予約してポインタを返す
 				m_WillState = it;
+				it->get()->SetIsInitialized(false); // キャッシュ廃止に尽きIsInitializedフラグをfalseにする
+				it->get()->Init(); // Initを呼び出す
 				return static_cast<T*>(it->get());
 			}
 		}
 		// ない場合は新規作成してデキューに追加
-		m_StateStack.emplace_back(std::make_unique<T>());
+		auto new_state = std::make_unique<T>();
+		new_state->Init();
+		m_StateStack.emplace_back(std::move(new_state));
 		// 追加した要素（末尾）のイテレータを予約
 		m_WillState = std::prev(m_StateStack.end());
 		return static_cast<T*>(m_StateStack.back().get());

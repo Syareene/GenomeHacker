@@ -6,6 +6,10 @@
 class Camera : public Object3D
 {
 private:
+	constexpr static Vector3 DEFAULT_POSITION = Vector3(0.0f, 1.0f, -5.0f);
+	constexpr static Vector3 DEFAULT_TARGET_OFFSET = Vector3(0.0f, 1.5f, 0.0f);
+	constexpr static float ROTATION_VALUE = 2.0f;
+	constexpr static float CULLING_RANGE = 30.0f; // カリング判定範囲
 	Vector3 m_Target{ 0.0f, 0.0f, 0.0f };
 	XMMATRIX m_ViewMatrix;
 	XMMATRIX m_ProjectionMatrix;
@@ -17,14 +21,21 @@ private:
 	Vector3 m_ShakeVector = { 0.0f, 0.0f, 0.0f };
 	std::unique_ptr<TitleCam> m_TitleCam;
 public:
-	void Init(Transform trans = Transform()) override;
+	Camera() = default; // デフォルトコンストラクタ
+	virtual ~Camera() {};
+	Camera(Camera&&) noexcept = default; // ムーブコンストラクタ
+	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
+
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。
+
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
 	inline void SetTitleCam()
 	{
 		m_TitleCam = std::make_unique<TitleCam>();
-		m_TitleCam->Attach(this, Vector3(0.0f, 3.0f, -5.0f));
+		m_TitleCam->Attach(this->GetObjectID(), Vector3(0.0f, 3.0f, -5.0f));
 	}
 	inline TitleCam* GetTitleCam() const { return m_TitleCam.get(); }
 	void Shake(const Vector3& power);

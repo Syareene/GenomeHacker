@@ -5,13 +5,6 @@
 #include "scene/manager.h"
 #include "manager/shader_manager.h"
 
-
-// 現在想定しているゲームだと敵とかのポリゴンを板ポリでやりたいので常に正面を向くポリゴンを作りたい
-// けどこのまんまだとカメラの位置に対して回転するのでビルボードとはちょっと違うかも？
-// あくまでカメラの向きだけ考慮したいので。->いや多分大丈夫だ
-
-// textureとshaderはflyweightにしないとね
-
 void BillBoard::Init(Transform trans)
 {
 	VERTEX_3D vertex[4];
@@ -72,7 +65,7 @@ void BillBoard::Update()
 	m_FrameCount++;
 	if (m_FrameCount >= 16) // 4x4のテクスチャなので16フレームで1サイクル
 	{
-		SetDestory(true); // フレームカウントが16を超えたら削除予約
+		SetDestroy(true); // フレームカウントが16を超えたら削除予約
 	}
 }
 

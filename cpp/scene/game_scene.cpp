@@ -17,7 +17,7 @@
 #include "enemy/node_tab/togame_button.h"
 #include "object/ui/in_game/fade.h"
 #include "enemy/base_data/enemy_list.h"
-//#include "enemy/node_tab/enemy_dna_list.h"
+#include "enemy/enemy_bullet.h"
 
 #include <typeindex>
 // state系
@@ -32,36 +32,24 @@ void GameScene::Init()
 	// 明示的にstateをセットして遷移実行
 	MoveState();
 
-	AddGameObject<Camera>(0);
+	Vector3 camRot = AddGameObject<Camera>(0)->GetRotation();
 	AddGameObject<Field>(0);
-	AddGameObject<Player>(0);
-	//AddGameObject<Particle>(0)->SetPosition({ 0.0f, 3.0f, 0.0f });
+	Transform playerTrans;
+	// プレイヤーの向きをカメラの向きに合わせる
+	playerTrans.SetRotation(camRot);
+	// 生成した角度を元にプレイヤーを生成
+	Player* player_ptr = AddGameObject<Player>(0, playerTrans);
+	const unsigned int id = player_ptr->GetObjectID();
+
 	AddGameObject<Score>(1);
 	AddGameObject<DNAButton>(2);
 	AddGameObject<ToGameButton>(2);
-	AddSystemObject<EnemyList>();
-	AddSystemObject<EnemySpawner>();
-	
-	// ボタン用フォントデータ設定
-	FontData fontData;
-	fontData.fontSize = 50;
-	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
-	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
-	fontData.font = DirectWriteCustomFont::GetFontName(0);
-	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
-	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	fontData.outlineWidth = 4.0f;
+	AddSystemObject<EnemyList>(false, id);
+	AddSystemObject<EnemySpawner>(false);
 
-	
-	AddGameObject<Button>(2)->Register([this]() {
-		// ボタンがクリックされた時の処理
-		GetGameObject<Player>()->SetPosition(Vector3(0.0f, 5.0f, 0.0f));
-		}, Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), Vector2(200.0f, 100.0f), 
-			Vector2(0.0f, 0.0f), fontData, "ボタン", L"asset\\texture\\debug_sprite.png", L"");
+	// 敵の弾を予約
+	ReserveObject<EnemyBullet>(EnemyBullet::MAX_OBJECTS);
 
-	//AddGameObject<Polygon2D>(2);
 	AddGameObject<Fade>(3)->SetFadeProperty(120, Fade::FadePower::Linear, Fade::FadeTiming::In, true, true); // フェードイン開始
 
 	m_BGM = new Audio();
@@ -73,7 +61,7 @@ void GameScene::Init()
 
 void GameScene::Uninit()
 {
-	GetStatePtr()->Uninit();
+	GetCurrentState()->Uninit();
 	// ゲームシーンの終了処理
 	Scene::Uninit();
 	// BGMの解放
@@ -88,7 +76,7 @@ void GameScene::Uninit()
 void GameScene::Update()
 {
 	// 現在のstateに応じてupdateを実行
-	GetStatePtr()->Update();
+	GetCurrentState()->Update();
 
 	if (Input::GetKeyTrigger(VK_RETURN))
 	{
@@ -103,10 +91,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	// 現在のstateに応じてdrawを実行
-	GetStatePtr()->Draw();
+	GetCurrentState()->Draw();
 
 	Scene::UpdateFinal();
-	GetStatePtr()->UpdateFinal();
+	GetCurrentState()->UpdateFinal();
 
 	// stateの移行を実行
 	MoveState();

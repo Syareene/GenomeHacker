@@ -1,18 +1,16 @@
 ﻿#include "main.h"
 #include "object/panel.h"
 
-void Panel::Init(Transform trans)
+unsigned int Panel::m_ObjectIDCounter = 0;
+
+void Panel::Init()
 {
 	// パネルの初期化処理
-	Object2D::Init(trans);
 
 	// 子オブジェクトの初期化
-	for (auto& layer : m_ChildObjects)
+	for (auto& child : m_ChildObjects)
 	{
-		for (auto& child : layer)
-		{
-			child.get()->Init();
-		}
+		
 	}
 }
 
@@ -22,13 +20,17 @@ void Panel::Uninit()
 	Object2D::Uninit();
 
 	// 子オブジェクトの終了
-	for (auto& layer : m_ChildObjects)
+	for (auto& child : m_ChildObjects)
 	{
-		for (auto& child : layer)
+		if(!child)
 		{
-			child.get()->Uninit();
+			continue;
 		}
+		child->Uninit();
 	}
+
+	// リストクリア
+	m_ChildObjects.clear();
 }
 
 void Panel::Update()
@@ -36,16 +38,19 @@ void Panel::Update()
 	// パネルの更新処理
 	Object2D::Update();
 	// 子オブジェクトの更新
-	for (auto& layer : m_ChildObjects)
+	for (auto& child : m_ChildObjects)
 	{
-		for (auto& child : layer)
+		if(!child)
 		{
-			child.get()->Update();
+			continue;
 		}
+		child->Update();
 	}
 
 	// 不要な子オブジェクトの削除処理
 	DeleteChildObject();
+	// 待機オブジェクトの反映
+	FlushPendingObjects();
 }
 
 void Panel::Draw()
@@ -53,11 +58,25 @@ void Panel::Draw()
 	// パネルの描画処理
 	Object2D::Draw();
 	// 子オブジェクトの描画
-	for (auto& layer : m_ChildObjects)
+	for (auto& child : m_ChildObjects)
 	{
-		for (auto& child : layer)
+		if (!child)
 		{
-			child.get()->Draw();
+			continue;
 		}
+		child->Draw();
+	}
+}
+
+void Panel::FlushPendingObjects()
+{
+	// 子オブジェクトの保留中オブジェクトをフラッシュ
+	for (auto& child : m_ChildObjects)
+	{
+		if (!child)
+		{
+			continue;
+		}
+		child->FlushPendingObjects();
 	}
 }

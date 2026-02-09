@@ -48,8 +48,8 @@ void Score::Init(Transform trans)
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\number.png"));
 
 	// 座標設定
-	SetPosition(Vector3(50.0f, 50.0f, 0.0f)); // 画面右上に配置
-	SetScale(Vector3(75.0f, 75.0f, 1.0f)); // サイズを調整
+	SetPosition(SHOW_POSITION); // 画面右上に配置
+	SetScale(SHOW_SCALE); // サイズを調整
 }
 
 void Score::Uninit()
@@ -86,13 +86,13 @@ void Score::Draw()
 	// 徐々に表示するのでそのスコアを計算用として保存
 	int SingleScore = m_Score;
 	// スコアがShowableDigits以上の場合は、表示可能な桁数に制限
-	if(SingleScore >= static_cast<int>(pow(10, ShowableDigits) + 1))
+	if(SingleScore >= static_cast<int>(pow(10, SHOWABLE_DIGITS) + 1))
 	{
-		SingleScore = static_cast<int>(pow(10, ShowableDigits) - 1); // 最大値を制限
+		SingleScore = static_cast<int>(pow(10, SHOWABLE_DIGITS) - 1); // 最大値を制限
 	}
 
 	// 頂点データ書き換え
-	for (int i = 0; i < ShowableDigits; i++)
+	for (int i = 0; i < SHOWABLE_DIGITS; i++)
 	{
 		int show_num = SingleScore % 10; // 現在の桁の数字を取得
 		SingleScore /= 10; // 次の桁へ進む
@@ -102,10 +102,10 @@ void Score::Draw()
 
 		VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
 
-		float texture_width = 1.0f / 5.0f; // テクスチャの横幅を5分割
-		float texture_height = 1.0f / 5.0f; // テクスチャの縦幅を5分割
-		float offset_x = (show_num % 5) * texture_width; // フレームに応じたXオフセット
-		float offset_y = (show_num / 5) * texture_height; // フレームに応じたYオフセット
+		float texture_width = 1.0f / SHOWABLE_DIGITS; // テクスチャの横幅を5分割
+		float texture_height = 1.0f / SHOWABLE_DIGITS; // テクスチャの縦幅を5分割
+		float offset_x = (show_num % SHOWABLE_DIGITS) * texture_width; // フレームに応じたXオフセット
+		float offset_y = (show_num / SHOWABLE_DIGITS) * texture_height; // フレームに応じたYオフセット
 
 		vertex[0].Position = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 		vertex[0].Normal = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -136,7 +136,7 @@ void Score::Draw()
 		// 移動、回転マトリックス設定
 		XMMATRIX trans, world, rot, scale;
 		// 桁に応じてXを調整(-1はiが0~4分布なので減算させる)
-		trans = XMMatrixTranslation(GetPosition().x + 50.0f * (ShowableDigits - i - 1), GetPosition().y, GetPosition().z);
+		trans = XMMatrixTranslation(GetPosition().x + 50.0f * (SHOWABLE_DIGITS - i - 1), GetPosition().y, GetPosition().z);
 		rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
 		scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
 		world = scale * rot * trans;

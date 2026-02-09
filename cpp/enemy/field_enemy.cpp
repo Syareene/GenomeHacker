@@ -5,24 +5,32 @@
 #include "enemy/base_data/enemy_base.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
+#include "enemy/enemy_spawner.h"
 #include "collider/sphere.h"
 #include "player.h"
 
-void FieldEnemy::Init(Transform trans)
+void FieldEnemy::Init(EnemyBase* base, Transform trans)
 {
+	// 基礎データをセット
+	SetEnemyBase(base);
+
 	// 初期座標で設定する
-	SetPosition(trans.GetPosition());
-	SetRotation(trans.GetRotation());
-	SetScale(trans.GetScale());
+	SetTransform(trans);
 
 	// 初期化処理
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
-	transform.SetScale(Vector3(0.30f, 0.30f, 0.30f));
+	transform.SetScale(COLLIDER_SCALE);
 
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
+
+	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
+	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
+	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
+	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
+	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y, false);
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
@@ -30,12 +38,18 @@ void FieldEnemy::Init(Transform trans)
 
 void FieldEnemy::Uninit()
 {
+	// Spawner側に消えたことを伝える
+	Manager::GetCurrentScene()->GetSystemObject<EnemySpawner>()->EnemyKilled();
+
 	// 終了処理
 	Object3D::Uninit();
 }
 
 void FieldEnemy::Update()
 {
+	// 生存時間をインクリメント
+	m_LiveTime++;
+
 	// 判定リセット
 	m_IsHit = false;
 
@@ -47,14 +61,25 @@ void FieldEnemy::Update()
 		if (isDead)
 		{
 			// trueが帰ってきたら自身を削除
-			SetDestory(true);
+			SetDestroy(true);
 		}
-		// 0以下ならそれ移行の処理は実施したくないのでここでreturn
+		// 0以下ならそれ以降の処理は実施したくないのでここでreturn
+		return;
+	}
+	// x,zが-30>=か30<=なら削除
+	if (GetPosition().x <= -DELETE_POS.x || GetPosition().x >= DELETE_POS.x ||
+		GetPosition().z <= -DELETE_POS.y || GetPosition().z >= DELETE_POS.y)
+	{
+		SetDestroy(true);
 		return;
 	}
 
+
 	// 更新処理
 	Object3D::Update();
+
+	// 前fの座標を保存
+	UpdatePreviousPosition();
 	
 	// 各敵のnodeを実行。
 	m_EnemyBase->ExecuteAttack(this);
@@ -64,13 +89,13 @@ void FieldEnemy::Update()
 	GetCollider()->Update(GetPosition());
 
 	// 当たってるコライダがあるかチェック
-	std::list<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();
+	std::vector<Player*> p_hit = GetCollider()->GetHitObjectsByType<Player>();
 	if (!p_hit.empty())
 	{
 		m_IsHit = true;
 	}
 
-	std::list<FieldEnemy*> e_hit = GetCollider()->GetHitObjectsByType<FieldEnemy>();
+	std::vector<FieldEnemy*> e_hit = GetCollider()->GetHitObjectsByType<FieldEnemy>();
 	for (auto& h : e_hit)
 	{
 		// 自分自身はスルー
@@ -95,6 +120,7 @@ void FieldEnemy::Draw()
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
+
 	// 移動、回転マトリックス設定
 	SetWorldMatrixOnDrawBillboard();
 
@@ -102,7 +128,8 @@ void FieldEnemy::Draw()
 	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	SetDefaultVertexBufferBillboardOnDraw();
+	//SetDefaultVertexBufferBillboardOnDraw();
+	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする

@@ -7,7 +7,7 @@
 class Particle : public Object3D
 {
 public:
-	void Init(Transform trans = Transform()) override;
+	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
@@ -18,6 +18,10 @@ public:
 		Vector3 Velocity;
 		int LifeTime; // パーティクルの寿命
 	};
-	static constexpr int MaxParticles = 10000; // 最大パーティクル数
+	constexpr static int MaxParticles = 10000; // 最大パーティクル数
 	ParticleData m_Particles[MaxParticles]; // パーティクルデータ
+private:
+	constexpr static Vector3 PARTICLE_SCALE = Vector3(0.3f, 0.3f, 0.3f);
+	constexpr static int PARTICLE_LIFETIME = 60.0f; // パーティクルの寿命(フレーム)
+	constexpr static float VELOCITY_RANDOM_RANGE = 1.0f;
 };

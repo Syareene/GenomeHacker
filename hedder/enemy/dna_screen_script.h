@@ -1,16 +1,18 @@
 ﻿#pragma once
 
 #include "object/panel.h"
-#include "enemy/node_tab/attack.h"
-#include "enemy/node_tab/movement.h"
-#include "enemy/node_tab/death.h"
+#include "enemy/node_tab/tab_visual.h"
 
 class EnemyBase;
 
+// 見た目部分を管理するクラス
 class DnaScreenScript : public Panel
 {
 public:
-	void Init(Transform trans = Transform()) override;
+
+	// このクラスがenemy_baseからstateにたされてるので要らなくなったらstateからdestoryすべきかな
+
+	void Init(EnemyBase* base_enemy, const unsigned int& player_id);
 	void Uninit() override;
 	void Update() override;
 	void Draw() override;
@@ -18,17 +20,35 @@ public:
 	void ShowDnaInfo();
 	void HideDnaInfo();
 
-	TabBase* GetActiveTab();
+	// タブ移動する時に掴んでるノードは解放してね!
+	inline VisualBase* GetGrabbingNode() const { return m_GrabbingNode; }
+	inline void ReleaseGrabbingNode() { m_IsReleaseGrabNode = true; }
+	inline void SetGrabbingNode(VisualBase* nodePtr) { m_GrabbingNode = nodePtr; }
 
-	AttackTab* GetAttackTab() { return m_AttackTab; }
-	MoveTab* GetMoveTab() { return m_MoveTab; }
-	DeathTab* GetDeathTab() { return m_DeathTab; }
+	TabVisual* GetActiveTab();
+	inline TabVisual* GetAttackTabVisual() { return &m_AttackVisual; }
+	inline TabVisual* GetMoveTabVisual() { return &m_MoveVisual; }
+	inline TabVisual* GetDeathTabVisual() { return &m_DeathVisual; }
+
 private:
-	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
+	TabVisual m_AttackVisual;
+	TabVisual m_MoveVisual;
+	TabVisual m_DeathVisual;
+
+	void GeneratePlayerVisualNodes();
+
 	void SelectedAttackTab();
 	void SelectedMoveTab();
 	void SelectedDeathTab();
-	AttackTab* m_AttackTab;
-	MoveTab* m_MoveTab;
-	DeathTab* m_DeathTab;
+
+	// プレイヤーのid(tab_visual用に保存し、playerのノードを見れるようにする)
+	unsigned int m_PlayerId = 0;
+
+	VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ
+	bool m_IsReleaseGrabNode = false; // ノードを離したかどうかのフラグ
+	EnemyBase* m_EnemyBase = nullptr; // 参照しているデータ
+	static constexpr Vector2 NODE_TAB_TEXT_POS = { 1000.0f, 35.0f }; // ノードタブのテキスト位置
+	static constexpr Vector2 PLAYER_NODE_LIST_POS = { 1024.0f, 450.0f }; // プレイヤーノード欄の位置
+	static constexpr Vector2 PLAYER_NODE_LIST_SCALE = { 512.0f, 540.0f }; // プレイヤーノード欄のスケール
+	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
 };

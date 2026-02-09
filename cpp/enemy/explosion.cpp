@@ -47,10 +47,6 @@ void Explosion::Init(Transform trans)
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\explosion.png"));
 
-	// シェーダー設定
-	//Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
-	//Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
-
 	// 変数初期化
 	m_FrameCount = 0;
 
@@ -68,9 +64,9 @@ void Explosion::Uninit()
 void Explosion::Update()
 {
 	m_FrameCount++;
-	if (m_FrameCount >= 16) // 4x4のテクスチャなので16フレームで1サイクル
+	if (m_FrameCount >= FRAME_MAX) // 4x4のテクスチャなので16フレームで1サイクル
 	{
-		SetDestory(true); // フレームカウントが16を超えたら削除予約
+		SetDestroy(true); // フレームカウントが16を超えたら削除予約
 	}
 }
 

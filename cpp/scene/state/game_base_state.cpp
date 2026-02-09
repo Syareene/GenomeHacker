@@ -10,8 +10,6 @@ void GameBaseState::Init()
 	}
 	SetIsInitialized(true);
 	State::Init();
-	// 大本のSceneの
-	//Manager::GetCurrentScene()->Init();
 }
 
 void GameBaseState::Uninit()
@@ -28,7 +26,7 @@ void GameBaseState::Update()
 	// 大本のsceneの更新
 	Manager::GetCurrentScene()->UpdateObject();
 
-	// このstateのobjectの更新(これここで基底の変数にアクセスできないから基底に対して更新処理する関数を作成する必要あり)
+	// このstateのobjectの更新
 	UpdateStateObject();
 }
 

@@ -55,9 +55,6 @@
     <Filter Include="ヘッダー ファイル\manager">
       <UniqueIdentifier>{57e6f74b-b236-4338-919d-46107479d2c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\node">
-      <UniqueIdentifier>{6292120a-12b6-44b8-b399-c1c09c40d017}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\enemy\node_tab">
       <UniqueIdentifier>{62031bad-4ded-4086-ae21-b9b90e90d537}</UniqueIdentifier>
     </Filter>
@@ -315,9 +312,6 @@
     <ClInclude Include="hedder\enemy\node\add_score.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\visual_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\lib\particle.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -335,6 +329,33 @@
     </ClInclude>
     <ClInclude Include="hedder\lib\random_number.h">
       <Filter>ヘッダー ファイル\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\manager\object_manager.h">
+      <Filter>ヘッダー ファイル\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\tab_manager.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\visual_base.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node_tab\tab_visual.h">
+      <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\eight_shot.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\enemy_bullet.h">
+      <Filter>ヘッダー ファイル\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_circular.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_to_player.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\move_random.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +545,6 @@
     <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
       <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\enemy\node\visual_base.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\lib\2d_particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
@@ -547,6 +565,33 @@
     </ClCompile>
     <ClCompile Include="cpp\lib\random_number.cpp">
       <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\manager\object_manager.cpp">
+      <Filter>ソース ファイル\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\tab_manager.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\visual_base.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node_tab\tab_visual.cpp">
+      <Filter>ソース ファイル\enemy\node_tab</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\eight_shot.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\enemy_bullet.cpp">
+      <Filter>ソース ファイル\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_circular.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_to_player.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\move_random.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

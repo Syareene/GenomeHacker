@@ -9,8 +9,11 @@ class Collision;
 class Object3D : public GameObject
 {
 public:
+	Object3D() = default; // デフォルトコンストラクタ
 	virtual ~Object3D();
-	void Init(Transform trans = Transform()) override
+	Object3D(Object3D&&) noexcept; // ムーブコンストラクタ
+	Object3D& operator=(Object3D&&); // ムーブ代入演算子
+	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
 	};
@@ -24,6 +27,17 @@ public:
 		return dynamic_cast<T*>(m_Collider.get());
 	};
 	inline Collision* GetCollider() const { return m_Collider.get(); }
+	template <typename T>
+	static int getTypeId()
+	{
+		static int id = nextTypeId();
+		return id;
+	}
 private:
+	static int nextTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
 	std::unique_ptr<Collision> m_Collider = nullptr; // 球か箱かのポインタを持つ
 };

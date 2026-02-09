@@ -5,8 +5,11 @@
 class UI : public Object2D
 {
 public:
+	UI() = default; // デフォルトコンストラクタ
 	virtual ~UI() {}
-	void Init(Transform trans = Transform()) override 
+	UI(UI&&) noexcept = default; // ムーブコンストラクタ
+	UI& operator=(UI&&) noexcept = default; // ムーブ代入演算子
+	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
 	}
@@ -15,22 +18,13 @@ public:
 	void Draw() override {}
 	// 更新しなくて良いオブジェクトには更新しなくていいタグを付けてコストを下げる
 
-	// クリック検知
-
 	// 画像表示
-	// 都度描画するだけなので初期化子だけで良い
-	// 初期化子: pos/size/rot/texture
 	// 完成した!
 	
 	// text
-	// jsonとかから読み込んで表示。翻訳とかもそのうちできるかもねぇ。
-	// 後はテキスト表示機構を作らなければならない
-	// 初期化子: pos/rot/fontsize/text(将来的にtextのファイルになるかも)/(プロパティ:太字とか?)
+	// 完成した!
 
 	// ボタン
-	// クリック検知をして、範囲内に入っていれば処理を実行する->基本的にはボタン毎にクラス作成になるのかなぁ?
-	// unityみたいなインスペクター内から初期化子にいれるには情報量多いしなぁ、、
-	// 各クラスで作ることになるので初期化子はなしかな。ただ実行先のクラスをうまいこと作れれば初期化子から作れる。
 	// 完成した!
 	
 	// スライダー
@@ -39,9 +33,6 @@ public:
 	// 初期化子: pos/size/rot/min/max/value(初期値)/step(刻み幅)
 
 	// もし子objとかを作るなら初期化子の座標に元objの座標を参照するとかで表現する形にしようかなぁ。
-
-
-	// 各派生クラスを作る
 
 public:
 	inline void SetNoUpdate(const bool noUpdate) { m_NoUpdate = noUpdate; }

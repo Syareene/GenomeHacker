@@ -1,10 +1,6 @@
-﻿// 実際に使用する環境でのヘッダーは適宜追加してください
-#include "main.h"
+﻿#include "main.h"
 #include "lib/renderer.h"
 #include "object/ui/font.h"
-
-// DirectWrite描画クラス
-//DirectWriteCustomFont* Write;
 
 void Font::Register(const Vector2& pos, const FontData& font_data, std::string text)
 {
@@ -22,9 +18,10 @@ void Font::Register(const Vector2& pos, const FontData& font_data, std::string t
 	FLOAT wPx = 0.0f, hPx = 0.0f;
 	if (SUCCEEDED(DirectWriteCustomFont::GetInstance()->GetTextSizePixels(m_DisplayText, &wPx, &hPx)))
 	{
-		wchar_t buf2[256];
+		// デバッグ用出力
+		/*wchar_t buf2[256];
 		swprintf_s(buf2, L"Text size (px): w=%.1f h=%.1f\n", wPx, hPx);
-		OutputDebugStringW(buf2);
+		OutputDebugStringW(buf2);*/
 		m_WidthHeight = Vector2(wPx, hPx);
 	}
 }

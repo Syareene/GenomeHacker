@@ -7,8 +7,9 @@
 class SystemObject
 {
 public:
+	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
+
 	virtual ~SystemObject() {}
-	// エラー解消用にコメントアウト
 	virtual void Init() {};
 	virtual void Uninit() {};
 	virtual void Update() {};
@@ -33,6 +34,18 @@ public:
 		}
 		return false;
 	}
+
+	template <typename T>
+	static int getTypeId()
+	{
+		static int id = nextTypeId();
+		return id;
+	}
 private:
+	static int nextTypeId()
+	{
+		static int id = 0;
+		return id++;
+	}
 	std::list<std::string> m_Tags; // タグ
 };

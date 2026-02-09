@@ -1,47 +1,24 @@
 ﻿#include "main.h"
 #include "enemy/node/number.h"
 
-std::vector<NodeBase::NodeTextData> NumberNode::m_Descriptions; // ノードの説明部分
-FontData NumberNode::m_DescFontData; // 説明文用のフォントデータ(クラス内で共通利用したいため)
-
 
 void NumberNode::Init(Transform trans)
 {
-	SetTransform(trans);
 	AddInputTypeTop(InputType::Move);
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
 }
 
-void NumberNode::Uninit()
-{
-
-}
-
-void NumberNode::Update()
-{
-
-}
-
-void NumberNode::Draw()
-{
-
-}
-
 bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)
 {
-	// moveノードなのでcdはチェックせず常に動かす
-	// 通常のノードならcdチェックし動かす形に
-	// んで実行したらtrueを返す
-
-	// 定期的に動かす
-	//enemy_ptr->AddPosition(Vector3(0.0f, 0.0f, m_MoveVal)); // z方向に動かす
 
 	return true;
 }
 
-void NumberNode::UpdateDescriptionData()
+std::string NumberNode::GenerateDescriptionText()
 {
-
+	// 説明文のテンプレートを取得
+	std::string format_string = "このノードは数字ノードです。";
+	return format_string;
 }
