@@ -7,6 +7,22 @@
 unsigned int GameObject::m_NextObjectID = 0; 
 
 
+void GameObject::UpdateGPUData(ID3D11Buffer* gpuBuffer, IGameObjectManager::InstanceBufferData& data)
+{
+	// 各種値を現在のobjectの値で更新
+	data.Position = XMFLOAT4(GetPosition().x,GetPosition().y,GetPosition().z,1.0f);
+	data.Scale = XMFLOAT4(m_Transform.GetScale().x, m_Transform.GetScale().y, m_Transform.GetScale().z, 1.0f);
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f); // うわこれobject側でuv座標持ってないと大変かも?->ChangeTexUVからとる?
+}
+
+// ここ、描画コールを重ねている参照元がないと困るね
+void GameObject::StackDrawCall()
+{
+
+}
+
+
 void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed)
 {
 	if (calcWorldSpeed)

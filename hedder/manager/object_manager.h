@@ -33,6 +33,17 @@ public:
 class IGameObjectManager : public IObjectManager
 {
 public:
+	// インスタンシングレンダリングにて用いるgpu受け渡し用バッファの構造体
+	struct InstanceBufferData
+	{
+		XMFLOAT4 Position; // xyz
+		XMFLOAT4 Scale; // xyz
+		XMFLOAT4 Color; // rgba
+		XMFLOAT4 UVOffset; // xy: offset, zw: scale
+	};
+
+	virtual void UpdateGPUData() = 0;
+
 	virtual GameObject* GetObjectByTag(const std::string& tag) = 0;
 	virtual std::list<GameObject*> GetObjectsByTag(const std::string& tag) = 0;
 	virtual void FlushPendingObjects() = 0;
@@ -57,6 +68,7 @@ public:
 	ObjectManager()
 	{
 		m_Objects.reserve(ObjectType::MAX_OBJECTS);
+		m_InstanceDataBuffer.reserve(ObjectType::MAX_OBJECTS);
 	}
 
 	// タグを用いた単体取得
@@ -128,6 +140,7 @@ public:
 	void Reserve(size_t capacity)
 	{
 		m_Objects.reserve(capacity);
+		m_InstanceDataBuffer.reserve(capacity);
 	}
 
 	template<typename... Args>
@@ -203,10 +216,23 @@ public:
 	void Update() override
 	{
 		// 自身が所有しているオブジェクトを全て更新
+		int index = 0;
 		for(auto& obj : m_Objects)
 		{
 			obj.Update();
 		}
+	}
+
+	// 全部のupdate終わった後に呼ぶことで他オブジェクトによって座標が動かされても大丈夫
+	void UpdateGPUData() override
+	{
+		int index = 0;
+		for(auto& obj : m_Objects)
+		{
+			obj.UpdateGPUData(m_InstanceBuffer, m_InstanceDataBuffer[index]);
+		}
+		// バッファ更新
+		Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
 	}
 
 	void UpdateObjectByTag(const std::string& tag) override
@@ -282,6 +308,10 @@ public:
 private:
 	std::vector<ObjectType> m_Objects;
 	std::vector<ObjectType> m_PendingObjects; // 追加待ちオブジェクトのリスト
+	// インスタンシングレンダリング用
+	ID3D11Buffer* m_InstanceBuffer = nullptr;
+	ID3D11ShaderResourceView* m_InstanceSRV = nullptr;
+	std::vector<InstanceBufferData> m_InstanceDataBuffer;
 };
 
 template <typename ObjectType>

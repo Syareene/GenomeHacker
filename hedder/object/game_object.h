@@ -77,7 +77,9 @@ public:
 	};
 	virtual void Uninit() {};
 	virtual void Update() {};
-	virtual void Draw() {};
+	void UpdateGPUData(ID3D11Buffer* gpuBuffer, IGameObjectManager::InstanceBufferData& data); // GPUバッファ更新関数
+	void StackDrawCall();
+	virtual void Draw(ID3D11Buffer* gpuBuffer, std::vector<IGameObjectManager::InstanceBufferData> dataList) {};
 
 	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
