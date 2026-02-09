@@ -13,6 +13,7 @@
 class GameObject
 {
 private:
+	static unsigned int m_NextObjectID; // 次に割り当てるオブジェクトID
 	Transform m_Transform = Transform();
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
 	bool m_IsAliveData = true; // 実体が存在するかどうか(ObjectManagerで管理している場合は削除はせず配列上に残しておく)
@@ -57,7 +58,14 @@ protected:
 
 public:
 	static constexpr size_t MAX_OBJECTS = 64; // オブジェクトvector最大数。継承先クラスで変更可能。
-	GameObject() = default; // デフォルトコンストラクタ
+	GameObject()
+	{
+		if(m_NextObjectID >= UINT_MAX)
+		{
+			m_NextObjectID = 0; // オーバーフロー防止
+		}
+		m_ObjectID = m_NextObjectID++;
+	}
 	GameObject(GameObject&&) noexcept = default; // ムーブコンストラクタ
 	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
 

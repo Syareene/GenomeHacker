@@ -4,6 +4,8 @@
 #include "object/camera.h"
 #include "manager/default_vertex.h"
 
+unsigned int GameObject::m_NextObjectID = 0; 
+
 
 void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed)
 {
