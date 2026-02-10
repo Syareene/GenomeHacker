@@ -63,6 +63,18 @@ public:
 		m_StateChanged = false;
 	}
 
+	void UpdateGPUData()
+	{
+		if (m_StateStack.empty()) return;
+		m_StateStack.front()->UpdateGPUData();
+	}
+
+	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue)
+	{
+		if (m_StateStack.empty()) return;
+		m_StateStack.front()->SubmitDrawRequests(renderQueue);
+	}
+
 private:
 	using StateIterator = std::deque<std::unique_ptr<State>>::iterator;
 	std::deque<std::unique_ptr<State>> m_StateStack; // キャッシュするためのデキュー(現在のStateは先頭である)

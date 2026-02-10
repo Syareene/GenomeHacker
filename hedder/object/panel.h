@@ -2,6 +2,7 @@
 
 #include "object/2d_object.h"
 #include "manager/object_manager.h"
+#include "object/i_container.h"
 #include <deque>
 #include <memory>
 #include <type_traits>
@@ -12,7 +13,7 @@ template<typename T>
 concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 
 // 現状パネルは2d限定
-class Panel : public Object2D
+class Panel : public Object2D, public IContainer
 {
 private:
 	std::deque<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
@@ -36,6 +37,10 @@ public:
 	virtual void Init();
 	void Uninit() override;
 	void Update() override;
+
+	void UpdateGPUData(IGameObjectManager::InstanceBufferData& data) override;
+	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue) override;
+
 	void FlushPendingObjects();
 	// sceneみたいに後付pushにするかちょい悩む
 	void Draw() override;

@@ -83,6 +83,8 @@ void GameScene::Update()
 		// Enterキーが押されたらリザルトシーンに遷移
 		Manager::SetScene<ResultScene>();
 	}
+	// GPUデータの更新
+	UpdateGPUData();
 
 	// フレーム内の更新が終わったら state-changed フラグをクリア
 	ResetStateChanged();

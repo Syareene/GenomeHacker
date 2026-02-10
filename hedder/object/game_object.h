@@ -20,6 +20,7 @@ private:
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
+	int m_Layer = 0; // 描画レイヤー(数値が大きいほど手前側)
 	unsigned int m_ObjectID = 0; // オブジェクトID(管理用)
 	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
@@ -78,7 +79,8 @@ public:
 	};
 	virtual void Uninit() {};
 	virtual void Update() {};
-	void UpdateGPUData(ID3D11Buffer* gpuBuffer, IGameObjectManager::InstanceBufferData& data); // GPUバッファ更新関数
+	//virtual IGameObjectManager::InstanceBufferData GetInstanceData() const; -> おそらくしたの関数で良い
+	virtual void UpdateGPUData(IGameObjectManager::InstanceBufferData& data); // GPUバッファ更新関数
 	void StackDrawCall();
 	virtual void Draw(ID3D11Buffer* gpuBuffer, std::vector<IGameObjectManager::InstanceBufferData> dataList) {};
 
@@ -86,6 +88,8 @@ public:
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
+	inline void SetLayer(const int& layer) { m_Layer = layer; }
+	inline const int& GetLayer() const { return m_Layer; }
 	inline void SetIsAlive(const bool& manage) { m_IsAliveData = manage; }
 	inline const bool& GetIsAlive() const { return m_IsAliveData; }
 	inline void SetObjectID(const unsigned int& id) { m_ObjectID = id; }

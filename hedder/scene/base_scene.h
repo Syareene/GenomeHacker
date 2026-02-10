@@ -57,6 +57,7 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update() = 0;
+	virtual void UpdateGPUData();
 	void FlushPendingObjects();
 	void UpdateObject();
 	/// @brief 指定タグを持つオブジェクトのみ更新する
@@ -89,7 +90,8 @@ public:
 			if (manager) manager->SubmitDrawRequests(renderQueue);
 		}
 
-		// TODO: Stateのオブジェクトに対してもキューを走らせる
+		// Stateのオブジェクトに対してもキューを走らせる
+		m_StateManager.SubmitDrawRequests(renderQueue);
 
 
 		// レイヤー順にソートする

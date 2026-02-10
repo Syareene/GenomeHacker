@@ -46,6 +46,8 @@ void TitleScene::Update()
 		// Enterキーが押されたらゲームシーンに遷移
 		Manager::SetScene<GameScene>();
 	}
+	// GPUデータの更新
+	UpdateGPUData();
 }
 
 void TitleScene::Draw()

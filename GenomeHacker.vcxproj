@@ -81,6 +81,7 @@
     <ClInclude Include="hedder\object\camera.h" />
     <ClInclude Include="hedder\object\field.h" />
     <ClInclude Include="hedder\object\game_object.h" />
+    <ClInclude Include="hedder\object\i_container.h" />
     <ClInclude Include="hedder\object\movement\title_cam.h" />
     <ClInclude Include="hedder\object\panel.h" />
     <ClInclude Include="hedder\object\system_object.h" />

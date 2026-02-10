@@ -111,6 +111,31 @@ void Scene::Uninit()
 	}
 }
 
+void Scene::UpdateGPUData()
+{
+	// 3dオブジェクトのGPUデータ更新
+	for (auto& objects3d : m_Objects3D)
+	{
+		if(!objects3d)
+		{
+			continue;
+		}
+		objects3d->UpdateGPUData();
+	}
+	// 2dオブジェクトのGPUデータ更新
+	for (auto& objects2d : m_Objects2D)
+	{
+		if (!objects2d)
+		{
+			continue;
+		}
+		objects2d->UpdateGPUData();
+	}
+
+	// stateのオブジェクトも更新
+	m_StateManager.UpdateGPUData();
+}
+
 void Scene::FlushPendingObjects()
 {
 	// 3dオブジェクトの保留中オブジェクトをフラッシュ

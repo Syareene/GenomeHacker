@@ -168,6 +168,7 @@ public:
 		// 待機リストに追加
 		auto& obj = m_PendingObjects.emplace_back();
 		obj.SetObjectID(objId);
+		obj.SetLayer(index);
 		obj.Init(std::forward<Args>(args)...);
 		return &obj;
 	}
@@ -267,10 +268,23 @@ public:
 					return a->GetLayer() < b->GetLayer();
 				});
 
-			// 3. ソート順通りにGPU用データを作成
+			// 3. ソート順通りにGPU用データを更新
 			for (auto* obj : activeObjects) 
 			{
-				m_InstanceDataList.emplace_back(obj->GetInstanceData());
+				// ここの引数に生成したinstancebufferの該当indexを渡す必要あり
+				m_InstanceDataList.emplace_back(obj->UpdateGPUData()); // **********行列計算等々**********
+			}
+
+			// gameobjectの中に更にgameobjectを管理しているようなものの場合は中身に対して探索する
+			if constexpr (ContainerObject<ObjectType>)
+			{
+				for (auto& obj : m_Objects)
+				{
+					if(obj.IsActive() && !obj.IsDestroy())
+					{
+						obj.UpdateGPUData();
+					}
+				}
 			}
 
 			// 4. GPUバッファ転送 (Map/Unmap)
@@ -373,7 +387,7 @@ public:
 
 				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
 				req.DrawCall = [this, batch]() {
-					ObjectType::SetPipelineState();
+					ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
 
 					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(typename ObjectType::InstanceData) };
 					UINT offsets[2] = { 0, 0 };
@@ -388,6 +402,19 @@ public:
 					};
 
 				renderQueue.push_back(req);
+			}
+
+			// gameobjectの中に更にgameobjectを管理しているようなものの場合は中身に対して実行する
+			// これちょっと書き方異なるか?
+			if constexpr (ContainerObject<ObjectType>)
+			{
+				for(auto& obj : m_Objects)
+				{
+					if(obj.IsActive() && !obj.IsDestroy())
+					{
+						obj.SubmitDrawRequests(renderQueue);
+					}
+				}
 			}
 		}
 		// === インスタンシングではない場合 ===

@@ -357,6 +357,9 @@
     <ClInclude Include="hedder\enemy\node\move_random.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\object\i_container.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -27,6 +27,8 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
+	void UpdateGPUData();
+	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue);
 	virtual void Draw();
 	void UpdateFinal();
 	void FlushPendingObjects();
