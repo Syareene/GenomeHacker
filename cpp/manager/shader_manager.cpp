@@ -5,6 +5,10 @@
 ID3D11VertexShader* ShaderManager::UnlitVertexShader = nullptr;
 ID3D11PixelShader* ShaderManager::UnlitPixelShader = nullptr;
 ID3D11InputLayout* ShaderManager::UnlitVertexLayout = nullptr;
+// インスタンシング用シェーダー(α値描画しない)
+ID3D11VertexShader* ShaderManager::InstancingVertexShader = nullptr;
+ID3D11PixelShader* ShaderManager::InstancingPixelShader = nullptr;
+ID3D11InputLayout* ShaderManager::InstancingVertexLayout = nullptr;
 // 影なしシェーダー(アルファ値描画しない)
 ID3D11VertexShader* ShaderManager::NoAlphaVertexShader = nullptr;
 ID3D11PixelShader* ShaderManager::NoAlphaPixelShader = nullptr;
@@ -19,6 +23,9 @@ void ShaderManager::Init()
 	// シェーダーの初期化
 	Renderer::CreateVertexShader(&UnlitVertexShader, &UnlitVertexLayout, "shader\\unlitTextureVS.cso");
 	Renderer::CreatePixelShader(&UnlitPixelShader, "shader\\unlitTexturePS.cso");
+
+	Renderer::CreateVertexShader(&InstancingVertexShader, &InstancingVertexLayout, "shader\\instancingVS.cso");
+	Renderer::CreatePixelShader(&InstancingPixelShader, "shader\\instancingPS.cso");
 
 	Renderer::CreateVertexShader(&NoAlphaVertexShader, &NoAlphaVertexLayout, "shader\\unlitTextureWithNoAlphaVS.cso");
 	Renderer::CreatePixelShader(&NoAlphaPixelShader, "shader\\unlitTextureWithNoAlphaPS.cso");

@@ -9,6 +9,31 @@
 #include "collider/sphere.h"
 #include "player.h"
 
+void FieldEnemy::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+
+	// 移動、回転マトリックス設定
+	SetWorldMatrixOnDrawBillboard();
+
+	// マテリアル設定
+	SetMaterialOnDraw();
+
+	// 頂点バッファ設定
+	//SetDefaultVertexBufferBillboardOnDraw();
+	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
+
+	// テクスチャ設定
+	// 一時変数に入れないと参照取得できないのでこうする
+
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetEnemyBase()->GetEnemyTextureID());
+	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+}
+
 void FieldEnemy::Init(EnemyBase* base, Transform trans)
 {
 	// 基礎データをセット

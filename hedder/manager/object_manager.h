@@ -65,6 +65,38 @@ public:
 		CheckOverride();
 		m_Objects.reserve(ObjectType::MAX_OBJECTS);
 		m_InstanceDataBuffer.reserve(ObjectType::MAX_OBJECTS);
+
+		// ストラクチャードバッファ作成
+		//InstanceData* data = new InstanceData[maxParticles];
+		// 初期値をセット
+		//for (int i = 0; i < maxParticles; i++)
+		//{
+		//	data[i].PositionAndSize = XMFLOAT4(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100.0f, 0.0f);
+		//	data[i].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		//	data[i].UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		//}
+
+		// shaderに渡したいプロパティをInstanceDataで渡す
+
+		D3D11_BUFFER_DESC bd{};
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.ByteWidth = sizeof(InstanceBufferData) * ObjectType::MAX_OBJECTS;
+		bd.StructureByteStride = sizeof(InstanceBufferData);
+		bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_InstanceBuffer);
+
+		// シェーダーリソースビュー作成
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvd{};
+		srvd.Format = DXGI_FORMAT_UNKNOWN;
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+		srvd.Buffer.FirstElement = 0;
+		srvd.Buffer.NumElements = ObjectType::MAX_OBJECTS;
+
+		// 設定
+		Renderer::GetDevice()->CreateShaderResourceView(m_InstanceBuffer, &srvd, &m_InstanceSRV);
 	}
 
 	// タグを用いた単体取得
@@ -226,6 +258,15 @@ public:
 		// AI提案まま
 		if constexpr (ObjectType::ENABLE_INSTANCING)
 		{
+			// map
+			D3D11_MAPPED_SUBRESOURCE msr;
+			Renderer::GetDeviceContext()->Map(m_InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+
+			InstanceBufferData* dataPtr = (InstanceBufferData*)msr.pData;
+			int count = 0;
+
+			// あーこれだと今までデータクリアしてた部分しなくなるわけだけどどうなるんだ
+
 			// データをクリア(メモリ上でのサイズは変わらない)
 			m_InstanceDataBuffer.clear();
 
@@ -373,6 +414,11 @@ public:
 					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(InstanceBufferData) };
 					UINT offsets[2] = { 0, 0 };
 					ID3D11Buffer* pBuffers[2] = { m_Objects[0].GetVertexBuffer(), m_InstanceBuffer };
+
+					// これ対象が2dの場合はdepth enable/disable切り替え必要
+
+					// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
+					Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
 
 					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 2, pBuffers, strides, offsets);
 					Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
