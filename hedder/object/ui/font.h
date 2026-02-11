@@ -13,6 +13,7 @@ public:
 	virtual ~Font() {}
 	Font(Font&&) noexcept = default; // ムーブコンストラクタ
 	Font& operator=(Font&&) noexcept = default; // ムーブ代入演算子
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効
 	void Register(const Vector2& pos, const FontData& font_data, std::string text);
 	void Init(Transform trans = Transform());
 	void Uninit() override;

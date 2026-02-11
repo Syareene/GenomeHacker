@@ -7,7 +7,7 @@ class ImageDraw : public UI
 {
 public:
 	ImageDraw() {} // デフォコン
-
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効(汎用クラスは別テクスチャ読み込むのに対応してないので一旦無効化)
 	void Register(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
 	{
 		// 引数を受け取り値をセット

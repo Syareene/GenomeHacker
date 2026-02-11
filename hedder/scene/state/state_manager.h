@@ -69,7 +69,7 @@ public:
 		m_StateStack.front()->UpdateGPUData();
 	}
 
-	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue)
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
 	{
 		if (m_StateStack.empty()) return;
 		m_StateStack.front()->SubmitDrawRequests(renderQueue);

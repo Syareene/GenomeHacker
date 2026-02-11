@@ -1,14 +1,16 @@
 ﻿#pragma once
 
-#include "lib/transform.h"
 #include "main.h" // あんまりこれで読み込みたくないんだよな、、
+#include "lib/transform.h"
 #include "lib/renderer.h"
+#include "object/gpu_data.h"
 //#include "scene/manager.h"
 // ->多分ここのせいでエラー出てる
 #include <string>
 #include <list>
-
 #include <Windows.h>
+
+class IGameObjectManager; // 前方宣言
 
 class GameObject
 {
@@ -34,7 +36,6 @@ private:
 	// ここに描画系の簡易関数を作成する
 protected:
 	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
-	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 	inline ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
 	inline void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
 	inline ID3D11VertexShader* GetVertexShader() const { return m_VertexShader; }
@@ -80,12 +81,14 @@ public:
 	virtual void Uninit() {};
 	virtual void Update() {};
 	//virtual IGameObjectManager::InstanceBufferData GetInstanceData() const; -> おそらくしたの関数で良い
-	virtual void UpdateGPUData(IGameObjectManager::InstanceBufferData& data); // GPUバッファ更新関数
+	virtual void UpdateGPUData(InstanceBufferData& data); // GPUバッファ更新関数
 	void StackDrawCall();
-	virtual void Draw(ID3D11Buffer* gpuBuffer, std::vector<IGameObjectManager::InstanceBufferData> dataList) {};
+	virtual void Draw() {};
 
 	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
+
+	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
 	inline void SetLayer(const int& layer) { m_Layer = layer; }

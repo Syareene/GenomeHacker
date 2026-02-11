@@ -38,8 +38,9 @@ public:
 	void Uninit() override;
 	void Update() override;
 
-	void UpdateGPUData(IGameObjectManager::InstanceBufferData& data) override;
-	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue) override;
+	void UpdateGPUData(InstanceBufferData& data) override;
+	// icontainerでは引数がRenderQueueData& renderQueueだったのでどうなるか
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) override;
 
 	void FlushPendingObjects();
 	// sceneみたいに後付pushにするかちょい悩む

@@ -3,11 +3,12 @@
 #include "scene/manager.h"
 #include "object/camera.h"
 #include "manager/default_vertex.h"
+//#include "manager/object_manager.h"
 
 unsigned int GameObject::m_NextObjectID = 0; 
 
 
-void GameObject::UpdateGPUData(IGameObjectManager::InstanceBufferData& data)
+void GameObject::UpdateGPUData(InstanceBufferData& data)
 {
 	// 各種値を現在のobjectの値で更新
 	data.Position = XMFLOAT4(GetPosition().x,GetPosition().y,GetPosition().z,1.0f);

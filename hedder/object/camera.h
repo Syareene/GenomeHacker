@@ -27,6 +27,7 @@ public:
 	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
 
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効
 
 	void Init(Transform trans = Transform());
 	void Uninit() override;

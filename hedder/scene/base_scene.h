@@ -75,7 +75,7 @@ public:
 	void DrawObjectsByQueue()
 	{
 		// キューの作成
-		std::vector<IGameObjectManager::RenderQueueData> renderQueue;
+		std::vector<RenderQueueData> renderQueue;
 		// リクエスト数の予測（パフォーマンス向上のため）
 		renderQueue.reserve(1024);
 

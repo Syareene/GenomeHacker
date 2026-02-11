@@ -15,6 +15,7 @@ public:
 	virtual ~Button() {}
 	Button(Button&&) noexcept = default; // ムーブコンストラクタ
 	Button& operator=(Button&&) noexcept = default; // ムーブ代入演算子
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効(汎用クラスは別テクスチャ読み込むのに対応してないので一旦無効化)
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring& filePath, const std::wstring& frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const int& texID, const std::wstring frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const FontData& fontData, const std::string& text, const std::wstring& filePath = L"", const std::wstring& frameTexPath = L"");

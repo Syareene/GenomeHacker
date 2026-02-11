@@ -7,11 +7,12 @@
 #include <typeinfo>
 #include <string>
 #include "Windows.h"
-
 #include "object/game_object.h"
+#include "object/i_container.h"
+#include "object/check_override.h"
+
 
 class Panel; // 前方宣言
-
 
 // ObjectManagerのインターフェースとなる基底クラス
 class IObjectManager
@@ -33,31 +34,7 @@ public:
 class IGameObjectManager : public IObjectManager
 {
 public:
-	// インスタンシングレンダリングにて用いるgpu受け渡し用バッファの構造体
-	struct InstanceBufferData
-	{
-		XMFLOAT4 Position; // xyz
-		XMFLOAT4 Scale; // xyz
-		XMFLOAT4 Color; // rgba
-		XMFLOAT4 UVOffset; // xy: offset, zw: scale
-	};
 
-	struct RenderQueueData
-	{
-		int Layer; // layerNo
-		float Depth; // カメラからの距離
-		std::function<void()> DrawCall; // 実際の描画関数
-
-		// 自作構造体なため、ソート用の比較演算子を定義
-		bool operator<(const RenderQueueData& other) const
-		{
-			if (Layer != other.Layer)
-			{
-				return Layer < other.Layer; // レイヤーで比較
-			}
-			return Depth < other.Depth; // レイヤーが同じ場合は深度で比較
-		}
-	};
 
 	virtual void UpdateGPUData() = 0;
 
@@ -85,6 +62,7 @@ class ObjectManager : public IGameObjectManager
 public:
 	ObjectManager()
 	{
+		CheckOverride();
 		m_Objects.reserve(ObjectType::MAX_OBJECTS);
 		m_InstanceDataBuffer.reserve(ObjectType::MAX_OBJECTS);
 	}
@@ -248,7 +226,8 @@ public:
 		// AI提案まま
 		if constexpr (ObjectType::ENABLE_INSTANCING)
 		{
-			m_InstanceDataList.clear();
+			// データをクリア(メモリ上でのサイズは変わらない)
+			m_InstanceDataBuffer.clear();
 
 			// 1. まずアクティブなオブジェクトへのポインタを集める
 			std::vector<ObjectType*> activeObjects;
@@ -271,21 +250,23 @@ public:
 			// 3. ソート順通りにGPU用データを更新
 			for (auto* obj : activeObjects) 
 			{
-				// ここの引数に生成したinstancebufferの該当indexを渡す必要あり
-				m_InstanceDataList.emplace_back(obj->UpdateGPUData()); // **********行列計算等々**********
+				// 要素を構築しその場所を取得
+				InstanceBufferData& data = m_InstanceDataBuffer.emplace_back();
+				// 引数に渡して書き込みしてもらう
+				obj->UpdateGPUData(data);
 			}
 
 			// gameobjectの中に更にgameobjectを管理しているようなものの場合は中身に対して探索する
-			if constexpr (ContainerObject<ObjectType>)
-			{
-				for (auto& obj : m_Objects)
-				{
-					if(obj.IsActive() && !obj.IsDestroy())
-					{
-						obj.UpdateGPUData();
-					}
-				}
-			}
+			//if constexpr (ContainerObject<ObjectType>)
+			//{
+			//	for (auto& obj : m_Objects)
+			//	{
+			//		if(obj.IsActive() && !obj.IsDestroy())
+			//		{
+			//			obj.UpdateGPUData(InstanceBufferData & data);
+			//		}
+			//	}
+			//}
 
 			// 4. GPUバッファ転送 (Map/Unmap)
 			// ... (省略: 前回のコードと同じ) ...
@@ -293,11 +274,11 @@ public:
 
 
 		// 過去のやつ
-		int index = 0;
+		/*int index = 0;
 		for(auto& obj : m_Objects)
 		{
 			obj.UpdateGPUData(m_InstanceBuffer, m_InstanceDataBuffer[index]);
-		}
+		}*/
 		// バッファ更新
 		Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
 	}
@@ -336,7 +317,7 @@ public:
 		// === インスタンシングの場合 ===
 		if constexpr (requires { ObjectType::ENABLE_INSTANCING; }&& ObjectType::ENABLE_INSTANCING)
 		{
-			if (m_InstanceDataList.empty()) return;
+			if (m_InstanceDataBuffer.empty()) return;
 
 			// ソート済みの m_InstanceDataList を走査し、レイヤーの切れ目を見つけてリクエストを発行する
 			// activeObjectsはUpdateGPUDataでソート済みなので、同じレイヤーは連続している前提
@@ -381,7 +362,7 @@ public:
 			// リクエストの発行
 			for (const auto& batch : batches)
 			{
-				RenderRequest req;
+				RenderQueueData req;
 				req.Layer = batch.Layer;
 				req.Depth = 0.0f; // インスタンシング内での深度ソートはZバッファ任せ
 
@@ -389,7 +370,7 @@ public:
 				req.DrawCall = [this, batch]() {
 					ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
 
-					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(typename ObjectType::InstanceData) };
+					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(InstanceBufferData) };
 					UINT offsets[2] = { 0, 0 };
 					ID3D11Buffer* pBuffers[2] = { m_Objects[0].GetVertexBuffer(), m_InstanceBuffer };
 
@@ -399,7 +380,7 @@ public:
 					// ★ここが重要: DrawInstancedの引数で「開始位置(StartInstanceLocation)」を指定
 					// 引数: VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation
 					Renderer::GetDeviceContext()->DrawInstanced(4, batch.Count, 0, batch.Start);
-					};
+				};
 
 				renderQueue.push_back(req);
 			}
@@ -425,7 +406,7 @@ public:
 			{
 				if (obj.IsActive() && !obj.IsDestroy())
 				{
-					RenderRequest req;
+					RenderQueueData req;
 					req.Layer = obj.GetLayer(); // GameObjectにGetLayerが必要
 					// カメラからの距離を計算（簡易）
 					req.Depth = obj.GetPosition().z;
@@ -437,6 +418,27 @@ public:
 				}
 			}
 		}
+#ifdef _DEBUG
+		// デバッグ時にコライダを描画
+		const int DEBUG_LAYER = 1000;
+		for (auto& obj : m_Objects)
+		{
+			// アクティブでないか削除済みならスキップ
+			if (!obj.IsActive() || obj.IsDestroy()) return;
+			// コライダないならスキップ
+			if (!obj.GetCollider()) return;
+
+			// 描画関数をラムダで登録
+			RenderQueueData req;
+			req.Layer = DEBUG_LAYER; // 最前面に描画
+			req.Depth = 0.0f;
+			req.DrawCall = [&obj]() 
+			{
+				obj.GetCollider()->DrawCollider();	
+			};
+			renderQueue.push_back(req);
+		}
+#endif
 	}
 
 	void Draw() override
@@ -488,6 +490,18 @@ private:
 	ID3D11Buffer* m_InstanceBuffer = nullptr;
 	ID3D11ShaderResourceView* m_InstanceSRV = nullptr;
 	std::vector<InstanceBufferData> m_InstanceDataBuffer;
+
+	// このエラーでないのそれ以前の問題とかそういうことかね
+	void CheckOverride()
+	{
+		if constexpr (requires { ObjectType::ENABLE_INSTANCING; }&& ObjectType::ENABLE_INSTANCING)
+		{
+			// static関数はvirtual化できないためここでチェックする
+			// GameObjectにSetPipelineState関数を定義していないとコンパイルエラーを出す
+			static_assert(HasPipelineState<ObjectType>,
+				"Error: This class enables instancing but forgot to define 'static void SetPipelineState()'.");
+		}
+	}
 };
 
 template <typename ObjectType>

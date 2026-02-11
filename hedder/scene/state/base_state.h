@@ -28,7 +28,7 @@ public:
 	virtual void Uninit();
 	virtual void Update();
 	void UpdateGPUData();
-	void SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue);
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue);
 	virtual void Draw();
 	void UpdateFinal();
 	void FlushPendingObjects();

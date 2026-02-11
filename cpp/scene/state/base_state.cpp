@@ -44,7 +44,7 @@ void State::UpdateGPUData()
     }
 }
 
-void State::SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue)
+void State::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
 {
     // 3dオブジェクトの描画要求を送信
     for (auto& objects3d : m_Objects3D)

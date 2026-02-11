@@ -53,10 +53,10 @@ void Panel::Update()
 	FlushPendingObjects();
 }
 
-void Panel::UpdateGPUData(IGameObjectManager::InstanceBufferData& data)
+void Panel::UpdateGPUData(InstanceBufferData& data)
 {
 	// パネルのGPUデータ更新処理
-	GameObject::UpdateGPUData(data);
+	UpdateGPUData(data);
 	// 子オブジェクトのGPUデータ更新
 	for (auto& child : m_ChildObjects)
 	{
@@ -68,7 +68,7 @@ void Panel::UpdateGPUData(IGameObjectManager::InstanceBufferData& data)
 	}
 }
 
-void Panel::SubmitDrawRequests(std::vector<IGameObjectManager::RenderQueueData>& renderQueue)
+void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
 {
 	// 子オブジェクトの描画要求提出
 	for (auto& child : m_ChildObjects)
