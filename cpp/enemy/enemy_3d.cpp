@@ -5,6 +5,7 @@
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 
 void Enemy3D::Init(Transform trans)
 {

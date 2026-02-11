@@ -5,6 +5,7 @@
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "player.h"
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"

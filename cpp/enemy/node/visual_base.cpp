@@ -3,6 +3,7 @@
 #include "enemy/node/visual_base.h"
 #include "enemy/node/base.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 

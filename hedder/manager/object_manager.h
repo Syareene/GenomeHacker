@@ -10,7 +10,7 @@
 #include "object/game_object.h"
 #include "object/i_container.h"
 #include "object/check_override.h"
-
+#include "object/3d_object.h"
 
 class Panel; // 前方宣言
 
@@ -419,24 +419,28 @@ public:
 			}
 		}
 #ifdef _DEBUG
-		// デバッグ時にコライダを描画
-		const int DEBUG_LAYER = 1000;
-		for (auto& obj : m_Objects)
+		// object3Dのみコライダ描画対応
+		if constexpr(std::is_base_of<Object3D, ObjectType>::value)
 		{
-			// アクティブでないか削除済みならスキップ
-			if (!obj.IsActive() || obj.IsDestroy()) return;
-			// コライダないならスキップ
-			if (!obj.GetCollider()) return;
-
-			// 描画関数をラムダで登録
-			RenderQueueData req;
-			req.Layer = DEBUG_LAYER; // 最前面に描画
-			req.Depth = 0.0f;
-			req.DrawCall = [&obj]() 
+			// デバッグ時にコライダを描画
+			const int DEBUG_LAYER = 1000;
+			for (auto& obj : m_Objects)
 			{
-				obj.GetCollider()->DrawCollider();	
-			};
-			renderQueue.push_back(req);
+				// アクティブでないか削除済みならスキップ
+				if (!obj.IsActive() || obj.IsDestroy()) return;
+				// コライダないならスキップ
+				if (!obj.GetCollider()) return;
+
+				// 描画関数をラムダで登録
+				RenderQueueData req;
+				req.Layer = DEBUG_LAYER; // 最前面に描画
+				req.Depth = 0.0f;
+				req.DrawCall = [&obj]()
+					{
+						obj.DrawCollider();
+					};
+				renderQueue.push_back(req);
+			}
 		}
 #endif
 	}

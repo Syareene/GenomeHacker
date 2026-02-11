@@ -72,39 +72,7 @@ public:
 
 
 	// ドローをキューで整理し一括で描画する関数郡
-	void DrawObjectsByQueue()
-	{
-		// キューの作成
-		std::vector<RenderQueueData> renderQueue;
-		// リクエスト数の予測（パフォーマンス向上のため）
-		renderQueue.reserve(1024);
-
-		// 各マネージャーからリクエストを収集
-		for (auto& manager : m_Objects3D) 
-		{
-			if (manager) manager->SubmitDrawRequests(renderQueue);
-		}
-		
-		for (auto& manager : m_Objects2D) 
-		{
-			if (manager) manager->SubmitDrawRequests(renderQueue);
-		}
-
-		// Stateのオブジェクトに対してもキューを走らせる
-		m_StateManager.SubmitDrawRequests(renderQueue);
-
-
-		// レイヤー順にソートする
-		std::sort(renderQueue.begin(), renderQueue.end());
-
-		// 実行
-		for (const auto& req : renderQueue)
-		{
-			// インスタンシングレンダリングならまとめてスタックに積まれている
-			// 対応していない場合は個別に積まれているため個別に関数が呼ばれる
-			req.DrawCall(); 
-		}
-	}
+	void DrawObjectsByQueue();
 
 
 	// 2d版リザーブ関数

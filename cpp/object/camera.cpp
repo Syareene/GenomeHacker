@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "lib/renderer.h"
 #include "object/camera.h"
 #include "player.h"

@@ -3,6 +3,7 @@
 #include "lib/renderer.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "manager/texture_manager.h"
 #include "manager/shader_manager.h"
 #include "lib/random_number.h"

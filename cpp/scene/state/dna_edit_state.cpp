@@ -2,6 +2,7 @@
 #include "scene/state/dna_edit_state.h"
 #include "scene/state/dna_table_state.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/ui/button.h"
 #include "manager/texture_manager.h"
 #include "enemy/base_data/enemy_base.h"

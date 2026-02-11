@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "object/movement/title_cam.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/camera.h"
 
 void TitleCam::Attach(unsigned int objId, const Vector3& start_pos)

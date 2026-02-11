@@ -2,6 +2,7 @@
 #include <thread>
 #include "scene/state/load_state.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 
 
 void LoadState::Load()

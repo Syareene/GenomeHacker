@@ -2,6 +2,7 @@
 #include "enemy/node/eight_shot.h"
 #include "enemy/field_enemy.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
 

@@ -5,6 +5,7 @@
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "enemy/bullet.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"

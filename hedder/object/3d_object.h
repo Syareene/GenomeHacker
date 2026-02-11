@@ -20,6 +20,7 @@ public:
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}
+	void DrawCollider();
 	template <typename T>
 	T* SetCollider()
 	{

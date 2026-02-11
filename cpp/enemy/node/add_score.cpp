@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/add_score.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "score.h"
 #include "enemy/node/base.h"
 #include <format>

@@ -545,9 +545,6 @@
     <ClCompile Include="cpp\scene\state\setting_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\object\3d_object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\enemy\node\number.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
@@ -601,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\move_random.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\3d_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@
 
 #include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/game_object.h"
 #include "manager/texture_manager.h"
 #include "enemy/dna_screen_script.h"

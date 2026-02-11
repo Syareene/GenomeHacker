@@ -2,6 +2,7 @@
 
 #include "enemy/dna_screen_script.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/ui/font.h"
 #include "object/ui/button.h"
 #include "object/ui/image.h"

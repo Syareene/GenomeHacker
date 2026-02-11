@@ -5,6 +5,7 @@
 #include "scene/manager.h"
 #include "enemy/base_data/enemy_list.h"
 #include "object/system_object.h"
+#include "scene/base_scene.h"
 
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"

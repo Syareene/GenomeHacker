@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "scene/state/dna_table_state.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 
 #include "enemy/node_tab/enemy_dna_list.h"
 
