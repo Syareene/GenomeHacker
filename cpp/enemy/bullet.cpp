@@ -97,10 +97,10 @@ void Bullet::Draw()
 
 	m_ModelRenderer->Draw();
 
-	// コリジョン描画(デバッグ用)
-	if (!GetCollider())
-	{
-		return;
-	}
-	GetCollider()->DrawCollider();
+	//// コリジョン描画(デバッグ用)
+	//if (!GetCollider())
+	//{
+	//	return;
+	//}
+	//GetCollider()->DrawCollider();
 }
