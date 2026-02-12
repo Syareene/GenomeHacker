@@ -69,6 +69,13 @@ struct ParticleInstanceData
     float4 UVOffset; // xy: offset, zw: scale
 };
 
+struct InstanceData
+{
+    float4x4 WorldMatrix;
+    float4 Color;
+    float4 UVOffset; // xy: offset, zw: scale
+};
+
 struct VS_IN
 {
 	float4 Position		: POSITION0;
