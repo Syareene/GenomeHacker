@@ -14,6 +14,39 @@
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
 
+void Player::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+}
+
+void Player::UpdateGPUData(InstanceBufferData& data)
+{
+	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
+
+	// ビューの逆行列作成
+	XMMATRIX invView;
+	invView = XMMatrixInverse(nullptr, camera->GetViewMatrix());
+	invView.r[3].m128_f32[0] = 0.0f; // カメラの位置を無視
+	invView.r[3].m128_f32[1] = 0.0f;
+	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
+
+	XMMATRIX trans, world, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * invView * trans;
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
 void Player::Init(Transform trans)
 {
 	// 画像が小さいため相対的に拡大する

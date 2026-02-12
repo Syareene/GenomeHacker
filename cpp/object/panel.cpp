@@ -68,6 +68,11 @@ void Panel::UpdateGPUData(InstanceBufferData& data)
 	}
 }
 
+void Panel::SetPipelineState()
+{
+	// パネルのパイプラインステート設定(一旦特になし)
+}
+
 void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
 {
 	// 子オブジェクトの描画要求提出

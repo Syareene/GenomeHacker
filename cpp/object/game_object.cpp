@@ -11,11 +11,18 @@ unsigned int GameObject::m_NextObjectID = 0;
 
 void GameObject::UpdateGPUData(InstanceBufferData& data)
 {
-	// 各種値を現在のobjectの値で更新
-	data.Position = XMFLOAT4(GetPosition().x,GetPosition().y,GetPosition().z,1.0f);
-	data.Scale = XMFLOAT4(m_Transform.GetScale().x, m_Transform.GetScale().y, m_Transform.GetScale().z, 1.0f);
+	XMMATRIX trans, world, scale, rot;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * rot * trans;
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
 	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f); // うわこれobject側でuv座標持ってないと大変かも?->ChangeTexUVからとる?
+	// uv設定
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 // ここ、描画コールを重ねている参照元がないと困るね

@@ -65,17 +65,6 @@ public:
 		CheckOverride();
 		m_Objects.reserve(ObjectType::MAX_OBJECTS);
 		m_InstanceDataBuffer.reserve(ObjectType::MAX_OBJECTS);
-
-		// ストラクチャードバッファ作成
-		//InstanceData* data = new InstanceData[maxParticles];
-		// 初期値をセット
-		//for (int i = 0; i < maxParticles; i++)
-		//{
-		//	data[i].PositionAndSize = XMFLOAT4(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100.0f, 0.0f);
-		//	data[i].Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		//	data[i].UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-		//}
-
 		// shaderに渡したいプロパティをInstanceDataで渡す
 
 		D3D11_BUFFER_DESC bd{};
@@ -86,7 +75,8 @@ public:
 		bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-		Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_InstanceBuffer);
+		// 第二引数は初期データなので今回はnullでok
+		Renderer::GetDevice()->CreateBuffer(&bd, nullptr, &m_InstanceBuffer);
 
 		// シェーダーリソースビュー作成
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd{};
@@ -255,22 +245,12 @@ public:
 	// 全部のupdate終わった後に呼ぶことで他オブジェクトによって座標が動かされても大丈夫
 	void UpdateGPUData() override
 	{
-		// AI提案まま
 		if constexpr (ObjectType::ENABLE_INSTANCING)
 		{
-			// map
-			D3D11_MAPPED_SUBRESOURCE msr;
-			Renderer::GetDeviceContext()->Map(m_InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-
-			InstanceBufferData* dataPtr = (InstanceBufferData*)msr.pData;
-			int count = 0;
-
-			// あーこれだと今までデータクリアしてた部分しなくなるわけだけどどうなるんだ
-
 			// データをクリア(メモリ上でのサイズは変わらない)
 			m_InstanceDataBuffer.clear();
 
-			// 1. まずアクティブなオブジェクトへのポインタを集める
+			// まずアクティブなオブジェクトへのポインタを集める
 			std::vector<ObjectType*> activeObjects;
 			for (auto& obj : m_Objects) 
 			{
@@ -280,7 +260,7 @@ public:
 				}
 			}
 
-			// 2. レイヤー順（昇順）にソートする
+			// レイヤー順にソートする
 			// これにより、GPUバッファ内でレイヤーごとにデータが連続するようになる
 			std::sort(activeObjects.begin(), activeObjects.end(),
 				[](const ObjectType* a, const ObjectType* b) 
@@ -288,7 +268,7 @@ public:
 					return a->GetLayer() < b->GetLayer();
 				});
 
-			// 3. ソート順通りにGPU用データを更新
+			// ソート順通りにGPU用データを更新
 			for (auto* obj : activeObjects) 
 			{
 				// 要素を構築しその場所を取得
@@ -297,20 +277,15 @@ public:
 				obj->UpdateGPUData(data);
 			}
 
-			// gameobjectの中に更にgameobjectを管理しているようなものの場合は中身に対して探索する
-			//if constexpr (ContainerObject<ObjectType>)
-			//{
-			//	for (auto& obj : m_Objects)
-			//	{
-			//		if(obj.IsActive() && !obj.IsDestroy())
-			//		{
-			//			obj.UpdateGPUData(InstanceBufferData & data);
-			//		}
-			//	}
-			//}
+			// データがないなら転送しない
+			if (m_InstanceDataBuffer.empty()) return;
 
-			// 4. GPUバッファ転送 (Map/Unmap)
-			// ... (省略: 前回のコードと同じ) ...
+			// GPUバッファ転送(Map/Unmap)
+			D3D11_MAPPED_SUBRESOURCE msr;
+			Renderer::GetDeviceContext()->Map(m_InstanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+
+			memcpy(msr.pData, m_InstanceDataBuffer.data(), sizeof(InstanceBufferData) * m_InstanceDataBuffer.size());
+			Renderer::GetDeviceContext()->Unmap(m_InstanceBuffer, 0);
 		}
 
 
@@ -408,23 +383,24 @@ public:
 				req.Depth = 0.0f; // インスタンシング内での深度ソートはZバッファ任せ
 
 				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
+				
+
+				// おそらくここで追加でキャプチャを入れないとstatic関数しか呼べないので、それぞれのobjectの値を見れないんだよね
 				req.DrawCall = [this, batch]() {
 					ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
-
-					UINT strides[2] = { sizeof(VERTEX_3D), sizeof(InstanceBufferData) };
-					UINT offsets[2] = { 0, 0 };
-					ID3D11Buffer* pBuffers[2] = { m_Objects[0].GetVertexBuffer(), m_InstanceBuffer };
-
 					// これ対象が2dの場合はdepth enable/disable切り替え必要
+
+					// バッファ設定(これもpipelinestateに委任しちゃってもいい気はするけど)
+					// 現在の構造だとできないので、今までDefaultで通してた部分をポインタだけ貰って設定するような形にしないとだめだね
+					UINT stride = sizeof(VERTEX_3D);
+					UINT offset = 0;
+					ID3D11Buffer* vb = m_Objects[0].GetVertexBuffer();
+					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
 					// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
 					Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
 
-					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 2, pBuffers, strides, offsets);
-					Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-					// ★ここが重要: DrawInstancedの引数で「開始位置(StartInstanceLocation)」を指定
-					// 引数: VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation
+					// まとめて描画
 					Renderer::GetDeviceContext()->DrawInstanced(4, batch.Count, 0, batch.Start);
 				};
 

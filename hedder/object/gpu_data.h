@@ -6,10 +6,12 @@
 // インスタンシングレンダリングにて用いるgpu受け渡し用バッファの構造体
 struct InstanceBufferData
 {
-	XMFLOAT4 Position; // xyz
-	XMFLOAT4 Scale; // xyz
+	XMFLOAT4X4 WorldMatrix; // 4x4行列
+	//XMFLOAT4 Position; // xyz
+	//XMFLOAT4 Scale; // xyz
 	XMFLOAT4 Color; // rgba
 	XMFLOAT4 UVOffset; // xy: offset, zw: scale
+	
 };
 
 struct RenderQueueData

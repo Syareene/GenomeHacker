@@ -8,6 +8,8 @@
 class Particle2D : public Object2D
 {
 public:
+	static void SetPipelineState();
+	void UpdateGPUData(InstanceBufferData& data) override;
 	void Register(int maxCount);
 	void Init(Transform trans = Transform());
 	void Uninit() override;

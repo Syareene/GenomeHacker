@@ -13,6 +13,7 @@ public:
 	void Draw() override;
 
 	static void SetPipelineState();
+	void UpdateGPUData(InstanceBufferData& data) override;
 
 	inline void SetEnemyBase(EnemyBase* base) { m_EnemyBase = base; }
 	inline EnemyBase* GetEnemyBase() const { return m_EnemyBase; }

@@ -7,6 +7,8 @@
 class Player : public Object3D
 {
 public:
+	static void SetPipelineState();
+	void UpdateGPUData(InstanceBufferData& data) override;
 	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;

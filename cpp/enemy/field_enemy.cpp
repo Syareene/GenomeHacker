@@ -8,6 +8,7 @@
 #include "enemy/enemy_spawner.h"
 #include "collider/sphere.h"
 #include "player.h"
+#include "object/camera.h"
 
 void FieldEnemy::SetPipelineState()
 {
@@ -17,21 +18,44 @@ void FieldEnemy::SetPipelineState()
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
 
-	// 移動、回転マトリックス設定
-	SetWorldMatrixOnDrawBillboard();
+	// 下2つ、3dならいらない説
 
-	// マテリアル設定
-	SetMaterialOnDraw();
+	// viewmat
+	//XMMATRIX view;
+	//view = XMMatrixIdentity();
+	//Renderer::SetViewMatrix(view);
 
-	// 頂点バッファ設定
-	//SetDefaultVertexBufferBillboardOnDraw();
-	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
+	// projmat
+	//XMMATRIX projection;
+	//projection = XMMatrixOrthographicOffCenterLH(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
+	//Renderer::SetProjectionMatrix(projection);
 
-	// テクスチャ設定
-	// 一時変数に入れないと参照取得できないのでこうする
+	// プリミティブトポロジ
+	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
 
-	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetEnemyBase()->GetEnemyTextureID());
-	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+void FieldEnemy::UpdateGPUData(InstanceBufferData& data)
+{
+	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
+
+	// ビューの逆行列作成
+	XMMATRIX invView;
+	invView = XMMatrixInverse(nullptr, camera->GetViewMatrix());
+	invView.r[3].m128_f32[0] = 0.0f; // カメラの位置を無視
+	invView.r[3].m128_f32[1] = 0.0f;
+	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
+
+	XMMATRIX trans, world, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * invView * trans;
+	
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void FieldEnemy::Init(EnemyBase* base, Transform trans)

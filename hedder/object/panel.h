@@ -39,6 +39,7 @@ public:
 	void Update() override;
 
 	void UpdateGPUData(InstanceBufferData& data) override;
+	static void SetPipelineState();
 	// icontainerでは引数がRenderQueueData& renderQueueだったのでどうなるか
 	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) override;
 

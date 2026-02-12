@@ -5,6 +5,7 @@
 class Explosion : public Object3D
 {
 public:
+	static constexpr bool ENABLE_INSTANCING = false;
 	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;

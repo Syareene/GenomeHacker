@@ -6,7 +6,7 @@ class EnemyBullet : public Object3D
 {
 public:
 	static constexpr size_t MAX_OBJECTS = 1000; // オブジェクトvector最大数。継承先クラスで変更可能。
-
+	static constexpr bool ENABLE_INSTANCING = false;
 	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;

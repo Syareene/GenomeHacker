@@ -5,6 +5,7 @@
 class Score : public Object2D
 {
 public:
+	static constexpr bool ENABLE_INSTANCING = false;
 	void Init(Transform trans = Transform());
 	void Uninit() override; // 
 	void Update() override; // 
