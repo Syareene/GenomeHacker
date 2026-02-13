@@ -80,6 +80,9 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
 	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
 	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y, false);
+	// textureIDをセット
+	SetTextureID(base->GetEnemyTextureID());
+
 
 	//Object3D::Init();
 	// テクスチャは敵データから描画時に取得するのでいらない
@@ -183,7 +186,7 @@ void FieldEnemy::Draw()
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetEnemyBase()->GetEnemyTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定

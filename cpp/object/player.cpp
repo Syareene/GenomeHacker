@@ -9,6 +9,7 @@
 #include "enemy/bullet.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
+#include "manager/default_vertex.h"
 #include "collider/sphere.h"
 #include "enemy/node/visual_base.h"
 #include "enemy/node/move_x.h"
@@ -58,6 +59,9 @@ void Player::Init(Transform trans)
 
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\hero.png"));
+
+	// 頂点代入
+	SetVertexBuffer(DefaultVertex::GetBillboardBuffer());
 
 	// コリジョンを有効化する
 	Transform transform;

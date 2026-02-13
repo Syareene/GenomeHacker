@@ -35,7 +35,6 @@ private:
 
 	// ここに描画系の簡易関数を作成する
 protected:
-	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
 	inline ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
 	inline void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
 	inline ID3D11VertexShader* GetVertexShader() const { return m_VertexShader; }
@@ -88,6 +87,7 @@ public:
 	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
 
+	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
 	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)

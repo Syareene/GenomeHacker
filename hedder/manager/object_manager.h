@@ -11,6 +11,7 @@
 #include "object/i_container.h"
 #include "object/check_override.h"
 #include "object/3d_object.h"
+#include "manager/texture_manager.h"
 
 class Panel; // 前方宣言
 
@@ -396,6 +397,10 @@ public:
 					UINT offset = 0;
 					ID3D11Buffer* vb = m_Objects[0].GetVertexBuffer();
 					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+
+					// テクスチャセット
+					ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(m_Objects[0].GetTextureID());
+					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 					// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
 					Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
