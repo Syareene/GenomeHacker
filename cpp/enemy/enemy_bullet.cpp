@@ -11,6 +11,33 @@
 #include "enemy/base_data/enemy_base.h"
 #include "collider/sphere.h"
 #include "enemy/explosion.h"
+#include "manager/shader_manager.h"
+
+void EnemyBullet::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+}
+
+void EnemyBullet::UpdateGPUData(InstanceBufferData& data)
+{
+	XMMATRIX trans, world, rot, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * rot * trans;
+	Renderer::SetWorldMatrix(world);
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+}
 
 void EnemyBullet::Init(Transform trans)
 {

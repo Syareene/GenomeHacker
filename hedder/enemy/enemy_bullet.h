@@ -2,17 +2,24 @@
 
 #include "object/3d_object.h"
 
+
+class ModelRenderer;
+
 class EnemyBullet : public Object3D
 {
 public:
 	static constexpr size_t MAX_OBJECTS = 1000; // オブジェクトvector最大数。継承先クラスで変更可能。
-	static constexpr bool ENABLE_INSTANCING = false;
+	//static constexpr bool ENABLE_INSTANCING = false;
+	static constexpr bool IS_3D_MODEL = true;
 	void Init(Transform trans = Transform());
 	void Uninit() override;
 	void Update() override;
+	static void SetPipelineState();
+	void UpdateGPUData(InstanceBufferData& data) override;
 	void Draw() override;
 	void SetVelocity(const Vector3& velocity) { m_Velocity = velocity; }
 	const Vector3 GetVelocity() const { return m_Velocity; }
+	ModelRenderer* GetModelRenderer() const { return m_ModelRenderer; }
 
 	// 発射した敵の種類IDを設定する関数
 	void SetOwnerEnemyID(const int enemyID) { m_OwnerEnemyID = enemyID; }

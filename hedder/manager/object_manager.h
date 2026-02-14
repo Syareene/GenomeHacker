@@ -12,6 +12,7 @@
 #include "object/check_override.h"
 #include "object/3d_object.h"
 #include "manager/texture_manager.h"
+#include "lib/modelRenderer.h"
 
 class Panel; // 前方宣言
 
@@ -315,17 +316,17 @@ public:
 	void UpdateObjectByTags(const std::list<std::string>& tags) override
 	{
 		// 指定タグを持つオブジェクトのみ更新
-		for(auto& obj : m_Objects)
+for (auto& obj : m_Objects)
+{
+	for (const auto& tag : tags)
+	{
+		if (obj.IsTagAvailable(tag))
 		{
-			for(const auto& tag : tags)
-			{
-				if(obj.IsTagAvailable(tag))
-				{
-					obj.Update();
-					break; // タグが見つかったら次のオブジェクトへ
-				}
-			}
+			obj.Update();
+			break; // タグが見つかったら次のオブジェクトへ
 		}
+	}
+}
 	}
 
 	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override
@@ -365,7 +366,7 @@ public:
 				// タグを確認
 
 				// tagsがemptyならそのまま追加
-				if(tags.empty())
+				if (tags.empty())
 				{
 					sortedObjs.push_back(&obj);
 					continue;
@@ -411,30 +412,91 @@ public:
 				req.Depth = 0.0f; // インスタンシング内での深度ソートはZバッファ任せ
 
 				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
-				
 
-				// おそらくここで追加でキャプチャを入れないとstatic関数しか呼べないので、それぞれのobjectの値を見れないんだよね
-				req.DrawCall = [this, batch]() {
-					ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
-					// これ対象が2dの場合はdepth enable/disable切り替え必要
 
-					// バッファ設定(これもpipelinestateに委任しちゃってもいい気はするけど)
-					// 現在の構造だとできないので、今までDefaultで通してた部分をポインタだけ貰って設定するような形にしないとだめだね
-					UINT stride = sizeof(VERTEX_3D);
-					UINT offset = 0;
-					ID3D11Buffer* vb = m_Objects[0].GetVertexBuffer();
-					Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+				if constexpr (requires { ObjectType::IS_3D_MODEL; }&& ObjectType::IS_3D_MODEL)
+				{
+					// 対象があるかどうか
+					if (m_Objects.empty()) return;
+					MODEL* modelData = m_Objects[0].GetModelRenderer()->GetModel();
+					// 読み込めないならスキップ
+					if (!modelData) return;
 
-					// テクスチャセット
-					ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(m_Objects[0].GetTextureID());
-					Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+					// ラムダ式でキャプチャし登録
+					req.DrawCall = [this, batch, modelData]()
+						{
+							ObjectType::SetPipelineState();
 
-					// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
-					Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
+							// 1. 頂点バッファ・インデックスバッファの設定
+							UINT stride = sizeof(VERTEX_3D);
+							UINT offset = 0;
+							// インスタンシングデータ(m_InstanceBuffer)もスロット1にバインド
+							//ID3D11Buffer* pBuffers[2] = { modelData->VertexBuffer, m_InstanceBuffer };
+							//UINT strides[2] = { stride, sizeof(typename ObjectType::InstanceBufferData) }; // 構造体名注意
+							//UINT offsets[2] = { 0, 0 };
 
-					// まとめて描画
-					Renderer::GetDeviceContext()->DrawInstanced(4, batch.Count, 0, batch.Start);
-				};
+							Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &modelData->VertexBuffer, &stride, &offset);
+							Renderer::GetDeviceContext()->IASetIndexBuffer(modelData->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+							Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+							// これそうか、ストラクチャードバッファも送らないといけなくて
+
+							// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
+							Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
+
+
+							// ストラクチャードバッファ方式の場合は VSSetShaderResources などを使用してください
+							// 以下は頂点バッファ方式(InputLayout方式)の例です
+
+							// 2. サブセットごとの描画ループ
+							for (unsigned int i = 0; i < modelData->SubsetNum; i++)
+							{
+								// マテリアル設定 (定数バッファ)
+								Renderer::SetMaterial(modelData->SubsetArray[i].Material.Material);
+
+								// テクスチャ設定
+								if (modelData->SubsetArray[i].Material.Texture)
+								{
+									Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &modelData->SubsetArray[i].Material.Texture);
+								}
+
+								// ★ インデックス付きインスタンシング描画
+								// 引数: IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation
+								Renderer::GetDeviceContext()->DrawIndexedInstanced(
+									modelData->SubsetArray[i].IndexNum,
+									batch.Count,
+									modelData->SubsetArray[i].StartIndex,
+									0,
+									batch.Start
+								);
+							}
+						};
+				}
+				else
+				{
+
+					// おそらくここで追加でキャプチャを入れないとstatic関数しか呼べないので、それぞれのobjectの値を見れないんだよね
+					req.DrawCall = [this, batch]() {
+						ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
+						// これ対象が2dの場合はdepth enable/disable切り替え必要
+
+						// バッファ設定(これもpipelinestateに委任しちゃってもいい気はするけど)
+						// 現在の構造だとできないので、今までDefaultで通してた部分をポインタだけ貰って設定するような形にしないとだめだね
+						UINT stride = sizeof(VERTEX_3D);
+						UINT offset = 0;
+						ID3D11Buffer* vb = m_Objects[0].GetVertexBuffer();
+						Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+
+						// テクスチャセット
+						ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(m_Objects[0].GetTextureID());
+						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+
+						// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
+						Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
+
+						// まとめて描画
+						Renderer::GetDeviceContext()->DrawInstanced(4, batch.Count, 0, batch.Start);
+						};
+				}
 
 				renderQueue.push_back(req);
 			}
