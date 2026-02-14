@@ -12,6 +12,8 @@ public:
 
 	// このクラスがenemy_baseからstateにたされてるので要らなくなったらstateからdestoryすべきかな
 
+	static constexpr bool ENABLE_INSTANCING = false;
+
 	void Init(EnemyBase* base_enemy, const unsigned int& player_id);
 	void Uninit() override;
 	void Update() override;
