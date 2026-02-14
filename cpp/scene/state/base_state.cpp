@@ -51,7 +51,7 @@ void State::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
     {
         if (objects3d)
         {
-            objects3d->SubmitDrawRequests(renderQueue);
+            objects3d->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
         }
     }
     // 2dオブジェクトの描画要求を送信
@@ -59,7 +59,7 @@ void State::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
     {
         if (objects2d)
         {
-            objects2d->SubmitDrawRequests(renderQueue);
+            objects2d->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
         }
     }
 }

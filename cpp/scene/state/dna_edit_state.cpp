@@ -19,6 +19,14 @@ void DnaEditState::Init()
 	SetIsInitialized(true);
 
 	State::Init();
+	// sceneの描画タグリセット
+	Manager::GetCurrentScene()->GetDrawTargetTags().clear();
+	// sceneの描画タグセット
+	Manager::GetCurrentScene()->AddDrawTargetTag("dna_edit");
+	// stateの描画タグリセット
+	GetDrawTargetTags().clear();
+	// stateの描画タグセット(このstateはない)
+	//AddDrawTargetTag();
 
 	// フォントデータ
 	FontData fontData;

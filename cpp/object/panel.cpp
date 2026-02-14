@@ -56,7 +56,7 @@ void Panel::Update()
 void Panel::UpdateGPUData(InstanceBufferData& data)
 {
 	// パネルのGPUデータ更新処理
-	UpdateGPUData(data);
+	//UpdateGPUData(data);
 	// 子オブジェクトのGPUデータ更新
 	for (auto& child : m_ChildObjects)
 	{
@@ -73,7 +73,7 @@ void Panel::SetPipelineState()
 	// パネルのパイプラインステート設定(一旦特になし)
 }
 
-void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
+void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags)
 {
 	// 子オブジェクトの描画要求提出
 	for (auto& child : m_ChildObjects)
@@ -82,7 +82,7 @@ void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
 		{
 			continue;
 		}
-		child->SubmitDrawRequests(renderQueue);
+		child->SubmitDrawRequests(renderQueue, tags);
 	}
 }
 

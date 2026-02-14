@@ -147,12 +147,12 @@ void Scene::DrawObjectsByQueue()
 	// 各マネージャーからリクエストを収集
 	for (auto& manager : m_Objects3D)
 	{
-		if (manager) manager->SubmitDrawRequests(renderQueue);
+		if (manager) manager->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
 	}
 
 	for (auto& manager : m_Objects2D)
 	{
-		if (manager) manager->SubmitDrawRequests(renderQueue);
+		if (manager) manager->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
 	}
 
 	// Stateのオブジェクトに対してもキューを走らせる

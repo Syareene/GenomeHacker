@@ -42,7 +42,7 @@ public:
 	virtual GameObject* GetObjectByTag(const std::string& tag) = 0;
 	virtual std::list<GameObject*> GetObjectsByTag(const std::string& tag) = 0;
 	virtual void FlushPendingObjects() = 0;
-	virtual void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) = 0;
+	virtual void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) = 0;
 	virtual void Draw() = 0;
 	virtual void DrawObjectByTag(const std::string& tag) = 0;
 	virtual void DrawObjectByTags(const std::list<std::string>& tags) = 0;
@@ -328,7 +328,7 @@ public:
 		}
 	}
 
-	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) override
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override
 	{
 		// インスタンシングレンダリングの場合は処理を追加(AIまるまるコピーなので検証してね)
 		// === インスタンシングの場合 ===
@@ -355,7 +355,34 @@ public:
 			// バッチ情報の構築 (UpdateGPUData内でやるとより高速)
 			// ※ここでは概念説明のため都度計算します
 			std::vector<ObjectType*> sortedObjs;
-			for (auto& obj : m_Objects) if (obj.IsActive() && !obj.IsDestroy()) sortedObjs.push_back(&obj);
+			for (auto& obj : m_Objects)
+			{
+				if (!obj.IsActive() || obj.IsDestroy())
+				{
+					// アクティブでないか削除済みならスキップ
+					continue;
+				}
+				// タグを確認
+
+				// tagsがemptyならそのまま追加
+				if(tags.empty())
+				{
+					sortedObjs.push_back(&obj);
+					continue;
+				}
+				// タグがあるならどれか1つでもあれば追加
+				for (auto& tag : tags)
+				{
+					if (!obj.IsTagAvailable(tag))
+					{
+						// タグが見つからなければスキップ
+						continue;
+					}
+					// タグが見つかったため追加しループを抜ける
+					sortedObjs.push_back(&obj);
+					break;
+				}
+			}
 			std::sort(sortedObjs.begin(), sortedObjs.end(), [](auto* a, auto* b) { return a->GetLayer() < b->GetLayer(); });
 
 			if (sortedObjs.empty()) return;
@@ -420,7 +447,7 @@ public:
 				{
 					if(obj.IsActive() && !obj.IsDestroy())
 					{
-						obj.SubmitDrawRequests(renderQueue);
+						obj.SubmitDrawRequests(renderQueue, tags);
 					}
 				}
 			}
@@ -431,7 +458,34 @@ public:
 			// 個別にリクエストを投げる
 			for (auto& obj : m_Objects)
 			{
-				if (obj.IsActive() && !obj.IsDestroy())
+				// アクティブでないまたは削除済みならスキップ
+				if (!obj.IsActive() || obj.IsDestroy())
+				{
+					continue;
+				}
+				// 確認用フラグ
+				bool tagMatch = false;
+
+				// タグを確認
+				// tagsがemptyならtrueに
+				if (tags.empty())
+				{
+					tagMatch = true;
+				}
+				else
+				{
+					// タグがあるならどれか1つでもあればtrueに
+					for(auto& tag : tags)
+					{
+						if (obj.IsTagAvailable(tag))
+						{
+							tagMatch = true;
+							break; // タグが見つかったらループを抜ける
+						}
+					}
+				}
+
+				if(tagMatch)
 				{
 					RenderQueueData req;
 					req.Layer = obj.GetLayer(); // GameObjectにGetLayerが必要

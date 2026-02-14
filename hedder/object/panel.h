@@ -41,7 +41,7 @@ public:
 	void UpdateGPUData(InstanceBufferData& data) override;
 	static void SetPipelineState();
 	// icontainerでは引数がRenderQueueData& renderQueueだったのでどうなるか
-	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue) override;
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override;
 
 	void FlushPendingObjects();
 	// sceneみたいに後付pushにするかちょい悩む

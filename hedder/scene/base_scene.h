@@ -65,6 +65,14 @@ public:
 	void UpdateObjectByTag(const std::string& tag);
 	void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw() = 0;
+	inline void AddDrawTargetTag(const std::string& tag)
+	{
+		m_DrawTargetTags.push_back(tag);
+	}
+	inline std::deque<std::string>& GetDrawTargetTags()
+	{
+		return m_DrawTargetTags;
+	}
 	void DrawObject();
 	void DrawObjectByTag(const std::string& tag);
 	void DrawObjectByTags(const std::list<std::string>& tags);
@@ -385,6 +393,7 @@ private:
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
 	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
+	std::deque<std::string> m_DrawTargetTags; // 描画対象にするタグ
 	static std::deque<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
 	StateManager m_StateManager;
 };
