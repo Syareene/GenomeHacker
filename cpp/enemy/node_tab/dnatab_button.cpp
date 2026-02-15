@@ -21,8 +21,8 @@ void DNAButton::Init(Transform trans)
 
 	// 一旦固定値でセット
 	Button::Register(std::bind(&DNAButton::ToDNATab, this), BUTTON_POS,
-		BUTTON_SIZE, Vector2(0.0f, 0.0f), fontData, "DNA編集",
-		L"asset\\texture\\alpha_texture.png");
+		BUTTON_SIZE, Vector2(0.0f, 0.0f), fontData, "ボタン",
+		L"asset\\texture\\alpha_texture.png"); // DNA編集->ボタンへ
 }
 
 void DNAButton::Uninit()
