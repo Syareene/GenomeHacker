@@ -562,29 +562,32 @@ for (auto& obj : m_Objects)
 			}
 		}
 #ifdef _DEBUG
-		// object3Dのみコライダ描画対応
-		if constexpr(std::is_base_of<Object3D, ObjectType>::value)
-		{
-			// デバッグ時にコライダを描画
-			const int DEBUG_LAYER = 1000;
-			for (auto& obj : m_Objects)
-			{
-				// アクティブでないか削除済みならスキップ
-				if (!obj.IsActive() || obj.IsDestroy()) return;
-				// コライダないならスキップ
-				if (!obj.GetCollider()) return;
+		// ここで個別にレンダリングを呼ぶと、インスタンスレンダリングを弾とか敵に取り入れた意味がなくなってしまうため
+		// 実行速度の為にコメントアウトします。描画したい時は有効化してね
 
-				// 描画関数をラムダで登録
-				RenderQueueData req;
-				req.Layer = DEBUG_LAYER; // 最前面に描画
-				req.Depth = 0.0f;
-				req.DrawCall = [&obj]()
-					{
-						obj.DrawCollider();
-					};
-				renderQueue.push_back(req);
-			}
-		}
+		// object3Dのみコライダ描画対応
+		//if constexpr(std::is_base_of<Object3D, ObjectType>::value)
+		//{
+		//	// デバッグ時にコライダを描画
+		//	const int DEBUG_LAYER = 1000;
+		//	for (auto& obj : m_Objects)
+		//	{
+		//		// アクティブでないか削除済みならスキップ
+		//		if (!obj.IsActive() || obj.IsDestroy()) return;
+		//		// コライダないならスキップ
+		//		if (!obj.GetCollider()) return;
+
+		//		// 描画関数をラムダで登録
+		//		RenderQueueData req;
+		//		req.Layer = DEBUG_LAYER; // 最前面に描画
+		//		req.Depth = 0.0f;
+		//		req.DrawCall = [&obj]()
+		//			{
+		//				obj.DrawCollider();
+		//			};
+		//		renderQueue.push_back(req);
+		//	}
+		//}
 #endif
 	}
 
