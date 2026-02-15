@@ -193,6 +193,15 @@ void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTar
 	Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
 }
 
+Vector2 GameObject::CalcTexUVOffset(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget) const
+{
+	float texture_width = 1.0f / static_cast<float>(texWidthCount); // テクスチャの横幅を分割
+	float texture_height = 1.0f / static_cast<float>(texHeightCount); // テクスチャの縦幅を分割
+	float offset_x = widthTarget * texture_width; // フレームに応じたXオフセット
+	float offset_y = heightTarget * texture_height; // フレームに応じたYオフセット
+	return Vector2(offset_x, offset_y);
+}
+
 void GameObject::SetDefaultVertexBufferOnDraw() const
 {
 	UINT stride = sizeof(VERTEX_3D);

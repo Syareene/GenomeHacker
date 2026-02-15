@@ -87,6 +87,7 @@ public:
 
 	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
+	Vector2 CalcTexUVOffset(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget) const;
 
 	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
 	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
