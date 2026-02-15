@@ -44,7 +44,7 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\monsters_v2.png");
+	SetTextureID(L"asset\\texture\\monsters.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
 	SetUVPos(Vector2(1.0f, 2.0f));
