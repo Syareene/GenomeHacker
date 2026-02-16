@@ -24,9 +24,13 @@
     <ClInclude Include="hedder\collider\collision.h" />
     <ClInclude Include="hedder\collider\cube.h" />
     <ClInclude Include="hedder\collider\sphere.h" />
+    <ClInclude Include="hedder\enemy\base_data\bat.h" />
     <ClInclude Include="hedder\enemy\base_data\enemy_base.h" />
     <ClInclude Include="hedder\enemy\base_data\enemy_list.h" />
+    <ClInclude Include="hedder\enemy\base_data\ghost.h" />
+    <ClInclude Include="hedder\enemy\base_data\mage.h" />
     <ClInclude Include="hedder\enemy\base_data\minotaur.h" />
+    <ClInclude Include="hedder\enemy\base_data\skeleton.h" />
     <ClInclude Include="hedder\enemy\base_data\slime.h" />
     <ClInclude Include="hedder\enemy\bullet.h" />
     <ClInclude Include="hedder\enemy\dna_screen_script.h" />
@@ -116,9 +120,13 @@
     <ClCompile Include="billboard.cpp" />
     <ClCompile Include="cpp\collider\collision.cpp" />
     <ClCompile Include="cpp\collider\sphere.cpp" />
+    <ClCompile Include="cpp\enemy\base_data\bat.cpp" />
     <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp" />
     <ClCompile Include="cpp\enemy\base_data\enemy_list.cpp" />
+    <ClCompile Include="cpp\enemy\base_data\ghost.cpp" />
+    <ClCompile Include="cpp\enemy\base_data\mage.cpp" />
     <ClCompile Include="cpp\enemy\base_data\minotaur.cpp" />
+    <ClCompile Include="cpp\enemy\base_data\skeleton.cpp" />
     <ClCompile Include="cpp\enemy\base_data\slime.cpp" />
     <ClCompile Include="cpp\enemy\bullet.cpp" />
     <ClCompile Include="cpp\enemy\dna_screen_script.cpp" />
