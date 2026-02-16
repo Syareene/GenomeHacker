@@ -1,6 +1,6 @@
 ﻿#include "main.h"
 
-#include "enemy/base_data/minotaur.h"
+#include "enemy/base_data/skeleton.h"
 
 #include "manager/texture_manager.h"
 #include "scene/manager.h"
@@ -12,12 +12,12 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
-#include "enemy/node/move_x.h"
-#include "enemy/node/move_circular.h"
-#include "enemy/node/add_score.h"
-#include "enemy/node/move_random.h"
+//#include "enemy/node/move_x.h"
+//#include "enemy/node/move_circular.h"
+//#include "enemy/node/add_score.h"
+//#include "enemy/node/move_random.h"
 
-EnemyBase* Minotaur::Register(const unsigned int& playerId)
+EnemyBase* Skeleton::Register(const unsigned int& playerId)
 {
 	// 登録処理
 
@@ -26,7 +26,7 @@ EnemyBase* Minotaur::Register(const unsigned int& playerId)
 	// 初期化処理
 	EnemyBase::Init(playerId);
 
-	SetEnemyID(GetEnemyTypeId<Minotaur>());
+	SetEnemyID(GetEnemyTypeId<Skeleton>());
 
 	// ノード登録
 	// 移動タブ
