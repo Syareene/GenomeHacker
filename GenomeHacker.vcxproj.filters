@@ -378,6 +378,15 @@
     <ClInclude Include="hedder\enemy\base_data\mage.h">
       <Filter>ヘッダー ファイル\enemy\base_data</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\enemy\node\shot_front.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\area.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\self_destruction.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -625,6 +634,15 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\base_data\mage.cpp">
       <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\self_destruction.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\shot_front.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\area.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
