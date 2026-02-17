@@ -248,11 +248,13 @@ public:
 	template <typename T>
 	T* GetGameObject() requires std::is_base_of_v<Object2D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		return manager->GetGameObject();
 	}
@@ -261,12 +263,14 @@ public:
 	template <typename T>
 	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object2D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
 			static std::vector<T> empty; // 空のベクターを返す
 			return empty;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		return manager->GetGameObjects();
 	}
@@ -275,11 +279,13 @@ public:
 	template <typename T>
 	T* GetGameObject() requires std::is_base_of_v<Object3D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		return manager->GetGameObject();
 	}
@@ -288,12 +294,14 @@ public:
 	template <typename T>
 	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object3D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
 		{
 			static std::vector<T> empty; // 空のベクターを返す
 			return empty;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		return manager->GetGameObjects();
 	}
@@ -302,6 +310,7 @@ public:
 	template <typename T>
 	T* GetSystemObject(bool is_global = false) requires std::is_base_of_v<SystemObject, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if (is_global)
 		{
@@ -318,6 +327,7 @@ public:
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<SystemObjectManager<T>*>(m_SystemObjects[typeId].get());
 		return manager->GetSystemObject();
 	}
