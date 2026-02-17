@@ -11,7 +11,7 @@
 
 #include <format>
 
-void EightShot::Init(Transform trans)
+void ShotFront::Init(Transform trans)
 {
 	// ベースデータセット
 
@@ -35,7 +35,7 @@ void EightShot::Init(Transform trans)
 	SetCD(0);
 }
 
-bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
+bool ShotFront::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// 発射処理
 	// 8方向に球を出す
@@ -70,7 +70,7 @@ bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 	return true;
 }
 
-std::string EightShot::GenerateDescriptionText()
+std::string ShotFront::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
 	std::string format_string = "このノードがある敵は{}フレーム毎に8方向に進む球を出します。";
