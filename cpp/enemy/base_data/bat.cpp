@@ -40,7 +40,7 @@ EnemyBase* Bat::Register(const unsigned int& playerId)
 	SetTextureID(L"asset\\texture\\monsters.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
-	SetUVPos(Vector2(3.0f, 7.0f));
+	SetUVPos(Vector2(6.0f, 6.0f));
 
 	// また、テクスチャに応じて追加でscaleやposの差異を設定
 	SetDrawPosDiff(DRAW_POS_DIFF);

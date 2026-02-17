@@ -16,7 +16,7 @@ void SelfDestruction::Init(Transform trans)
 	// ベースデータセット
 
 	// 名前
-	SetNameData({ "EightShot", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
+	SetNameData({ "SelfDestruction", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	// 説明文
 	SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 

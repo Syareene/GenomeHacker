@@ -84,6 +84,7 @@
     <ClInclude Include="hedder\manager\texture_manager.h" />
     <ClInclude Include="hedder\object\2d_object.h" />
     <ClInclude Include="hedder\object\3d_object.h" />
+    <ClInclude Include="hedder\object\area_object.h" />
     <ClInclude Include="hedder\object\billboard.h" />
     <ClInclude Include="hedder\object\camera.h" />
     <ClInclude Include="hedder\object\check_override.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
     <ClCompile Include="cpp\object\3d_object.cpp" />
+    <ClCompile Include="cpp\object\area_object.cpp" />
     <ClCompile Include="cpp\object\camera.cpp" />
     <ClCompile Include="cpp\object\field.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />

@@ -6,8 +6,8 @@
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
 
-// 敵専用の弾クラス
-#include "enemy/enemy_bullet.h"
+// エリアクラス
+#include "object/area_object.h"
 
 #include <format>
 
@@ -16,7 +16,7 @@ void Area::Init(Transform trans)
 	// ベースデータセット
 
 	// 名前
-	SetNameData({ "EightShot", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
+	SetNameData({ "Area", Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	// 説明文
 	SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 
@@ -27,8 +27,9 @@ void Area::Init(Transform trans)
 	AddInputTypeBottom(InputType::Attack);
 	AddInputTypeBottom(InputType::Death);
 
-	m_MoveVal = 0.05f; // 球速度
-	m_ShotInterval = 150.0f;
+	m_Duration = 150.0f; // エリアの持続時間(フレーム数)
+	m_AreaDamage = 1.0f; // エリアのダメージ(仮)
+	m_ShotInterval = 300.0f;
 
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
@@ -38,34 +39,11 @@ void Area::Init(Transform trans)
 bool Area::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// 発射処理
-	// 8方向に球を出す
-	for (int i = 0; i < 8; ++i)
-	{
-		// 敵専用の弾の生成処理
-		EnemyBullet* bullet = Manager::GetCurrentScene()->AddGameObject<EnemyBullet>(1);
-		// 弾の初期位置を敵の位置にセット
-		Transform trans;
-		trans.SetPosition(enemy_ptr->GetPosition());
-		trans.SetScale(bullet->GetScale());
-		trans.SetRotation(bullet->GetRotation());
-
-		bullet->SetTransform(trans);
-
-		// 弾の発射元の敵種類IDを設定
-		if (enemy_ptr->GetEnemyBase())
-		{
-			bullet->SetOwnerEnemyID(enemy_ptr->GetEnemyBase()->GetEnemyID());
-		}
-
-		// 角度に応じてvelocityをセット
-		float angle = i * (3.14159f / 4.0f); // 45度刻み
-		Vector3 velocity;
-		velocity.x = cosf(angle) * m_MoveVal;
-		velocity.y = 0.0f;
-		velocity.z = sinf(angle) * m_MoveVal;
-		// 弾の速度を設定
-		bullet->SetVelocity(velocity);
-	}
+	// ダメージエリアを出す
+	AreaObject* obj = Manager::GetCurrentScene()->AddGameObject<AreaObject>(1);
+	// 各種プロパティを設定
+	obj->SetPosition(enemy_ptr->GetPosition());
+	obj->SetMaxDuration(static_cast<int>(m_Duration));
 
 	return true;
 }
@@ -73,8 +51,8 @@ bool Area::NodeEffect(FieldEnemy* enemy_ptr)
 std::string Area::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = "このノードがある敵は{}フレーム毎に8方向に進む球を出します。";
+	std::string format_string = "このノードがある敵は{}フレーム毎に{}ダメージを与え、{}秒持続するエリアを展開します。";
 	// std::formatを使用して最終的な文字列を生成
-	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval));
+	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval, m_AreaDamage, m_Duration));
 	return formatted_text;
 }
