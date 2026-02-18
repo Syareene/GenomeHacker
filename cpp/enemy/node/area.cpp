@@ -5,6 +5,7 @@
 #include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
+#include "lib/random_number.h"
 
 // エリアクラス
 #include "object/area_object.h"
@@ -41,9 +42,19 @@ bool Area::NodeEffect(FieldEnemy* enemy_ptr)
 	// 発射処理
 	// ダメージエリアを出す
 	AreaObject* obj = Manager::GetCurrentScene()->AddGameObject<AreaObject>(1);
+	obj->SetOwnerEnemyID(enemy_ptr->GetEnemyBase()->GetEnemyID()); // 発射元の敵種類ID
 	// 各種プロパティを設定
-	obj->SetPosition(enemy_ptr->GetPosition());
+	// これ初期化後に呼ばれるからポリゴンのいちおかしくなるかもね
+	Vector3 enemy_pos = enemy_ptr->GetPosition();
+	Vector3 pos = enemy_pos;
+	// x,zはちょいランダム
+	pos.x += RandomNumber::GetInstance()->GetRandomFloat(-2.0f, 2.0f);
+	pos.z += RandomNumber::GetInstance()->GetRandomFloat(-2.0f, 2.0f);
+
+	pos.y = 0.01f; // 少しだけ地面から浮かせる
+	obj->SetPosition(pos);
 	obj->SetMaxDuration(static_cast<int>(m_Duration));
+	obj->SetAreaDamage(m_AreaDamage);
 
 	return true;
 }

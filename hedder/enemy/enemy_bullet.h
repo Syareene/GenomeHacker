@@ -24,6 +24,8 @@ public:
 	// 発射した敵の種類IDを設定する関数
 	void SetOwnerEnemyID(const int enemyID) { m_OwnerEnemyID = enemyID; }
 	const int GetOwnerEnemyID() const { return m_OwnerEnemyID; }
+	void SetBulletDamage(const float damage) { m_BulletDamage = damage; }
+	const float GetBulletDamage() const { return m_BulletDamage; }
 
 private:
 	constexpr static Vector3 POSITION_OFFSET = Vector3(0.0f, -1.0f, 0.0f);
@@ -35,5 +37,6 @@ private:
 	class ModelRenderer* m_ModelRenderer = nullptr;
 	Vector3 m_Velocity{ 0.0f, 0.0f, 0.0f };
 	int m_LifeTime = 180; // 弾の生存時間
+	float m_BulletDamage = 1.0f; // 弾のダメージ量
 	int m_OwnerEnemyID = -1; // この弾を発射した敵の種類ID
 };

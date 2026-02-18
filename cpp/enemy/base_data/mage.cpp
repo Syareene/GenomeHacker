@@ -11,6 +11,7 @@
 #include "enemy/node_tab/attack.h"
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
+#include "enemy/node/area.h"
 
 //#include "enemy/node/move_x.h"
 //#include "enemy/node/move_circular.h"
@@ -33,6 +34,9 @@ EnemyBase* Mage::Register(const unsigned int& playerId)
 	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
 	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
 	//GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
+	// 攻撃タブ
+	GetTabManager()->GetAttackTab()->AddNode<Area>(0);
+	// 
 	// 死亡タブ
 	//GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 

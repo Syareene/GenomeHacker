@@ -106,10 +106,10 @@ void Explosion::Draw()
 	Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
 
 	// 入力レイアウト設定
-	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
 	// シェーダー設定
-	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::UnlitVertexShader, NULL, 0);
-	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::UnlitPixelShader, NULL, 0);
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::NoAlphaVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::NoAlphaPixelShader, NULL, 0);
 
 	// 移動、回転マトリックス設定
 	SetWorldMatrixOnDrawBillboard();

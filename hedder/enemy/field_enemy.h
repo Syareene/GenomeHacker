@@ -19,6 +19,7 @@ public:
 	inline EnemyBase* GetEnemyBase() const { return m_EnemyBase; }
 	inline unsigned int GetLiveTime() const { return m_LiveTime; }
 	inline void SetCurrentHP(const float hp) { m_CurrentHP = hp; }
+	inline void DecreaseHP(const float damage) { m_CurrentHP -= damage; }
 	inline const float GetCurrentHP() const { return m_CurrentHP; }
 	inline void SetAttackNodeTime(const int time) { m_AttackNodeTime = time; }
 	inline const int GetAttackNodeTime() const { return m_AttackNodeTime; }

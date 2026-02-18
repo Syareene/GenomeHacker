@@ -82,7 +82,7 @@ void EnemyBullet::Update()
 	// コライダの場所更新
 	GetCollider()->Update(GetPosition());
 
-	// プレイヤーとの衝突判定（敵の弾はプレイヤーにのみ当たる）
+	// プレイヤーとの衝突判定
 	std::vector<Player*> players = GetCollider()->GetHitObjectsByType<Player>();
 
 	for (auto& player : players)
@@ -112,8 +112,7 @@ void EnemyBullet::Update()
 		Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 敵に当たったら削除
 		SetDestroy(true);
-		// TODO: 敵にダメージを与える処理をここに追加
-		// enemy->TakeDamage(m_BulletDamage);
+		enemy->DecreaseHP(m_BulletDamage);
 		break; // 一つの敵に当たったらループを抜ける
 	}
 

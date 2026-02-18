@@ -6,6 +6,7 @@
 // enemyDataのhedder
 #include "enemy/base_data/slime.h"
 #include "enemy/base_data/minotaur.h"
+#include "enemy/base_data/mage.h"
 
 void EnemyList::Init(const unsigned int& playerId)
 {
@@ -15,6 +16,7 @@ void EnemyList::Init(const unsigned int& playerId)
 	// 敵を追加
 	m_EnemyBaseList.emplace_back(std::make_unique<Slime>())->Register(playerId);
 	m_EnemyBaseList.emplace_back(std::make_unique<Minotaur>())->Register(playerId);
+	m_EnemyBaseList.emplace_back(std::make_unique<Mage>())->Register(playerId);
 }
 
 void EnemyList::Uninit()

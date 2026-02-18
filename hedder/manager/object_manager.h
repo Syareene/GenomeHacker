@@ -331,8 +331,8 @@ for (auto& obj : m_Objects)
 
 	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override
 	{
-		// インスタンシングレンダリングの場合は処理を追加(AIまるまるコピーなので検証してね)
-		// === インスタンシングの場合 ===
+		// インスタンシングレンダリングの場合は処理を追加
+		// インスタンシングの場合
 		if constexpr (requires { ObjectType::ENABLE_INSTANCING; }&& ObjectType::ENABLE_INSTANCING)
 		{
 			if (m_InstanceDataBuffer.empty()) return;
@@ -343,18 +343,11 @@ for (auto& obj : m_Objects)
 			int currentStartIndex = 0;
 			int currentLayer = -9999; // ありえない値
 
-			// レイヤー情報を復元するために、再度m_Objectsを走査するのは非効率なので、
-			// UpdateGPUDataでソートした時の情報をキャッシュしておくか、
-			// InstanceData構造体にLayerを含めるのが簡単です（描画には使いませんがcpu側で使う）。
-
-			// ★簡略化のため、再走査ロジックのイメージで書きます
-			// 実際は UpdateGPUData で「どの範囲がどのレイヤーか」のリストを作っておくのがベストです。
-
+			// レイヤーごとにバッチを構築するための構造体とリスト
 			struct BatchRange { int Layer; int Start; int Count; };
 			std::vector<BatchRange> batches;
 
-			// バッチ情報の構築 (UpdateGPUData内でやるとより高速)
-			// ※ここでは概念説明のため都度計算します
+			// バッチ情報の構築
 			std::vector<ObjectType*> sortedObjs;
 			for (auto& obj : m_Objects)
 			{
@@ -384,6 +377,7 @@ for (auto& obj : m_Objects)
 					break;
 				}
 			}
+			// レイヤー順にソート
 			std::sort(sortedObjs.begin(), sortedObjs.end(), [](auto* a, auto* b) { return a->GetLayer() < b->GetLayer(); });
 
 			if (sortedObjs.empty()) return;
@@ -413,6 +407,8 @@ for (auto& obj : m_Objects)
 
 				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
 
+				ObjectType* activeObj = sortedObjs[batch.Start]; // バッチの最初のオブジェクトを代表として取得
+
 
 				if constexpr (requires { ObjectType::IS_3D_MODEL; }&& ObjectType::IS_3D_MODEL)
 				{
@@ -427,7 +423,7 @@ for (auto& obj : m_Objects)
 						{
 							ObjectType::SetPipelineState();
 
-							// 1. 頂点バッファ・インデックスバッファの設定
+							// 頂点バッファ・インデックスバッファの設定
 							UINT stride = sizeof(VERTEX_3D);
 							UINT offset = 0;
 							// インスタンシングデータ(m_InstanceBuffer)もスロット1にバインド
@@ -438,7 +434,6 @@ for (auto& obj : m_Objects)
 							Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &modelData->VertexBuffer, &stride, &offset);
 							Renderer::GetDeviceContext()->IASetIndexBuffer(modelData->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 							Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-							// これそうか、ストラクチャードバッファも送らないといけなくて
 
 							// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
 							Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
@@ -447,7 +442,7 @@ for (auto& obj : m_Objects)
 							// ストラクチャードバッファ方式の場合は VSSetShaderResources などを使用してください
 							// 以下は頂点バッファ方式(InputLayout方式)の例です
 
-							// 2. サブセットごとの描画ループ
+							// サブセットごとの描画ループ
 							for (unsigned int i = 0; i < modelData->SubsetNum; i++)
 							{
 								// マテリアル設定 (定数バッファ)
@@ -459,7 +454,7 @@ for (auto& obj : m_Objects)
 									Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &modelData->SubsetArray[i].Material.Texture);
 								}
 
-								// ★ インデックス付きインスタンシング描画
+								// インデックス付きインスタンシング描画
 								// 引数: IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation
 								Renderer::GetDeviceContext()->DrawIndexedInstanced(
 									modelData->SubsetArray[i].IndexNum,
@@ -473,22 +468,30 @@ for (auto& obj : m_Objects)
 				}
 				else
 				{
-
-					// おそらくここで追加でキャプチャを入れないとstatic関数しか呼べないので、それぞれのobjectの値を見れないんだよね
-					req.DrawCall = [this, batch]() {
+					// ラムダでキャプチャ
+					req.DrawCall = [this, batch, activeObj]() {
 						ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
 						// これ対象が2dの場合はdepth enable/disable切り替え必要
 
-						// バッファ設定(これもpipelinestateに委任しちゃってもいい気はするけど)
-						// 現在の構造だとできないので、今までDefaultで通してた部分をポインタだけ貰って設定するような形にしないとだめだね
+						// バッファ設定
 						UINT stride = sizeof(VERTEX_3D);
 						UINT offset = 0;
 						ID3D11Buffer* vb = m_Objects[0].GetVertexBuffer();
 						Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 
-						// テクスチャセット
-						ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(m_Objects[0].GetTextureID());
-						Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+						Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+						if(activeObj)
+						{
+							// テクスチャセット
+							ID3D11ShaderResourceView * texture = TextureManager::Get3DTexture(activeObj->GetTextureID());
+
+							Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+						}
+						MATERIAL material;
+						material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f); // 基本テクスチャ貼るのでこのまんま
+						material.TextureEnable = true;
+						Renderer::SetMaterial(material); // マテリアルセット(テクスチャを有効化)
 
 						// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
 						Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
@@ -514,7 +517,7 @@ for (auto& obj : m_Objects)
 				}
 			}
 		}
-		// === インスタンシングではない場合 ===
+		// インスタンシングではない場合
 		else
 		{
 			// 個別にリクエストを投げる
