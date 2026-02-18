@@ -13,10 +13,8 @@
 #include "enemy/node_tab/death.h"
 #include "enemy/node/area.h"
 
-//#include "enemy/node/move_x.h"
-//#include "enemy/node/move_circular.h"
-//#include "enemy/node/add_score.h"
-//#include "enemy/node/move_random.h"
+#include "enemy/node/move_circular.h"
+#include "enemy/node/add_score.h"
 
 EnemyBase* Mage::Register(const unsigned int& playerId)
 {
@@ -31,14 +29,12 @@ EnemyBase* Mage::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 移動タブ
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
+	GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(0)->SetRadius(1.0f);
 	// 攻撃タブ
 	GetTabManager()->GetAttackTab()->AddNode<Area>(0);
 	// 
 	// 死亡タブ
-	//GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\monsters.png");

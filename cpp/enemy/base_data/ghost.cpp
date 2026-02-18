@@ -12,10 +12,9 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
-//#include "enemy/node/move_x.h"
-//#include "enemy/node/move_circular.h"
-//#include "enemy/node/add_score.h"
-//#include "enemy/node/move_random.h"
+#include "enemy/node/move_circular.h"
+#include "enemy/node/move_to_player.h"
+#include "enemy/node/add_score.h"
 
 EnemyBase* Ghost::Register(const unsigned int& playerId)
 {
@@ -30,11 +29,14 @@ EnemyBase* Ghost::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 移動タブ
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
+	// プレイヤー近づく+Circle
+	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0)->SetMoveVal(MOVE_SPEED);
+	MoveCircular* node = GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(1);
+	node->SetRadius(0.75f);
+	node->SetDuration(120);
+
 	// 死亡タブ
-	//GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\monsters.png");

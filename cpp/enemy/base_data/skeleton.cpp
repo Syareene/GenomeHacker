@@ -12,10 +12,10 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 
-//#include "enemy/node/move_x.h"
-//#include "enemy/node/move_circular.h"
-//#include "enemy/node/add_score.h"
-//#include "enemy/node/move_random.h"
+#include "enemy/node/eight_shot.h"
+#include "enemy/node/move_to_player.h"
+#include "enemy/node/area.h"
+#include "enemy/node/add_score.h"
 
 EnemyBase* Skeleton::Register(const unsigned int& playerId)
 {
@@ -29,12 +29,19 @@ EnemyBase* Skeleton::Register(const unsigned int& playerId)
 	SetEnemyID(GetEnemyTypeId<Skeleton>());
 
 	// ノード登録
+	
+	// 攻撃タブ
+	// 定期的に8shot
+	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+	
 	// 移動タブ
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0)->SetMoveVal(MOVE_X_SPEED);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveRandom>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveCircular>(-1);
+	// ゆっくりプレイヤーに近づく
+	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0)->SetMoveVal(MOVE_SPEED);
+
 	// 死亡タブ
-	//GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
+	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
+	// area展開
+	GetTabManager()->GetDeathTab()->AddNode<Area>(-1);
 
 	// テクスチャ生成
 	SetTextureID(L"asset\\texture\\monsters.png");

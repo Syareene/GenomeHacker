@@ -31,7 +31,7 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 攻撃タブ
-	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+	//GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0);
 	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
