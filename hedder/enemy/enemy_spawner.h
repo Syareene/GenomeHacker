@@ -94,7 +94,7 @@ private:
 	constexpr static int DEFAULT_SPAWN_COUNT = 6;
 	int m_SpawnedCount = 0; // 出した敵の数(temp)
 	int m_EnemyCost = 20;
-	int m_TimeCost = 600; // 敵の出現事の間隔とwave間の間隔を決めるための変数
+	int m_TimeCost = 400; // 敵の出現事の間隔とwave間の間隔を決めるための変数
 	int m_EnemySpawnInterval = 0; // 敵が出現するまでの間隔
 	int m_TimeNextWave = 0; // ウェーブ間の時間
 	constexpr static int ENEMY_MAX_AMOUNT = 40;
