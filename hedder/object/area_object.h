@@ -21,6 +21,7 @@ public:
 	inline void SetOwnerEnemyID(const int enemyID) { m_OwnerEnemyID = enemyID; }
 	inline const int GetOwnerEnemyID() const { return m_OwnerEnemyID; }
 private:
+	static constexpr int APPLY_COLLIDER = 45; // 判定開始始まるフレーム
 	float m_AreaDamage = 1.0f; // エリアのダメージ(仮)
 	int m_MaxDuration = 0; // エリアの最大持続時間(フレーム数)
 	int m_Duration = 0;

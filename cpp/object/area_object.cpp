@@ -31,7 +31,7 @@ void AreaObject::UpdateGPUData(InstanceBufferData& data)
 	// 結果をdataに格納
 	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
 	// 色設定
-	float alpha = std::min(1.0f, m_Duration / 30.0f); // 持続時間が30フレーム未満の間は徐々に透明から不透明へ変化
+	float alpha = std::min(1.0f, m_Duration / static_cast<float>(APPLY_COLLIDER)); // 持続時間がAPPLY_COLLIDERフレーム未満の間は徐々に透明から不透明へ変化
 	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, alpha); // 徐々に見えるように
 	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
 	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -115,10 +115,10 @@ void AreaObject::Update()
 		SetDestroy(true);
 	}
 
-	// これより下の判定はm_Durationが30以上だけ
-	if(m_Duration < 30)
+	// これより下の判定はm_DurationがAPPLY_COLLIDER以上だけ
+	if(m_Duration < APPLY_COLLIDER)
 	{
-		return; // 持続時間が30未満なら当たり判定を行わない
+		return; // 持続時間がAPPLY_COLLIDER未満なら当たり判定を行わない
 	}
 
 
