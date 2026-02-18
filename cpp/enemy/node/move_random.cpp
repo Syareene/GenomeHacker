@@ -35,7 +35,7 @@ bool MoveRandom::NodeEffect(FieldEnemy* enemy_ptr)
 	// んで実行したらtrueを返す
 
 
-    // ここAIそのままコピーでありまたパーリンノイズが-1~1のときのプログラムなので
+    // パーリンノイズが-1~1のときのプログラムなので
     // 今は0-1のため色々と留意
 
 
@@ -87,5 +87,7 @@ std::string MoveRandom::GenerateDescriptionText()
 	std::string format_string = "このノードがある敵は毎フレーム{:.2f}だけランダムな方向に移動します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_MoveVal));
+    // メンバに格納
+    SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

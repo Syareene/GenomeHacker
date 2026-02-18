@@ -27,9 +27,6 @@ void EightShot::Init(Transform trans)
 	AddInputTypeBottom(InputType::Attack);
 	AddInputTypeBottom(InputType::Death);
 
-	m_MoveVal = 0.05f; // 球速度
-	m_ShotInterval = 150.0f;
-
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
@@ -76,5 +73,7 @@ std::string EightShot::GenerateDescriptionText()
 	std::string format_string = "このノードがある敵は{}フレーム毎に8方向に進む球を出します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

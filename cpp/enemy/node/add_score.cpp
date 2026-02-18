@@ -17,8 +17,7 @@ void AddScore::Init(Transform trans)
 
 	// ここでSetDescriptionData(GenerateDescriptionText))
 
-
-	m_AddScore = 1.0f; // スコア加算量
+	//m_AddScore = 1.0f; // スコア加算量
 
 	// フォントデータ更新
 	UpdateDescriptionData();
@@ -47,6 +46,9 @@ std::string AddScore::GenerateDescriptionText()
 
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_AddScore));
+
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 
 	return formatted_text;
 }

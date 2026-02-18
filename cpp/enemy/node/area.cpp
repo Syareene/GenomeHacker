@@ -28,10 +28,6 @@ void Area::Init(Transform trans)
 	AddInputTypeBottom(InputType::Attack);
 	AddInputTypeBottom(InputType::Death);
 
-	m_Duration = 150.0f; // エリアの持続時間(フレーム数)
-	m_AreaDamage = 1.0f; // エリアのダメージ(仮)
-	m_ShotInterval = 300.0f;
-
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
@@ -62,8 +58,10 @@ bool Area::NodeEffect(FieldEnemy* enemy_ptr)
 std::string Area::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = "このノードがある敵は{}フレーム毎に{}ダメージを与え、{}秒持続するエリアを展開します。";
+	std::string format_string = "このノードがある敵は{}フレーム毎に、{}ダメージを与え{}フレーム持続するエリアを展開します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval, m_AreaDamage, m_Duration));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

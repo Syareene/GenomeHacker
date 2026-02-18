@@ -11,7 +11,7 @@ public:
 	{ 
 		m_AddScore = score;
 		// データを更新したため説明文も更新
-		UpdateDescriptionData();
+		GenerateDescriptionText();
 	}
 	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
 

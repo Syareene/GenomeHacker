@@ -16,10 +16,6 @@ void MoveCircular::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
-
-	// 円形移動パラメータの初期化
-	m_Radius = 3.0f;
-	m_Duration = 180;
 }
 
 bool MoveCircular::NodeEffect(FieldEnemy* enemy_ptr)
@@ -69,7 +65,9 @@ Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 
 std::string MoveCircular::GenerateDescriptionText()
 {
-	std::string format_string = "このノードがある敵は半径{}の円上を、{}フレームで移動します。";
+	std::string format_string = "このノードがある敵は半径{:.2f}の円上を、{}フレームで移動します。";
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_Radius, m_Duration));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }
