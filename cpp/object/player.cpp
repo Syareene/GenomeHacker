@@ -12,8 +12,12 @@
 #include "manager/default_vertex.h"
 #include "collider/sphere.h"
 #include "enemy/node/visual_base.h"
+// ノード系
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
+#include "enemy/node/move_to_player.h"
+#include "enemy/node/eight_shot.h"
+#include "enemy/node/area.h"
 
 void Player::SetPipelineState()
 {
@@ -73,13 +77,22 @@ void Player::Init(Transform trans)
 	// 生成するであろうBulletのmanager空間予約をする
 	Manager::GetCurrentScene()->ReserveObject<Bullet>(Bullet::MAX_OBJECTS);
 
-
 	m_HavingNodes.emplace_back(std::make_unique<MoveX>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 	m_HavingNodes.emplace_back(std::make_unique<MoveZ>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<MoveToPlayer>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<EightShot>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<Area>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+
 	// プレイヤー側にもVisualを管理する配列があるが生成はDnaScreenScript側のinitで行う。
 
 
