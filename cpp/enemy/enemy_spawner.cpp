@@ -6,6 +6,7 @@
 #include "enemy/base_data/enemy_base.h"
 #include "enemy/base_data/enemy_list.h"
 #include "lib/random_number.h"
+#include "scene/state/game_base_state.h"
 
 
 // enemyDataのhedder
@@ -84,6 +85,12 @@ void EnemySpawner::Update()
 
 	// デバッグ用: 1~6キーで任意の敵を出す
 #ifdef _DEBUG
+	State* state = Manager::GetCurrentScene()->GetCurrentState();
+	if (!dynamic_cast<GameBaseState*>(state))
+	{
+		return;
+	}
+
 	for (int i = 0; i < 6; i++)
 	{
 		if (Input::GetKeyTrigger('1' + i))
