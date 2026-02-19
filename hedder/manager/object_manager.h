@@ -14,6 +14,8 @@
 #include "manager/texture_manager.h"
 #include "lib/modelRenderer.h"
 
+// https://zenn.dev/luke256/articles/2e66c4879a5503
+
 class Panel; // 前方宣言
 
 // ObjectManagerのインターフェースとなる基底クラス
