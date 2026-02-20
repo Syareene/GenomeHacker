@@ -68,6 +68,14 @@
     <ClInclude Include="hedder\lib\2d_particle.h" />
     <ClInclude Include="hedder\lib\audio.h" />
     <ClInclude Include="hedder\lib\easing.h" />
+    <ClInclude Include="hedder\lib\imgui\imconfig.h" />
+    <ClInclude Include="hedder\lib\imgui\imgui.h" />
+    <ClInclude Include="hedder\lib\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="hedder\lib\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="hedder\lib\imgui\imgui_internal.h" />
+    <ClInclude Include="hedder\lib\imgui\imstb_rectpack.h" />
+    <ClInclude Include="hedder\lib\imgui\imstb_textedit.h" />
+    <ClInclude Include="hedder\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="hedder\lib\input.h" />
     <ClInclude Include="hedder\lib\modelRenderer.h" />
     <ClInclude Include="hedder\lib\mouse.h" />
@@ -167,6 +175,13 @@
     <ClCompile Include="cpp\lib\2d_particle.cpp" />
     <ClCompile Include="cpp\lib\audio.cpp" />
     <ClCompile Include="cpp\lib\easing.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_demo.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_draw.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_tables.cpp" />
+    <ClCompile Include="cpp\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="cpp\lib\input.cpp" />
     <ClCompile Include="cpp\lib\modelRenderer.cpp" />
     <ClCompile Include="cpp\lib\mouse.cpp" />
@@ -493,7 +508,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\hedder;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\hedder;$(SolutionDir);$(SolutionDir)\hedder\lib\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
