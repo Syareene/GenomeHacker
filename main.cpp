@@ -2,6 +2,10 @@
 #include "scene/manager.h"
 #include "lib/mouse.h"
 #include <thread>
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 
 // 時間計測用
 #include <chrono>
@@ -10,7 +14,8 @@
 const char* CLASS_NAME = "AppClass";
 const char* WINDOW_NAME = "DX11ゲーム";
 
-
+// ImGuiのWin32バックエンドが提供するハンドラを宣言
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 
@@ -61,7 +66,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
-
 
 	Manager::Init();
 
@@ -145,6 +149,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	bool updateMouse = false;
+
+	// ImGuiが処理する時、他の処理を行わないようにする
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
+
 	switch(uMsg)
 	{
 	case WM_DESTROY:

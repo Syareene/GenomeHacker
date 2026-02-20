@@ -387,6 +387,8 @@ void Renderer::Begin()
 	float clearColor[4] = { 0.6f, 0.6f, 1.0f, 1.0f };
 	m_DeviceContext->ClearRenderTargetView( m_RenderTargetView, clearColor );
 	m_DeviceContext->ClearDepthStencilView( m_DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	// ターゲット再設定
+	GetDeviceContext()->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
 }
 
 
