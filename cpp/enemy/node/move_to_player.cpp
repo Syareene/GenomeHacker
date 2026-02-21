@@ -4,6 +4,7 @@
 #include "scene/manager.h"
 #include "scene/base_scene.h"
 #include "player.h"
+#include "imgui.h"
 
 #include <format>
 
@@ -23,6 +24,14 @@ void MoveToPlayer::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void MoveToPlayer::ShowConfigWindow()
+{
+	ImGui::Begin("MoveToPlayer Config");
+	ImGui::SetWindowSize(ImVec2(300, 100), ImGuiCond_Once);
+	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.1f);
+	ImGui::End();
 }
 
 bool MoveToPlayer::NodeEffect(FieldEnemy* enemy_ptr)

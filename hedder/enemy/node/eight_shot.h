@@ -6,6 +6,7 @@ class EightShot : public NodeBase
 {
 public:
 	void Init(Transform trans = Transform()) override;
+	void ShowConfigWindow() override; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
 	void SetMoveVal(const float val) 
 	{ 

@@ -72,6 +72,9 @@ void VisualBase::Update()
 	// マウス座標がノード内にあるかどうか
 	if (Mouse::IsMouseInsideArea(startPos, endPos))
 	{
+		// マウス内にある状態ならDebug用ウィンドウを表示
+		m_BaseNodePtr->ShowConfigWindow();
+
 		// カウントインクリメント
 		m_HoverTimer++;
 
@@ -108,6 +111,9 @@ void VisualBase::Update()
 		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
 		if (grabbingNode == this)
 		{
+			// 掴み状態ならDebug用ウィンドウを表示
+			m_BaseNodePtr->ShowConfigWindow();
+
 			Vector2 mouseDiffPos = Mouse::GetDiffPosition();
 			Vector3 pos = Vector3(mouseDiffPos.x + GetPosition().x, mouseDiffPos.y + GetPosition().y, 0.0f);
 			SetPosition(pos);

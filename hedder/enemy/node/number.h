@@ -11,6 +11,7 @@ public:
 	// これ考えたけどsprite作るのがめんどくさいから形みたいな感じじゃなくて内部処理でくっつくくっつかないとかになるのかな？〇〇の場所で使えるノードみたいな感じで
 
 	void Init(Transform trans = Transform()) override;
+	void ShowConfigWindow() override; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	bool NodeEffect(FieldEnemy* enemy_ptr) override;
 	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
 private:

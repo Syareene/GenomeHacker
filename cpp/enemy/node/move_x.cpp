@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/move_x.h"
 #include "enemy/field_enemy.h"
+#include "imgui.h"
 
 #include <format>
 
@@ -20,6 +21,15 @@ void MoveX::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void MoveX::ShowConfigWindow()
+{
+	ImGui::Begin("MoveX Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Move Value", &m_MoveVal, -0.2f, 0.2f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)

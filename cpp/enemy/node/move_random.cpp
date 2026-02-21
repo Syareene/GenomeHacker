@@ -4,6 +4,7 @@
 #include "scene/manager.h"
 #include "lib/random_number.h"
 #include "player.h"
+#include "imgui.h"
 
 #include <format>
 
@@ -26,6 +27,15 @@ void MoveRandom::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void MoveRandom::ShowConfigWindow()
+{
+	ImGui::Begin("MoveRandom Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::SliderFloat("Move Amount", &m_MoveVal, 0.0f, 0.1f);
+    // データを更新したため説明文も更新
+    GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool MoveRandom::NodeEffect(FieldEnemy* enemy_ptr)

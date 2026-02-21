@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/move_z.h"
 #include "enemy/field_enemy.h"
+#include "imgui.h"
 
 #include <format>
 
@@ -20,6 +21,15 @@ void MoveZ::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void MoveZ::ShowConfigWindow()
+{
+	ImGui::Begin("MoveZ Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool MoveZ::NodeEffect(FieldEnemy* enemy_ptr)

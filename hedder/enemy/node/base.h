@@ -57,6 +57,7 @@ public:
 	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
 
 	virtual void Init(Transform trans = Transform());
+	virtual void ShowConfigWindow() = 0; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;

@@ -5,6 +5,7 @@
 #include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
+#include "imgui.h"
 
 // 敵専用の弾クラス
 #include "enemy/enemy_bullet.h"
@@ -33,6 +34,16 @@ void ShotFront::Init(Transform trans)
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
+}
+
+void ShotFront::ShowConfigWindow()
+{
+	ImGui::Begin("ShotFront Config");
+	ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.2f);
+	ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 30.0f, 300.0f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool ShotFront::NodeEffect(FieldEnemy* enemy_ptr)

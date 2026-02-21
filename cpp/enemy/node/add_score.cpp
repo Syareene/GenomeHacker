@@ -4,6 +4,7 @@
 #include "scene/base_scene.h"
 #include "score.h"
 #include "enemy/node/base.h"
+#include "imgui.h"
 #include <format>
 
 void AddScore::Init(Transform trans)
@@ -28,6 +29,15 @@ void AddScore::Init(Transform trans)
 	AddInputTypeBottom(InputType::Death);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void AddScore::ShowConfigWindow()
+{
+	ImGui::Begin("AddScore Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Add Score", &m_AddScore, 0.0f, 100.0f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)

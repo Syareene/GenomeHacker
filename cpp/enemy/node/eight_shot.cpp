@@ -5,6 +5,7 @@
 #include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
+#include "imgui.h"
 
 // 敵専用の弾クラス
 #include "enemy/enemy_bullet.h"
@@ -30,6 +31,16 @@ void EightShot::Init(Transform trans)
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
+}
+
+void EightShot::ShowConfigWindow()
+{
+	ImGui::Begin("EightShot Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f);
+	ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 30.0f, 300.0f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)

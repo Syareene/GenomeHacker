@@ -6,6 +6,7 @@
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
 #include "lib/random_number.h"
+#include "imgui.h"
 
 // エリアクラス
 #include "object/area_object.h"
@@ -31,6 +32,17 @@ void Area::Init(Transform trans)
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
+}
+
+void Area::ShowConfigWindow()
+{
+	ImGui::Begin("Area Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Area Damage", &m_AreaDamage, 0.1f, 10.0f);
+	ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 30.0f, 300.0f);
+	ImGui::SliderFloat("Duration", &m_Duration, 30.0f, 300.0f);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool Area::NodeEffect(FieldEnemy* enemy_ptr)

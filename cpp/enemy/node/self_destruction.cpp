@@ -5,6 +5,7 @@
 #include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
+#include "imgui.h"
 
 // 敵専用の弾クラス
 #include "enemy/enemy_bullet.h"
@@ -33,6 +34,17 @@ void SelfDestruction::Init(Transform trans)
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
+}
+
+void SelfDestruction::ShowConfigWindow()
+{
+	ImGui::Begin("SelfDestruction Config");
+	ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.2f);
+	ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 30.0f, 300.0f);
+	ImGui::SliderFloat("BulletDamage", &m_BulletDamage, 0.1f, 10.0f);
+	ImGui::End();
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
 }
 
 bool SelfDestruction::NodeEffect(FieldEnemy* enemy_ptr)

@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/move_circular.h"
 #include "enemy/field_enemy.h"
+#include "imgui.h"
 #include <format>
 #include <cmath>
 
@@ -16,6 +17,16 @@ void MoveCircular::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void MoveCircular::ShowConfigWindow()
+{
+	ImGui::Begin("MoveCircular Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Radius", &m_Radius, 0.1f, 10.0f);
+	ImGui::SliderInt("Duration", &m_Duration, 30, 600);
+	// データを更新したため説明文も更新
+	GenerateDescriptionText();
+	ImGui::End();
 }
 
 bool MoveCircular::NodeEffect(FieldEnemy* enemy_ptr)

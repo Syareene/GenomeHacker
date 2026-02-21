@@ -13,6 +13,7 @@ private:
 
 public:
 	void Init(Transform trans) override;
+	void ShowConfigWindow() override; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	bool NodeEffect(FieldEnemy* enemy_ptr) override;
 	std::string GenerateDescriptionText();
 

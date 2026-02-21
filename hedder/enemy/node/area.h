@@ -7,6 +7,7 @@ class Area : public NodeBase
 public:
 	static constexpr size_t MAX_OBJECTS = 256; // オブジェクトvector最大数。継承先クラスで変更可能。
 	void Init(Transform trans = Transform()) override;
+	void ShowConfigWindow() override; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
 	void SetDurationVal(const float val) 
 	{ 
