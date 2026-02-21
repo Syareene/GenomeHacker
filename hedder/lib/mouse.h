@@ -23,12 +23,16 @@ public:
 	static void UpdateFinal();
 	// 状態取得系は参照したいクラスが呼ぶ
 	static inline bool IsRightButtonDown() { return m_RightButtonDown; }
+	static inline bool IsRightButtonUp() { return m_RightButtonUp; }
 	static inline bool IsRightButtonTrigger() { return m_RightButtonTrigger; }
 	static inline bool IsLeftButtonDown() { return m_LeftButtonDown; }
+	static inline bool IsLeftButtonUp() { return m_LeftButtonUp; }
 	static inline bool IsLeftButtonTrigger() { return m_LeftButtonTrigger; }
 	static inline bool IsSideButton1Down() { return m_SideButton1Down; }
+	static inline bool IsSideButton1Up() { return m_SideButton1Up; }
 	static inline bool IsSideButton1Trigger() { return m_SideButton1Trigger; }
 	static inline bool IsSideButton2Down() { return m_SideButton2Down; }
+	static inline bool IsSideButton2Up() { return m_SideButton2Up; }
 	static inline bool IsSideButton2Trigger() { return m_SideButton2Trigger; }
 	static inline Vector2 GetPosition() { return m_Position; }
 	static inline Vector2 GetDiffPosition() { return m_AccumulatedPosition; }
