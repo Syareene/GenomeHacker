@@ -22,6 +22,6 @@ public:
 	ParticleData m_Particles[MaxParticles]; // パーティクルデータ
 private:
 	constexpr static Vector3 PARTICLE_SCALE = Vector3(0.3f, 0.3f, 0.3f);
-	constexpr static int PARTICLE_LIFETIME = 60.0f; // パーティクルの寿命(フレーム)
+	constexpr static int PARTICLE_LIFETIME = 60; // パーティクルの寿命(フレーム)
 	constexpr static float VELOCITY_RANDOM_RANGE = 1.0f;
 };

@@ -239,7 +239,6 @@ public:
 	void Update() override
 	{
 		// 自身が所有しているオブジェクトを全て更新
-		int index = 0;
 		for(auto& obj : m_Objects)
 		{
 			obj.Update();
