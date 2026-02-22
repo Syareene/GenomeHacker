@@ -27,6 +27,10 @@ public:
 	inline void ReleaseGrabbingNode() { m_IsReleaseGrabNode = true; }
 	inline void SetGrabbingNode(VisualBase* nodePtr) { m_GrabbingNode = nodePtr; }
 
+	inline VisualBase* GetInfoNode() const { return m_InfoNodePtr; }
+	inline void ReleaseInfoNode() { m_InfoNodePtr = nullptr; }
+	inline void SetInfoNode(VisualBase* nodePtr) { m_InfoNodePtr = nodePtr; }
+
 	TabVisual* GetActiveTab();
 	inline TabVisual* GetAttackTabVisual() { return &m_AttackVisual; }
 	inline TabVisual* GetMoveTabVisual() { return &m_MoveVisual; }
@@ -47,6 +51,7 @@ private:
 	unsigned int m_PlayerId = 0;
 
 	VisualBase* m_GrabbingNode = nullptr; // 現在掴んでいるノードのポインタ
+	VisualBase* m_InfoNodePtr = nullptr; // デバッグ用に変数をいじるウィンドウを表示しているノードのポインタ
 	bool m_IsReleaseGrabNode = false; // ノードを離したかどうかのフラグ
 	EnemyBase* m_EnemyBase = nullptr; // 参照しているデータ
 	static constexpr Vector2 NODE_TAB_TEXT_POS = { 1000.0f, 35.0f }; // ノードタブのテキスト位置

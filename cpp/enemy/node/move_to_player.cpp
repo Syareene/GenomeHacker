@@ -28,9 +28,18 @@ void MoveToPlayer::Init(Transform trans)
 
 void MoveToPlayer::ShowConfigWindow()
 {
+	// 上限値と下限値に関しては移動速度は遅すぎず早すぎずの範囲で、
+	// 発射間隔とかもそんな感じで調節しておけばいいかなと。
+
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+
 	ImGui::Begin("MoveToPlayer Config");
-	ImGui::SetWindowSize(ImVec2(300, 100), ImGuiCond_Once);
-	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.1f);
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.1f))
+	{
+		// データを更新したため説明文も更新
+		SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
+	}
 	ImGui::End();
 }
 

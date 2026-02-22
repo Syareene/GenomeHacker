@@ -72,33 +72,35 @@ void VisualBase::Update()
 	// マウス座標がノード内にあるかどうか
 	if (Mouse::IsMouseInsideArea(startPos, endPos))
 	{
-		// マウス内にある状態ならDebug用ウィンドウを表示
-		m_BaseNodePtr->ShowConfigWindow();
-
 		// カウントインクリメント
 		m_HoverTimer++;
 
 		// その状態で左クリックされたかどうか
 		if (Mouse::IsLeftButtonTrigger())
 		{
+			// infoを表示するノードを設定->掴みと異なるかどうかという部分が大事か(掴んでないけど表示みたいなパターンがあるので別にしたい)
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetInfoNode(this);
+			// 掴みノードも設定(対象だけ取る形に)
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
+
+
+			// 変更後は
+			// 押されっぱ(Down=true)なら掴みで動く、この段階でimguiでのウィンドウ表示は確定->対象のノードを変数に保存したほうがいいかも
+			// 離された時に対して動いていないならつかみは解除、guiはそのまま
+			// 離された時にそこそこ動いているならつかみは解除、guiも閉じる、かねぇ。->こっちもそのままでいいかな
+
 			m_HoverTimer = 0; // ホバータイマーリセット
-			// 現在掴んでいるノードがあるかどうかを確認
-			VisualBase* grabbingNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+		}
 
-			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
+		if (Mouse::IsLeftButtonUp())
+		{
+			m_HoverTimer = 0; // ホバータイマーリセット
 
-			if (grabbingNode)
-			{
-				// 反映処理
-				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
-			}
-			else
-			{
-				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
-			}
+			// マウスを離したタイミングでGrabPtrをリセットする
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
 		}
 	}
+
 	else
 	{
 		// 非表示
@@ -111,9 +113,6 @@ void VisualBase::Update()
 		// 掴んでいるノードがある場合、そのノードをマウス位置に移動させる
 		if (grabbingNode == this)
 		{
-			// 掴み状態ならDebug用ウィンドウを表示
-			m_BaseNodePtr->ShowConfigWindow();
-
 			Vector2 mouseDiffPos = Mouse::GetDiffPosition();
 			Vector3 pos = Vector3(mouseDiffPos.x + GetPosition().x, mouseDiffPos.y + GetPosition().y, 0.0f);
 			SetPosition(pos);
@@ -122,14 +121,17 @@ void VisualBase::Update()
 		}
 	}
 
-	// フォント参照してサイズ更新
-	// 今あるノード実装しきったらここはいった時にassertでエラー出す	
-
 	// ホバータイマーが一定値以上なら説明文を表示
 	if (m_HoverTimer >= SHOW_DESC_TIME)
 	{
 		// ノードのちょい上あたりに表示
 		m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
+	}
+
+	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
+	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
+	{
+		m_BaseNodePtr->ShowConfigWindow();
 	}
 }
 

@@ -58,6 +58,7 @@ public:
 
 	virtual void Init(Transform trans = Transform());
 	virtual void ShowConfigWindow() = 0; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
+	void ImWindowSettings(); // ウィンドウ作成及びサイズ設定の関数。派生クラスのShowConfigWindow関数の中の最初で呼んでね。
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;

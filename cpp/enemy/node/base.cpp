@@ -8,12 +8,27 @@
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
 
+#include "imgui.h"
+
 unsigned int NodeBase::m_UniqueIDCounter = 0;
 
 void NodeBase::Init(Transform trans)
 {
 
 	// ここに説明文格納する感じかな
+}
+
+void NodeBase::ImWindowSettings()
+{
+	// ウィンドウ位置取得
+	RECT screen_rect = GetRect();
+	// 起点ポイント
+	POINT pt = { screen_rect.right, screen_rect.top };
+	// ウィンドウ内座標ではなくスクリーン座標に変換
+	ClientToScreen(GetWindow(), &pt);
+	// ウィンドウの諸々を設定
+	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(pt.x), static_cast<float>(pt.y)), ImGuiCond_Appearing); // これScreenの実posで出す感じ->現在のウィンドウ位置を見て相対的に置く感じかな
+	ImGui::SetNextWindowSize(ImVec2(300.0f, 100.0f), ImGuiCond_Appearing);
 }
 
 bool NodeBase::NodeEffect(FieldEnemy* enemy_ptr)
