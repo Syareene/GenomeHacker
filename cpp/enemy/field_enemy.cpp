@@ -55,7 +55,8 @@ void FieldEnemy::UpdateGPUData(InstanceBufferData& data)
 	// 色設定
 	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
-	Vector2 uv_pos = CalcTexUVOffset(GetEnemyBase()->GetTextureSplitCount().x, GetEnemyBase()->GetTextureSplitCount().y, GetEnemyBase()->GetUVPos().x, GetEnemyBase()->GetUVPos().y);
+	Vector2 uv_pos = CalcTexUVOffset(static_cast<int>(GetEnemyBase()->GetTextureSplitCount().x), static_cast<int>(GetEnemyBase()->GetTextureSplitCount().y), 
+																static_cast<int>(GetEnemyBase()->GetUVPos().x), static_cast<int>(GetEnemyBase()->GetUVPos().y));
 	// 敵ごとにテクスチャが異なるためシェーダー側でその値をずらしてあげる
 	data.UVOffset = XMFLOAT4(uv_pos.x, uv_pos.y, 0.0f, 0.0f);
 }
@@ -81,7 +82,7 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
 	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
 	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
-	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, 0, 0, false);
+	ChangeTexUV(static_cast<int>(base->GetTextureSplitCount().x), static_cast<int>(base->GetTextureSplitCount().y), 0, 0, false);
 	// textureIDをセット
 	SetTextureID(base->GetEnemyTextureID());
 

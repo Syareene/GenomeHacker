@@ -305,7 +305,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 
 	// UV変更モードに設定
 	m_ToDnaButton->SetCanChangeVertex(true); // ->これbutton共通だからdrawの時にこっち使ってくれねぇ
-	m_ToDnaButton->ChangeTexUV(m_TextureSplitCount.x, m_TextureSplitCount.y, m_UVPos.x, m_UVPos.y, true); // 保存した変数から値を参照するように変更する。
+	m_ToDnaButton->ChangeTexUV(static_cast<int>(m_TextureSplitCount.x), static_cast<int>(m_TextureSplitCount.y), static_cast<int>(m_UVPos.x), static_cast<int>(m_UVPos.y), true); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("dna");
 
 }
