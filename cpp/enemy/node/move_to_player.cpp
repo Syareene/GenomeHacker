@@ -33,13 +33,15 @@ void MoveToPlayer::ShowConfigWindow()
 
 	// NodeでのWindow設定適応
 	ImWindowSettings();
-
+	// ウィンドウ生成
 	ImGui::Begin("MoveToPlayer Config");
-	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.1f))
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
 		// データを更新したため説明文も更新
 		SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	}
+
 	ImGui::End();
 }
 

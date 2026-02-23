@@ -25,10 +25,17 @@ void MoveZ::Init(Transform trans)
 
 void MoveZ::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("MoveZ Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, -0.3f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 

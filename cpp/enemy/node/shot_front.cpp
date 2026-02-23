@@ -38,11 +38,18 @@ void ShotFront::Init(Transform trans)
 
 void ShotFront::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("ShotFront Config");
-	ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.2f);
-	ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 30.0f, 300.0f);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 

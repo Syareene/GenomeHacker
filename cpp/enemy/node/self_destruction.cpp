@@ -38,13 +38,20 @@ void SelfDestruction::Init(Transform trans)
 
 void SelfDestruction::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("SelfDestruction Config");
-	ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.2f);
-	ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 30.0f, 300.0f);
-	ImGui::SliderFloat("BulletDamage", &m_BulletDamage, 0.1f, 10.0f);
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("MoveVal", &m_MoveVal, 0.01f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("ShotInterval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Damage", &m_BulletDamage, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
 }
 
 bool SelfDestruction::NodeEffect(FieldEnemy* enemy_ptr)

@@ -33,10 +33,17 @@ void AddScore::Init(Transform trans)
 
 void AddScore::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("AddScore Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderFloat("Add Score", &m_AddScore, 0.0f, 100.0f);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Add Score", &m_AddScore, 0.0f, 100.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 

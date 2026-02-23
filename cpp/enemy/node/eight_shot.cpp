@@ -35,11 +35,19 @@ void EightShot::Init(Transform trans)
 
 void EightShot::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("EightShot Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f);
-	ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 30.0f, 300.0f);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f, "%.2f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Bullet Damage", &m_BulletDamage, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 
@@ -73,6 +81,8 @@ bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 		velocity.z = sinf(angle) * m_MoveVal;
 		// 弾の速度を設定
 		bullet->SetVelocity(velocity);
+		// 弾のダメージを設定
+		bullet->SetBulletDamage(m_BulletDamage);
 	}
 
 	return true;

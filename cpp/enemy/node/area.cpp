@@ -36,12 +36,19 @@ void Area::Init(Transform trans)
 
 void Area::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("Area Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderFloat("Area Damage", &m_AreaDamage, 0.1f, 10.0f);
-	ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 30.0f, 300.0f);
-	ImGui::SliderFloat("Duration", &m_Duration, 30.0f, 300.0f);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Area Damage", &m_AreaDamage, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Duration", &m_Duration, 30.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 

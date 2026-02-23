@@ -21,11 +21,18 @@ void MoveCircular::Init(Transform trans)
 
 void MoveCircular::ShowConfigWindow()
 {
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
 	ImGui::Begin("MoveCircular Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderFloat("Radius", &m_Radius, 0.1f, 10.0f);
-	ImGui::SliderInt("Duration", &m_Duration, 30, 600);
-	// データを更新したため説明文も更新
-	GenerateDescriptionText();
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Radius", &m_Radius, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderInt("Duration", &m_Duration, 10, 600))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+
 	ImGui::End();
 }
 
