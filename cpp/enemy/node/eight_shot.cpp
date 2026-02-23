@@ -39,6 +39,7 @@ void EightShot::ShowConfigWindow()
 	ImWindowSettings();
 	// ウィンドウ生成
 	ImGui::Begin("EightShot Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
 	// 設定可能なパラメーターを列挙
 	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f, "%.2f", ImGuiSliderFlags_AlwaysClamp) ||
 		ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
@@ -47,6 +48,8 @@ void EightShot::ShowConfigWindow()
 		// データを更新したため説明文も更新
 		GenerateDescriptionText();
 	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
 
 	ImGui::End();
 }

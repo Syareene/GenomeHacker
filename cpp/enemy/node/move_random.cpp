@@ -35,12 +35,15 @@ void MoveRandom::ShowConfigWindow()
     ImWindowSettings();
     // ウィンドウ生成
 	ImGui::Begin("MoveRandom Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::SeparatorText("Properties");
     // 設定可能なパラメーターを列挙
     if (ImGui::SliderFloat("Move Amount", &m_MoveVal, 0.01f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
     {
         // データを更新したため説明文も更新
         GenerateDescriptionText();
     }
+    // どのタブで使えるかを表示
+    ShowTabInfo();
 
 	ImGui::End();
 }

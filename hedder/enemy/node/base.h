@@ -59,6 +59,8 @@ public:
 	virtual void Init(Transform trans = Transform());
 	virtual void ShowConfigWindow() = 0; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
 	void ImWindowSettings(); // ウィンドウ作成及びサイズ設定の関数。派生クラスのShowConfigWindow関数の中の最初で呼んでね。
+	void ShowTabInfo(); // どのタブに属しているかをImGuiのWindowに表示する関数
+
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
@@ -108,6 +110,7 @@ protected:
 	// 死亡時に即座に発動するかどうか(順に発動するため間にfalseなものがあったらそれが実行されるまで保留されます)
 	inline void SetInstantCastOnDead(const bool instant) { m_InstantCastOnDead = instant; }
 private:
+	constexpr static Vector2 IMGUI_WINDOW_SIZE = { 300.0f, 200.0f }; // ImGuiのウィンドウサイズ
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }

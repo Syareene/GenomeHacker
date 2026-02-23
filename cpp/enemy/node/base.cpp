@@ -28,7 +28,21 @@ void NodeBase::ImWindowSettings()
 	ClientToScreen(GetWindow(), &pt);
 	// ウィンドウの諸々を設定
 	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(pt.x), static_cast<float>(pt.y)), ImGuiCond_Appearing); // これScreenの実posで出す感じ->現在のウィンドウ位置を見て相対的に置く感じかな
-	ImGui::SetNextWindowSize(ImVec2(300.0f, 100.0f), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_SIZE.x, IMGUI_WINDOW_SIZE.y), ImGuiCond_Appearing);
+}
+
+void NodeBase::ShowTabInfo()
+{
+	ImGui::SeparatorText("UseableTab");
+	ImGui::BeginDisabled(true); // 無効化してさわれなくする
+	// 各種タブが使えるかどうかを表示
+	bool canUseAttackTab = (std::find(m_InputTypesTop.begin(), m_InputTypesTop.end(), InputType::Attack) != m_InputTypesTop.end());
+	ImGui::Checkbox("CanUseAttackTab", &canUseAttackTab);
+	bool canUseMoveTab = (std::find(m_InputTypesTop.begin(), m_InputTypesTop.end(), InputType::Move) != m_InputTypesTop.end());
+	ImGui::Checkbox("CanUseMoveTab", &canUseMoveTab);
+	bool canUseDeathTab = (std::find(m_InputTypesTop.begin(), m_InputTypesTop.end(), InputType::Death) != m_InputTypesTop.end());
+	ImGui::Checkbox("CanUseDeathTab", &canUseDeathTab);
+	ImGui::EndDisabled(); // 無効化終了
 }
 
 bool NodeBase::NodeEffect(FieldEnemy* enemy_ptr)

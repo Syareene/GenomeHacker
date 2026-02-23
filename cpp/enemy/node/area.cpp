@@ -40,6 +40,7 @@ void Area::ShowConfigWindow()
 	ImWindowSettings();
 	// ウィンドウ生成
 	ImGui::Begin("Area Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
 	// 設定可能なパラメーターを列挙
 	if (ImGui::SliderFloat("Area Damage", &m_AreaDamage, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp) ||
 		ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
@@ -48,6 +49,8 @@ void Area::ShowConfigWindow()
 		// データを更新したため説明文も更新
 		GenerateDescriptionText();
 	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
 
 	ImGui::End();
 }

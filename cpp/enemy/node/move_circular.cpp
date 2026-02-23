@@ -25,6 +25,7 @@ void MoveCircular::ShowConfigWindow()
 	ImWindowSettings();
 	// ウィンドウ生成
 	ImGui::Begin("MoveCircular Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
 	// 設定可能なパラメーターを列挙
 	if (ImGui::SliderFloat("Radius", &m_Radius, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp) ||
 		ImGui::SliderInt("Duration", &m_Duration, 10, 600))
@@ -32,6 +33,8 @@ void MoveCircular::ShowConfigWindow()
 		// データを更新したため説明文も更新
 		GenerateDescriptionText();
 	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
 
 	ImGui::End();
 }
