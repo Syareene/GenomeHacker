@@ -16,7 +16,6 @@ void TabVisual::CreateVisual(TabBase* base)
 {
 	if(m_DnaScreenId == 0 || m_PlayerId == 0)
 	{
-		// id設定されてないなら処理しない->振られてない扱いで草
 		// (下の段階でidが設定されてるかわからないので暫定処理)
 		assert(false && "TabVisual::CreateVisual called before IDs are set.");
 		return;

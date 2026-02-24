@@ -242,8 +242,17 @@ void DnaScreenScript::ShowDnaInfo()
 	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
 	// 描画されてない時、game_objのリストにはあるが範囲forにてヒットしておらず描画されない?
 	AddChildObject<ImageDraw>(1)->Register(Vector3(PLAYER_NODE_LIST_POS.x, PLAYER_NODE_LIST_POS.y, 0.0f), 
-		Vector3(PLAYER_NODE_LIST_SCALE.x, PLAYER_NODE_LIST_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\node_list.png");
+		Vector3(PLAYER_NODE_LIST_SCALE.x, PLAYER_NODE_LIST_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\player_node_list.png");
 
+	AddChildObject<ImageDraw>(1)->Register(Vector3(ENEMY_NODE_LIST_POS.x, ENEMY_NODE_LIST_POS.y, 0.0f),
+		Vector3(ENEMY_NODE_LIST_SCALE.x, ENEMY_NODE_LIST_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\enemy_node_list.png");
+
+	// 敵自体の見た目を敵ノード側に表示
+	ImageDraw* image = AddChildObject<ImageDraw>(2); 
+	image->Register(Vector3(720.0f, 540.0f, 0.0f), Vector3(200.0f, 200.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\monsters.png");
+	image->SetCanChangeVertex(true);
+	image->ChangeTexUV(static_cast<float>(m_EnemyBase->GetTextureSplitCount().x), static_cast<float>(m_EnemyBase->GetTextureSplitCount().y), 
+										   static_cast<float>(m_EnemyBase->GetUVPos().x), static_cast<float>(m_EnemyBase->GetUVPos().y), true);
 
 	// 現在のノードを表示
 	fontData.fontSize = 100;

@@ -64,8 +64,18 @@ void ImageDraw::Draw()
 	// マトリクス設定
 	Renderer::SetWorldViewProjection2D();
 
-	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw();
+
+	// ここのテクスチャに関してはuvで描画される可能性があるためvertexbufferがある場合は変更する
+	if (GetVertexBuffer())
+	{
+		// 頂点バッファ設定
+		SetVertexBufferOnDraw();
+	}
+	else
+	{
+		// 頂点バッファ設定
+		SetDefaultVertexBufferOnDraw();
+	}
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定
