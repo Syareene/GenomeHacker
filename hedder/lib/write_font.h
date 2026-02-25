@@ -78,6 +78,53 @@ struct FontData
 		outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 		outlineWidth = 0.0f;
 	}
+
+	// std::wstring は noexcept なムーブができないため明示的に定義する
+	FontData(FontData&& Other) noexcept
+		: font(std::move(Other.font))
+		, fontCollection(Other.fontCollection)
+		, fontWeight(Other.fontWeight)
+		, fontStyle(Other.fontStyle)
+		, fontStretch(Other.fontStretch)
+		, fontSize(Other.fontSize)
+		, localeName(Other.localeName)
+		, textAlignment(Other.textAlignment)
+		, Color(Other.Color)
+		, shadowColor(Other.shadowColor)
+		, shadowOffset(Other.shadowOffset)
+		, outlineColor(Other.outlineColor)
+		, outlineWidth(Other.outlineWidth)
+	{
+		Other.fontCollection = nullptr;
+		// localeName は文字列リテラルへのポインタなのでリセット不要
+	}
+
+	FontData& operator=(FontData&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			font           = std::move(Other.font);
+			fontCollection = Other.fontCollection;
+			fontWeight     = Other.fontWeight;
+			fontStyle      = Other.fontStyle;
+			fontStretch    = Other.fontStretch;
+			fontSize       = Other.fontSize;
+			localeName     = Other.localeName;
+			textAlignment  = Other.textAlignment;
+			Color          = Other.Color;
+			shadowColor    = Other.shadowColor;
+			shadowOffset   = Other.shadowOffset;
+			outlineColor   = Other.outlineColor;
+			outlineWidth   = Other.outlineWidth;
+
+			Other.fontCollection = nullptr;
+		}
+		return *this;
+	}
+
+	// コピーも明示的に定義（= default では wstring の _Myproxy 問題が出る）
+	FontData(const FontData&) = default;
+	FontData& operator=(const FontData&) = default;
 };
 
 // FontData 比較用の演算子

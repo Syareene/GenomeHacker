@@ -31,8 +31,21 @@ private:
 public:
 	Panel() = default;
 	~Panel() override = default;
-	Panel(Panel&&) noexcept = default;
-	Panel& operator=(Panel&&) noexcept = default;
+	Panel(Panel&& Other) noexcept
+		: Object2D(std::move(Other))
+		, IContainer(std::move(Other))
+		, m_ChildObjects(std::move(Other.m_ChildObjects))
+	{
+	}
+	Panel& operator=(Panel&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Object2D::operator=(std::move(Other));
+			m_ChildObjects = std::move(Other.m_ChildObjects);
+		}
+		return *this;
+	}
 
 	virtual void Init();
 	void Uninit() override;

@@ -44,8 +44,48 @@ public:
 		m_UniqueID = GetNextUniqueID();
 	}
 	virtual ~NodeBase() = default;
-	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
-	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
+	NodeBase(NodeBase&& Other) noexcept
+		: m_InputTypesTop(std::move(Other.m_InputTypesTop))
+		, m_InputTypesBottom(std::move(Other.m_InputTypesBottom))
+		, m_ChildNodes(std::move(Other.m_ChildNodes))
+		, m_Name(std::move(Other.m_Name))
+		, m_Description(std::move(Other.m_Description))
+		, m_NameFont(std::move(Other.m_NameFont))
+		, m_DescriptionFonts(std::move(Other.m_DescriptionFonts))
+		, m_NodeLocation(Other.m_NodeLocation)
+		, m_MoveManageId(Other.m_MoveManageId)
+		, m_UniqueID(Other.m_UniqueID)
+		, m_ID(Other.m_ID)
+		, m_Keyword(std::move(Other.m_Keyword))
+		, m_CDMax(Other.m_CDMax)
+		, m_CD(Other.m_CD)
+		, m_InstantCastOnDead(Other.m_InstantCastOnDead)
+		, m_IsUpdated(Other.m_IsUpdated)
+	{
+	}
+	NodeBase& operator=(NodeBase&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_InputTypesTop = std::move(Other.m_InputTypesTop);
+			m_InputTypesBottom = std::move(Other.m_InputTypesBottom);
+			m_ChildNodes = std::move(Other.m_ChildNodes);
+			m_Name = std::move(Other.m_Name);
+			m_Description = std::move(Other.m_Description);
+			m_NameFont = std::move(Other.m_NameFont);
+			m_DescriptionFonts = std::move(Other.m_DescriptionFonts);
+			m_NodeLocation = Other.m_NodeLocation;
+			m_MoveManageId = Other.m_MoveManageId;
+			m_UniqueID = Other.m_UniqueID;
+			m_ID = Other.m_ID;
+			m_Keyword = std::move(Other.m_Keyword);
+			m_CDMax = Other.m_CDMax;
+			m_CD = Other.m_CD;
+			m_InstantCastOnDead = Other.m_InstantCastOnDead;
+			m_IsUpdated = Other.m_IsUpdated;
+		}
+		return *this;
+	}
 
 	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
 	// text_typeを元にFontData返す関数欲しいな

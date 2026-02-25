@@ -15,8 +15,46 @@ class EnemyBase
 public:
 	EnemyBase() = default; // デフォルトコンストラクタ
 	virtual ~EnemyBase() {}
-	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
-	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
+	EnemyBase(EnemyBase&& Other) noexcept
+		: m_TabManager(std::move(Other.m_TabManager))
+		, m_ToDnaButton(Other.m_ToDnaButton)
+		, m_TextureID(Other.m_TextureID)
+		, m_EnemyID(Other.m_EnemyID)
+		, m_TextureSplitCount(Other.m_TextureSplitCount)
+		, m_UVPos(Other.m_UVPos)
+		, m_TextureTarget(Other.m_TextureTarget)
+		, m_TextureCount(Other.m_TextureCount)
+		, m_PosDiff(Other.m_PosDiff)
+		, m_ScaleDiff(Other.m_ScaleDiff)
+		, m_IsExitDnaEdit(Other.m_IsExitDnaEdit)
+		, m_MaxHealth(Other.m_MaxHealth)
+	{
+		Other.m_ToDnaButton = nullptr;
+		Other.m_TextureID = -1;
+		Other.m_EnemyID = -1;
+	}
+	EnemyBase& operator=(EnemyBase&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_TabManager = std::move(Other.m_TabManager);
+			m_ToDnaButton = Other.m_ToDnaButton;
+			m_TextureID = Other.m_TextureID;
+			m_EnemyID = Other.m_EnemyID;
+			m_TextureSplitCount = Other.m_TextureSplitCount;
+			m_UVPos = Other.m_UVPos;
+			m_TextureTarget = Other.m_TextureTarget;
+			m_TextureCount = Other.m_TextureCount;
+			m_PosDiff = Other.m_PosDiff;
+			m_ScaleDiff = Other.m_ScaleDiff;
+			m_IsExitDnaEdit = Other.m_IsExitDnaEdit;
+			m_MaxHealth = Other.m_MaxHealth;
+			Other.m_ToDnaButton = nullptr;
+			Other.m_TextureID = -1;
+			Other.m_EnemyID = -1;
+		}
+		return *this;
+	}
 
 	virtual EnemyBase* Register(const unsigned int& playerId); // 登録処理
 	void Unregister(); // 登録解除処理

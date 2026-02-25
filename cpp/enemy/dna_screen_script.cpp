@@ -46,7 +46,7 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	player->SetDnaScreenId(GetObjectID());
 
 	// プレイヤーに関しても所持しているノードの見た目部分を生成する
-	GeneratePlayerVisualNodes();
+	//GeneratePlayerVisualNodes();
 
 	// その他UI等の生成
 
@@ -181,6 +181,9 @@ void DnaScreenScript::ShowDnaInfo()
 {
 	// 表示中かどうかもこっちで管理
 	SetActive(true);
+
+	// 生成
+	GeneratePlayerVisualNodes();
 
 	// DNA情報を表示する処理
 

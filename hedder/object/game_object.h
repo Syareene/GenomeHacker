@@ -72,8 +72,58 @@ public:
 		}
 		m_ObjectID = m_NextObjectID++;
 	}
-	GameObject(GameObject&&) noexcept = default; // ムーブコンストラクタ
-	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
+	// ムーブコンストラクタ(改善版)
+	GameObject(GameObject&& Other) noexcept
+		: m_Transform(std::move(Other.m_Transform))
+		, m_Velocity(std::move(Other.m_Velocity))
+		, m_IsAliveData(Other.m_IsAliveData)
+		, m_IsActive(Other.m_IsActive)
+		, m_Destroy(Other.m_Destroy)
+		, m_TextureID(Other.m_TextureID)
+		, m_Layer(Other.m_Layer)
+		, m_ObjectID(Other.m_ObjectID)
+		, m_Tag(std::move(Other.m_Tag))
+		, m_ObjSpeedMlt(Other.m_ObjSpeedMlt)
+		, m_VertexBuffer(Other.m_VertexBuffer)
+		, m_VertexShader(Other.m_VertexShader)
+		, m_PixelShader(Other.m_PixelShader)
+		, m_VertexLayout(Other.m_VertexLayout)
+	{
+		// ムーブ元のポインタをリセット（二重解放防止）
+		Other.m_VertexBuffer = nullptr;
+		Other.m_VertexShader = nullptr;
+		Other.m_PixelShader = nullptr;
+		Other.m_VertexLayout = nullptr;
+		Other.m_TextureID = -1;
+	}
+	// ムーブ代入演算子(改善版)
+	GameObject& operator=(GameObject&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_Transform = std::move(Other.m_Transform);
+			m_Velocity = std::move(Other.m_Velocity);
+			m_IsAliveData = Other.m_IsAliveData;
+			m_IsActive = Other.m_IsActive;
+			m_Destroy = Other.m_Destroy;
+			m_TextureID = Other.m_TextureID;
+			m_Layer = Other.m_Layer;
+			m_ObjectID = Other.m_ObjectID;
+			m_Tag = std::move(Other.m_Tag);
+			m_ObjSpeedMlt = Other.m_ObjSpeedMlt;
+			m_VertexBuffer = Other.m_VertexBuffer;
+			m_VertexShader = Other.m_VertexShader;
+			m_PixelShader = Other.m_PixelShader;
+			m_VertexLayout = Other.m_VertexLayout;
+
+			Other.m_VertexBuffer = nullptr;
+			Other.m_VertexShader = nullptr;
+			Other.m_PixelShader = nullptr;
+			Other.m_VertexLayout = nullptr;
+			Other.m_TextureID = -1;
+		}
+		return *this;
+	}
 
 	virtual ~GameObject() {}
 	template <typename... Args>

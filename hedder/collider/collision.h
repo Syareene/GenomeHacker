@@ -17,8 +17,22 @@ class Collision
 public:
 	Collision() = default;
 	virtual ~Collision() = default;
-	Collision(Collision&&) noexcept = default; // ムーブコンストラクタ
-	Collision& operator=(Collision&&) noexcept = default; // ムーブ代入演算子
+	Collision(Collision&& Other) noexcept
+		: m_Transform(std::move(Other.m_Transform))
+		, m_PositionOffset(Other.m_PositionOffset)
+		, m_IsHit(Other.m_IsHit)
+	{
+	}
+	Collision& operator=(Collision&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_Transform = std::move(Other.m_Transform);
+			m_PositionOffset = Other.m_PositionOffset;
+			m_IsHit = Other.m_IsHit;
+		}
+		return *this;
+	}
 	virtual void Init(const Transform& trans = Transform(), const Vector3& pos_diff = { 0.0f, 0.0f, 0.0f }) 
 	{
 		SetTransform(trans);

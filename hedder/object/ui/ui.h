@@ -7,8 +7,20 @@ class UI : public Object2D
 public:
 	UI() = default; // デフォルトコンストラクタ
 	virtual ~UI() {}
-	UI(UI&&) noexcept = default; // ムーブコンストラクタ
-	UI& operator=(UI&&) noexcept = default; // ムーブ代入演算子
+	UI(UI&& Other) noexcept
+		: Object2D(std::move(Other))
+		, m_NoUpdate(Other.m_NoUpdate)
+	{
+	}
+	UI& operator=(UI&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Object2D::operator=(std::move(Other));
+			m_NoUpdate = Other.m_NoUpdate;
+		}
+		return *this;
+	}
 	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
