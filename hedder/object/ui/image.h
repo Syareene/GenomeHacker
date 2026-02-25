@@ -6,7 +6,10 @@
 class ImageDraw : public UI
 {
 public:
-	ImageDraw() {} // デフォコン
+	ImageDraw() = default; // デフォコン
+	virtual ~ImageDraw() {}
+	ImageDraw(ImageDraw&&) noexcept = default; // ムーブコンストラクタ
+	ImageDraw& operator=(ImageDraw&&) noexcept = default; // ムーブ代入演算子
 	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効(汎用クラスは別テクスチャ読み込むのに対応してないので一旦無効化)
 	void Register(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
 	{
