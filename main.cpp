@@ -36,7 +36,10 @@ RECT GetRect()
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
+#ifdef _DEBUG
+	// デバッグ用にメモリ破壊の検出を有効にする
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+#endif
 
 	WNDCLASSEX wcex;
 	{

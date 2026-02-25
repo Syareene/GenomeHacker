@@ -358,42 +358,45 @@ void DnaScreenScript::GeneratePlayerVisualNodes()
 
 void DnaScreenScript::SelectedAttackTab()
 {
-	// 現在のタブに対して移動反映を行う->これ必要なんだけどこれするとplayerのノードが消えてしまう
 	GetActiveTab()->ApplyMovedResult();
-	// プレイヤーノード再生成
 	GeneratePlayerVisualNodes();
 
-	GetChildObjectByType<Font>()->SetDisplayText("攻撃ノード");
+	if (Font* font = GetChildObjectByType<Font>())
+	{
+		font->SetDisplayText("攻撃ノード");
+	}
 	m_AttackVisual.SetIsSelected(true);
-	m_AttackVisual.ModifyNodePos(); // ノード位置修正
+	m_AttackVisual.ModifyNodePos();
 	m_MoveVisual.SetIsSelected(false);
 	m_DeathVisual.SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedMoveTab()
 {
-	// 現在のタブに対して移動反映を行う
 	GetActiveTab()->ApplyMovedResult();
-
 	GeneratePlayerVisualNodes();
 
-	GetChildObjectByType<Font>()->SetDisplayText("移動ノード");
+	if (Font* font = GetChildObjectByType<Font>())
+	{
+		font->SetDisplayText("移動ノード");
+	}
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(true);
-	m_MoveVisual.ModifyNodePos(); // ノード位置修正
+	m_MoveVisual.ModifyNodePos();
 	m_DeathVisual.SetIsSelected(false);
 }
 
 void DnaScreenScript::SelectedDeathTab()
 {
-	// 現在のタブに対して移動反映を行う
 	GetActiveTab()->ApplyMovedResult();
-
 	GeneratePlayerVisualNodes();
 
-	GetChildObjectByType<Font>()->SetDisplayText("死亡ノード");
+	if (Font* font = GetChildObjectByType<Font>())
+	{
+		font->SetDisplayText("死亡ノード");
+	}
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(false);
 	m_DeathVisual.SetIsSelected(true);
-	m_DeathVisual.ModifyNodePos(); // ノード位置修正
+	m_DeathVisual.ModifyNodePos();
 }

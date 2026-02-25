@@ -111,8 +111,6 @@ void Manager::Update()
 
 void Manager::Draw()
 {
-	// 描画データ作成
-	ImGui::Render();
 	// レンダリング開始
 	Renderer::Begin();
 	Renderer::GetID2D1DeviceContext()->BeginDraw();
@@ -121,6 +119,8 @@ void Manager::Draw()
 	// D2D描画確定
 	Renderer::GetID2D1DeviceContext()->EndDraw();
 
+	// 描画データ作成
+	ImGui::Render();
 	// ImGuiの描画
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	// 描画確定
