@@ -61,10 +61,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 
 void DnaScreenScript::Uninit()
 {
-	// TODO: 残り動いた分の反映処理
-
-	// DNAスクリーンの終了処理
-	Panel::Uninit();
 	// ここで必要な終了処理を追加
 
 	// 最終的に動いた分を反映
@@ -81,6 +77,10 @@ void DnaScreenScript::Uninit()
 	m_DeathVisual.Uninit();
 
 	m_EnemyBase = nullptr;
+
+	// 最初に解放するのではなく最後に解放するように変更!
+	// DNAスクリーンの終了処理
+	Panel::Uninit();
 
 	SetDestroy(true);
 }
@@ -189,7 +189,7 @@ void DnaScreenScript::ShowDnaInfo()
 	fontData.fontSize = 35;
 	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
 	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
-	fontData.Color = D2D1::ColorF(D2D1::ColorF::ForestGreen);
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::OrangeRed);
 	fontData.font = DirectWriteCustomFont::GetFontName(0);
 	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
 	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
@@ -228,9 +228,13 @@ void DnaScreenScript::ShowDnaInfo()
 		buttonCallback(0); // 攻撃
 		}, Vector2(NODE_TAB_TEXT_POS), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
 
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::ForestGreen);
+
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(1); // 移動
 		}, Vector2(NODE_TAB_TEXT_POS.x + 100.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "移動", L"asset\\texture\\alpha_texture.png", L"");
+
+	fontData.Color = D2D1::ColorF(D2D1::ColorF::DarkSlateBlue);
 
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(2); // 死亡
@@ -249,7 +253,7 @@ void DnaScreenScript::ShowDnaInfo()
 
 	// 敵自体の見た目を敵ノード側に表示
 	ImageDraw* image = AddChildObject<ImageDraw>(2); 
-	image->Register(Vector3(720.0f, 540.0f, 0.0f), Vector3(200.0f, 200.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\monsters.png");
+	image->Register(Vector3(ENEMY_VISUAL_POS.x, ENEMY_VISUAL_POS.y, 0.0f), Vector3(ENEMY_VISUAL_SCALE.x, ENEMY_VISUAL_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\monsters.png");
 	image->SetCanChangeVertex(true);
 	image->ChangeTexUV(static_cast<float>(m_EnemyBase->GetTextureSplitCount().x), static_cast<float>(m_EnemyBase->GetTextureSplitCount().y), 
 										   static_cast<float>(m_EnemyBase->GetUVPos().x), static_cast<float>(m_EnemyBase->GetUVPos().y), true);

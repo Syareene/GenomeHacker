@@ -57,6 +57,8 @@ private:
 	static constexpr Vector2 NODE_TAB_TEXT_POS = { 1000.0f, 35.0f }; // ノードタブのテキスト位置
 	static constexpr Vector2 PLAYER_NODE_LIST_POS = { 1024.0f, 450.0f }; // プレイヤーノード欄の位置
 	static constexpr Vector2 PLAYER_NODE_LIST_SCALE = { 512.0f, 540.0f }; // プレイヤーノード欄のスケール
+	static constexpr Vector2 ENEMY_VISUAL_POS = { 680.0f, 640.0f }; // 敵の見た目の位置
+	static constexpr Vector2 ENEMY_VISUAL_SCALE = { 125.0f, 125.0f }; // 敵の見た目のスケール
 	static constexpr Vector2 ENEMY_NODE_LIST_POS = { 384.0f, 450.0f }; // 敵ノード欄の位置
 	static constexpr Vector2 ENEMY_NODE_LIST_SCALE = { 768.0f, 540.0f }; // 敵ノード欄のスケール
 	static constexpr Vector2 TAB_BUTTON_SIZE = {100.0f, 50.0f};
