@@ -24,7 +24,7 @@ private:
 	int m_TextureID = -1;
 	int m_Layer = 0; // 描画レイヤー(数値が大きいほど手前側)
 	unsigned int m_ObjectID = 0; // オブジェクトID(管理用)
-	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
+	std::vector<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
 
 	// 描画系変数
@@ -113,7 +113,7 @@ public:
 	inline void SetTransform(const Transform& Transform) { m_Transform = Transform; }
 	inline int GetTextureID() const { return m_TextureID; }
 	inline void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
-	inline std::list<std::string>& GetTagList() { return m_Tag; }
+	inline std::vector<std::string>& GetTagList() { return m_Tag; }
 	inline bool IsTagAvailable(const std::string& tagName) const
 	{
 		for (const auto& tag : m_Tag)
