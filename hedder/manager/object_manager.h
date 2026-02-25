@@ -183,6 +183,14 @@ public:
 		{
 			return; // 保留中のオブジェクトがなければ何もしない
 		}
+
+		// この段階で要らないオブジェを消す
+		std::erase_if(m_Objects, [](const ObjectType& obj) 
+		{
+			return obj.IsDestroy();
+		});
+
+
 		// 保留中のオブジェクトを本体リストに移動
 		for (auto& obj : m_PendingObjects)
 		{
@@ -230,7 +238,11 @@ public:
 		// uninitする
 		for(auto& obj : m_Objects)
 		{
-			obj.Uninit();
+			// もし破棄されていないならuninitする
+			if (!obj.IsDestroy())
+			{
+				obj.Uninit();
+			}
 		}
 
 		// リストから消す
