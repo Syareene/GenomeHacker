@@ -302,8 +302,8 @@ public:
 			memcpy(msr.pData, m_InstanceDataBuffer.data(), sizeof(InstanceBufferData) * m_InstanceDataBuffer.size());
 			Renderer::GetDeviceContext()->Unmap(m_InstanceBuffer, 0);
 
-			// バッファ更新
-			Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
+			// バッファ更新->いらない?
+			//Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
 		}
 	}
 
