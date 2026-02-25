@@ -38,7 +38,11 @@ void ImageDraw::Init(Transform trans)
 void ImageDraw::Uninit()
 {
 	// 開放
-	TextureManager::UnloadTexture(GetTextureID());
+	if (GetTextureID() >= 0)
+	{
+		TextureManager::UnloadTexture(GetTextureID());
+		SetTextureID(-1);
+	}
 	UninitDrawMember();
 }
 

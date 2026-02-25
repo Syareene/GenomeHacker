@@ -50,14 +50,26 @@ void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed
 
 void GameObject::UninitDrawMember()
 {
-	if (m_VertexBuffer) m_VertexBuffer->Release();
-	if (m_VertexShader) m_VertexShader->Release();
-	if (m_PixelShader) m_PixelShader->Release();
-	if (m_VertexLayout) m_VertexLayout->Release();
-	m_VertexBuffer = nullptr;
-	m_VertexShader = nullptr;
-	m_PixelShader = nullptr;
-	m_VertexLayout = nullptr;
+	if (m_VertexBuffer)
+	{
+		m_VertexBuffer->Release();
+		m_VertexBuffer = nullptr;
+	}
+	if (m_VertexShader)
+	{
+		m_VertexShader->Release();
+		m_VertexShader = nullptr;
+	}
+	if (m_PixelShader)
+	{
+		m_PixelShader->Release();
+		m_PixelShader = nullptr;
+	}
+	if (m_VertexLayout)
+	{
+		m_VertexLayout->Release();
+		m_VertexLayout = nullptr;
+	}
 }
 
 void GameObject::SetCanChangeVertex(bool is2D)
