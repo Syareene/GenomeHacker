@@ -80,7 +80,7 @@ void DnaScreenScript::Uninit()
 
 	// 最初に解放するのではなく最後に解放するように変更!
 	// DNAスクリーンの終了処理
-	Panel::Uninit();
+	//Panel::Uninit(); //->Destoryをセットしてたらどのみち終了されるから呼ばない
 
 	SetDestroy(true);
 }
