@@ -45,10 +45,10 @@ public:
 		return (*it).get();
 	}
 	// 見た目ノード追加
-	void AddVisualNode(const VisualBase& visual)
+	void AddVisualNode(int index, NodeBase* nodePtr)
 	{
 		m_NodeVisuals.emplace_back(std::make_unique<VisualBase>());
-		m_NodeVisuals.back()->Init(m_DnaScreenId, static_cast<int>(m_NodeVisuals.size() - 1), visual.GetBaseNodePtr());
+		m_NodeVisuals.back()->Init(m_DnaScreenId, index, nodePtr);
 	}
 private:
 	constexpr static Vector3 MODEL_SCALE = Vector3(1.5f, 1.5f, 1.0f);

@@ -348,10 +348,7 @@ void DnaScreenScript::GeneratePlayerVisualNodes()
 	int counter = 0;
 	for(auto& node : player->GetAllNodes())
 	{
-		// nodeの見た目部分を生成
-		VisualBase visual = VisualBase();
-		visual.Init(GetObjectID(), counter, node.get());
-		player->AddVisualNode(visual);
+		player->AddVisualNode(counter, node.get());
 		counter++;
 	}
 }
