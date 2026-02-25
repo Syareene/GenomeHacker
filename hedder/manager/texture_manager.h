@@ -77,6 +77,14 @@ public:
 
     static void UnloadTexture(int id)
     {
+        // 存在しているかどうか?
+		auto it = m_TextureMap.find(id);
+        if(it == m_TextureMap.end())
+        {
+            // 存在しないなら何もしない
+            return;
+		}
+
         // 参照カウントを減らす
 		m_TextureMap[id].TextureCount--;
 
