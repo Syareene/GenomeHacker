@@ -126,12 +126,6 @@ void VisualBase::Update()
 		// ノードのちょい上あたりに表示
 		m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
 	}
-
-	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
-	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
-	{
-		m_BaseNodePtr->ShowConfigWindow();
-	}
 }
 
 void VisualBase::Draw()
@@ -159,7 +153,11 @@ void VisualBase::Draw()
 		}
 	}
 
-	// ノードソケットの描画処理
+	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
+	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
+	{
+		m_BaseNodePtr->ShowConfigWindow();
+	}
 }
 
 const FontData& VisualBase::GetFontDataFromTextType(const NodeBase::TextType& type) const
