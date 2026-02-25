@@ -301,17 +301,10 @@ public:
 
 			memcpy(msr.pData, m_InstanceDataBuffer.data(), sizeof(InstanceBufferData) * m_InstanceDataBuffer.size());
 			Renderer::GetDeviceContext()->Unmap(m_InstanceBuffer, 0);
+
+			// バッファ更新
+			Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
 		}
-
-
-		// 過去のやつ
-		/*int index = 0;
-		for(auto& obj : m_Objects)
-		{
-			obj.UpdateGPUData(m_InstanceBuffer, m_InstanceDataBuffer[index]);
-		}*/
-		// バッファ更新
-		Renderer::GetDeviceContext()->UpdateSubresource(m_InstanceBuffer, 0, NULL, m_InstanceDataBuffer.data(), 0, 0);
 	}
 
 	void UpdateObjectByTag(const std::string& tag) override
@@ -570,8 +563,10 @@ for (auto& obj : m_Objects)
 					// カメラからの距離を計算（簡易）
 					req.Depth = obj.GetPosition().z;
 
-					req.DrawCall = [&obj]() {
-						obj.Draw();
+					ObjectType* objPtr = &obj; // キャプチャ用(同フレーム消費なのでポインタでok)
+
+					req.DrawCall = [objPtr]() {
+						objPtr->Draw();
 						};
 					renderQueue.push_back(req);
 				}
