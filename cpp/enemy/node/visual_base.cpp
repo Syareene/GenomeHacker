@@ -41,7 +41,6 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 
 void VisualBase::UpdateVisual(NodeBase* node_ptr)
 {
-	//m_Transform = node_ptr->GetTransform();
 	m_IsUpdated = true;
 
 

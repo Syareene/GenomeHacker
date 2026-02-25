@@ -79,7 +79,5 @@ private:
 	NodeBase* m_BaseNodePtr = nullptr; // 元となるノードのポインタ
 	NodeBase::NodeLocation m_NodeLocation = NodeBase::NodeLocation::Enemy; // ノードの配置場所(敵orプレイヤー)
 
-	Transform m_Transform = Transform();
-	int m_TextureID = -1;
 	bool m_IsUpdated = false;
 };
