@@ -63,6 +63,9 @@ public:
 	static constexpr bool IS_3D_MODEL = false; // 3dモデルを用いて描画を行うかどうか
 	GameObject()
 	{
+		// タグの配列リザーブ
+		m_Tag.reserve(4);
+
 		if(m_NextObjectID >= UINT_MAX)
 		{
 			m_NextObjectID = 0; // オーバーフロー防止
