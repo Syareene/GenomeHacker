@@ -8,6 +8,7 @@
 // ->多分ここのせいでエラー出てる
 #include <string>
 #include <list>
+#include <deque>
 #include <Windows.h>
 
 class IGameObjectManager; // 前方宣言
@@ -24,7 +25,7 @@ private:
 	int m_TextureID = -1;
 	int m_Layer = 0; // 描画レイヤー(数値が大きいほど手前側)
 	unsigned int m_ObjectID = 0; // オブジェクトID(管理用)
-	std::vector<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
+	std::deque<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
 
 	// 描画系変数
@@ -64,7 +65,7 @@ public:
 	GameObject()
 	{
 		// タグの配列リザーブ
-		m_Tag.reserve(4);
+		//m_Tag.reserve(4);
 
 		if(m_NextObjectID >= UINT_MAX)
 		{
@@ -89,17 +90,7 @@ public:
 		, m_PixelShader(std::exchange(Other.m_PixelShader, nullptr))
 		, m_VertexLayout(std::exchange(Other.m_VertexLayout, nullptr))
 	{
-#ifdef _DEBUG
-		// ムーブ後の Other.m_Tag の状態を確認したい場合は、サイズなどpublicな情報のみ出力可能
-		char msg[256];
-		sprintf_s(msg, "GameObject move constructor: Other.m_Tag.size() = %zu\n", 
-				  Other.m_Tag.size());
-		OutputDebugStringA(msg);
-#endif
 
-		// ✅ ムーブ後に Other.m_Tag をクリア
-		Other.m_Tag.clear();
-		Other.m_Tag.shrink_to_fit();
 	}
 	// ムーブ代入演算子(改善版)
 	GameObject& operator=(GameObject&& Other) noexcept
@@ -171,7 +162,7 @@ public:
 	inline void SetTransform(const Transform& Transform) { m_Transform = Transform; }
 	inline int GetTextureID() const { return m_TextureID; }
 	inline void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
-	inline std::vector<std::string>& GetTagList() { return m_Tag; }
+	inline std::deque<std::string>& GetTagList() { return m_Tag; }
 	inline bool IsTagAvailable(const std::string& tagName) const
 	{
 		for (const auto& tag : m_Tag)

@@ -179,6 +179,11 @@ public:
 
 	void FlushPendingObjects() override
 	{
+		// FlushPendingObjects の最初に追加
+		OutputDebugStringA(("Current capacity: " + std::to_string(m_Objects.capacity()) + "\n").c_str());
+		OutputDebugStringA(("Pending objects: " + std::to_string(m_PendingObjects.size()) + "\n").c_str());
+		OutputDebugStringA(("Current objects: " + std::to_string(m_Objects.size()) + "\n").c_str());
+
 		if(m_PendingObjects.empty())
 		{
 			return; // 保留中のオブジェクトがなければ何もしない
@@ -190,27 +195,32 @@ public:
 			return obj.IsDestroy();
 		});
 
+		const size_t required_capacity = m_Objects.size() + m_PendingObjects.size();
+		
+		// ✅ キャパシティチェック
+		if (required_capacity > m_Objects.capacity())
+		{
+			std::string errorMsg = "[Error] ObjectManager capacity exceeded! Target Type: ";
+			errorMsg += typeid(ObjectType).name();
+			errorMsg += "\nRequired: " + std::to_string(required_capacity);
+			errorMsg += ", Current capacity: " + std::to_string(m_Objects.capacity());
+			OutputDebugStringA(errorMsg.c_str());
+			assert(!"Capacity exceeded!");
+			return;
+		}
 
-		// 保留中のオブジェクトを本体リストに移動
+		// ✅ reserve を明示的に呼ぶ
+		m_Objects.reserve(required_capacity);
+
+		// ✅ 個別にムーブ
 		for (auto& obj : m_PendingObjects)
 		{
-			// キャパシティチェック
-			if (m_Objects.size() >= m_Objects.capacity())
-			{
-				// エラーメッセージを作成
-				std::string errorMsg = "[Error] ObjectManager capacity exceeded! Target Type: ";
-				errorMsg += typeid(ObjectType).name();
-				errorMsg += "\nWrite more value on hedder!\n";
-
-				// Visual Studioの出力ウィンドウに表示
-				OutputDebugStringA(errorMsg.c_str());
-
-				// 停止
-				assert(!"Capacity exceeded! Check Output Window for the object type.");
-			}
-			m_Objects.emplace_back(std::move(obj));
+			m_Objects.push_back(std::move(obj));
 		}
+
+		// ✅ ムーブ後にクリア
 		m_PendingObjects.clear();
+		m_PendingObjects.shrink_to_fit();  // メモリを解放
 	}
 
 	ObjectType* GetGameObject()
