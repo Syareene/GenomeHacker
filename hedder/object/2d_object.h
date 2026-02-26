@@ -9,8 +9,20 @@ class Object2D : public GameObject
 public:
 	Object2D() = default; // デフォルトコンストラクタ
 	virtual ~Object2D() {}
-	Object2D(Object2D&&) noexcept = default; // ムーブコンストラクタ
-	Object2D& operator=(Object2D&&) noexcept = default; // ムーブ代入演算子
+	// ムーブコンストラクタ
+	Object2D(Object2D&&) noexcept
+		: GameObject(std::move(*this))
+	{
+	}
+	// ムーブ代入演算子
+	Object2D& operator=(Object2D&&) noexcept
+	{
+		if (this != &*this)
+		{
+			GameObject::operator=(std::move(*this));
+		}
+		return *this;
+	}
 	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
