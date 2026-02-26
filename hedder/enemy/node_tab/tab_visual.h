@@ -14,14 +14,13 @@ public:
 	// ムーブコンストラクタ
 	TabVisual(TabVisual&& Other) noexcept
 		: Panel(std::move(Other))
-		, m_IsSelected(Other.m_IsSelected)
-		, m_PlayerId(Other.m_PlayerId)
-		, m_DnaScreenId(Other.m_DnaScreenId)
+		, m_IsSelected(std::exchange(Other.m_IsSelected, false))
+		, m_PlayerId(std::exchange(Other.m_PlayerId, 0))
+		, m_DnaScreenId(std::exchange(Other.m_DnaScreenId, 0))
 		, m_VisualNodes(std::move(Other.m_VisualNodes))
-		, m_Tab(Other.m_Tab)
+		, m_Tab(std::exchange(Other.m_Tab, nullptr))
 	{
-		// ムーブ元を安全な状態にする
-		Other.m_Tab = nullptr;
+		// すべて初期化リストで完結
 	}
 	// ムーブ代入演算子
 	TabVisual& operator=(TabVisual&& Other) noexcept

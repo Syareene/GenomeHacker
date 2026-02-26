@@ -65,7 +65,16 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 
 void TabVisual::Uninit()
 {
+	if (!m_Tab)
+	{
+		return;
+	}
 
+	// ノードクリア
+	m_VisualNodes.clear();
+
+	// リセット
+	m_Tab = nullptr;
 }
 
 void TabVisual::Update()
@@ -171,8 +180,19 @@ void TabVisual::ApplyGrabNode()
 		}
 
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
-		Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
-		grabNode = tempNode.get();
+		
+		// grabNode を再設定する前に nullptr チェック
+		if (tempNode)
+		{
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
+			grabNode = tempNode.get();
+		}
+		else
+		{
+			// tempNode が nullptr の場合、エラーを出力
+			OutputDebugStringA("[Error] tempNode is nullptr in ApplyMovedResult\n");
+			return;
+		}
 
 		// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
 		if (grabNode->GetPosition().x < 768.0f)

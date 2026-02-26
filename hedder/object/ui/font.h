@@ -10,14 +10,28 @@ class Font : public UI
 {
 public:
 	Font() = default; // デフォルトコンストラクタ
-	virtual ~Font() {}
+	virtual ~Font() 
+	{
+#ifdef _DEBUG
+    OutputDebugStringA("Font destructor called\n");
+    if (!m_DisplayText.empty())
+    {
+        OutputDebugStringA(("Font destructor: m_DisplayText = " + m_DisplayText + "\n").c_str());
+    }
+    
+    // ⚠️ this ポインタの値を確認
+    char msg[256];
+    sprintf_s(msg, "Font destructor: this = %p\n", this);
+    OutputDebugStringA(msg);
+#endif
+	}
 	Font(Font&& Other) noexcept
 		: UI(std::move(Other))
-		, m_WidthHeight(Other.m_WidthHeight)
+		, m_WidthHeight(std::exchange(Other.m_WidthHeight, Vector2(0.0f, 0.0f)))
 		, m_FontData(std::move(Other.m_FontData))
 		, m_DisplayText(std::move(Other.m_DisplayText))
-		, m_IsShadow(Other.m_IsShadow)
-		, m_IsOutline(Other.m_IsOutline)
+		, m_IsShadow(std::exchange(Other.m_IsShadow, false))
+		, m_IsOutline(std::exchange(Other.m_IsOutline, false))
 	{
 	}
 	Font& operator=(Font&& Other) noexcept

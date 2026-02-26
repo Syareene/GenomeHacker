@@ -39,7 +39,7 @@ void BillBoard::Init(Transform trans)
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = vertex;
 
-	Renderer::GetDevice()->CreateBuffer(&bd, &sd, &m_VertexBuffer);
+	Renderer::GetDevice()->CreateBuffer(&bd, &sd, GetVertexBufferPointer());
 
 	// テクスチャ読み込み
 	TexMetadata metadata;
@@ -56,8 +56,12 @@ void BillBoard::Init(Transform trans)
 void BillBoard::Uninit()
 {
 	// 開放
-	m_Texture->Release();
-	m_VertexBuffer->Release();
+	if (m_Texture)
+	{
+		m_Texture->Release();
+		m_Texture = nullptr;
+	}
+	UninitDrawMember();
 }
 
 void BillBoard::Update()
@@ -73,7 +77,7 @@ void BillBoard::Draw()
 {
 	// 頂点データ書き換え
 	D3D11_MAPPED_SUBRESOURCE msr;
-	Renderer::GetDeviceContext()->Map(m_VertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	Renderer::GetDeviceContext()->Map(GetVertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 
 	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
 
@@ -102,7 +106,7 @@ void BillBoard::Draw()
 	vertex[3].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(offsetX + textureWidth, offsetY + textureHeight);
 
-	Renderer::GetDeviceContext()->Unmap(m_VertexBuffer, 0);
+	Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
 
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::UnlitVertexLayout);

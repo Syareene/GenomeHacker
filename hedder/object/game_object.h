@@ -76,25 +76,30 @@ public:
 	GameObject(GameObject&& Other) noexcept
 		: m_Transform(std::move(Other.m_Transform))
 		, m_Velocity(std::move(Other.m_Velocity))
-		, m_IsAliveData(Other.m_IsAliveData)
-		, m_IsActive(Other.m_IsActive)
-		, m_Destroy(Other.m_Destroy)
-		, m_TextureID(Other.m_TextureID)
-		, m_Layer(Other.m_Layer)
-		, m_ObjectID(Other.m_ObjectID)
+		, m_IsAliveData(std::exchange(Other.m_IsAliveData, false))
+		, m_IsActive(std::exchange(Other.m_IsActive, false))
+		, m_Destroy(std::exchange(Other.m_Destroy, false))
+		, m_TextureID(std::exchange(Other.m_TextureID, -1))
+		, m_Layer(std::exchange(Other.m_Layer, 0))
+		, m_ObjectID(std::exchange(Other.m_ObjectID, 0))
 		, m_Tag(std::move(Other.m_Tag))
-		, m_ObjSpeedMlt(Other.m_ObjSpeedMlt)
-		, m_VertexBuffer(Other.m_VertexBuffer)
-		, m_VertexShader(Other.m_VertexShader)
-		, m_PixelShader(Other.m_PixelShader)
-		, m_VertexLayout(Other.m_VertexLayout)
+		, m_ObjSpeedMlt(std::exchange(Other.m_ObjSpeedMlt, 1.0f))
+		, m_VertexBuffer(std::exchange(Other.m_VertexBuffer, nullptr))
+		, m_VertexShader(std::exchange(Other.m_VertexShader, nullptr))
+		, m_PixelShader(std::exchange(Other.m_PixelShader, nullptr))
+		, m_VertexLayout(std::exchange(Other.m_VertexLayout, nullptr))
 	{
-		// ムーブ元のポインタをリセット（二重解放防止）
-		Other.m_VertexBuffer = nullptr;
-		Other.m_VertexShader = nullptr;
-		Other.m_PixelShader = nullptr;
-		Other.m_VertexLayout = nullptr;
-		Other.m_TextureID = -1;
+#ifdef _DEBUG
+		// ムーブ後の Other.m_Tag の状態を確認したい場合は、サイズなどpublicな情報のみ出力可能
+		char msg[256];
+		sprintf_s(msg, "GameObject move constructor: Other.m_Tag.size() = %zu\n", 
+				  Other.m_Tag.size());
+		OutputDebugStringA(msg);
+#endif
+
+		// ✅ ムーブ後に Other.m_Tag をクリア
+		Other.m_Tag.clear();
+		Other.m_Tag.shrink_to_fit();
 	}
 	// ムーブ代入演算子(改善版)
 	GameObject& operator=(GameObject&& Other) noexcept

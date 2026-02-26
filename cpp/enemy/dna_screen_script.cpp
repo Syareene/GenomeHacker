@@ -71,7 +71,7 @@ void DnaScreenScript::Uninit()
 	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(0);
 
 
-	// uninit呼び出し
+	// uninit呼び出し ->これも仮にpanelの子として登録されてるなら呼ばなくても呼ばれるからいらないね
 	m_AttackVisual.Uninit();
 	m_MoveVisual.Uninit();
 	m_DeathVisual.Uninit();
@@ -81,8 +81,6 @@ void DnaScreenScript::Uninit()
 	// 最初に解放するのではなく最後に解放するように変更!
 	// DNAスクリーンの終了処理
 	//Panel::Uninit(); //->Destoryをセットしてたらどのみち終了されるから呼ばない
-
-	SetDestroy(true);
 }
 
 void DnaScreenScript::Update()
