@@ -255,7 +255,7 @@ private:
 	// フォントデータ
 	FontData  Setting = FontData();
 	// フォント名リスト
-	static std::vector<std::wstring> fontNamesList;
+	static std::vector<std::wstring> fontNamesList; // CAREFUL!
 
 	// フォントのファイル名（拡張子なし）を取得する（動的割当しない安全な戻り値）
 	std::wstring GetFontFileNameWithoutExtension(const std::wstring& filePath);

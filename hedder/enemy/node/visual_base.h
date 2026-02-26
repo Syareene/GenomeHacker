@@ -69,7 +69,7 @@ public:
 
 private:
 	Font m_Font;
-	std::vector<Font> m_DescriptionFonts;
+	std::vector<Font> m_DescriptionFonts; // CAREFUL!
 	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
 	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
 

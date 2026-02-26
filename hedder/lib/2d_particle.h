@@ -82,9 +82,9 @@ private:
 	ID3D11Buffer* m_InstanceBuffer = nullptr;
 	ID3D11ShaderResourceView* m_InstanceSRV = nullptr;
 	// プールされたパーティクル配列
-	std::vector<ParticleData> m_Particles;
+	std::vector<ParticleData> m_Particles; // CAREFUL!
 	// GPU転送用バッファ（毎フレーム書き換える）
-	std::vector<InstanceData> m_InstanceDataBuffer;
+	std::vector<InstanceData> m_InstanceDataBuffer; // CAREFUL!
 
 	// 設定パラメータ
 	int maxParticles;

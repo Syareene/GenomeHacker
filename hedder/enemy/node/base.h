@@ -125,13 +125,13 @@ private:
 	}
 
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
-	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
-	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
+	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上) // CAREFUL!
+	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下) // CAREFUL!
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
 	NodeTextData m_Description; // ノードの説明文群
 	Font m_NameFont;
-	std::vector<Font> m_DescriptionFonts;
+	std::vector<Font> m_DescriptionFonts; // CAREFUL!
 
 
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
