@@ -12,21 +12,9 @@ public:
 	Object3D() = default; // デフォルトコンストラクタ
 	virtual ~Object3D();
 	// ムーブコンストラクタ
-	Object3D(Object3D&&) noexcept
-		: GameObject(std::move(*this))
-		, m_Collider(std::move(m_Collider))
-	{
-	}
+	Object3D(Object3D&&) noexcept;
 	// ムーブ代入演算子
-	Object3D& operator=(Object3D&&) noexcept
-	{
-		if (this != &*this)
-		{
-			GameObject::operator=(std::move(*this));
-			m_Collider = std::move(m_Collider);
-		}
-		return *this;
-	}
+	Object3D& operator=(Object3D&&) noexcept;
 
 	void Init(Transform trans = Transform())
 	{
