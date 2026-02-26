@@ -69,8 +69,47 @@ public:
 		}
 		m_ObjectID = m_NextObjectID++;
 	}
-	GameObject(GameObject&&) noexcept = default; // ムーブコンストラクタ
-	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
+	GameObject(GameObject&& other) noexcept
+    : m_Transform(std::move(other.m_Transform))
+    , m_Velocity(std::move(other.m_Velocity))
+    , m_IsAliveData(other.m_IsAliveData)
+    , m_IsActive(other.m_IsActive)
+    , m_Destroy(other.m_Destroy)
+    , m_TextureID(other.m_TextureID)
+    , m_Layer(other.m_Layer)
+    , m_ObjectID(other.m_ObjectID)
+    , m_Tag(std::move(other.m_Tag))  // std::listを正しくムーブ
+    , m_ObjSpeedMlt(other.m_ObjSpeedMlt)
+    , m_VertexBuffer(std::exchange(other.m_VertexBuffer, nullptr))
+    , m_VertexShader(std::exchange(other.m_VertexShader, nullptr))
+    , m_PixelShader(std::exchange(other.m_PixelShader, nullptr))
+    , m_VertexLayout(std::exchange(other.m_VertexLayout, nullptr))
+	{
+		// ムーブ後のotherは有効だが空の状態になる
+		// std::listのムーブコンストラクタが内部で適切に処理する
+	}
+	GameObject& operator=(GameObject&& other) noexcept
+	{
+		if (this != &other)
+		{
+			m_Transform = std::move(other.m_Transform);
+			m_Velocity = std::move(other.m_Velocity);
+			m_IsAliveData = other.m_IsAliveData;
+			m_IsActive = other.m_IsActive;
+			m_Destroy = other.m_Destroy;
+			m_TextureID = other.m_TextureID;
+			m_Layer = other.m_Layer;
+			m_ObjectID = other.m_ObjectID;
+			m_Tag = std::move(other.m_Tag);
+			m_ObjSpeedMlt = other.m_ObjSpeedMlt;
+			
+			m_VertexBuffer = std::exchange(other.m_VertexBuffer, nullptr);
+			m_VertexShader = std::exchange(other.m_VertexShader, nullptr);
+			m_PixelShader = std::exchange(other.m_PixelShader, nullptr);
+			m_VertexLayout = std::exchange(other.m_VertexLayout, nullptr);
+		}
+		return *this;
+	}
 
 	virtual ~GameObject() {}
 	template <typename... Args>
