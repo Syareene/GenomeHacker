@@ -14,6 +14,49 @@ public:
 
 	static constexpr bool ENABLE_INSTANCING = false;
 
+	DnaScreenScript() = default;
+	~DnaScreenScript() override = default;
+	
+	// ムーブコンストラクタ
+	DnaScreenScript(DnaScreenScript&& Other) noexcept
+		: Panel(std::move(Other))
+		, m_AttackVisual(std::move(Other.m_AttackVisual))
+		, m_MoveVisual(std::move(Other.m_MoveVisual))
+		, m_DeathVisual(std::move(Other.m_DeathVisual))
+		, m_PlayerId(Other.m_PlayerId)
+		, m_GrabbingNode(Other.m_GrabbingNode)
+		, m_InfoNodePtr(Other.m_InfoNodePtr)
+		, m_IsReleaseGrabNode(Other.m_IsReleaseGrabNode)
+		, m_EnemyBase(Other.m_EnemyBase)
+	{
+		// ポインタをnullに設定してムーブ元を安全な状態にする
+		Other.m_GrabbingNode = nullptr;
+		Other.m_InfoNodePtr = nullptr;
+		Other.m_EnemyBase = nullptr;
+	}
+
+	// ムーブ代入演算子
+	DnaScreenScript& operator=(DnaScreenScript&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Panel::operator=(std::move(Other));
+			m_AttackVisual = std::move(Other.m_AttackVisual);
+			m_MoveVisual = std::move(Other.m_MoveVisual);
+			m_DeathVisual = std::move(Other.m_DeathVisual);
+			m_PlayerId = Other.m_PlayerId;
+			m_GrabbingNode = Other.m_GrabbingNode;
+			m_InfoNodePtr = Other.m_InfoNodePtr;
+			m_IsReleaseGrabNode = Other.m_IsReleaseGrabNode;
+			m_EnemyBase = Other.m_EnemyBase;
+			
+			Other.m_GrabbingNode = nullptr;
+			Other.m_InfoNodePtr = nullptr;
+			Other.m_EnemyBase = nullptr;
+		}
+		return *this;
+	}
+
 	void Init(EnemyBase* base_enemy, const unsigned int& player_id);
 	void Uninit() override;
 	void Update() override;

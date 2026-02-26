@@ -33,7 +33,6 @@ public:
 	~Panel() override = default;
 	Panel(Panel&& Other) noexcept
 		: Object2D(std::move(Other))
-		, IContainer(std::move(Other))
 		, m_ChildObjects(std::move(Other.m_ChildObjects))
 	{
 	}
