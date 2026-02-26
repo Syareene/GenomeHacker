@@ -701,6 +701,9 @@
     <ClCompile Include="cpp\lib\imgui\imgui_widgets.cpp">
       <Filter>ソース ファイル\lib\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\object\2d_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\unlitTextureVS.hlsl">

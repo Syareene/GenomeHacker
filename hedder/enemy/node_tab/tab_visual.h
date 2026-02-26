@@ -9,6 +9,36 @@ class EnemyBase;
 class TabVisual : public Panel
 {
 public:
+	TabVisual() = default;
+	virtual ~TabVisual() = default;
+	// ムーブコンストラクタ
+	TabVisual(TabVisual&& Other) noexcept
+		: Panel(std::move(Other))
+		, m_IsSelected(Other.m_IsSelected)
+		, m_PlayerId(Other.m_PlayerId)
+		, m_DnaScreenId(Other.m_DnaScreenId)
+		, m_VisualNodes(std::move(Other.m_VisualNodes))
+		, m_Tab(Other.m_Tab)
+	{
+		// ムーブ元を安全な状態にする
+		Other.m_Tab = nullptr;
+	}
+	// ムーブ代入演算子
+	TabVisual& operator=(TabVisual&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Panel::operator=(std::move(Other));
+			m_IsSelected = Other.m_IsSelected;
+			m_PlayerId = Other.m_PlayerId;
+			m_DnaScreenId = Other.m_DnaScreenId;
+			m_VisualNodes = std::move(Other.m_VisualNodes);
+			m_Tab = Other.m_Tab;
+			Other.m_Tab = nullptr;
+		}
+		return *this;
+	}
+
 	// 途中で変更はいるからそのタイミングをどうしようかなって感じだ
 	void CreateVisual(TabBase* base);
 	// 再生成する関数(更新したい対象だけに対して作動)

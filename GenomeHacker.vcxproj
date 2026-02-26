@@ -193,6 +193,7 @@
     <ClCompile Include="cpp\manager\object_manager.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
     <ClCompile Include="cpp\manager\texture_manager.cpp" />
+    <ClCompile Include="cpp\object\2d_object.cpp" />
     <ClCompile Include="cpp\object\3d_object.cpp" />
     <ClCompile Include="cpp\object\area_object.cpp" />
     <ClCompile Include="cpp\object\camera.cpp" />

@@ -184,6 +184,8 @@ void DnaScreenScript::ShowDnaInfo()
 
 	// 生成
 	GeneratePlayerVisualNodes();
+	// pos修正
+	GetActiveTab()->ModifyNodePos();
 
 	// DNA情報を表示する処理
 

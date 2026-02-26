@@ -5,6 +5,30 @@
 class TitleCam
 {
 public:
+	TitleCam() = default;
+	virtual ~TitleCam() {}
+	// ムーブコンストラクタ
+	TitleCam(TitleCam&& Other) noexcept
+		: m_AttachObjectID(Other.m_AttachObjectID)
+		, m_MovementList(std::move(Other.m_MovementList))
+		, m_Count(Other.m_Count)
+		, m_CurrentIndex(Other.m_CurrentIndex)
+	{
+	}
+	// ムーブ代入演算子
+	TitleCam& operator=(TitleCam&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_AttachObjectID = Other.m_AttachObjectID;
+			m_MovementList = std::move(Other.m_MovementList);
+			m_Count = Other.m_Count;
+			m_CurrentIndex = Other.m_CurrentIndex;
+		}
+		return *this;
+	}
+
+
 	void Attach(unsigned int objId, const Vector3& start_pos);
 	void Detach();
 	void Move(const float& speed);

@@ -23,7 +23,20 @@ public:
 		Other.m_FrameTexID = -1;
 		// ムーブ後の Other.m_TargetFunc は std::move により空になる
 	}
-	Button& operator=(Button&&) noexcept = default; // ムーブ代入演算子
+	// ムーブ代入演算子
+	Button& operator=(Button&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			UI::operator=(std::move(Other));
+			m_TargetFunc = std::move(Other.m_TargetFunc);
+			m_FrameTexID = Other.m_FrameTexID;
+			m_Text = std::move(Other.m_Text);
+			Other.m_FrameTexID = -1;
+			// ムーブ後のm_TargetFuncはstd::moveにより空になるため特に記載なし。
+		}
+		return *this;
+	}
 	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効(汎用クラスは別テクスチャ読み込むのに対応してないので一旦無効化)
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const std::wstring& filePath, const std::wstring& frameTexPath = L"");
 	void Register(const std::function<void()>& func, const Vector2& pos, const Vector2& scale, const Vector2& rot, const int& texID, const std::wstring frameTexPath = L"");
