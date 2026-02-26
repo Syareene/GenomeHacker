@@ -4,6 +4,8 @@
 #include "object/ui/font.h"
 #include "enemy/node/base.h"
 
+#include <deque>
+
 
 class NodeBase; // 前方宣言
 class TabVisual; // 前方宣言
@@ -55,7 +57,7 @@ public:
 		m_DescriptionFonts.back().Init(Transform());
 		m_DescriptionFonts.back().Register(data.text_pos, GetFontDataFromTextType(data.text_type), data.text);
 	}
-	inline const std::vector<Font>* GetDescFonts() const
+	inline const std::deque<Font>* GetDescFonts() const
 	{
 		return &m_DescriptionFonts;
 	}
@@ -69,7 +71,7 @@ public:
 
 private:
 	Font m_Font;
-	std::vector<Font> m_DescriptionFonts; // CAREFUL!
+	std::deque<Font> m_DescriptionFonts;
 	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示
 	int m_HoverTimer = 0; // ホバーしている時間(フレーム数)
 

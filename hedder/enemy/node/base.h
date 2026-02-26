@@ -3,6 +3,8 @@
 #include "enemy/field_enemy.h"
 #include "object/ui/font.h"
 
+#include <deque>
+
 class NodeBase
 {
 	// 
@@ -18,6 +20,7 @@ public:
 		Move,
 		Attack,
 		Death,
+		Total, // 数検知用
 	};
 
 	enum class NodeLocation
@@ -42,10 +45,49 @@ public:
 	{
 		// idを発行
 		m_UniqueID = GetNextUniqueID();
+		// reserve
+		m_InputTypesBottom.reserve(InputType::Total);
+		m_InputTypesTop.reserve(InputType::Total);
 	}
 	virtual ~NodeBase() = default;
-	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
-	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
+	NodeBase(NodeBase&& Other) noexcept
+	{
+		// ムーブコンストラクタ
+		m_UniqueID = Other.m_UniqueID;
+		m_ID = Other.m_ID;
+		m_Keyword = std::move(Other.m_Keyword);
+		m_CD = Other.m_CD;
+		m_CDMax = Other.m_CDMax;
+		m_NodeLocation = Other.m_NodeLocation;
+		m_InputTypesTop = std::move(Other.m_InputTypesTop);
+		m_InputTypesBottom = std::move(Other.m_InputTypesBottom);
+		m_ChildNodes = std::move(Other.m_ChildNodes);
+		m_Name = std::move(Other.m_Name);
+		m_Description = std::move(Other.m_Description);
+		m_MoveManageId = Other.m_MoveManageId;
+		m_InstantCastOnDead = Other.m_InstantCastOnDead;
+	}
+	NodeBase& operator=(NodeBase&& Other) noexcept
+	{
+		// ムーブ代入演算子
+		if (this != &Other)
+		{
+			m_UniqueID = Other.m_UniqueID;
+			m_ID = Other.m_ID;
+			m_Keyword = std::move(Other.m_Keyword);
+			m_CD = Other.m_CD;
+			m_CDMax = Other.m_CDMax;
+			m_NodeLocation = Other.m_NodeLocation;
+			m_InputTypesTop = std::move(Other.m_InputTypesTop);
+			m_InputTypesBottom = std::move(Other.m_InputTypesBottom);
+			m_ChildNodes = std::move(Other.m_ChildNodes);
+			m_Name = std::move(Other.m_Name);
+			m_Description = std::move(Other.m_Description);
+			m_MoveManageId = Other.m_MoveManageId;
+			m_InstantCastOnDead = Other.m_InstantCastOnDead;
+		}
+		return *this;
+	}
 
 	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
 	// text_typeを元にFontData返す関数欲しいな
@@ -125,13 +167,13 @@ private:
 	}
 
 	// ここの2つ、今のところサイズ3超えないからlistじゃなくてもいい説はある。
-	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上) // CAREFUL!
-	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下) // CAREFUL!
+	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
+	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
 	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
 	NodeTextData m_Description; // ノードの説明文群
 	Font m_NameFont;
-	std::vector<Font> m_DescriptionFonts; // CAREFUL!
+	std::deque<Font> m_DescriptionFonts;
 
 
 	// ゲーム内に表示するテキストの文言->内部にある子ノードの位置を考慮して色々組まないといけないのだけがネック。	子ノード自体の位置はこの座標からの相対座標でいいんだけどね。
