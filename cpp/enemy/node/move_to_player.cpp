@@ -58,6 +58,13 @@ bool MoveToPlayer::NodeEffect(FieldEnemy* enemy_ptr)
 	Vector3 enemy_pos = enemy_ptr->GetPosition();
 	// playerに向かうベクトルを計算
 	Vector3 to_player = player_pos - enemy_pos;
+
+	// プレイヤーとの距離が1.25以下なら移動しない
+	if(to_player.length() <= 1.25f)
+	{
+		return true;
+	}
+
 	to_player.normalize();
 	// 移動量を掛ける
 	to_player *= m_MoveVal;
