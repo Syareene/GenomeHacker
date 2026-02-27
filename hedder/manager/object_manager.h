@@ -68,6 +68,7 @@ public:
 	{
 		CheckOverride();
 		m_Objects.reserve(ObjectType::MAX_OBJECTS);
+		m_PendingObjects.reserve(ObjectType::MAX_OBJECTS);
 		m_InstanceDataBuffer.reserve(ObjectType::MAX_OBJECTS);
 		// shaderに渡したいプロパティをInstanceDataで渡す
 
@@ -218,9 +219,9 @@ public:
 			m_Objects.push_back(std::move(obj));
 		}
 
-		// ✅ ムーブ後にクリア
+		// ✅ ムーブ後にクリア（shrink_to_fitは削除 → 次回のAddObjectで再アロケートが起きないようにreserveを維持）
 		m_PendingObjects.clear();
-		m_PendingObjects.shrink_to_fit();  // メモリを解放
+		m_PendingObjects.reserve(ObjectType::MAX_OBJECTS); // キャパシティを再確保
 	}
 
 	ObjectType* GetGameObject()
