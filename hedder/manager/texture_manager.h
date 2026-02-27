@@ -115,7 +115,7 @@ public:
     }
 
     // テクスチャの取得
-    // 注意: シーン系はこの関数をコンストラクタで使用せず、Init関数内で使用してください!(これどうなるかわからん)
+    // 注意: シーン系はこの関数をコンストラクタで使用せず、Init関数内で使用してください!
     static int LoadTexture(const std::wstring filePath, [[maybe_unused]] const TextureType tex_type = TextureManager::TextureType::DX_3D)
     {
         // すでに読み込まれているテクスチャならそれを返す

@@ -24,7 +24,6 @@ public:
 		m_SpawnedCount--;
 	}
 private:
-	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>
 	bool SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
 	{

@@ -27,7 +27,6 @@ private:
 		}
 		return m_ObjectIDCounter++;
 	}
-	// このとき子オブジェクトからdestoryとかが呼ばれた際にこのリストからちゃんと消えるか問題はあるよねぇ、、->updateのところに消す処理書いたけどunique_ptrにしてるので変える必要あり
 public:
 	Panel() = default;
 	~Panel() override = default;
@@ -52,7 +51,6 @@ public:
 
 	void UpdateGPUData(InstanceBufferData& data) override;
 	static void SetPipelineState();
-	// icontainerでは引数がRenderQueueData& renderQueueだったのでどうなるか
 	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override;
 
 	void FlushPendingObjects();

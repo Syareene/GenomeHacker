@@ -128,8 +128,6 @@ private:
 	std::unique_ptr<TabManager> m_TabManager; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
-	// static -> ボタン押すときの外枠テクスチャ用変数?
-	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、
 	int m_TextureID = -1; // 敵のテクスチャID
 	int m_EnemyID = -1; // 敵のID
 	Vector2 m_TextureSplitCount = DEFAULT_TEXTURE_COUNT; // テクスチャの分割数

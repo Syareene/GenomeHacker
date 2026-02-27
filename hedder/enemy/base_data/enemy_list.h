@@ -12,7 +12,6 @@
 template<typename T>
 concept EnemyBaseType = std::is_base_of_v <EnemyBase, T>;
 
-// システムオブジェクトを作ってそれを継承しつつ実体化しないといけない
 class EnemyList : public SystemObject
 {
 public:

@@ -7,9 +7,9 @@ class Score : public Object2D
 public:
 	static constexpr bool ENABLE_INSTANCING = false;
 	void Init(Transform trans = Transform());
-	void Uninit() override; // 
-	void Update() override; // 
-	void Draw() override; // 
+	void Uninit() override;
+	void Update() override;
+	void Draw() override;
 	void AddScore(int score) { m_Score += score; } // スコア加算
 	void SetScore(int score) { m_Score = score; } // スコア設定
 private:

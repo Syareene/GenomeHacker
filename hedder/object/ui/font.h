@@ -4,8 +4,7 @@
 #include "lib/write_font.h"
 #include <memory>
 
-// これ、3d空間上に出したいとかならちょっと仕組み変えないといけないけど
-// とりあえずui用フォントなため2d継承で実装。
+// ui用フォントなため2d継承で実装。
 class Font : public UI
 {
 public:

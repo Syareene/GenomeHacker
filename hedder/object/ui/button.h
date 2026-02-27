@@ -21,7 +21,7 @@ public:
 		, m_Text(std::move(Other.m_Text))
 	{
 		Other.m_FrameTexID = -1;
-		// ムーブ後の Other.m_TargetFunc は std::move により空になる
+		// ムーブ後のOther.m_TargetFuncはstd::moveにより空になる
 	}
 	// ムーブ代入演算子
 	Button& operator=(Button&& Other) noexcept

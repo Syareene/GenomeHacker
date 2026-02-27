@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "main.h" // あんまりこれで読み込みたくないんだよな、、
+#include "main.h"
 #include "lib/transform.h"
 #include "lib/renderer.h"
 #include "object/gpu_data.h"
@@ -129,7 +129,6 @@ public:
 	};
 	virtual void Uninit() {};
 	virtual void Update() {};
-	//virtual IGameObjectManager::InstanceBufferData GetInstanceData() const; -> おそらくしたの関数で良い
 	virtual void UpdateGPUData(InstanceBufferData& data); // GPUバッファ更新関数
 	void StackDrawCall();
 	virtual void Draw() {};

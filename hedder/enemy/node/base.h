@@ -11,10 +11,7 @@ public:
 	// ノードの入力タイプ
 	enum InputType
 	{
-		None, // くっつかない	
-		//Square,
-		//Triangle,
-		//Circle,
+		None, // くっつかない
 		Move,
 		Attack,
 		Death,
@@ -88,13 +85,7 @@ public:
 	}
 
 	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
-	// text_typeを元にFontData返す関数欲しいな
-
 	FontData& GetFontDataFromTextType(const TextType& type) const;
-
-
-	// このノード内で追加でくっつけられるノード(数字系のノード等)
-	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
 
 	virtual void Init(Transform trans = Transform());
 	virtual void ShowConfigWindow() = 0; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
@@ -168,7 +159,7 @@ private:
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
-	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
+	NodeTextData m_Name; // ノードの名前(表示名)
 	NodeTextData m_Description; // ノードの説明文群
 	Font m_NameFont;
 	std::vector<Font> m_DescriptionFonts;

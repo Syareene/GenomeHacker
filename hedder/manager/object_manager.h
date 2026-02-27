@@ -14,7 +14,9 @@
 #include "manager/texture_manager.h"
 #include "lib/modelRenderer.h"
 
+// 設計構想元
 // https://zenn.dev/luke256/articles/2e66c4879a5503
+// ここを元に一部自己流に変更。
 
 class Panel; // 前方宣言
 
@@ -193,7 +195,7 @@ public:
 
 		const size_t required_capacity = m_Objects.size() + m_PendingObjects.size();
 		
-		// ✅ キャパシティチェック
+		// キャパシティチェック
 		if (required_capacity > m_Objects.capacity())
 		{
 			std::string errorMsg = "[Error] ObjectManager capacity exceeded! Target Type: ";
@@ -205,16 +207,16 @@ public:
 			return;
 		}
 
-		// ✅ reserve を明示的に呼ぶ
+		// reserve を明示的に呼ぶ
 		m_Objects.reserve(required_capacity);
 
-		// ✅ 個別にムーブ
+		// 個別にムーブ
 		for (auto& obj : m_PendingObjects)
 		{
 			m_Objects.push_back(std::move(obj));
 		}
 
-		// ✅ ムーブ後にクリア（shrink_to_fitは削除 → 次回のAddObjectで再アロケートが起きないようにreserveを維持）
+		// ムーブ後にクリア(確保用リストも再度容量を変えておく)
 		m_PendingObjects.clear();
 		m_PendingObjects.reserve(ObjectType::MAX_OBJECTS); // キャパシティを再確保
 	}
@@ -233,12 +235,12 @@ public:
 		return m_Objects;
 	}
 
-	// 
 
 	void Init()
 	{
 
 	};
+
 	void Uninit() override
 	{
 		// uninitする
@@ -353,7 +355,7 @@ for (auto& obj : m_Objects)
 			// activeObjectsはUpdateGPUDataでソート済みなので、同じレイヤーは連続している前提
 
 			int currentStartIndex = 0;
-			int currentLayer = -9999; // ありえない値
+			int currentLayer = -9999; // 通常設定しないであろう範囲の値で初期化
 
 			// レイヤーごとにバッチを構築するための構造体とリスト
 			struct BatchRange { int Layer; int Start; int Count; };
@@ -421,7 +423,6 @@ for (auto& obj : m_Objects)
 
 				ObjectType* activeObj = sortedObjs[batch.Start]; // バッチの最初のオブジェクトを代表として取得
 
-
 				if constexpr (requires { ObjectType::IS_3D_MODEL; }&& ObjectType::IS_3D_MODEL)
 				{
 					// 対象があるかどうか
@@ -449,10 +450,6 @@ for (auto& obj : m_Objects)
 
 							// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
 							Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
-
-
-							// ストラクチャードバッファ方式の場合は VSSetShaderResources などを使用してください
-							// 以下は頂点バッファ方式(InputLayout方式)の例です
 
 							// サブセットごとの描画ループ
 							for (unsigned int i = 0; i < modelData->SubsetNum; i++)
@@ -482,7 +479,7 @@ for (auto& obj : m_Objects)
 				{
 					// ラムダでキャプチャ
 					req.DrawCall = [this, batch, activeObj]() {
-						ObjectType::SetPipelineState(); // **********実装予定の各GameObject派生クラスに作成するstatic関数 シェーダーやlayoutをセットする**********
+						ObjectType::SetPipelineState(); // 各GameObject派生クラスに作成するstatic関数->シェーダーのセット
 						// これ対象が2dの場合はdepth enable/disable切り替え必要
 
 						// バッファ設定
@@ -517,7 +514,6 @@ for (auto& obj : m_Objects)
 			}
 
 			// gameobjectの中に更にgameobjectを管理しているようなものの場合は中身に対して実行する
-			// これちょっと書き方異なるか?
 			if constexpr (ContainerObject<ObjectType>)
 			{
 				for(auto& obj : m_Objects)
@@ -580,7 +576,7 @@ for (auto& obj : m_Objects)
 		}
 #ifdef _DEBUG
 		// ここで個別にレンダリングを呼ぶと、インスタンスレンダリングを弾とか敵に取り入れた意味がなくなってしまうため
-		// 実行速度の為にコメントアウトします。描画したい時は有効化してね
+		// 実行速度の為にコメントアウト。描画したい時は有効化してね
 
 		// object3Dのみコライダ描画対応
 		//if constexpr(std::is_base_of<Object3D, ObjectType>::value)
@@ -612,8 +608,6 @@ for (auto& obj : m_Objects)
 	{
 		// とりあえず所有しているオブジェクトを描画
 		// 後にインスタンシングレンダリングに対応する形で
-
-		// そうなるとレイヤーはここでvector<vector>にしないとダメやなぁ
 
 		for(auto& obj : m_Objects)
 		{
@@ -658,7 +652,7 @@ private:
 	ID3D11ShaderResourceView* m_InstanceSRV = nullptr;
 	std::vector<InstanceBufferData> m_InstanceDataBuffer;
 
-	// このエラーでないのそれ以前の問題とかそういうことかね
+	// オーバーライドチェック
 	void CheckOverride()
 	{
 		if constexpr (requires { ObjectType::ENABLE_INSTANCING; }&& ObjectType::ENABLE_INSTANCING)
