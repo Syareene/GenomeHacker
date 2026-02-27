@@ -180,11 +180,6 @@ public:
 
 	void FlushPendingObjects() override
 	{
-		// FlushPendingObjects の最初に追加
-		OutputDebugStringA(("Current capacity: " + std::to_string(m_Objects.capacity()) + "\n").c_str());
-		OutputDebugStringA(("Pending objects: " + std::to_string(m_PendingObjects.size()) + "\n").c_str());
-		OutputDebugStringA(("Current objects: " + std::to_string(m_Objects.size()) + "\n").c_str());
-
 		if(m_PendingObjects.empty())
 		{
 			return; // 保留中のオブジェクトがなければ何もしない

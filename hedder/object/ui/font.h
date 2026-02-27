@@ -12,18 +12,7 @@ public:
 	Font() = default; // デフォルトコンストラクタ
 	virtual ~Font() 
 	{
-#ifdef _DEBUG
-    OutputDebugStringA("Font destructor called\n");
-    if (!m_DisplayText.empty())
-    {
-        OutputDebugStringA(("Font destructor: m_DisplayText = " + m_DisplayText + "\n").c_str());
-    }
-    
-    // ⚠️ this ポインタの値を確認
-    char msg[256];
-    sprintf_s(msg, "Font destructor: this = %p\n", this);
-    OutputDebugStringA(msg);
-#endif
+
 	}
 	Font(Font&& Other) noexcept
 		: UI(std::move(Other))
