@@ -122,6 +122,8 @@
     <ClInclude Include="hedder\scene\title_scene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="result_scene.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="skydome.h" />
@@ -402,6 +404,13 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include=".github\copilot-instructions.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GenomeHacker.rc" />
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="game_icon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
