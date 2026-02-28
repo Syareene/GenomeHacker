@@ -86,7 +86,16 @@ void Player::Init(Transform trans)
 	m_HavingNodes.emplace_back(std::make_unique<MoveToPlayer>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<MoveToPlayer>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 	m_HavingNodes.emplace_back(std::make_unique<EightShot>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<EightShot>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<Area>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 	m_HavingNodes.emplace_back(std::make_unique<Area>());
