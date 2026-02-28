@@ -15,7 +15,6 @@ unsigned int NodeBase::m_UniqueIDCounter = 0;
 void NodeBase::Init(Transform trans)
 {
 
-	// ここに説明文格納する感じかな
 }
 
 void NodeBase::ImWindowSettings()
@@ -27,7 +26,7 @@ void NodeBase::ImWindowSettings()
 	// ウィンドウ内座標ではなくスクリーン座標に変換
 	ClientToScreen(GetWindow(), &pt);
 	// ウィンドウの諸々を設定
-	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(pt.x), static_cast<float>(pt.y)), ImGuiCond_Appearing); // これScreenの実posで出す感じ->現在のウィンドウ位置を見て相対的に置く感じかな
+	ImGui::SetNextWindowPos(ImVec2(static_cast<float>(pt.x), static_cast<float>(pt.y)), ImGuiCond_Appearing); // 現在のウィンドウ位置を見て相対的に置く形
 	ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_SIZE.x, IMGUI_WINDOW_SIZE.y), ImGuiCond_Appearing);
 }
 
@@ -127,5 +126,4 @@ const bool NodeBase::CanAttach(NodeBase* upper_node, NodeBase* lower_node) const
 void NodeBase::UpdateDescriptionData()
 {
 	// テキスト生成等
-	// これtemplate化してargs受け取ればargある場合にstd::formatsで変数埋込できるね
 }

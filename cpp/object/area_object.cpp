@@ -98,9 +98,6 @@ void AreaObject::Uninit()
 
 void AreaObject::Update()
 {
-	// 登場したては透明な時間作ってその後適応みたいな感じにしたいな
-
-
 	// カウントインクリメント
 	m_Duration++;
 

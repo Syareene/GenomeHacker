@@ -45,8 +45,6 @@ void Bullet::Uninit()
 
 void Bullet::Update()
 {
-	// vector3が間違ってる可能性とかもある?
-
 	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
 	Vector3 rotation = camera->GetRotation();
 	// 移動

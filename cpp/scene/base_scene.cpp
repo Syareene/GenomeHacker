@@ -6,7 +6,6 @@
 #include "object/panel.h"
 #include "collider/collision.h"
 
-// Define out-of-line destructor
 Scene::~Scene() = default;
 
 // プロトタイプ宣言
@@ -362,8 +361,6 @@ void Scene::DrawObject()
 	//});
 
 	// 3dオブジェクトの描画
-	// 描画前にソートし、その後に描画するようにする
-	// というか3dobjはそもそもレイヤーいらない説がある(ソートしにくい)
 
 	// 3dオブジェクトの描画
 	for(auto& objects3d : m_Objects3D)

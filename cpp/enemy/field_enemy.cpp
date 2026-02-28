@@ -18,18 +18,6 @@ void FieldEnemy::SetPipelineState()
 	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
 	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
 
-	// 下2つ、3dならいらない説
-
-	// viewmat
-	//XMMATRIX view;
-	//view = XMMatrixIdentity();
-	//Renderer::SetViewMatrix(view);
-
-	// projmat
-	//XMMATRIX projection;
-	//projection = XMMatrixOrthographicOffCenterLH(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f);
-	//Renderer::SetProjectionMatrix(projection);
-
 	// プリミティブトポロジ
 	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
@@ -78,17 +66,11 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
 
-	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
-	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
-	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
-	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
+	// UV反映
+	SetCanChangeVertex(false);
 	ChangeTexUV(static_cast<int>(base->GetTextureSplitCount().x), static_cast<int>(base->GetTextureSplitCount().y), 0, 0, false);
 	// textureIDをセット
 	SetTextureID(base->GetEnemyTextureID());
-
-
-	//Object3D::Init();
-	// テクスチャは敵データから描画時に取得するのでいらない
 }
 
 void FieldEnemy::Uninit()
@@ -164,10 +146,7 @@ void FieldEnemy::Update()
 
 void FieldEnemy::Draw()
 {
-	// 描画処理
-	//Object3D::Draw();
-	
-	// 敵データからテクスチャを取得して描画(テンプレ関数用意してないので一旦使い回しでやる)
+	// 敵データからテクスチャを取得して描画
 
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
@@ -183,8 +162,7 @@ void FieldEnemy::Draw()
 	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	//SetDefaultVertexBufferBillboardOnDraw();
-	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
+	SetVertexBufferOnDraw();
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする

@@ -54,8 +54,6 @@ void ImageDraw::Update()
 void ImageDraw::Draw()
 {
 	// 1回だけ描画がonでないなら描画する
-	// 1回だけ描画onならそもそもコンストラクタから描画したいね
-
 	if(GetNoUpdate() || !IsActive()) 
 	{
 		return; // 更新しない、または非アクティブなら描画しない

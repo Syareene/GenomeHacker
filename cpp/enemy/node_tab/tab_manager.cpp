@@ -15,12 +15,7 @@ TabManager::TabManager()
 
 TabManager::~TabManager()
 {
-	// 終了処理
-	//m_AttackTab.Uninit();
-	//m_MoveTab.Uninit();
-	//m_DeathTab.Uninit();
 
-	// これってメモリ上からデータ消すのどうするんだ？よくよく考えたら。そもそもstd::unique_ptr周りの処理がどうなってるかわからねえから確かめるべきだな
 }
 
 

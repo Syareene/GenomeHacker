@@ -5,8 +5,6 @@
 #include "scene/manager.h"
 #include <algorithm>
 
-//unsigned int TabBase::m_PlayerId = 0; // プレイヤーポインタ初期化
-
 void TabBase::Init(const unsigned int& playerId, Transform trans)
 {
 	
@@ -29,8 +27,4 @@ void TabBase::ModifyTimeLine()
 
 	// 最後にm_CDMaxを更新
 	m_CDMax = currentTime;
-	if(m_CDMax == 0)
-	{
-		//m_CDMax = 1; // 0だと困るので1に
-	}
 }

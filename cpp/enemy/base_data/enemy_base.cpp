@@ -29,19 +29,9 @@ EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 
 	// そのenemy固有の情報を登録
 	
-	// なんかこのタイミングでオブジェクトとして生成はしといて常駐させつつ、描画とかに必要なデータだけ表示時に受け取って、非表示時に消すとかがいいような
-	// 今すぐこのタイミングで作る必要が出てきた、、
-
-	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
-	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
-	
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
-	// これ無限ループしてるわなってことでエラーっす
 	return this;
-
-	// テクスチャ生成
-	
 }
 
 void EnemyBase::Unregister()
@@ -131,7 +121,6 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	{
 		// 生成時にfieldEnemyのcdmaxが更新されていないので最初はここはいる
 
-
 		// 時間が伸びる場合はcdmaxだけ更新
 		// 短くなる場合は比を使い現在のcd位置も更新
 		if (enemy_ptr->GetMoveNodeCDSum() > moveTab->GetCDMax())
@@ -201,8 +190,6 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 			// 現在のcd位置を更新
 			float ratio = static_cast<float>(enemy_ptr->GetDeathNodeCDSum()) / static_cast<float>(deathTab->GetCDMax());
 			enemy_ptr->SetDeathNodeTime(static_cast<int>(enemy_ptr->GetDeathNodeTime() * ratio));
-
-			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
 		}
 
 		// 異なる場合は現在のcdmaxを保存
@@ -296,7 +283,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 	// state、GameStateになってたわね
 	m_ToDnaButton = ptr->AddGameObject<Button>(2);
 
-	// これ、敵のテクスチャをuv化したけど、ボタンがuv化できてない
+	// ボタン登録
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();

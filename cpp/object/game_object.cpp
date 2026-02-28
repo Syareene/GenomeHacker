@@ -141,8 +141,6 @@ void GameObject::SetCanChangeVertex(bool is2D)
 
 void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D)
 {
-	// TexCoord以外は既存のデータから取得するように変えるべきかな。
-
 	// 頂点書き換え始め
 	D3D11_MAPPED_SUBRESOURCE msr;
 	Renderer::GetDeviceContext()->Map(GetVertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);

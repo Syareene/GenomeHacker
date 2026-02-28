@@ -16,10 +16,6 @@ void AddScore::Init(Transform trans)
 	// 説明文
 	SetDescriptionData({ GenerateDescriptionText(), Vector2(0.0f, 0.0f), NodeBase::TextType::Normal});
 
-	// ここでSetDescriptionData(GenerateDescriptionText))
-
-	//m_AddScore = 1.0f; // スコア加算量
-
 	// フォントデータ更新
 	UpdateDescriptionData();
 
@@ -58,7 +54,6 @@ bool AddScore::NodeEffect(FieldEnemy* enemy_ptr)
 	return true;
 }
 
-// この関数init時とeditにきた瞬間に呼ぶようにしようね
 std::string AddScore::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得

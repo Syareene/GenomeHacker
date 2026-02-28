@@ -110,8 +110,6 @@ void State::FlushPendingObjects()
     }
 
     // パネル内にもmanagerがあるためそちらもフラッシュ処理
-
-    // これパネル継承したやつの場合実行されんね
     if (panelManager)
     {
         for (auto& panelObj : panelManager->GetGameObjects())

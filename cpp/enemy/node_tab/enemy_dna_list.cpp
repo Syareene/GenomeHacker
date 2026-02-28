@@ -11,9 +11,6 @@ void EnemyDnaList::Init(State* ptr)
 {
 	AddTag("system");
 
-
-	// これ一覧取得できてないのでid or ptrもらって取得できるようにする形に
-
 	// 敵一覧を取得
 	std::list<std::unique_ptr<EnemyBase>>& enemy_base_list = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases();
 

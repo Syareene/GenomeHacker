@@ -33,9 +33,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 
 	// TabManager経由で対象が所持しているノードの見た目の部分を生成する
 
-
-	// screenのidちゃんと発行されてない
-
 	// 初期化
 	m_AttackVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetAttackTab());
 	m_MoveVisual.Init(GetObjectID(), player_id, base_enemy->GetTabManager()->GetMoveTab());
@@ -44,11 +41,6 @@ void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 	// プレイヤーにidをセットしてあげる
 	Player* player = Manager::GetCurrentScene()->GetGameObject<Player>();
 	player->SetDnaScreenId(GetObjectID());
-
-	// プレイヤーに関しても所持しているノードの見た目部分を生成する
-	//GeneratePlayerVisualNodes();
-
-	// その他UI等の生成
 
 	AddTag("dna_edit");
 
@@ -66,19 +58,16 @@ void DnaScreenScript::Uninit()
 	// 最終的に動いた分を反映
 	GetActiveTab()->ApplyMovedResult();
 
-
 	// playerで保存しているidのリセット
 	Manager::GetCurrentScene()->GetGameObject<Player>()->SetDnaScreenId(0);
 
-
-	// uninit呼び出し ->これも仮にpanelの子として登録されてるなら呼ばなくても呼ばれるからいらないね
+	// uninit呼び出し
 	m_AttackVisual.Uninit();
 	m_MoveVisual.Uninit();
 	m_DeathVisual.Uninit();
 
 	m_EnemyBase = nullptr;
 
-	// 最初に解放するのではなく最後に解放するように変更!
 	// DNAスクリーンの終了処理
 	//Panel::Uninit(); //->Destoryをセットしてたらどのみち終了されるから呼ばない
 }
@@ -88,23 +77,25 @@ void DnaScreenScript::Update()
 	// 有効時の処理
 	if (IsActive())
 	{
-	// Debug時限定で数字キーでタブ切り替え
-
-	// 1キー: 攻撃タブ
-		if (Input::GetKeyTrigger('1'))
-		{
-			SelectedAttackTab();
-		}
-		// 2キー: 移動タブ
-		if (Input::GetKeyTrigger('2'))
-		{
-			SelectedMoveTab();
-		}
-		// 3キー: 死亡タブ
-		if (Input::GetKeyTrigger('3'))
-		{
-			SelectedDeathTab();
-		}
+#ifdef _DEBUG
+		// Debug時限定で数字キーでタブ切り替え
+		// ->バグ修正により表示されなくなることが消えたのでコメントアウト
+		//// 1キー: 攻撃タブ
+		//if (Input::GetKeyTrigger('1'))
+		//{
+		//	SelectedAttackTab();
+		//}
+		//// 2キー: 移動タブ
+		//if (Input::GetKeyTrigger('2'))
+		//{
+		//	SelectedMoveTab();
+		//}
+		//// 3キー: 死亡タブ
+		//if (Input::GetKeyTrigger('3'))
+		//{
+		//	SelectedDeathTab();
+		//}
+#endif
 
 		// タブ更新(内部でアクティブなタブのみ更新される)
 		m_AttackVisual.Update();
@@ -168,10 +159,6 @@ void DnaScreenScript::Draw()
 		}
 		child->Draw();
 	}
-
-	// DNAスクリーンの描画処理
-	//Panel::Draw();
-	// ここで必要な描画処理を追加
 }
 
 
@@ -227,6 +214,7 @@ void DnaScreenScript::ShowDnaInfo()
 		}
 	};
 
+	// タブ切り替え用ボタン
 	AddChildObject<Button>(1)->Register([buttonCallback]() {
 		buttonCallback(0); // 攻撃
 		}, Vector2(NODE_TAB_TEXT_POS), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "攻撃", L"asset\\texture\\alpha_texture.png", L"");
@@ -243,11 +231,7 @@ void DnaScreenScript::ShowDnaInfo()
 		buttonCallback(2); // 死亡
 		}, Vector2(NODE_TAB_TEXT_POS.x + 200.0f, 35.0f), Vector2(TAB_BUTTON_SIZE.x, TAB_BUTTON_SIZE.y), Vector2(0.0f, 0.0f), fontData, "死亡", L"asset\\texture\\alpha_texture.png", L"");
 
-	// 右側の追加したいノード郡
-	//Panel::AddChildObject<ImageDraw>(1)->Register(Vector3(950.0f, 50.0f, 0.0f), Vector3(400.0f, 70.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\debug_sprite.png");
-
-	// 表示されたりされなかったりするなこれ->消してないのもあるし位置調整含めて後々でいいか
-	// 描画されてない時、game_objのリストにはあるが範囲forにてヒットしておらず描画されない?
+	// プレイヤー及び敵側ノードの背景
 	AddChildObject<ImageDraw>(1)->Register(Vector3(PLAYER_NODE_LIST_POS.x, PLAYER_NODE_LIST_POS.y, 0.0f), 
 		Vector3(PLAYER_NODE_LIST_SCALE.x, PLAYER_NODE_LIST_SCALE.y, 0.0f), Vector3(0.0f, 0.0f, 0.0f), L"asset\\texture\\player_node_list.png");
 
@@ -297,11 +281,6 @@ void DnaScreenScript::HideDnaInfo()
 	// いらないデータは消す
 	SetActive(false);
 
-	// ここTabBase以外を消すようにしたほうがいいな
-
-
-	// ここでちゃんと子オブジェクト消せてなさそうね
-
 	// panelからfontオブジェクトを消す
 	for(auto& child : GetChildObjectsByType<Font>())
 	{
@@ -309,7 +288,6 @@ void DnaScreenScript::HideDnaInfo()
 	}
 
 	// buttonも消す
-	// これでもDNAButtonとかも消えちゃうからタグつけないとだ
 	for(auto& child : GetChildObjectsByType<Button>())
 	{
 		child.SetDestroy(true);
@@ -323,8 +301,6 @@ void DnaScreenScript::HideDnaInfo()
 	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも
 	DeleteChildObject();
 
-	// uninitとりあえず呼ぶ
-	//Uninit();
 }
 
 TabVisual* DnaScreenScript::GetActiveTab()

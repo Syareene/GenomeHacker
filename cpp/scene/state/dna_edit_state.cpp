@@ -86,9 +86,6 @@ void DnaEditState::Clicked()
 	Manager::GetCurrentScene()->SetState<DnaTableState>();
 }
 
-
-// tab_baseのModifyNodeIndexFromPosみたいなしょうに関数作ってその中でこの関数実行するようにする
-// んでそしたらちゃんと動く
 void DnaEditState::ModifyNodePos()
 {
 

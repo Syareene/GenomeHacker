@@ -34,11 +34,6 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 	//GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
 	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);

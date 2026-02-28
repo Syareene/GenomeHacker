@@ -78,9 +78,9 @@ void GameScene::Update()
 	// 現在のstateに応じてupdateを実行
 	GetCurrentState()->Update();
 
-	if (Input::GetKeyTrigger(VK_RETURN))
+	if (Input::GetKeyTrigger(VK_F4))
 	{
-		// Enterキーが押されたらリザルトシーンに遷移
+		// F4キーが押されたらリザルトシーンに遷移
 		Manager::SetScene<ResultScene>();
 	}
 	// GPUデータの更新
@@ -95,7 +95,7 @@ void GameScene::Draw()
 	// 現在のstateに応じてdrawを実行
 	//GetCurrentState()->Draw();
 
-	// renderキュー形式になった際はこうなる
+	// renderキューで描画
 	DrawObjectsByQueue();
 
 	Scene::UpdateFinal();

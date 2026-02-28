@@ -62,12 +62,11 @@ bool Area::NodeEffect(FieldEnemy* enemy_ptr)
 	AreaObject* obj = Manager::GetCurrentScene()->AddGameObject<AreaObject>(1);
 	obj->SetOwnerEnemyID(enemy_ptr->GetEnemyBase()->GetEnemyID()); // 発射元の敵種類ID
 	// 各種プロパティを設定
-	// これ初期化後に呼ばれるからポリゴンのいちおかしくなるかもね
 	Vector3 enemy_pos = enemy_ptr->GetPosition();
 	Vector3 pos = enemy_pos;
 	// x,zはちょいランダム
-	pos.x += RandomNumber::GetInstance()->GetRandomFloat(-2.0f, 2.0f);
-	pos.z += RandomNumber::GetInstance()->GetRandomFloat(-2.0f, 2.0f);
+	pos.x += RandomNumber::GetInstance()->GetRandomFloat(AREA_DIFF.x, AREA_DIFF.y);
+	pos.z += RandomNumber::GetInstance()->GetRandomFloat(AREA_DIFF.x, AREA_DIFF.y);
 
 	pos.y = 0.01f; // 少しだけ地面から浮かせる
 	obj->SetPosition(pos);

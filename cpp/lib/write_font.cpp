@@ -257,10 +257,7 @@ HRESULT DirectWriteCustomFont::Init(IDXGISwapChain* swapChain)
 {
     // ref: 
     // https://learn.microsoft.com/ja-jp/windows/win32/direct2d/getting-started-with-direct2d
-    // 基本的にfactoryは一こ作ればいいのでrendererあたりでdirect2d作ってそのfactoryをfontで使うのがいいね
-
-    // 後本来作るpD2DFactory->CreateHwndRenderTargetがねえ
-    // 終了時はSafeRelease(pD2DFactory);
+    // 基本的にfactoryは1つ作ればいいのでrendererあたりでdirect2d作ってそのfactoryをfontで使うのがいいね
 
     HRESULT result = S_OK;
 

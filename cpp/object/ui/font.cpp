@@ -67,15 +67,16 @@ void Font::SetDisplayText(const std::string& text)
 	// フォントキャッシュを更新
 	DirectWriteCustomFont::GetInstance()->PreCacheTextLayout(m_FontData, m_DisplayText);
 
-	// これGetTextSizeDipsとかはキャッシュにある前提なのでDrawString呼んだ後じゃないと見れないな
-
 	// テキストサイズ取得
 	FLOAT wPx = 0.0f, hPx = 0.0f;
 	if (SUCCEEDED(DirectWriteCustomFont::GetInstance()->GetTextSizePixels(m_DisplayText, &wPx, &hPx)))
 	{
-		wchar_t buf2[256];
-		swprintf_s(buf2, L"Text size (px): w=%.1f h=%.1f\n", wPx, hPx);
-		OutputDebugStringW(buf2);
+		// デバッグ用出力
+		//wchar_t buf2[256];
+		//swprintf_s(buf2, L"Text size (px): w=%.1f h=%.1f\n", wPx, hPx);
+		//OutputDebugStringW(buf2);
+
+		// サイズ更新
 		m_WidthHeight = Vector2(wPx, hPx);
 	}
 }

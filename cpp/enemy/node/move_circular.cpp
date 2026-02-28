@@ -52,7 +52,7 @@ Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 	// 生存時間を取得
 	unsigned int liveTime = enemy_ptr->GetLiveTime();
 	
-	// 初回フレーム（生存時間1）では移動しない
+	// 初回フレームでは移動しない
 	if (liveTime <= 1)
 	{
 		return Vector3(0.0f, 0.0f, 0.0f);
