@@ -151,7 +151,7 @@ void VisualBase::Update()
 			else
 			{
 				// はみ出ないのでそのまま右側に表示
-				m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x + (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) + NODE_MARGIN.y, 0.0f));
+				m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
 			}
 		}
 
