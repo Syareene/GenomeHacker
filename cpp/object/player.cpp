@@ -1,6 +1,6 @@
 ﻿#include "main.h"
 #include "lib/renderer.h"
-#include "player.h"
+#include "object/player.h"
 #include "lib/modelRenderer.h"
 #include "lib/input.h"
 #include "object/camera.h"

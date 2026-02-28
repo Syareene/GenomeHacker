@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="component.h" />
     <ClInclude Include="hedder\collider\collider_base.h" />
     <ClInclude Include="hedder\collider\collision.h" />
     <ClInclude Include="hedder\collider\cube.h" />
     <ClInclude Include="hedder\collider\sphere.h" />
+    <ClInclude Include="hedder\component.h" />
     <ClInclude Include="hedder\enemy\base_data\bat.h" />
     <ClInclude Include="hedder\enemy\base_data\enemy_base.h" />
     <ClInclude Include="hedder\enemy\base_data\enemy_list.h" />
@@ -85,6 +85,7 @@
     <ClInclude Include="hedder\lib\vector2.h" />
     <ClInclude Include="hedder\lib\vector3.h" />
     <ClInclude Include="hedder\lib\write_font.h" />
+    <ClInclude Include="hedder\main.h" />
     <ClInclude Include="hedder\manager\default_vertex.h" />
     <ClInclude Include="hedder\manager\object_manager.h" />
     <ClInclude Include="hedder\manager\shader_manager.h" />
@@ -101,16 +102,22 @@
     <ClInclude Include="hedder\object\i_container.h" />
     <ClInclude Include="hedder\object\movement\title_cam.h" />
     <ClInclude Include="hedder\object\panel.h" />
+    <ClInclude Include="hedder\object\player.h" />
+    <ClInclude Include="hedder\object\score.h" />
+    <ClInclude Include="hedder\object\skydome.h" />
     <ClInclude Include="hedder\object\system_object.h" />
     <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\font.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
     <ClInclude Include="hedder\object\ui\in_game\fade.h" />
     <ClInclude Include="hedder\object\ui\ui.h" />
+    <ClInclude Include="hedder\resource.h" />
+    <ClInclude Include="hedder\resource1.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
     <ClInclude Include="hedder\scene\game_scene.h" />
     <ClInclude Include="hedder\scene\initialize_scene.h" />
     <ClInclude Include="hedder\scene\manager.h" />
+    <ClInclude Include="hedder\scene\result_scene.h" />
     <ClInclude Include="hedder\scene\setting_scene.h" />
     <ClInclude Include="hedder\scene\state\base_state.h" />
     <ClInclude Include="hedder\scene\state\dna_edit_state.h" />
@@ -120,16 +127,8 @@
     <ClInclude Include="hedder\scene\state\setting_state.h" />
     <ClInclude Include="hedder\scene\state\state_manager.h" />
     <ClInclude Include="hedder\scene\title_scene.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
-    <ClInclude Include="result_scene.h" />
-    <ClInclude Include="score.h" />
-    <ClInclude Include="skydome.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="billboard.cpp" />
     <ClCompile Include="cpp\collider\collision.cpp" />
     <ClCompile Include="cpp\collider\sphere.cpp" />
     <ClCompile Include="cpp\enemy\base_data\bat.cpp" />
@@ -188,6 +187,7 @@
     <ClCompile Include="cpp\lib\random_number.cpp" />
     <ClCompile Include="cpp\lib\renderer.cpp" />
     <ClCompile Include="cpp\lib\write_font.cpp" />
+    <ClCompile Include="cpp\main.cpp" />
     <ClCompile Include="cpp\manager\default_vertex.cpp" />
     <ClCompile Include="cpp\manager\object_manager.cpp" />
     <ClCompile Include="cpp\manager\shader_manager.cpp" />
@@ -195,21 +195,28 @@
     <ClCompile Include="cpp\object\2d_object.cpp" />
     <ClCompile Include="cpp\object\3d_object.cpp" />
     <ClCompile Include="cpp\object\area_object.cpp" />
+    <ClCompile Include="cpp\object\billboard.cpp" />
     <ClCompile Include="cpp\object\camera.cpp" />
     <ClCompile Include="cpp\object\field.cpp" />
     <ClCompile Include="cpp\object\game_object.cpp" />
     <ClCompile Include="cpp\object\movement\title_cam.cpp" />
     <ClCompile Include="cpp\object\panel.cpp" />
     <ClCompile Include="cpp\object\player.cpp" />
+    <ClCompile Include="cpp\object\score.cpp" />
     <ClCompile Include="cpp\object\skydome.cpp" />
     <ClCompile Include="cpp\object\ui\button.cpp" />
     <ClCompile Include="cpp\object\ui\font.cpp" />
     <ClCompile Include="cpp\object\ui\image.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\fade.cpp" />
+    <ClCompile Include="cpp\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />
     <ClCompile Include="cpp\scene\initialize_scene.cpp" />
     <ClCompile Include="cpp\scene\manager.cpp" />
+    <ClCompile Include="cpp\scene\result_scene.cpp" />
     <ClCompile Include="cpp\scene\setting_scene.cpp" />
     <ClCompile Include="cpp\scene\state\base_state.cpp" />
     <ClCompile Include="cpp\scene\state\dna_edit_state.cpp" />
@@ -219,15 +226,6 @@
     <ClCompile Include="cpp\scene\state\setting_state.cpp" />
     <ClCompile Include="cpp\scene\state\state_manager.cpp" />
     <ClCompile Include="cpp\scene\title_scene.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="score.cpp" />
-    <ClCompile Include="result_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\common.hlsl">
@@ -515,7 +513,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\hedder;$(SolutionDir);$(SolutionDir)\hedder\lib\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\hedder;$(SolutionDir);$(SolutionDir)\hedder\lib\imgui;$(ProjectDir)hedder\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>

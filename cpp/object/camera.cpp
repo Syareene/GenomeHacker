@@ -3,7 +3,7 @@
 #include "scene/base_scene.h"
 #include "lib/renderer.h"
 #include "object/camera.h"
-#include "player.h"
+#include "object/player.h"
 #include "lib/input.h"
 
 void Camera::Init(Transform trans)

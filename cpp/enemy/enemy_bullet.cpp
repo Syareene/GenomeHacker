@@ -6,7 +6,7 @@
 #include "object/camera.h"
 #include "scene/manager.h"
 #include "scene/base_scene.h"
-#include "player.h"
+#include "object/player.h"
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
 #include "collider/sphere.h"

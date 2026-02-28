@@ -12,7 +12,7 @@
 #include "enemy/node_tab/movement.h"
 #include "enemy/node_tab/death.h"
 #include "enemy/base_data/enemy_base.h"
-#include "player.h"
+#include "object/player.h"
 #include "lib/input.h" 
 
 

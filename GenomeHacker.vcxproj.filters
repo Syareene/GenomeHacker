@@ -37,9 +37,6 @@
     <Filter Include="ヘッダー ファイル\enemy">
       <UniqueIdentifier>{43945e6d-7792-4bb3-9f31-2e7fa5f1cb0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\player">
-      <UniqueIdentifier>{400122c8-1bca-40fb-8395-d97e9033e8d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object">
       <UniqueIdentifier>{e4200ecd-955c-4fd1-bcf6-8aa7fea49fbb}</UniqueIdentifier>
     </Filter>
@@ -99,12 +96,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\scene\game_scene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
@@ -126,9 +117,6 @@
     <ClInclude Include="hedder\collider\cube.h">
       <Filter>ヘッダー ファイル\collider</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>ヘッダー ファイル\player</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\object\billboard.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
@@ -147,12 +135,6 @@
     <ClInclude Include="hedder\object\ui\image.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
-    <ClInclude Include="result_scene.h">
-      <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="score.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\lib\easing.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -163,9 +145,6 @@
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="hedder\object\3d_object.h">
-      <Filter>ヘッダー ファイル\object</Filter>
-    </ClInclude>
-    <ClInclude Include="skydome.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="hedder\lib\mouse.h">
@@ -408,17 +387,32 @@
     <ClInclude Include="hedder\lib\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル\lib\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="hedder\scene\result_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\component.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
+    <ClInclude Include="hedder\main.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\resource1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\score.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\player.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\skydome.h">
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\game_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
@@ -428,20 +422,11 @@
     <ClCompile Include="cpp\scene\title_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="billboard.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\base_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="result_scene.cpp">
-      <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\easing.cpp">
       <Filter>ソース ファイル\lib</Filter>
@@ -569,9 +554,6 @@
     <ClCompile Include="cpp\scene\state\base_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\state\dna_table_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
@@ -690,6 +672,21 @@
       <Filter>ソース ファイル\lib\imgui</Filter>
     </ClCompile>
     <ClCompile Include="cpp\object\2d_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\result_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\pch.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\score.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\billboard.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
   </ItemGroup>

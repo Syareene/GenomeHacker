@@ -1,5 +1,5 @@
 ﻿#include "main.h"
-#include "result_scene.h"
+#include "scene/result_scene.h"
 #include "lib/renderer.h"
 #include "scene/manager.h"
 #include "lib/input.h"

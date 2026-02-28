@@ -3,7 +3,7 @@
 #include "lib/renderer.h"
 #include "object/field.h"
 #include "object/camera.h"
-#include "player.h"
+#include "object/player.h"
 #include "lib/input.h"
 #include "manager/texture_manager.h"
 #include "scene/title_scene.h"
