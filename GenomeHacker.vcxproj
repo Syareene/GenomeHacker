@@ -54,7 +54,6 @@
     <ClInclude Include="hedder\enemy\node\number.h" />
     <ClInclude Include="hedder\enemy\node\self_destruction.h" />
     <ClInclude Include="hedder\enemy\node\shot_front.h" />
-    <ClInclude Include="hedder\enemy\node\socket\number_socket.h" />
     <ClInclude Include="hedder\enemy\node\visual_base.h" />
     <ClInclude Include="hedder\enemy\node_tab\attack.h" />
     <ClInclude Include="hedder\enemy\node_tab\death.h" />
@@ -106,7 +105,6 @@
     <ClInclude Include="hedder\object\ui\button.h" />
     <ClInclude Include="hedder\object\ui\font.h" />
     <ClInclude Include="hedder\object\ui\image.h" />
-    <ClInclude Include="hedder\object\ui\in_game\enemy_node.h" />
     <ClInclude Include="hedder\object\ui\in_game\fade.h" />
     <ClInclude Include="hedder\object\ui\ui.h" />
     <ClInclude Include="hedder\scene\base_scene.h" />
@@ -161,7 +159,6 @@
     <ClCompile Include="cpp\enemy\node\number.cpp" />
     <ClCompile Include="cpp\enemy\node\self_destruction.cpp" />
     <ClCompile Include="cpp\enemy\node\shot_front.cpp" />
-    <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp" />
     <ClCompile Include="cpp\enemy\node\visual_base.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\attack.cpp" />
     <ClCompile Include="cpp\enemy\node_tab\death.cpp" />
@@ -206,7 +203,6 @@
     <ClCompile Include="cpp\object\ui\button.cpp" />
     <ClCompile Include="cpp\object\ui\font.cpp" />
     <ClCompile Include="cpp\object\ui\image.cpp" />
-    <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp" />
     <ClCompile Include="cpp\object\ui\in_game\fade.cpp" />
     <ClCompile Include="cpp\scene\base_scene.cpp" />
     <ClCompile Include="cpp\scene\game_scene.cpp" />

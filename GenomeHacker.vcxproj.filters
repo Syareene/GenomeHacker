@@ -85,12 +85,6 @@
     <Filter Include="ヘッダー ファイル\scene\state">
       <UniqueIdentifier>{c7f17780-7514-4d25-b6ca-5180a80bbe18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\enemy\node\socket">
-      <UniqueIdentifier>{a6797e1e-2b48-430c-a8bb-6e641ccc5bf9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\enemy\node\socket">
-      <UniqueIdentifier>{8c15dbf5-ff57-499e-a3cd-faa0cf5d8613}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\movement">
       <UniqueIdentifier>{83177e50-b918-4640-a0d5-5f19b98ba17d}</UniqueIdentifier>
     </Filter>
@@ -201,9 +195,6 @@
     <ClInclude Include="hedder\object\panel.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\object\ui\in_game\enemy_node.h">
-      <Filter>ヘッダー ファイル\object\ui\in_game</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
     </ClInclude>
@@ -308,9 +299,6 @@
     </ClInclude>
     <ClInclude Include="hedder\enemy\node\number.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
-    </ClInclude>
-    <ClInclude Include="hedder\enemy\node\socket\number_socket.h">
-      <Filter>ヘッダー ファイル\enemy\node\socket</Filter>
     </ClInclude>
     <ClInclude Include="hedder\enemy\node\base.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
@@ -476,9 +464,6 @@
     <ClCompile Include="cpp\enemy\node\base.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp">
-      <Filter>ソース ファイル\object\ui\in_game</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\object\ui\button.cpp">
       <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
@@ -598,9 +583,6 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\node\number.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
-      <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\2d_particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
