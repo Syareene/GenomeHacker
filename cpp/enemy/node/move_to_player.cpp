@@ -77,7 +77,7 @@ bool MoveToPlayer::NodeEffect(FieldEnemy* enemy_ptr)
 std::string MoveToPlayer::GenerateDescriptionText()
 {
 	// 説明文のテンプレートを取得
-	std::string format_string = "このノードがある敵は毎フレーム{:.2f}だけ敵に向かって移動します。";
+	std::string format_string = "このノードがある敵は毎フレーム{:.2f}だけプレイヤーに向かって移動します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_MoveVal));
 	// メンバに格納
