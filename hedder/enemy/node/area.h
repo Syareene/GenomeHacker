@@ -18,6 +18,7 @@ public:
 	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
 
 private:
+	static constexpr Vector2 AREA_DIFF = Vector2(-2.0f, 2.0f); // ランダム生成範囲 
 	float m_Duration = 150.0f; // エリアの持続時間(フレーム数)
 	float m_ShotInterval = 300.0f; // 発射間隔(フレーム数)
 	float m_AreaDamage = 1.0f; // エリアのダメージ(仮)
