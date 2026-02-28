@@ -70,8 +70,8 @@ private:
 	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
 	void ModifyEnemyNodePos(VisualBase* grabPtr = nullptr);
 	void ModifyPlayerNodePos(VisualBase* grabPtr = nullptr);
-	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
-	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
+	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 225.0f }; // ノードと文字の余白
+	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 225.0f }; // ノードの初期配置位置
 	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置
 	constexpr static Vector2 PLAYER_AREA_END = { 1280.0f, 720.0f }; // プレイヤーエリアの終了位置
 	bool m_IsSelected = false; // 現在選択されているタブかどうか
