@@ -83,8 +83,8 @@ void EnemySpawner::Update()
 	}
 
 
-	// デバッグ用: 1~6キーで任意の敵を出す
-#ifdef _DEBUG
+	// 1~6キーで任意の敵を出す
+//#ifdef _DEBUG
 	State* state = Manager::GetCurrentScene()->GetCurrentState();
 	if (!dynamic_cast<GameBaseState*>(state))
 	{
@@ -103,5 +103,5 @@ void EnemySpawner::Update()
 			SpawnEnemyByData(it->get(), spawn_pos);
 		}
 	}
-#endif // _DEBUG
+//#endif // _DEBUG
 }
