@@ -15,8 +15,46 @@ class EnemyBase
 public:
 	EnemyBase() = default; // デフォルトコンストラクタ
 	virtual ~EnemyBase() {}
-	EnemyBase(EnemyBase&&) noexcept = default; // ムーブコンストラクタ
-	EnemyBase& operator=(EnemyBase&&) noexcept = default; // ムーブ代入演算子
+	EnemyBase(EnemyBase&& Other) noexcept
+		: m_TabManager(std::move(Other.m_TabManager))
+		, m_ToDnaButton(Other.m_ToDnaButton)
+		, m_TextureID(Other.m_TextureID)
+		, m_EnemyID(Other.m_EnemyID)
+		, m_TextureSplitCount(Other.m_TextureSplitCount)
+		, m_UVPos(Other.m_UVPos)
+		, m_TextureTarget(Other.m_TextureTarget)
+		, m_TextureCount(Other.m_TextureCount)
+		, m_PosDiff(Other.m_PosDiff)
+		, m_ScaleDiff(Other.m_ScaleDiff)
+		, m_IsExitDnaEdit(Other.m_IsExitDnaEdit)
+		, m_MaxHealth(Other.m_MaxHealth)
+	{
+		Other.m_ToDnaButton = nullptr;
+		Other.m_TextureID = -1;
+		Other.m_EnemyID = -1;
+	}
+	EnemyBase& operator=(EnemyBase&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_TabManager = std::move(Other.m_TabManager);
+			m_ToDnaButton = Other.m_ToDnaButton;
+			m_TextureID = Other.m_TextureID;
+			m_EnemyID = Other.m_EnemyID;
+			m_TextureSplitCount = Other.m_TextureSplitCount;
+			m_UVPos = Other.m_UVPos;
+			m_TextureTarget = Other.m_TextureTarget;
+			m_TextureCount = Other.m_TextureCount;
+			m_PosDiff = Other.m_PosDiff;
+			m_ScaleDiff = Other.m_ScaleDiff;
+			m_IsExitDnaEdit = Other.m_IsExitDnaEdit;
+			m_MaxHealth = Other.m_MaxHealth;
+			Other.m_ToDnaButton = nullptr;
+			Other.m_TextureID = -1;
+			Other.m_EnemyID = -1;
+		}
+		return *this;
+	}
 
 	virtual EnemyBase* Register(const unsigned int& playerId); // 登録処理
 	void Unregister(); // 登録解除処理
@@ -90,8 +128,6 @@ private:
 	std::unique_ptr<TabManager> m_TabManager; // DNAスクリーンのスクリプトオブジェクト(自身が管理している場合はここに保存)
 
 	Button* m_ToDnaButton = nullptr; // 生成したボタンオブジェクトのポインタ。scene側に保持している物のポインタとなる。消すときはここから取得したのに対してdestoryを設定すれば良い
-	// static -> ボタン押すときの外枠テクスチャ用変数?
-	// 敵自体のテクスチャ?ただその場合テクスチャ元とuvを両方保存しないといけない、、
 	int m_TextureID = -1; // 敵のテクスチャID
 	int m_EnemyID = -1; // 敵のID
 	Vector2 m_TextureSplitCount = DEFAULT_TEXTURE_COUNT; // テクスチャの分割数

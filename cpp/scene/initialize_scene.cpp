@@ -38,6 +38,9 @@ void InitializeScene::Update()
 	{
 		Manager::SetScene<TitleScene>();
 	}
+
+	// GPUデータの更新
+	UpdateGPUData();
 }
 
 void InitializeScene::Draw()

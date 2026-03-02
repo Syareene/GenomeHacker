@@ -15,8 +15,36 @@ class VisualBase : public Object2D
 public:
 	VisualBase() = default;
 	virtual ~VisualBase() {}
-	VisualBase(VisualBase&&) noexcept = default; // ムーブコンストラクタ
-	VisualBase& operator=(VisualBase&&) noexcept = default; // ムーブ代入演算子
+	VisualBase(VisualBase&& Other) noexcept
+		: Object2D(std::move(Other))
+		, m_Font(std::move(Other.m_Font))
+		, m_DescriptionFonts(std::move(Other.m_DescriptionFonts))
+		, m_HoverTimer(Other.m_HoverTimer)
+		, m_ScreenID(Other.m_ScreenID)
+		, m_NodeBaseIndex(Other.m_NodeBaseIndex)
+		, m_BaseNodePtr(Other.m_BaseNodePtr)
+		, m_NodeLocation(Other.m_NodeLocation)
+		, m_IsUpdated(Other.m_IsUpdated)
+	{
+		Other.m_BaseNodePtr = nullptr;
+	}
+	VisualBase& operator=(VisualBase&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Object2D::operator=(std::move(Other));
+			m_Font = std::move(Other.m_Font);
+			m_DescriptionFonts = std::move(Other.m_DescriptionFonts);
+			m_HoverTimer = Other.m_HoverTimer;
+			m_ScreenID = Other.m_ScreenID;
+			m_NodeBaseIndex = Other.m_NodeBaseIndex;
+			m_BaseNodePtr = Other.m_BaseNodePtr;
+			m_NodeLocation = Other.m_NodeLocation;
+			m_IsUpdated = Other.m_IsUpdated;
+			Other.m_BaseNodePtr = nullptr;
+		}
+		return *this;
+	}
 
 	void Init(const unsigned int& screen_id, int base_index, NodeBase* node);
 	void UpdateVisual(NodeBase* node_ptr); // nodeのデータを引っ張ってきて更新する
@@ -79,7 +107,5 @@ private:
 	NodeBase* m_BaseNodePtr = nullptr; // 元となるノードのポインタ
 	NodeBase::NodeLocation m_NodeLocation = NodeBase::NodeLocation::Enemy; // ノードの配置場所(敵orプレイヤー)
 
-	Transform m_Transform = Transform();
-	int m_TextureID = -1;
 	bool m_IsUpdated = false;
 };

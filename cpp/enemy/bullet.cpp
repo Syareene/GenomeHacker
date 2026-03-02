@@ -5,6 +5,7 @@
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "enemy/field_enemy.h"
 #include "collider/sphere.h"
 #include "enemy/explosion.h"
@@ -44,8 +45,6 @@ void Bullet::Uninit()
 
 void Bullet::Update()
 {
-	// vector3が間違ってる可能性とかもある?
-
 	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
 	Vector3 rotation = camera->GetRotation();
 	// 移動
@@ -97,10 +96,10 @@ void Bullet::Draw()
 
 	m_ModelRenderer->Draw();
 
-	// コリジョン描画(デバッグ用)
-	if (!GetCollider())
-	{
-		return;
-	}
-	GetCollider()->DrawCollider();
+	//// コリジョン描画(デバッグ用)
+	//if (!GetCollider())
+	//{
+	//	return;
+	//}
+	//GetCollider()->DrawCollider();
 }

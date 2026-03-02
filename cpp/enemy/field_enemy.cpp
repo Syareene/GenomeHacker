@@ -7,7 +7,47 @@
 #include "manager/texture_manager.h"
 #include "enemy/enemy_spawner.h"
 #include "collider/sphere.h"
-#include "player.h"
+#include "object/player.h"
+#include "object/camera.h"
+
+void FieldEnemy::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+
+	// プリミティブトポロジ
+	Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
+
+void FieldEnemy::UpdateGPUData(InstanceBufferData& data)
+{
+	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
+
+	// ビューの逆行列作成
+	XMMATRIX invView;
+	invView = XMMatrixInverse(nullptr, camera->GetViewMatrix());
+	invView.r[3].m128_f32[0] = 0.0f; // カメラの位置を無視
+	invView.r[3].m128_f32[1] = 0.0f;
+	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
+
+	XMMATRIX trans, world, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * invView * trans;
+	
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	Vector2 uv_pos = CalcTexUVOffset(static_cast<int>(GetEnemyBase()->GetTextureSplitCount().x), static_cast<int>(GetEnemyBase()->GetTextureSplitCount().y), 
+																static_cast<int>(GetEnemyBase()->GetUVPos().x), static_cast<int>(GetEnemyBase()->GetUVPos().y));
+	// 敵ごとにテクスチャが異なるためシェーダー側でその値をずらしてあげる
+	data.UVOffset = XMFLOAT4(uv_pos.x, uv_pos.y, 0.0f, 0.0f);
+}
 
 void FieldEnemy::Init(EnemyBase* base, Transform trans)
 {
@@ -26,14 +66,11 @@ void FieldEnemy::Init(EnemyBase* base, Transform trans)
 	Sphere* collider = SetCollider<Sphere>();
 	collider->Init(transform);
 
-	// UV反映(該当enemyのuv位置だけ設定してもらう必要あり)
-	// でも敵によって異なるテクスチャ使用する可能性あるし今のdrawみたいな感じの処理にしたほうがいいかな
-	// ならuvtexかどうかフラグを作ってそれを用いて分岐かな
-	SetCanChangeVertex(false); // 多分これ呼ばないとダメ
-	ChangeTexUV(base->GetTextureSplitCount().x, base->GetTextureSplitCount().y, base->GetUVPos().x, base->GetUVPos().y, false);
-
-	//Object3D::Init();
-	// テクスチャは敵データから描画時に取得するのでいらない
+	// UV反映
+	SetCanChangeVertex(false);
+	ChangeTexUV(static_cast<int>(base->GetTextureSplitCount().x), static_cast<int>(base->GetTextureSplitCount().y), 0, 0, false);
+	// textureIDをセット
+	SetTextureID(base->GetEnemyTextureID());
 }
 
 void FieldEnemy::Uninit()
@@ -109,10 +146,7 @@ void FieldEnemy::Update()
 
 void FieldEnemy::Draw()
 {
-	// 描画処理
-	//Object3D::Draw();
-	
-	// 敵データからテクスチャを取得して描画(テンプレ関数用意してないので一旦使い回しでやる)
+	// 敵データからテクスチャを取得して描画
 
 	// 入力レイアウト設定
 	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::NoAlphaVertexLayout);
@@ -128,13 +162,12 @@ void FieldEnemy::Draw()
 	SetMaterialOnDraw();
 
 	// 頂点バッファ設定
-	//SetDefaultVertexBufferBillboardOnDraw();
-	SetVertexBufferOnDraw(); //->inputlayoutやshaderに関してはこのままで良くてここだけ変えないといけない
+	SetVertexBufferOnDraw();
 
 	// テクスチャ設定
 	// 一時変数に入れないと参照取得できないのでこうする
 
-	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetEnemyBase()->GetEnemyTextureID());
+	ID3D11ShaderResourceView* texture = TextureManager::Get3DTexture(GetTextureID());
 	Renderer::GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
 
 	// プリミティブトポロジ設定
@@ -144,9 +177,9 @@ void FieldEnemy::Draw()
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
 	// コリジョン描画(デバッグ用)
-	if(!GetCollider())
+	/*if(!GetCollider())
 	{
 		return;
 	}
-	GetCollider()->DrawCollider();
+	GetCollider()->DrawCollider();*/
 }

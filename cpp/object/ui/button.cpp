@@ -98,8 +98,9 @@ void Button::Init(Transform trans)
 
 void Button::Uninit()
 {
-	m_TargetFunc = nullptr; // コールバック関数をクリア
-	m_Text.reset(); // テキストオブジェクトを解放
+	// m_TargetFunc は std::function のデストラクタで自動解放されるため
+    // ここで nullptr 代入すると Uninit 後の clear() で二重解放になるらしい
+    m_Text.reset();
 }
 
 void Button::Update()

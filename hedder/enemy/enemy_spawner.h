@@ -5,6 +5,7 @@
 #include "scene/manager.h"
 #include "enemy/base_data/enemy_list.h"
 #include "object/system_object.h"
+#include "scene/base_scene.h"
 
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
@@ -23,7 +24,6 @@ public:
 		m_SpawnedCount--;
 	}
 private:
-	//EnemySpawner() = default; // newできないように->この場合は自身でインスタンスの所在を持ってないと行けなくはなるけどね。一旦検討
 	template<typename T>
 	bool SpawnEnemy(Vector3 spawn_pos = {0.0f, 0.0f, 0.0f})
 	{
@@ -90,12 +90,12 @@ private:
 	EnemyBase* m_EnemyBaseData = nullptr; // 敵の元データを格納するポインタ(敵を出現させるのに用いる)
 	int m_SpawnTimer = 0; // 敵を出すタイマー
 	int m_SpawnCount = 0; // 出す敵の数
-	constexpr static int DEFAULT_SPAWN_COUNT = 10;
+	constexpr static int DEFAULT_SPAWN_COUNT = 6;
 	int m_SpawnedCount = 0; // 出した敵の数(temp)
 	int m_EnemyCost = 20;
-	int m_TimeCost = 1200; // 敵の出現事の間隔とwave間の間隔を決めるための変数
+	int m_TimeCost = 400; // 敵の出現事の間隔とwave間の間隔を決めるための変数
 	int m_EnemySpawnInterval = 0; // 敵が出現するまでの間隔
 	int m_TimeNextWave = 0; // ウェーブ間の時間
-	constexpr static int ENEMY_MAX_AMOUNT = 30;
+	constexpr static int ENEMY_MAX_AMOUNT = 24;
 	constexpr static Vector2 SPAWN_POSITION_RANGE = { -5.0f, 5.0f };
 };

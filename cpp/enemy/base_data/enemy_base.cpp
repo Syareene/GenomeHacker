@@ -7,6 +7,7 @@
 
 #include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/game_object.h"
 #include "manager/texture_manager.h"
 #include "enemy/dna_screen_script.h"
@@ -28,19 +29,9 @@ EnemyBase* EnemyBase::Register(const unsigned int& playerId)
 
 	// そのenemy固有の情報を登録
 	
-	// なんかこのタイミングでオブジェクトとして生成はしといて常駐させつつ、描画とかに必要なデータだけ表示時に受け取って、非表示時に消すとかがいいような
-	// 今すぐこのタイミングで作る必要が出てきた、、
-
-	// 常駐させるとするならノードの配置状況とか、のデータとして管理できるものはここでいい
-	// 逆にテクスチャとか文字部分の生成に関しては呼ばれた時に行うような処理にしたい
-	
 	m_TabManager = std::make_unique<TabManager>(); // タブマネージャーの生成
 
-	// これ無限ループしてるわなってことでエラーっす
 	return this;
-
-	// テクスチャ生成
-	
 }
 
 void EnemyBase::Unregister()
@@ -130,7 +121,6 @@ void EnemyBase::ExecuteMove(FieldEnemy* enemy_ptr)
 	{
 		// 生成時にfieldEnemyのcdmaxが更新されていないので最初はここはいる
 
-
 		// 時間が伸びる場合はcdmaxだけ更新
 		// 短くなる場合は比を使い現在のcd位置も更新
 		if (enemy_ptr->GetMoveNodeCDSum() > moveTab->GetCDMax())
@@ -200,8 +190,6 @@ bool EnemyBase::ExecuteDeath(FieldEnemy* enemy_ptr)
 			// 現在のcd位置を更新
 			float ratio = static_cast<float>(enemy_ptr->GetDeathNodeCDSum()) / static_cast<float>(deathTab->GetCDMax());
 			enemy_ptr->SetDeathNodeTime(static_cast<int>(enemy_ptr->GetDeathNodeTime() * ratio));
-
-			// 将来的にだけど、変更に伴ってランダムで位置をずらしてもいい説はある
 		}
 
 		// 異なる場合は現在のcdmaxを保存
@@ -295,7 +283,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 	// state、GameStateになってたわね
 	m_ToDnaButton = ptr->AddGameObject<Button>(2);
 
-	// これ、敵のテクスチャをuv化したけど、ボタンがuv化できてない
+	// ボタン登録
 	m_ToDnaButton->Register([this]() {
 		// ボタンがクリックされた時の処理
 		ShowDnaScreen();
@@ -304,7 +292,7 @@ void EnemyBase::ShowDnaEditButton(const Vector2& pos, const Vector2& size, const
 
 	// UV変更モードに設定
 	m_ToDnaButton->SetCanChangeVertex(true); // ->これbutton共通だからdrawの時にこっち使ってくれねぇ
-	m_ToDnaButton->ChangeTexUV(m_TextureSplitCount.x, m_TextureSplitCount.y, m_UVPos.x, m_UVPos.y, true); // 保存した変数から値を参照するように変更する。
+	m_ToDnaButton->ChangeTexUV(static_cast<int>(m_TextureSplitCount.x), static_cast<int>(m_TextureSplitCount.y), static_cast<int>(m_UVPos.x), static_cast<int>(m_UVPos.y), true); // 保存した変数から値を参照するように変更する。
 	m_ToDnaButton->AddTag("dna");
 
 }

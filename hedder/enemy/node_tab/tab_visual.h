@@ -9,6 +9,35 @@ class EnemyBase;
 class TabVisual : public Panel
 {
 public:
+	TabVisual() = default;
+	virtual ~TabVisual() = default;
+	// ムーブコンストラクタ
+	TabVisual(TabVisual&& Other) noexcept
+		: Panel(std::move(Other))
+		, m_IsSelected(std::exchange(Other.m_IsSelected, false))
+		, m_PlayerId(std::exchange(Other.m_PlayerId, 0))
+		, m_DnaScreenId(std::exchange(Other.m_DnaScreenId, 0))
+		, m_VisualNodes(std::move(Other.m_VisualNodes))
+		, m_Tab(std::exchange(Other.m_Tab, nullptr))
+	{
+		// すべて初期化リストで完結
+	}
+	// ムーブ代入演算子
+	TabVisual& operator=(TabVisual&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Panel::operator=(std::move(Other));
+			m_IsSelected = Other.m_IsSelected;
+			m_PlayerId = Other.m_PlayerId;
+			m_DnaScreenId = Other.m_DnaScreenId;
+			m_VisualNodes = std::move(Other.m_VisualNodes);
+			m_Tab = Other.m_Tab;
+			Other.m_Tab = nullptr;
+		}
+		return *this;
+	}
+
 	// 途中で変更はいるからそのタイミングをどうしようかなって感じだ
 	void CreateVisual(TabBase* base);
 	// 再生成する関数(更新したい対象だけに対して作動)
@@ -41,8 +70,8 @@ private:
 	// 敵エリアは0,180~768,720/プレイヤーエリアは768,0~1280,720
 	void ModifyEnemyNodePos(VisualBase* grabPtr = nullptr);
 	void ModifyPlayerNodePos(VisualBase* grabPtr = nullptr);
-	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 275.0f }; // ノードと文字の余白
-	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 300.0f }; // ノードの初期配置位置
+	constexpr static Vector2 ENEMY_NODE_START = { 20.0f, 225.0f }; // ノードと文字の余白
+	constexpr static Vector2 PLAYER_NODE_START = { 800.0f, 225.0f }; // ノードの初期配置位置
 	constexpr static Vector2 ENEMY_AREA_END = { 768.0f, 720.0f }; // 敵エリアの終了位置
 	constexpr static Vector2 PLAYER_AREA_END = { 1280.0f, 720.0f }; // プレイヤーエリアの終了位置
 	bool m_IsSelected = false; // 現在選択されているタブかどうか

@@ -2,15 +2,18 @@
 #include "scene/manager.h"
 #include "lib/mouse.h"
 #include <thread>
+#include "imgui.h"
+
 
 // 時間計測用
 #include <chrono>
 
 
 const char* CLASS_NAME = "AppClass";
-const char* WINDOW_NAME = "DX11ゲーム";
+const char* WINDOW_NAME = "GenomeHacker";
 
-
+// ImGuiのWin32バックエンドが提供するハンドラを宣言
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 
@@ -33,7 +36,10 @@ RECT GetRect()
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
+#ifdef _DEBUG
+	// デバッグ用にメモリ破壊の検出を有効にする
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+#endif
 
 	WNDCLASSEX wcex;
 	{
@@ -61,7 +67,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
-
 
 	Manager::Init();
 
@@ -145,6 +150,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	bool updateMouse = false;
+
+	// ImGuiが処理する時、他の処理を行わないようにする
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
+
 	switch(uMsg)
 	{
 	case WM_DESTROY:

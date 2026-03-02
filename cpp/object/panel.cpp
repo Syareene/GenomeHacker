@@ -8,10 +8,10 @@ void Panel::Init()
 	// パネルの初期化処理
 
 	// 子オブジェクトの初期化
-	for (auto& child : m_ChildObjects)
-	{
-		
-	}
+	//for (auto& child : m_ChildObjects)
+	//{
+	//	
+	//}
 }
 
 void Panel::Uninit()
@@ -51,6 +51,39 @@ void Panel::Update()
 	DeleteChildObject();
 	// 待機オブジェクトの反映
 	FlushPendingObjects();
+}
+
+void Panel::UpdateGPUData(InstanceBufferData& data)
+{
+	// パネルのGPUデータ更新処理
+	//UpdateGPUData(data);
+	// 子オブジェクトのGPUデータ更新
+	for (auto& child : m_ChildObjects)
+	{
+		if (!child)
+		{
+			continue;
+		}
+		child->UpdateGPUData();
+	}
+}
+
+void Panel::SetPipelineState()
+{
+	// パネルのパイプラインステート設定(一旦特になし)
+}
+
+void Panel::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags)
+{
+	// 子オブジェクトの描画要求提出
+	for (auto& child : m_ChildObjects)
+	{
+		if (!child)
+		{
+			continue;
+		}
+		child->SubmitDrawRequests(renderQueue, tags);
+	}
 }
 
 void Panel::Draw()

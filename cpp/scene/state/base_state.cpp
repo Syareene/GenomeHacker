@@ -24,6 +24,46 @@ void State::Update()
     // また、個別で定義してあるどのupdateを呼ぶかを指定
 }
 
+void State::UpdateGPUData()
+{
+    // 3dオブジェクトのGPUデータ更新
+    for (auto& objects3d : m_Objects3D)
+    {
+        if (objects3d)
+        {
+            objects3d->UpdateGPUData();
+        }
+    }
+    // 2dオブジェクトのGPUデータ更新
+    for (auto& objects2d : m_Objects2D)
+    {
+        if (objects2d)
+        {
+            objects2d->UpdateGPUData();
+        }
+    }
+}
+
+void State::SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
+{
+    // 3dオブジェクトの描画要求を送信
+    for (auto& objects3d : m_Objects3D)
+    {
+        if (objects3d)
+        {
+            objects3d->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
+        }
+    }
+    // 2dオブジェクトの描画要求を送信
+    for (auto& objects2d : m_Objects2D)
+    {
+        if (objects2d)
+        {
+            objects2d->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
+        }
+    }
+}
+
 void State::Draw()
 {
     // updateと同じ
@@ -70,8 +110,6 @@ void State::FlushPendingObjects()
     }
 
     // パネル内にもmanagerがあるためそちらもフラッシュ処理
-
-    // これパネル継承したやつの場合実行されんね
     if (panelManager)
     {
         for (auto& panelObj : panelManager->GetGameObjects())

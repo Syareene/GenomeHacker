@@ -77,6 +77,14 @@ public:
 
     static void UnloadTexture(int id)
     {
+        // 存在しているかどうか?
+		auto it = m_TextureMap.find(id);
+        if(it == m_TextureMap.end())
+        {
+            // 存在しないなら何もしない
+            return;
+		}
+
         // 参照カウントを減らす
 		m_TextureMap[id].TextureCount--;
 
@@ -107,8 +115,8 @@ public:
     }
 
     // テクスチャの取得
-    // 注意: シーン系はこの関数をコンストラクタで使用せず、Init関数内で使用してください!(これどうなるかわからん)
-    static int LoadTexture(const std::wstring filePath, const TextureType tex_type = TextureManager::TextureType::DX_3D)
+    // 注意: シーン系はこの関数をコンストラクタで使用せず、Init関数内で使用してください!
+    static int LoadTexture(const std::wstring filePath, [[maybe_unused]] const TextureType tex_type = TextureManager::TextureType::DX_3D)
     {
         // すでに読み込まれているテクスチャならそれを返す
         auto it = m_PathMap.find(filePath);
@@ -152,7 +160,7 @@ public:
         );
 
 		// ID2D1Bitmap1* bitmap1 = nullptr;
-        HRESULT hr = Renderer::GetID2D1DeviceContext()->CreateBitmapFromDxgiSurface(
+        Renderer::GetID2D1DeviceContext()->CreateBitmapFromDxgiSurface(
             dxgiSurface,
             &bitmapProp1,
             &bitmap

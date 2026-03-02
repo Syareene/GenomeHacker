@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <list>
+#include <vector>
 #include <string>
 
 // 識別用のクラス
@@ -9,7 +9,20 @@ class SystemObject
 public:
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。継承先クラスで変更可能。
 
+	SystemObject() = default;
 	virtual ~SystemObject() {}
+	SystemObject(SystemObject&& Other) noexcept
+		: m_Tags(std::move(Other.m_Tags))
+	{
+	}
+	SystemObject& operator=(SystemObject&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_Tags = std::move(Other.m_Tags);
+		}
+		return *this;
+	}
 	virtual void Init() {};
 	virtual void Uninit() {};
 	virtual void Update() {};
@@ -47,5 +60,5 @@ private:
 		static int id = 0;
 		return id++;
 	}
-	std::list<std::string> m_Tags; // タグ
+	std::vector<std::string> m_Tags; // タグ
 };

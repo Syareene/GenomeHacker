@@ -78,6 +78,109 @@ struct FontData
 		outlineColor = D2D1::ColorF(D2D1::ColorF::White);
 		outlineWidth = 0.0f;
 	}
+
+	~FontData()
+	{
+		if (fontCollection)
+		{
+			fontCollection->Release();
+			fontCollection = nullptr;
+		}
+	}
+
+	// ムーブコンストラクタ
+	FontData(FontData&& Other) noexcept
+		: font(std::move(Other.font))
+		, fontCollection(std::exchange(Other.fontCollection, nullptr))
+		, fontWeight(Other.fontWeight)
+		, fontStyle(Other.fontStyle)
+		, fontStretch(Other.fontStretch)
+		, fontSize(Other.fontSize)
+		, localeName(std::exchange(Other.localeName, nullptr))
+		, textAlignment(Other.textAlignment)
+		, Color(Other.Color)
+		, shadowColor(Other.shadowColor)
+		, shadowOffset(Other.shadowOffset)
+		, outlineColor(Other.outlineColor)
+		, outlineWidth(Other.outlineWidth)
+	{
+	}
+	// ムーブ代入演算子
+	FontData& operator=(FontData&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			font           = std::move(Other.font);
+			fontCollection = Other.fontCollection;
+			fontWeight     = Other.fontWeight;
+			fontStyle      = Other.fontStyle;
+			fontStretch    = Other.fontStretch;
+			fontSize       = Other.fontSize;
+			localeName     = Other.localeName;
+			textAlignment  = Other.textAlignment;
+			Color          = Other.Color;
+			shadowColor    = Other.shadowColor;
+			shadowOffset   = Other.shadowOffset;
+			outlineColor   = Other.outlineColor;
+			outlineWidth   = Other.outlineWidth;
+
+			Other.fontCollection = nullptr;
+		}
+		return *this;
+	}
+
+	// コピーも明示的に定義
+	FontData(const FontData& Other) 
+		: font(Other.font)
+		, fontCollection(Other.fontCollection)
+		, fontWeight(Other.fontWeight)
+		, fontStyle(Other.fontStyle)
+		, fontStretch(Other.fontStretch)
+		, fontSize(Other.fontSize)
+		, localeName(Other.localeName)
+		, textAlignment(Other.textAlignment)
+		, Color(Other.Color)
+		, shadowColor(Other.shadowColor)
+		, shadowOffset(Other.shadowOffset)
+		, outlineColor(Other.outlineColor)
+		, outlineWidth(Other.outlineWidth)
+	{
+		if(fontCollection)
+		{
+			fontCollection->AddRef(); // コピー時に参照カウントを増やす
+		}
+	}
+
+	FontData& operator=(const FontData& Other)
+	{
+		if (this != &Other)
+		{
+			if (fontCollection)
+			{
+				fontCollection->Release(); // 既存の参照を解放
+			}
+
+			font = Other.font;
+			fontCollection = Other.fontCollection;
+			fontWeight = Other.fontWeight;
+			fontStyle = Other.fontStyle;
+			fontStretch = Other.fontStretch;
+			fontSize = Other.fontSize;
+			localeName = Other.localeName;
+			textAlignment = Other.textAlignment;
+			Color = Other.Color;
+			shadowColor = Other.shadowColor;
+			shadowOffset = Other.shadowOffset;
+			outlineColor = Other.outlineColor;
+			outlineWidth = Other.outlineWidth;
+
+			if(fontCollection)
+			{
+				fontCollection->AddRef(); // コピー後に参照カウントを増やす
+			}
+		}
+		return *this;
+	}
 };
 
 // FontData 比較用の演算子

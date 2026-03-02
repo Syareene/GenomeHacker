@@ -1,5 +1,5 @@
 ﻿#include "main.h"
-#include "result_scene.h"
+#include "scene/result_scene.h"
 #include "lib/renderer.h"
 #include "scene/manager.h"
 #include "lib/input.h"
@@ -26,6 +26,8 @@ void ResultScene::Update()
 		// Enterキーが押されたらタイトルシーンに遷移
 		Manager::SetScene<TitleScene>();
 	}
+	// GPUデータの更新
+	UpdateGPUData();
 }
 
 void ResultScene::Draw()

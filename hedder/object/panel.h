@@ -2,6 +2,7 @@
 
 #include "object/2d_object.h"
 #include "manager/object_manager.h"
+#include "object/i_container.h"
 #include <deque>
 #include <memory>
 #include <type_traits>
@@ -12,7 +13,7 @@ template<typename T>
 concept PanelSupportedGameObject = std::is_base_of_v<Object2D, T>;
 
 // 現状パネルは2d限定
-class Panel : public Object2D
+class Panel : public Object2D, public IContainer
 {
 private:
 	std::deque<std::unique_ptr<IGameObjectManager>> m_ChildObjects; // 子オブジェクトのリスト
@@ -26,16 +27,32 @@ private:
 		}
 		return m_ObjectIDCounter++;
 	}
-	// このとき子オブジェクトからdestoryとかが呼ばれた際にこのリストからちゃんと消えるか問題はあるよねぇ、、->updateのところに消す処理書いたけどunique_ptrにしてるので変える必要あり
 public:
 	Panel() = default;
 	~Panel() override = default;
-	Panel(Panel&&) noexcept = default;
-	Panel& operator=(Panel&&) noexcept = default;
+	Panel(Panel&& Other) noexcept
+		: Object2D(std::move(Other))
+		, m_ChildObjects(std::move(Other.m_ChildObjects))
+	{
+	}
+	Panel& operator=(Panel&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Object2D::operator=(std::move(Other));
+			m_ChildObjects = std::move(Other.m_ChildObjects);
+		}
+		return *this;
+	}
 
 	virtual void Init();
 	void Uninit() override;
 	void Update() override;
+
+	void UpdateGPUData(InstanceBufferData& data) override;
+	static void SetPipelineState();
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue, std::deque<std::string> tags) override;
+
 	void FlushPendingObjects();
 	// sceneみたいに後付pushにするかちょい悩む
 	void Draw() override;

@@ -1,14 +1,17 @@
 ﻿#pragma once
 
+#include "main.h"
 #include "lib/transform.h"
-#include "main.h" // あんまりこれで読み込みたくないんだよな、、
 #include "lib/renderer.h"
+#include "object/gpu_data.h"
 //#include "scene/manager.h"
 // ->多分ここのせいでエラー出てる
 #include <string>
 #include <list>
-
+#include <deque>
 #include <Windows.h>
+
+class IGameObjectManager; // 前方宣言
 
 class GameObject
 {
@@ -20,8 +23,9 @@ private:
 	bool m_IsActive = true; // アクティブフラグ(ここデフォでtrueにするかは検討)
 	bool m_Destroy = false; // 削除予約フラグ(今は別の方法で検知している為使っていない)
 	int m_TextureID = -1;
+	int m_Layer = 0; // 描画レイヤー(数値が大きいほど手前側)
 	unsigned int m_ObjectID = 0; // オブジェクトID(管理用)
-	std::list<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
+	std::deque<std::string> m_Tag; // タグを設定してグループで判定できるように->listにしても良い
 	float m_ObjSpeedMlt = 1.0f; // オブジェクトの速度(ゲーム内での移動速度などに使用)
 
 	// 描画系変数
@@ -32,8 +36,6 @@ private:
 
 	// ここに描画系の簡易関数を作成する
 protected:
-	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
-	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 	inline ID3D11Buffer** GetVertexBufferPointer() { return &m_VertexBuffer; }
 	inline void SetVertexShader(ID3D11VertexShader* VertexShader) { m_VertexShader = VertexShader; }
 	inline ID3D11VertexShader* GetVertexShader() const { return m_VertexShader; }
@@ -58,16 +60,66 @@ protected:
 
 public:
 	static constexpr size_t MAX_OBJECTS = 64; // オブジェクトvector最大数。継承先クラスで変更可能。
+	static constexpr bool ENABLE_INSTANCING = true;
+	static constexpr bool IS_3D_MODEL = false; // 3dモデルを用いて描画を行うかどうか
 	GameObject()
 	{
+		// タグの配列リザーブ
+		//m_Tag.reserve(4);
+
 		if(m_NextObjectID >= UINT_MAX)
 		{
 			m_NextObjectID = 0; // オーバーフロー防止
 		}
 		m_ObjectID = m_NextObjectID++;
 	}
-	GameObject(GameObject&&) noexcept = default; // ムーブコンストラクタ
-	GameObject& operator=(GameObject&&) noexcept = default; // ムーブ代入演算子
+	// ムーブコンストラクタ(改善版)
+	GameObject(GameObject&& Other) noexcept
+		: m_Transform(std::move(Other.m_Transform))
+		, m_Velocity(std::move(Other.m_Velocity))
+		, m_IsAliveData(std::exchange(Other.m_IsAliveData, false))
+		, m_IsActive(std::exchange(Other.m_IsActive, false))
+		, m_Destroy(std::exchange(Other.m_Destroy, false))
+		, m_TextureID(std::exchange(Other.m_TextureID, -1))
+		, m_Layer(std::exchange(Other.m_Layer, 0))
+		, m_ObjectID(std::exchange(Other.m_ObjectID, 0))
+		, m_Tag(std::move(Other.m_Tag))
+		, m_ObjSpeedMlt(std::exchange(Other.m_ObjSpeedMlt, 1.0f))
+		, m_VertexBuffer(std::exchange(Other.m_VertexBuffer, nullptr))
+		, m_VertexShader(std::exchange(Other.m_VertexShader, nullptr))
+		, m_PixelShader(std::exchange(Other.m_PixelShader, nullptr))
+		, m_VertexLayout(std::exchange(Other.m_VertexLayout, nullptr))
+	{
+
+	}
+	// ムーブ代入演算子(改善版)
+	GameObject& operator=(GameObject&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_Transform = std::move(Other.m_Transform);
+			m_Velocity = std::move(Other.m_Velocity);
+			m_IsAliveData = Other.m_IsAliveData;
+			m_IsActive = Other.m_IsActive;
+			m_Destroy = Other.m_Destroy;
+			m_TextureID = Other.m_TextureID;
+			m_Layer = Other.m_Layer;
+			m_ObjectID = Other.m_ObjectID;
+			m_Tag = std::move(Other.m_Tag);
+			m_ObjSpeedMlt = Other.m_ObjSpeedMlt;
+			m_VertexBuffer = Other.m_VertexBuffer;
+			m_VertexShader = Other.m_VertexShader;
+			m_PixelShader = Other.m_PixelShader;
+			m_VertexLayout = Other.m_VertexLayout;
+
+			Other.m_VertexBuffer = nullptr;
+			Other.m_VertexShader = nullptr;
+			Other.m_PixelShader = nullptr;
+			Other.m_VertexLayout = nullptr;
+			Other.m_TextureID = -1;
+		}
+		return *this;
+	}
 
 	virtual ~GameObject() {}
 	template <typename... Args>
@@ -77,12 +129,20 @@ public:
 	};
 	virtual void Uninit() {};
 	virtual void Update() {};
+	virtual void UpdateGPUData(InstanceBufferData& data); // GPUバッファ更新関数
+	void StackDrawCall();
 	virtual void Draw() {};
 
 	void SetCanChangeVertex(bool is2D); // 頂点データが変更可能にできるプリセット
 	void ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D);
+	Vector2 CalcTexUVOffset(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget) const;
+
+	inline void SetVertexBuffer(ID3D11Buffer* VertexBuffer) { m_VertexBuffer = VertexBuffer; }
+	inline ID3D11Buffer* GetVertexBuffer() const { return m_VertexBuffer; }
 
 	// get/set系関数(軽いものはinlineをつけ、get/setの適切な部分にconstをつけること!)
+	inline void SetLayer(const int& layer) { m_Layer = layer; }
+	inline const int& GetLayer() const { return m_Layer; }
 	inline void SetIsAlive(const bool& manage) { m_IsAliveData = manage; }
 	inline const bool& GetIsAlive() const { return m_IsAliveData; }
 	inline void SetObjectID(const unsigned int& id) { m_ObjectID = id; }
@@ -101,7 +161,7 @@ public:
 	inline void SetTransform(const Transform& Transform) { m_Transform = Transform; }
 	inline int GetTextureID() const { return m_TextureID; }
 	inline void SetTextureID(const int& TextureID) { m_TextureID = TextureID; }
-	inline std::list<std::string>& GetTagList() { return m_Tag; }
+	inline std::deque<std::string>& GetTagList() { return m_Tag; }
 	inline bool IsTagAvailable(const std::string& tagName) const
 	{
 		for (const auto& tag : m_Tag)

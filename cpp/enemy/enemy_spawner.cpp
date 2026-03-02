@@ -6,12 +6,15 @@
 #include "enemy/base_data/enemy_base.h"
 #include "enemy/base_data/enemy_list.h"
 #include "lib/random_number.h"
+#include "scene/state/game_base_state.h"
 
 
 // enemyDataのhedder
 #include "enemy/base_data/slime.h"
 #include "enemy/base_data/minotaur.h"
+//#include "enemy/base_data/mage.h"
 
+#include "lib/input.h"
 
 void EnemySpawner::Init()
 {
@@ -78,4 +81,27 @@ void EnemySpawner::Update()
 	{
 		m_TimeNextWave--;
 	}
+
+
+	// 1~6キーで任意の敵を出す
+//#ifdef _DEBUG
+	State* state = Manager::GetCurrentScene()->GetCurrentState();
+	if (!dynamic_cast<GameBaseState*>(state))
+	{
+		return;
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (Input::GetKeyTrigger('1' + i))
+		{
+			auto it = Manager::GetCurrentScene()->GetSystemObject<EnemyList>()->GetEnemyBases().begin();
+			std::advance(it, i);
+			// ランダムpos
+			Vector3 spawn_pos = { RandomNumber::GetInstance()->GetRandomFloat(SPAWN_POSITION_RANGE.x, SPAWN_POSITION_RANGE.y), 1.0f, RandomNumber::GetInstance()->GetRandomFloat(SPAWN_POSITION_RANGE.x, SPAWN_POSITION_RANGE.y) };
+
+			SpawnEnemyByData(it->get(), spawn_pos);
+		}
+	}
+//#endif // _DEBUG
 }

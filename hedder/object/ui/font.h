@@ -4,15 +4,38 @@
 #include "lib/write_font.h"
 #include <memory>
 
-// これ、3d空間上に出したいとかならちょっと仕組み変えないといけないけど
-// とりあえずui用フォントなため2d継承で実装。
+// ui用フォントなため2d継承で実装。
 class Font : public UI
 {
 public:
 	Font() = default; // デフォルトコンストラクタ
-	virtual ~Font() {}
-	Font(Font&&) noexcept = default; // ムーブコンストラクタ
-	Font& operator=(Font&&) noexcept = default; // ムーブ代入演算子
+	virtual ~Font() 
+	{
+
+	}
+	Font(Font&& Other) noexcept
+		: UI(std::move(Other))
+		, m_WidthHeight(std::exchange(Other.m_WidthHeight, Vector2(0.0f, 0.0f)))
+		, m_FontData(std::move(Other.m_FontData))
+		, m_DisplayText(std::move(Other.m_DisplayText))
+		, m_IsShadow(std::exchange(Other.m_IsShadow, false))
+		, m_IsOutline(std::exchange(Other.m_IsOutline, false))
+	{
+	}
+	Font& operator=(Font&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			UI::operator=(std::move(Other));
+			m_WidthHeight = Other.m_WidthHeight;
+			m_FontData = std::move(Other.m_FontData);
+			m_DisplayText = std::move(Other.m_DisplayText);
+			m_IsShadow = Other.m_IsShadow;
+			m_IsOutline = Other.m_IsOutline;
+		}
+		return *this;
+	}
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効
 	void Register(const Vector2& pos, const FontData& font_data, std::string text);
 	void Init(Transform trans = Transform());
 	void Uninit() override;

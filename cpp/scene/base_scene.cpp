@@ -4,8 +4,8 @@
 #include "scene/manager.h"
 #include "object/camera.h"
 #include "object/panel.h"
+#include "collider/collision.h"
 
-// Define out-of-line destructor
 Scene::~Scene() = default;
 
 // プロトタイプ宣言
@@ -108,6 +108,65 @@ void Scene::Uninit()
 			continue;
 		}
 		systemObject->Uninit();
+	}
+}
+
+void Scene::UpdateGPUData()
+{
+	// 3dオブジェクトのGPUデータ更新
+	for (auto& objects3d : m_Objects3D)
+	{
+		if(!objects3d)
+		{
+			continue;
+		}
+		objects3d->UpdateGPUData();
+	}
+	// 2dオブジェクトのGPUデータ更新
+	for (auto& objects2d : m_Objects2D)
+	{
+		if (!objects2d)
+		{
+			continue;
+		}
+		objects2d->UpdateGPUData();
+	}
+
+	// stateのオブジェクトも更新
+	m_StateManager.UpdateGPUData();
+}
+
+void Scene::DrawObjectsByQueue()
+{
+	// キューの作成
+	std::vector<RenderQueueData> renderQueue;
+	// リクエスト数の予測（パフォーマンス向上のため）
+	renderQueue.reserve(1024);
+
+	// 各マネージャーからリクエストを収集
+	for (auto& manager : m_Objects3D)
+	{
+		if (manager) manager->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
+	}
+
+	for (auto& manager : m_Objects2D)
+	{
+		if (manager) manager->SubmitDrawRequests(renderQueue, GetDrawTargetTags());
+	}
+
+	// Stateのオブジェクトに対してもキューを走らせる
+	m_StateManager.SubmitDrawRequests(renderQueue);
+
+
+	// レイヤー順にソートする
+	std::sort(renderQueue.begin(), renderQueue.end());
+
+	// 実行
+	for (const auto& req : renderQueue)
+	{
+		// インスタンシングレンダリングならまとめてスタックに積まれている
+		// 対応していない場合は個別に積まれているため個別に関数が呼ばれる
+		req.DrawCall();
 	}
 }
 
@@ -302,8 +361,6 @@ void Scene::DrawObject()
 	//});
 
 	// 3dオブジェクトの描画
-	// 描画前にソートし、その後に描画するようにする
-	// というか3dobjはそもそもレイヤーいらない説がある(ソートしにくい)
 
 	// 3dオブジェクトの描画
 	for(auto& objects3d : m_Objects3D)

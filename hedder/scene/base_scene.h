@@ -57,6 +57,7 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update() = 0;
+	virtual void UpdateGPUData();
 	void FlushPendingObjects();
 	void UpdateObject();
 	/// @brief 指定タグを持つオブジェクトのみ更新する
@@ -64,9 +65,22 @@ public:
 	void UpdateObjectByTag(const std::string& tag);
 	void UpdateObjectByTags(const std::list<std::string>& tags);
 	virtual void Draw() = 0;
+	inline void AddDrawTargetTag(const std::string& tag)
+	{
+		m_DrawTargetTags.push_back(tag);
+	}
+	inline std::deque<std::string>& GetDrawTargetTags()
+	{
+		return m_DrawTargetTags;
+	}
 	void DrawObject();
 	void DrawObjectByTag(const std::string& tag);
 	void DrawObjectByTags(const std::list<std::string>& tags);
+
+
+
+	// ドローをキューで整理し一括で描画する関数郡(現在の描画形式)
+	void DrawObjectsByQueue();
 
 
 	// 2d版リザーブ関数
@@ -234,11 +248,13 @@ public:
 	template <typename T>
 	T* GetGameObject() requires std::is_base_of_v<Object2D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		return manager->GetGameObject();
 	}
@@ -247,12 +263,14 @@ public:
 	template <typename T>
 	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object2D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects2D.size() <= typeId || !m_Objects2D[typeId])
 		{
 			static std::vector<T> empty; // 空のベクターを返す
 			return empty;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects2D[typeId].get());
 		return manager->GetGameObjects();
 	}
@@ -261,11 +279,13 @@ public:
 	template <typename T>
 	T* GetGameObject() requires std::is_base_of_v<Object3D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		return manager->GetGameObject();
 	}
@@ -274,12 +294,14 @@ public:
 	template <typename T>
 	std::vector<T>& GetGameObjects() requires std::is_base_of_v<Object3D, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if ((int)m_Objects3D.size() <= typeId || !m_Objects3D[typeId])
 		{
 			static std::vector<T> empty; // 空のベクターを返す
 			return empty;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<ObjectManager<T>*>(m_Objects3D[typeId].get());
 		return manager->GetGameObjects();
 	}
@@ -288,6 +310,7 @@ public:
 	template <typename T>
 	T* GetSystemObject(bool is_global = false) requires std::is_base_of_v<SystemObject, T>
 	{
+		// idを確認
 		const int typeId = getTypeId<T>();
 		if (is_global)
 		{
@@ -304,6 +327,7 @@ public:
 		{
 			return nullptr;
 		}
+		// 対応するマネージャーを取得
 		auto manager = static_cast<SystemObjectManager<T>*>(m_SystemObjects[typeId].get());
 		return manager->GetSystemObject();
 	}
@@ -379,6 +403,7 @@ private:
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
 	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
+	std::deque<std::string> m_DrawTargetTags; // 描画対象にするタグ
 	static std::deque<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
 	StateManager m_StateManager;
 };

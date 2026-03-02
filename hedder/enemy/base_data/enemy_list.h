@@ -12,14 +12,25 @@
 template<typename T>
 concept EnemyBaseType = std::is_base_of_v <EnemyBase, T>;
 
-// システムオブジェクトを作ってそれを継承しつつ実体化しないといけない
 class EnemyList : public SystemObject
 {
 public:
 	EnemyList() = default;
 	virtual ~EnemyList() {}
-	EnemyList(EnemyList&&) noexcept = default; // ムーブコンストラクタ
-	EnemyList& operator=(EnemyList&&) noexcept = default; // ムーブ代入演算子
+	EnemyList(EnemyList&& Other) noexcept
+		: SystemObject(std::move(Other))
+		, m_EnemyBaseList(std::move(Other.m_EnemyBaseList))
+	{
+	}
+	EnemyList& operator=(EnemyList&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			SystemObject::operator=(std::move(Other));
+			m_EnemyBaseList = std::move(Other.m_EnemyBaseList);
+		}
+		return *this;
+	}
 	void Init(const unsigned int& playerId);
 	void Uninit() override;
 	void Update() override;

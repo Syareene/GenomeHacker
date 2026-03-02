@@ -1,5 +1,6 @@
 ﻿#include "main.h"
 #include "enemy/node/number.h"
+#include "imgui.h"
 
 
 void NumberNode::Init(Transform trans)
@@ -8,6 +9,11 @@ void NumberNode::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
+
+void NumberNode::ShowConfigWindow()
+{
+	// とりあえず何もしない
 }
 
 bool NumberNode::NodeEffect(FieldEnemy* enemy_ptr)

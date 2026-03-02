@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/move_x.h"
 #include "enemy/field_enemy.h"
+#include "imgui.h"
 
 #include <format>
 
@@ -22,6 +23,25 @@ void MoveX::Init(Transform trans)
 	SetCD(0);
 }
 
+void MoveX::ShowConfigWindow()
+{
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
+	ImGui::Begin("MoveX Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, -0.3f, 0.3f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
+
+	ImGui::End();
+}
+
 bool MoveX::NodeEffect(FieldEnemy* enemy_ptr)
 {
 	// moveノードなのでcdはチェックせず常に動かす
@@ -40,5 +60,7 @@ std::string MoveX::GenerateDescriptionText()
 	std::string format_string = "このノードがある敵は毎フレーム{:.2f}だけX軸に対し移動します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_MoveVal));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

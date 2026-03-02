@@ -8,6 +8,8 @@
 class Particle2D : public Object2D
 {
 public:
+	static void SetPipelineState();
+	void UpdateGPUData(InstanceBufferData& data) override;
 	void Register(int maxCount);
 	void Init(Transform trans = Transform());
 	void Uninit() override;
@@ -15,7 +17,7 @@ public:
 	void UpdateParticle();
 	void Draw() override;
 
-	// 1. パーティクル単体のデータ (CPU計算用)
+	// パーティクル単体のデータ (CPU計算用)
 	struct ParticleData
 	{
 		Vector2 Position;
@@ -27,7 +29,7 @@ public:
 		bool IsActive;
 	};
 
-	// 2. GPUに送るインスタンスデータ (定数バッファや頂点バッファ用)
+	// GPUに送るインスタンスデータ (定数バッファや頂点バッファ用)
 	struct InstanceData 
 	{
 		XMFLOAT4 PositionAndSize; // xy: Position, z: Size, w: Rotation
@@ -35,7 +37,7 @@ public:
 		XMFLOAT4 UVOffset;        // テクスチャアトラス用 (xy: offset, zw: scale)
 	};
 
-    // 振る舞いをセットする関数（これで動きや初期化を自由に差し替え可能）
+    // 振る舞いをセットする関数(動きを個別でセットできる)
     void SetInitBehavior(std::function<void(ParticleData&)> func) 
 	{
         initBehavior = func;
@@ -60,7 +62,7 @@ public:
 				p.Size = size;
 				p.Color = color;
 
-                // 設定された初期化ロジックを実行
+                // 初期化
 				if (initBehavior)
 				{
 					initBehavior(p);
@@ -89,8 +91,8 @@ private:
 	int activeParticleCount = 0;
 
 	// 振る舞いを関数オブジェクトとして保持
-	// 初期化時の振る舞い（ランダムな拡散など）
+	// 初期化時処理
 	std::function<void(ParticleData&)> initBehavior;
-	// 更新時の振る舞い（重力、減速、色の変化など）
+	// 更新時処理
 	std::function<void(ParticleData&, float)> updateBehavior;
 };

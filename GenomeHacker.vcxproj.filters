@@ -37,9 +37,6 @@
     <Filter Include="ヘッダー ファイル\enemy">
       <UniqueIdentifier>{43945e6d-7792-4bb3-9f31-2e7fa5f1cb0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\player">
-      <UniqueIdentifier>{400122c8-1bca-40fb-8395-d97e9033e8d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object">
       <UniqueIdentifier>{e4200ecd-955c-4fd1-bcf6-8aa7fea49fbb}</UniqueIdentifier>
     </Filter>
@@ -85,26 +82,20 @@
     <Filter Include="ヘッダー ファイル\scene\state">
       <UniqueIdentifier>{c7f17780-7514-4d25-b6ca-5180a80bbe18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\enemy\node\socket">
-      <UniqueIdentifier>{a6797e1e-2b48-430c-a8bb-6e641ccc5bf9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\enemy\node\socket">
-      <UniqueIdentifier>{8c15dbf5-ff57-499e-a3cd-faa0cf5d8613}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\object\movement">
       <UniqueIdentifier>{83177e50-b918-4640-a0d5-5f19b98ba17d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\object\movement">
       <UniqueIdentifier>{96d1bfcd-87ad-4314-a99d-eac4c7d4327b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\lib\imgui">
+      <UniqueIdentifier>{ccdbe072-3679-4f9e-a29e-ef8891084290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\lib\imgui">
+      <UniqueIdentifier>{465d52ab-c7f0-43fb-a9bd-be0ceea9ce57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\scene\game_scene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
@@ -126,9 +117,6 @@
     <ClInclude Include="hedder\collider\cube.h">
       <Filter>ヘッダー ファイル\collider</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>ヘッダー ファイル\player</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\object\billboard.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
@@ -147,12 +135,6 @@
     <ClInclude Include="hedder\object\ui\image.h">
       <Filter>ヘッダー ファイル\object\ui</Filter>
     </ClInclude>
-    <ClInclude Include="result_scene.h">
-      <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="score.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\lib\easing.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
@@ -163,9 +145,6 @@
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="hedder\object\3d_object.h">
-      <Filter>ヘッダー ファイル\object</Filter>
-    </ClInclude>
-    <ClInclude Include="skydome.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="hedder\lib\mouse.h">
@@ -194,9 +173,6 @@
     </ClInclude>
     <ClInclude Include="hedder\object\panel.h">
       <Filter>ヘッダー ファイル\object</Filter>
-    </ClInclude>
-    <ClInclude Include="hedder\object\ui\in_game\enemy_node.h">
-      <Filter>ヘッダー ファイル\object\ui\in_game</Filter>
     </ClInclude>
     <ClInclude Include="hedder\enemy\node_tab\dnatab_button.h">
       <Filter>ヘッダー ファイル\enemy\node_tab</Filter>
@@ -303,9 +279,6 @@
     <ClInclude Include="hedder\enemy\node\number.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
-    <ClInclude Include="hedder\enemy\node\socket\number_socket.h">
-      <Filter>ヘッダー ファイル\enemy\node\socket</Filter>
-    </ClInclude>
     <ClInclude Include="hedder\enemy\node\base.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
@@ -357,11 +330,89 @@
     <ClInclude Include="hedder\enemy\node\move_random.h">
       <Filter>ヘッダー ファイル\enemy\node</Filter>
     </ClInclude>
+    <ClInclude Include="hedder\object\i_container.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\gpu_data.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\check_override.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\bat.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\skeleton.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\ghost.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\base_data\mage.h">
+      <Filter>ヘッダー ファイル\enemy\base_data</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\shot_front.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\area.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\enemy\node\self_destruction.h">
+      <Filter>ヘッダー ファイル\enemy\node</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\area_object.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imconfig.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imgui.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imgui_impl_dx11.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imgui_impl_win32.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imgui_internal.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imstb_rectpack.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imstb_textedit.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\lib\imgui\imstb_truetype.h">
+      <Filter>ヘッダー ファイル\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\scene\result_scene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\component.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\main.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\resource1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\score.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\player.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="hedder\object\skydome.h">
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\game_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
@@ -371,20 +422,11 @@
     <ClCompile Include="cpp\scene\title_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="billboard.cpp">
-      <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\base_scene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
     <ClCompile Include="cpp\object\game_object.cpp">
       <Filter>ソース ファイル\object</Filter>
-    </ClCompile>
-    <ClCompile Include="result_scene.cpp">
-      <Filter>ソース ファイル\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\easing.cpp">
       <Filter>ソース ファイル\lib</Filter>
@@ -413,9 +455,6 @@
     <ClCompile Include="cpp\enemy\node\base.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\object\ui\in_game\enemy_node.cpp">
-      <Filter>ソース ファイル\object\ui\in_game</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\object\ui\button.cpp">
       <Filter>ソース ファイル\object\ui</Filter>
     </ClCompile>
@@ -436,9 +475,6 @@
     </ClCompile>
     <ClCompile Include="cpp\enemy\field_enemy.cpp">
       <Filter>ソース ファイル\enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp">
-      <Filter>ソース ファイル\enemy\base_data</Filter>
     </ClCompile>
     <ClCompile Include="cpp\enemy\enemy_3d.cpp">
       <Filter>ソース ファイル\enemy</Filter>
@@ -518,9 +554,6 @@
     <ClCompile Include="cpp\scene\state\base_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\scene\state\dna_table_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
@@ -536,14 +569,8 @@
     <ClCompile Include="cpp\scene\state\setting_state.cpp">
       <Filter>ソース ファイル\scene\state</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\object\3d_object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\enemy\node\number.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\enemy\node\socket\number_socket.cpp">
-      <Filter>ソース ファイル\enemy\node\socket</Filter>
     </ClCompile>
     <ClCompile Include="cpp\lib\2d_particle.cpp">
       <Filter>ソース ファイル\lib</Filter>
@@ -593,6 +620,75 @@
     <ClCompile Include="cpp\enemy\node\move_random.cpp">
       <Filter>ソース ファイル\enemy\node</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\object\3d_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\enemy_base.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\skeleton.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\bat.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\ghost.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\base_data\mage.cpp">
+      <Filter>ソース ファイル\enemy\base_data</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\self_destruction.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\shot_front.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\enemy\node\area.cpp">
+      <Filter>ソース ファイル\enemy\node</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\area_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_demo.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_draw.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_impl_dx11.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_impl_win32.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_tables.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\lib\imgui\imgui_widgets.cpp">
+      <Filter>ソース ファイル\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\2d_object.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\scene\result_scene.cpp">
+      <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\pch.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\score.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\object\billboard.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\unlitTextureVS.hlsl">
@@ -640,6 +736,9 @@
     <FxCompile Include="shader\titleParticleVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="shader\instancingApplyAlphaVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig">
@@ -648,5 +747,18 @@
     <None Include=".github\copilot-instructions.md">
       <Filter>リソース ファイル</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GenomeHacker.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="game_icon.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -8,9 +8,12 @@ class Object2D : public GameObject
 {
 public:
 	Object2D() = default; // デフォルトコンストラクタ
-	virtual ~Object2D() {}
-	Object2D(Object2D&&) noexcept = default; // ムーブコンストラクタ
-	Object2D& operator=(Object2D&&) noexcept = default; // ムーブ代入演算子
+	virtual ~Object2D();
+	// ムーブコンストラクタ
+	Object2D(Object2D&&) noexcept;
+	// ムーブ代入演算子
+	Object2D& operator=(Object2D&&) noexcept;
+
 	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);

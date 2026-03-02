@@ -1,0 +1,25 @@
+﻿#pragma once
+
+#include "enemy/node/base.h"
+
+class Area : public NodeBase
+{
+public:
+	static constexpr size_t MAX_OBJECTS = 256; // オブジェクトvector最大数。継承先クラスで変更可能。
+	void Init(Transform trans = Transform()) override;
+	void ShowConfigWindow() override; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
+	bool NodeEffect(FieldEnemy* enemy_ptr) override; // cd管理して終わったならtrueを返す
+	void SetDurationVal(const float val) 
+	{ 
+		m_Duration = val;
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+	std::string GenerateDescriptionText() override; // ノードごとの説明文設定関数
+
+private:
+	static constexpr Vector2 AREA_DIFF = Vector2(-2.0f, 2.0f); // ランダム生成範囲 
+	float m_Duration = 150.0f; // エリアの持続時間(フレーム数)
+	float m_ShotInterval = 300.0f; // 発射間隔(フレーム数)
+	float m_AreaDamage = 1.0f; // エリアのダメージ(仮)
+};

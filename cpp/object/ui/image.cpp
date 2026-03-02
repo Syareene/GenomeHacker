@@ -38,7 +38,11 @@ void ImageDraw::Init(Transform trans)
 void ImageDraw::Uninit()
 {
 	// 開放
-	TextureManager::UnloadTexture(GetTextureID());
+	if (GetTextureID() >= 0)
+	{
+		TextureManager::UnloadTexture(GetTextureID());
+		SetTextureID(-1);
+	}
 	UninitDrawMember();
 }
 
@@ -50,8 +54,6 @@ void ImageDraw::Update()
 void ImageDraw::Draw()
 {
 	// 1回だけ描画がonでないなら描画する
-	// 1回だけ描画onならそもそもコンストラクタから描画したいね
-
 	if(GetNoUpdate() || !IsActive()) 
 	{
 		return; // 更新しない、または非アクティブなら描画しない
@@ -64,8 +66,18 @@ void ImageDraw::Draw()
 	// マトリクス設定
 	Renderer::SetWorldViewProjection2D();
 
-	// 頂点バッファ設定
-	SetDefaultVertexBufferOnDraw();
+
+	// ここのテクスチャに関してはuvで描画される可能性があるためvertexbufferがある場合は変更する
+	if (GetVertexBuffer())
+	{
+		// 頂点バッファ設定
+		SetVertexBufferOnDraw();
+	}
+	else
+	{
+		// 頂点バッファ設定
+		SetDefaultVertexBufferOnDraw();
+	}
 	// プロジェクションマトリックス設定
 	//SetProjectionMatrixOnDraw();
 	// ビューマトリックス設定

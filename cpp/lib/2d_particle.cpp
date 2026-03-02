@@ -7,6 +7,31 @@
 #include "manager/shader_manager.h"
 #include "lib/random_number.h"
 
+void Particle2D::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+}
+
+void Particle2D::UpdateGPUData(InstanceBufferData& data)
+{
+	XMMATRIX trans, world, rot, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * rot * trans;
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
 void Particle2D::Register(int maxCount)
 {
 	// 結局これ汎用性出そうと思ってたけど一時変数でやってる時点で汎用的ではないかも

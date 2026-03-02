@@ -2,6 +2,7 @@
 #include "scene/state/dna_edit_state.h"
 #include "scene/state/dna_table_state.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/ui/button.h"
 #include "manager/texture_manager.h"
 #include "enemy/base_data/enemy_base.h"
@@ -18,6 +19,14 @@ void DnaEditState::Init()
 	SetIsInitialized(true);
 
 	State::Init();
+	// sceneの描画タグリセット
+	Manager::GetCurrentScene()->GetDrawTargetTags().clear();
+	// sceneの描画タグセット
+	Manager::GetCurrentScene()->AddDrawTargetTag("dna_edit");
+	// stateの描画タグリセット
+	GetDrawTargetTags().clear();
+	// stateの描画タグセット(このstateはない)
+	//AddDrawTargetTag();
 
 	// フォントデータ
 	FontData fontData;
@@ -77,9 +86,6 @@ void DnaEditState::Clicked()
 	Manager::GetCurrentScene()->SetState<DnaTableState>();
 }
 
-
-// tab_baseのModifyNodeIndexFromPosみたいなしょうに関数作ってその中でこの関数実行するようにする
-// んでそしたらちゃんと動く
 void DnaEditState::ModifyNodePos()
 {
 

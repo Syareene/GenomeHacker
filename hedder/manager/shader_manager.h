@@ -11,6 +11,11 @@ public:
 	static ID3D11VertexShader* UnlitVertexShader;
 	static ID3D11PixelShader* UnlitPixelShader;
 	static ID3D11InputLayout* UnlitVertexLayout;
+	static ID3D11VertexShader* InstancingVertexShader;
+	static ID3D11VertexShader* InstancingAlphaVertexShader;
+	static ID3D11PixelShader* InstancingPixelShader;
+	static ID3D11InputLayout* InstancingVertexLayout;
+	static ID3D11InputLayout* InstancingAlphaVertexLayout;
 	static ID3D11VertexShader* NoAlphaVertexShader;
 	static ID3D11PixelShader* NoAlphaPixelShader;
 	static ID3D11InputLayout* NoAlphaVertexLayout;
@@ -20,7 +25,4 @@ public:
 
 	static void Init();
 	static void Uninit();
-
-	// 頂点自体は各自で生成してもらう?
-	// ないしは頂点データ自体も画像は4頂点固定だから基底クラスで生成してそれを使い回すように使用しても良いが。
 };

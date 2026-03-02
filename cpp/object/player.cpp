@@ -1,17 +1,56 @@
 ﻿#include "main.h"
 #include "lib/renderer.h"
-#include "player.h"
+#include "object/player.h"
 #include "lib/modelRenderer.h"
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "enemy/bullet.h"
 #include "manager/shader_manager.h"
 #include "manager/texture_manager.h"
+#include "manager/default_vertex.h"
 #include "collider/sphere.h"
 #include "enemy/node/visual_base.h"
+// ノード系
 #include "enemy/node/move_x.h"
 #include "enemy/node/move_z.h"
+#include "enemy/node/move_to_player.h"
+#include "enemy/node/eight_shot.h"
+#include "enemy/node/area.h"
+
+void Player::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+}
+
+void Player::UpdateGPUData(InstanceBufferData& data)
+{
+	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
+
+	// ビューの逆行列作成
+	XMMATRIX invView;
+	invView = XMMatrixInverse(nullptr, camera->GetViewMatrix());
+	invView.r[3].m128_f32[0] = 0.0f; // カメラの位置を無視
+	invView.r[3].m128_f32[1] = 0.0f;
+	invView.r[3].m128_f32[2] = 0.0f; // カメラの位置を無視
+
+	XMMATRIX trans, world, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * invView * trans;
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+}
 
 void Player::Init(Transform trans)
 {
@@ -25,6 +64,9 @@ void Player::Init(Transform trans)
 	// テクスチャ読み込み
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\hero.png"));
 
+	// 頂点代入
+	SetVertexBuffer(DefaultVertex::GetBillboardBuffer());
+
 	// コリジョンを有効化する
 	Transform transform;
 	transform.SetPosition(GetPosition());
@@ -35,13 +77,31 @@ void Player::Init(Transform trans)
 	// 生成するであろうBulletのmanager空間予約をする
 	Manager::GetCurrentScene()->ReserveObject<Bullet>(Bullet::MAX_OBJECTS);
 
-
 	m_HavingNodes.emplace_back(std::make_unique<MoveX>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
 	m_HavingNodes.emplace_back(std::make_unique<MoveZ>());
 	m_HavingNodes.back()->Init(); // 初期化
 	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<MoveToPlayer>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<MoveToPlayer>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<EightShot>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<EightShot>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<Area>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+	m_HavingNodes.emplace_back(std::make_unique<Area>());
+	m_HavingNodes.back()->Init(); // 初期化
+	m_HavingNodes.back()->SetNodeLocation(NodeBase::NodeLocation::Player);
+
 	// プレイヤー側にもVisualを管理する配列があるが生成はDnaScreenScript側のinitで行う。
 
 
@@ -138,10 +198,10 @@ void Player::Draw()
 	// 描画
 	Renderer::GetDeviceContext()->Draw(4, 0);
 
-	// コリジョン描画(デバッグ用)
-	if (!GetCollider())
-	{
-		return;
-	}
-	GetCollider()->DrawCollider();
+	//// コリジョン描画(デバッグ用)
+	//if (!GetCollider())
+	//{
+	//	return;
+	//}
+	//GetCollider()->DrawCollider();
 }

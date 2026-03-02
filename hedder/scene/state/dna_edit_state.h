@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "scene/state/base_state.h"
-#include "player.h"
+#include "object/player.h"
 
 // 前方宣言
 class NodeBase;

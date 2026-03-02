@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "enemy/node/move_circular.h"
 #include "enemy/field_enemy.h"
+#include "imgui.h"
 #include <format>
 #include <cmath>
 
@@ -16,10 +17,26 @@ void MoveCircular::Init(Transform trans)
 	AddInputTypeBottom(InputType::Move);
 	SetCDMax(0);
 	SetCD(0);
+}
 
-	// 円形移動パラメータの初期化
-	m_Radius = 3.0f;
-	m_Duration = 180;
+void MoveCircular::ShowConfigWindow()
+{
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
+	ImGui::Begin("MoveCircular Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Radius", &m_Radius, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderInt("Duration", &m_Duration, 10, 600))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
+
+	ImGui::End();
 }
 
 bool MoveCircular::NodeEffect(FieldEnemy* enemy_ptr)
@@ -35,7 +52,7 @@ Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 	// 生存時間を取得
 	unsigned int liveTime = enemy_ptr->GetLiveTime();
 	
-	// 初回フレーム（生存時間1）では移動しない
+	// 初回フレームでは移動しない
 	if (liveTime <= 1)
 	{
 		return Vector3(0.0f, 0.0f, 0.0f);
@@ -69,7 +86,9 @@ Vector3 MoveCircular::GenerateMovementVector(FieldEnemy* enemy_ptr)
 
 std::string MoveCircular::GenerateDescriptionText()
 {
-	std::string format_string = "このノードがある敵は半径{}の円上を、{}フレームで移動します。";
+	std::string format_string = "このノードがある敵は半径{:.2f}の円上を、{}フレームで移動します。";
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_Radius, m_Duration));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

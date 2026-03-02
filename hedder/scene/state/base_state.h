@@ -27,7 +27,18 @@ public:
 	virtual void Init();
 	virtual void Uninit();
 	virtual void Update();
+	void UpdateGPUData();
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue);
 	virtual void Draw();
+	inline void AddDrawTargetTag(const std::string& tag)
+	{
+		m_DrawTargetTags.push_back(tag);
+	}
+	inline std::deque<std::string>& GetDrawTargetTags()
+	{
+		return m_DrawTargetTags;
+	}
+
 	void UpdateFinal();
 	void FlushPendingObjects();
 
@@ -300,6 +311,7 @@ private:
 	}
 	static unsigned int m_ObjectIDCounter;
 	bool m_IsInitialized = false;
+	std::deque<std::string> m_DrawTargetTags; // 描画対象にするタグ
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
 	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
 	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;

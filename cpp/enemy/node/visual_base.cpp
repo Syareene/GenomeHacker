@@ -3,6 +3,7 @@
 #include "enemy/node/visual_base.h"
 #include "enemy/node/base.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 
@@ -40,7 +41,6 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 
 void VisualBase::UpdateVisual(NodeBase* node_ptr)
 {
-	//m_Transform = node_ptr->GetTransform();
 	m_IsUpdated = true;
 
 
@@ -77,24 +77,29 @@ void VisualBase::Update()
 		// その状態で左クリックされたかどうか
 		if (Mouse::IsLeftButtonTrigger())
 		{
+			// infoを表示するノードを設定->掴みと異なるかどうかという部分が大事か(掴んでないけど表示みたいなパターンがあるので別にしたい)
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetInfoNode(this);
+			// 掴みノードも設定(対象だけ取る形に)
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
+
+
+			// 変更後は
+			// 押されっぱ(Down=true)なら掴みで動く、この段階でimguiでのウィンドウ表示は確定->対象のノードを変数に保存したほうがいいかも
+			// 離された時に対して動いていないならつかみは解除、guiはそのまま
+			// 離された時にそこそこ動いているならつかみは解除、guiも閉じる、かねぇ。->こっちもそのままでいいかな
+
 			m_HoverTimer = 0; // ホバータイマーリセット
-			// 現在掴んでいるノードがあるかどうかを確認
-			VisualBase* grabbingNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
+		}
 
-			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
+		if (Mouse::IsLeftButtonUp())
+		{
+			m_HoverTimer = 0; // ホバータイマーリセット
 
-			if (grabbingNode)
-			{
-				// 反映処理
-				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
-			}
-			else
-			{
-				// 掴んでいるノードがない場合、自身を掴んでいるノードとして設定
-				Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
-			}
+			// マウスを離したタイミングでGrabPtrをリセットする
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->ReleaseGrabbingNode();
 		}
 	}
+
 	else
 	{
 		// 非表示
@@ -115,14 +120,41 @@ void VisualBase::Update()
 		}
 	}
 
-	// フォント参照してサイズ更新
-	// 今あるノード実装しきったらここはいった時にassertでエラー出す	
-
 	// ホバータイマーが一定値以上なら説明文を表示
 	if (m_HoverTimer >= SHOW_DESC_TIME)
 	{
-		// ノードのちょい上あたりに表示
-		m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
+		// enemy/playerによって説明文の位置を変える
+		if (m_BaseNodePtr->GetNodeLocation() == NodeBase::NodeLocation::Enemy)
+		{
+			// ノードのちょい上あたりに表示
+			// 説明文は現状単体なのでbackに対してセット
+			m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
+		}
+		else // player側
+		{
+			// なるべくノードの右側に表示
+			// はみ出る場合は左側によせる
+
+			// はみ出るかどうかの計算
+			Vector2 descPos = Vector2(GetPosition().x + (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) + NODE_MARGIN.y);
+			Vector2 descSize = m_DescriptionFonts.back().GetWidthHeight();
+			
+			if (descPos.x + descSize.x >= SCREEN_WIDTH)
+			{
+				// はみ出るので左側に補正をかけてあげる
+
+				// はみでる量の計算
+				float overflow = (descPos.x + descSize.x) - SCREEN_WIDTH;
+				// 上の値を元に補正をかける
+				m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) - overflow, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
+			}
+			else
+			{
+				// はみ出ないのでそのまま右側に表示
+				m_DescriptionFonts.back().SetPosition(Vector3(GetPosition().x - (GetScale().x * 0.5f) + NODE_MARGIN.x, GetPosition().y - (GetScale().y * 0.5f) - NODE_MARGIN.y - (m_DescriptionFonts.back().GetWidthHeight().y), 0.0f));
+			}
+		}
+
 	}
 }
 
@@ -151,7 +183,11 @@ void VisualBase::Draw()
 		}
 	}
 
-	// ノードソケットの描画処理
+	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
+	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
+	{
+		m_BaseNodePtr->ShowConfigWindow();
+	}
 }
 
 const FontData& VisualBase::GetFontDataFromTextType(const NodeBase::TextType& type) const

@@ -2,7 +2,8 @@
 #include "enemy/node_tab/tab_visual.h"
 #include "enemy/base_data/enemy_base.h"
 #include "scene/manager.h"
-#include "player.h"
+#include "scene/base_scene.h"
+#include "object/player.h"
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 
@@ -15,7 +16,6 @@ void TabVisual::CreateVisual(TabBase* base)
 {
 	if(m_DnaScreenId == 0 || m_PlayerId == 0)
 	{
-		// id設定されてないなら処理しない->振られてない扱いで草
 		// (下の段階でidが設定されてるかわからないので暫定処理)
 		assert(false && "TabVisual::CreateVisual called before IDs are set.");
 		return;
@@ -24,13 +24,11 @@ void TabVisual::CreateVisual(TabBase* base)
 	int counter = 0;
 	for (auto& node : base->GetNodes())
 	{
-		// まだ実装してないが、visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
+		// visualbaseに必要なデータをnodeから引っ張ってくるようにして作成する形にする
 		std::unique_ptr<VisualBase>& temp = m_VisualNodes.emplace_back(std::make_unique<VisualBase>());
 		temp->Init(m_DnaScreenId, counter, node.get());
 		counter++;
 	}
-
-	// プレイヤーのvisualも生成?->player側で生成し持っておくor dna_screen側で持つ?
 }
 
 void TabVisual::UpdateVisual(TabBase* base)
@@ -65,7 +63,16 @@ void TabVisual::Init(const unsigned int& screen_id, const unsigned int& player_i
 
 void TabVisual::Uninit()
 {
+	if (!m_Tab)
+	{
+		return;
+	}
 
+	// ノードクリア
+	m_VisualNodes.clear();
+
+	// リセット
+	m_Tab = nullptr;
 }
 
 void TabVisual::Update()
@@ -129,13 +136,6 @@ void TabVisual::ApplyGrabNode()
 	VisualBase* grabNode = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetGrabbingNode();
 	if (grabNode)
 	{
-		// 現在、掴みノードはplayer->enemyやenemy->playerで移動した時にlocationが更新されていない
-		// そのためここで比較しても正確な位置ではない。
-		// 掴んだ時に更新するようにしたほうがバグfix大変だったため、こちらでは両方とも配列を探索することで事なきを得ることとする。
-
-		// 掴みノードがenemy/playerどっちに所属しているかを取得
-		//NodeBase::NodeLocation loc = grabNode->GetNodeLocation();
-
 		// 所属しているノードリストから一時変数にmove
 		std::unique_ptr<VisualBase> tempNode;
 
@@ -171,8 +171,19 @@ void TabVisual::ApplyGrabNode()
 		}
 
 		// この段階でリストから消えているためgrabnodeのポインタを再度更新しないとエラーになる
-		Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
-		grabNode = tempNode.get();
+		
+		// grabNode を再設定する前に nullptr チェック
+		if (tempNode)
+		{
+			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(tempNode.get());
+			grabNode = tempNode.get();
+		}
+		else
+		{
+			// tempNode が nullptr の場合、エラーを出力
+			OutputDebugStringA("[Error] tempNode is nullptr in ApplyMovedResult\n");
+			return;
+		}
 
 		// 掴みノードのx座標で敵ノードかプレイヤーノードかを判定
 		if (grabNode->GetPosition().x < 768.0f)
@@ -187,7 +198,6 @@ void TabVisual::ApplyGrabNode()
 				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
-					//tempNode->SetNodeLocation(NodeBase::NodeLocation::Enemy);
 					m_VisualNodes.insert(it, std::move(tempNode));
 					inserted = true;
 					break;
@@ -197,7 +207,6 @@ void TabVisual::ApplyGrabNode()
 			// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
 			if (!inserted)
 			{
-				//tempNode->SetNodeLocation(NodeBase::NodeLocation::Enemy);
 				m_VisualNodes.push_back(std::move(tempNode));
 			}
 
@@ -216,7 +225,6 @@ void TabVisual::ApplyGrabNode()
 				if (grabPosY < (*it)->GetPosition().y)
 				{
 					// 見つかったら挿入
-					//tempNode->SetNodeLocation(NodeBase::NodeLocation::Player);
 					playerNodes.insert(it, std::move(tempNode));
 					inserted = true;
 					break;
@@ -226,8 +234,6 @@ void TabVisual::ApplyGrabNode()
 			// ループ内で挿入されなかった場合、末尾に追加(イテレーターの範囲外になるのでpush_backでしか挿入できない)
 			if (!inserted)
 			{
-				// プレイヤーに対してノードを追加する関数が必要かも
-				//tempNode->SetNodeLocation(NodeBase::NodeLocation::Player);
 				playerNodes.push_back(std::move(tempNode));
 			}
 
@@ -287,14 +293,6 @@ void TabVisual::ApplyMovedResult()
 	}
 	m_Tab->GetNodes().clear();
 
-
-	// この段階でノードが一個しかallnodesに入ってねぇ
-	// GetMoveManageIdが全部0で圧縮されて0になってる
-	// んーっとindexがインクリメントされてなかったからダメだった、これで解決ではあるんだけど
-	// enemy/playerごとの判定ではない+playerとenemy足したindexなのでplayerとenemyでそれぞれid振らないといけない
-	// なのでmapのキーを文字列にしてe/p + indexにすれば解決かな(or先頭に識別子)
-	// visualnodeの元がenemy/playerかの変数があるからそれを取得してGetNodeBaseIndexと組み合わせてキーとして取得する
-
 	// player/enemyのVisualBaseを元にNodeBaseを再配置する
 
 	// player
@@ -350,9 +348,6 @@ void TabVisual::ApplyMovedResult()
 	// プレイヤーのVisualBaseは消す
 	temp->GetAllVisualNodes().clear();
 
-	// これenemyに対しても消す?player->enemyしてedit_state抜けるとenemy側のノード消えるのがよくわからない
-	// 処理はちゃんと動いてそうなんだよね
-
 	return;
 }
 
@@ -371,8 +366,6 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
 	for (auto& node : m_VisualNodes)
 	{
-		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
-
 		// 掴みノードならマウス座標へ移動
 		if (node.get() == grabPtr)
 		{
@@ -386,7 +379,7 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		}
 
 		// 掴んでいるノードがある場合は、そのスペースを考慮する
-		// ノードの基準が中心になっているが一旦はこれで行くしかないかな、ちらつきそうだし
+		// ノードの基準が中心になっているがこれで行くしかないかな、ちらつきそうだし
 		if (!isOverGrabNode && grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
@@ -428,8 +421,6 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 	bool isOverGrabNode = false; // 掴みノードを超えたかどうか
 	for (auto& node : Manager::GetCurrentScene()->GetGameObjectById<Player>(m_PlayerId)->GetAllVisualNodes())
 	{
-		// 上から下は動いてるけど下から上に動く時1つ分ずれちゃってるね
-
 		// 掴みノードならマウス座標へ移動
 		if (node.get() == grabPtr)
 		{
@@ -443,7 +434,7 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 		}
 
 		// 掴んでいるノードがある場合は、そのスペースを考慮する
-		// ノードの基準が中心になっているが一旦はこれで行くしかないかな、ちらつきそうだし
+		// ノードの基準が中心になっているがこれで行くしかないかな、ちらつきそうだし
 		if (!isOverGrabNode && grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、
@@ -470,13 +461,8 @@ void TabVisual::ModifyPlayerNodePos(VisualBase* grabPtr)
 	}
 }
 
-
-// なぜかだいたい動いてしまったけど、動かしてるnodeが一番上とかの時(自身のindexの時?)に下に動かそうとすると動かないのでこの辺はなんとかしないとかも(中身が入れ替わってない?)
 void TabVisual::ModifyEnemyNodeIndexFromPos(Vector2 mousePos, VisualBase* grabPtr)
 {
-	// バグはなくなったが、現在のindexの範囲の場合nodeが動かないようにしてマウス座標だけ動きマウス座標がその範囲からでたら動くような形に変更したほうがいいかな
-	// ->ちゃんとindexが変わるようになりそれベースで位置変えてるので動かしたら強制的に位置が変わるようになっているのが原因
-
 	if (!grabPtr) return;
 
 	// リストを走査

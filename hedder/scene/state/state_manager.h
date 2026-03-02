@@ -63,10 +63,21 @@ public:
 		m_StateChanged = false;
 	}
 
+	void UpdateGPUData()
+	{
+		if (m_StateStack.empty()) return;
+		m_StateStack.front()->UpdateGPUData();
+	}
+
+	void SubmitDrawRequests(std::vector<RenderQueueData>& renderQueue)
+	{
+		if (m_StateStack.empty()) return;
+		m_StateStack.front()->SubmitDrawRequests(renderQueue);
+	}
+
 private:
 	using StateIterator = std::deque<std::unique_ptr<State>>::iterator;
 	std::deque<std::unique_ptr<State>> m_StateStack; // キャッシュするためのデキュー(現在のStateは先頭である)
-	//std::unique_ptr<State> m_State;
 	std::optional<StateIterator> m_WillState; // 次のStateへのイテレータを予約(std::optionalでラップ)
 	bool m_StateChanged = false;
 };

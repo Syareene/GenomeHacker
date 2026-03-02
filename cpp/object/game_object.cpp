@@ -1,10 +1,35 @@
 ﻿#include "main.h"
 #include "object/game_object.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "object/camera.h"
 #include "manager/default_vertex.h"
+//#include "manager/object_manager.h"
 
 unsigned int GameObject::m_NextObjectID = 0; 
+
+
+void GameObject::UpdateGPUData(InstanceBufferData& data)
+{
+	XMMATRIX trans, world, scale, rot;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRotation().x, GetRotation().y, GetRotation().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * rot * trans;
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// uv設定
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+// ここ、描画コールを重ねている参照元がないと困るね
+void GameObject::StackDrawCall()
+{
+
+}
 
 
 void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed)
@@ -25,14 +50,26 @@ void GameObject::AddPosition(const Vector3& Position, const bool& calcWorldSpeed
 
 void GameObject::UninitDrawMember()
 {
-	if (m_VertexBuffer) m_VertexBuffer->Release();
-	if (m_VertexShader) m_VertexShader->Release();
-	if (m_PixelShader) m_PixelShader->Release();
-	if (m_VertexLayout) m_VertexLayout->Release();
-	m_VertexBuffer = nullptr;
-	m_VertexShader = nullptr;
-	m_PixelShader = nullptr;
-	m_VertexLayout = nullptr;
+	if (m_VertexBuffer)
+	{
+		m_VertexBuffer->Release();
+		m_VertexBuffer = nullptr;
+	}
+	if (m_VertexShader)
+	{
+		m_VertexShader->Release();
+		m_VertexShader = nullptr;
+	}
+	if (m_PixelShader)
+	{
+		m_PixelShader->Release();
+		m_PixelShader = nullptr;
+	}
+	if (m_VertexLayout)
+	{
+		m_VertexLayout->Release();
+		m_VertexLayout = nullptr;
+	}
 }
 
 void GameObject::SetCanChangeVertex(bool is2D)
@@ -104,8 +141,6 @@ void GameObject::SetCanChangeVertex(bool is2D)
 
 void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget, bool is2D)
 {
-	// TexCoord以外は既存のデータから取得するように変えるべきかな。
-
 	// 頂点書き換え始め
 	D3D11_MAPPED_SUBRESOURCE msr;
 	Renderer::GetDeviceContext()->Map(GetVertexBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
@@ -166,6 +201,15 @@ void GameObject::ChangeTexUV(int texWidthCount, int texHeightCount, int widthTar
 	}
 	// 頂点書き換え終了
 	Renderer::GetDeviceContext()->Unmap(GetVertexBuffer(), 0);
+}
+
+Vector2 GameObject::CalcTexUVOffset(int texWidthCount, int texHeightCount, int widthTarget, int heightTarget) const
+{
+	float texture_width = 1.0f / static_cast<float>(texWidthCount); // テクスチャの横幅を分割
+	float texture_height = 1.0f / static_cast<float>(texHeightCount); // テクスチャの縦幅を分割
+	float offset_x = widthTarget * texture_width; // フレームに応じたXオフセット
+	float offset_y = heightTarget * texture_height; // フレームに応じたYオフセット
+	return Vector2(offset_x, offset_y);
 }
 
 void GameObject::SetDefaultVertexBufferOnDraw() const

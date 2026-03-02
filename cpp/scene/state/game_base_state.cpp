@@ -1,6 +1,7 @@
 ﻿#include "main.h"
 #include "scene/state/game_base_state.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 
 void GameBaseState::Init()
 {
@@ -10,6 +11,14 @@ void GameBaseState::Init()
 	}
 	SetIsInitialized(true);
 	State::Init();
+	// sceneの描画タグリセット
+	Manager::GetCurrentScene()->GetDrawTargetTags().clear();
+	// sceneの描画タグセット(このstateではセットしない)
+	//Manager::GetCurrentScene()->AddDrawTargetTag();
+	// stateの描画タグリセット
+	GetDrawTargetTags().clear();
+	// stateの描画タグセット(このstateはない)
+	//AddDrawTargetTag();
 }
 
 void GameBaseState::Uninit()

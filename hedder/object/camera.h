@@ -23,10 +23,44 @@ private:
 public:
 	Camera() = default; // デフォルトコンストラクタ
 	virtual ~Camera() {};
-	Camera(Camera&&) noexcept = default; // ムーブコンストラクタ
-	Camera& operator=(Camera&&) noexcept = default; // ムーブ代入演算子
+	// ムーブコンストラクタ
+	Camera(Camera&& other) noexcept
+		: Object3D(std::move(other))
+		, m_Target(std::move(other.m_Target))
+		, m_ViewMatrix(std::move(other.m_ViewMatrix))
+		, m_ProjectionMatrix(std::move(other.m_ProjectionMatrix))
+		, m_NearZ(other.m_NearZ)
+		, m_FarZ(other.m_FarZ)
+		, m_FieldOfViewY(other.m_FieldOfViewY)
+		, m_AspectRatio(other.m_AspectRatio)
+		, m_ShakeTime(other.m_ShakeTime)
+		, m_ShakeVector(std::move(other.m_ShakeVector))
+		, m_TitleCam(std::move(other.m_TitleCam))
+	{
+	}
+
+	// ムーブ代入演算子
+	Camera& operator=(Camera&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			Object3D::operator=(std::move(Other));
+			m_Target = std::move(Other.m_Target);
+			m_ViewMatrix = std::move(Other.m_ViewMatrix);
+			m_ProjectionMatrix = std::move(Other.m_ProjectionMatrix);
+			m_NearZ = Other.m_NearZ;
+			m_FarZ = Other.m_FarZ;
+			m_FieldOfViewY = Other.m_FieldOfViewY;
+			m_AspectRatio = Other.m_AspectRatio;
+			m_ShakeTime = Other.m_ShakeTime;
+			m_ShakeVector = std::move(Other.m_ShakeVector);
+			m_TitleCam = std::move(Other.m_TitleCam);
+		}
+		return *this;
+	}
 
 	static constexpr size_t MAX_OBJECTS = 1; // オブジェクトvector最大数。
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効
 
 	void Init(Transform trans = Transform());
 	void Uninit() override;

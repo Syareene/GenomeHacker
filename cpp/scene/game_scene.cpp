@@ -2,14 +2,14 @@
 #include "scene/game_scene.h"
 #include "object/camera.h"
 #include "object/field.h"
-#include "player.h"
+#include "object/player.h"
 #include "object/ui/image.h"
 
 #include "lib/particle.h"
 #include "lib/input.h"
-#include "result_scene.h"
+#include "scene/result_scene.h"
 #include "scene/manager.h"
-#include "score.h"
+#include "object/score.h"
 #include "lib/audio.h"
 #include "object/ui/button.h"
 #include "enemy/enemy_spawner.h"
@@ -78,11 +78,13 @@ void GameScene::Update()
 	// 現在のstateに応じてupdateを実行
 	GetCurrentState()->Update();
 
-	if (Input::GetKeyTrigger(VK_RETURN))
+	if (Input::GetKeyTrigger(VK_F4))
 	{
-		// Enterキーが押されたらリザルトシーンに遷移
+		// F4キーが押されたらリザルトシーンに遷移
 		Manager::SetScene<ResultScene>();
 	}
+	// GPUデータの更新
+	UpdateGPUData();
 
 	// フレーム内の更新が終わったら state-changed フラグをクリア
 	ResetStateChanged();
@@ -91,7 +93,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	// 現在のstateに応じてdrawを実行
-	GetCurrentState()->Draw();
+	//GetCurrentState()->Draw();
+
+	// renderキューで描画
+	DrawObjectsByQueue();
 
 	Scene::UpdateFinal();
 	GetCurrentState()->UpdateFinal();

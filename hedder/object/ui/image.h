@@ -6,8 +6,21 @@
 class ImageDraw : public UI
 {
 public:
-	ImageDraw() {} // デフォコン
-
+	ImageDraw() = default; // デフォコン
+	virtual ~ImageDraw() {}
+	ImageDraw(ImageDraw&& Other) noexcept
+		: UI(std::move(Other))
+	{
+	}
+	ImageDraw& operator=(ImageDraw&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			UI::operator=(std::move(Other));
+		}
+		return *this;
+	}
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効(汎用クラスは別テクスチャ読み込むのに対応してないので一旦無効化)
 	void Register(Vector3 pos, Vector3 scale, Vector3 rot, const std::wstring filePath, bool isNoUpdate = false)
 	{
 		// 引数を受け取り値をセット

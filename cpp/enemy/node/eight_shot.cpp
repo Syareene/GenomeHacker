@@ -2,8 +2,10 @@
 #include "enemy/node/eight_shot.h"
 #include "enemy/field_enemy.h"
 #include "scene/manager.h"
+#include "scene/base_scene.h"
 #include "collider/collision.h"
 #include "enemy/base_data/enemy_base.h"
+#include "imgui.h"
 
 // 敵専用の弾クラス
 #include "enemy/enemy_bullet.h"
@@ -26,12 +28,30 @@ void EightShot::Init(Transform trans)
 	AddInputTypeBottom(InputType::Attack);
 	AddInputTypeBottom(InputType::Death);
 
-	m_MoveVal = 0.05f; // 球速度
-	m_ShotInterval = 150.0f;
-
 	// CDMaxを発射間隔に設定
 	SetCDMax(static_cast<int>(m_ShotInterval));
 	SetCD(0);
+}
+
+void EightShot::ShowConfigWindow()
+{
+	// NodeでのWindow設定適応
+	ImWindowSettings();
+	// ウィンドウ生成
+	ImGui::Begin("EightShot Config", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SeparatorText("Properties");
+	// 設定可能なパラメーターを列挙
+	if (ImGui::SliderFloat("Move Value", &m_MoveVal, 0.01f, 0.2f, "%.2f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Shot Interval", &m_ShotInterval, 10.0f, 600.0f, "%.0f", ImGuiSliderFlags_AlwaysClamp) ||
+		ImGui::SliderFloat("Bullet Damage", &m_BulletDamage, 0.1f, 10.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+	{
+		// データを更新したため説明文も更新
+		GenerateDescriptionText();
+	}
+	// どのタブで使えるかを表示
+	ShowTabInfo();
+
+	ImGui::End();
 }
 
 bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
@@ -64,6 +84,8 @@ bool EightShot::NodeEffect(FieldEnemy* enemy_ptr)
 		velocity.z = sinf(angle) * m_MoveVal;
 		// 弾の速度を設定
 		bullet->SetVelocity(velocity);
+		// 弾のダメージを設定
+		bullet->SetBulletDamage(m_BulletDamage);
 	}
 
 	return true;
@@ -75,5 +97,7 @@ std::string EightShot::GenerateDescriptionText()
 	std::string format_string = "このノードがある敵は{}フレーム毎に8方向に進む球を出します。";
 	// std::formatを使用して最終的な文字列を生成
 	std::string formatted_text = std::vformat(format_string, std::make_format_args(m_ShotInterval));
+	// メンバに格納
+	SetDescriptionData({ formatted_text, Vector2(0.0f, 0.0f), NodeBase::TextType::Normal });
 	return formatted_text;
 }

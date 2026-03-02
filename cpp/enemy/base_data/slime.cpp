@@ -31,20 +31,15 @@ EnemyBase* Slime::Register(const unsigned int& playerId)
 
 	// ノード登録
 	// 攻撃タブ
-	GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
+	//GetTabManager()->GetAttackTab()->AddNode<EightShot>(0);
 	// 移動タブ
 	GetTabManager()->GetMoveTab()->AddNode<MoveToPlayer>(0);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(0);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveZ>(-1);
-	//GetTabManager()->GetMoveTab()->AddNode<MoveX>(-1);
 	// 死亡タブ
 	GetTabManager()->GetDeathTab()->AddNode<AddScore>(0)->SetAddScore(SCORE);
 	GetTabManager()->GetDeathTab()->AddNode<EightShot>(-1);
 
 	// テクスチャ生成
-	SetTextureID(L"asset\\texture\\monsters_v2.png");
+	SetTextureID(L"asset\\texture\\monsters.png");
 	// uvテクスチャの場合はuvのデータも変数に設定する。
 	SetTextureSplitCount(DEFAULT_TEXTURE_COUNT);
 	SetUVPos(Vector2(1.0f, 2.0f));

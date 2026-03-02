@@ -11,8 +11,11 @@ class Object3D : public GameObject
 public:
 	Object3D() = default; // デフォルトコンストラクタ
 	virtual ~Object3D();
-	Object3D(Object3D&&) noexcept; // ムーブコンストラクタ
-	Object3D& operator=(Object3D&&); // ムーブ代入演算子
+	// ムーブコンストラクタ
+	Object3D(Object3D&&) noexcept;
+	// ムーブ代入演算子
+	Object3D& operator=(Object3D&&) noexcept;
+
 	void Init(Transform trans = Transform())
 	{
 		SetTransform(trans);
@@ -20,6 +23,7 @@ public:
 	void Uninit() override {}
 	void Update() override {}
 	void Draw() override {}
+	void DrawCollider();
 	template <typename T>
 	T* SetCollider()
 	{

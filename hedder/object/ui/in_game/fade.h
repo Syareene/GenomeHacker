@@ -23,6 +23,7 @@ public:
 		//Quint,
 		//Expo
 	};
+	static constexpr bool ENABLE_INSTANCING = false; // インスタンスレンダリング無効
 
 	void Init(Transform trans = Transform());
 	void Uninit() override;

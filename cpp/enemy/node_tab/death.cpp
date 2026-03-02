@@ -31,8 +31,4 @@ void DeathTab::ModifyTimeLine()
 
 	// 最後にm_CDMaxを更新
 	SetCDMax(currentTime);
-	if (GetCDMax() == 0)
-	{
-		//SetCDMax(1); // 0だと困るので1に
-	}
 }

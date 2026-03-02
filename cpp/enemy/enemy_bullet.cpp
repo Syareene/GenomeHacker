@@ -5,11 +5,39 @@
 #include "lib/input.h"
 #include "object/camera.h"
 #include "scene/manager.h"
-#include "player.h"
+#include "scene/base_scene.h"
+#include "object/player.h"
 #include "enemy/field_enemy.h"
 #include "enemy/base_data/enemy_base.h"
 #include "collider/sphere.h"
 #include "enemy/explosion.h"
+#include "manager/shader_manager.h"
+
+void EnemyBullet::SetPipelineState()
+{
+	// 入力レイアウト設定
+	Renderer::GetDeviceContext()->IASetInputLayout(ShaderManager::InstancingVertexLayout);
+	// シェーダー設定
+	Renderer::GetDeviceContext()->VSSetShader(ShaderManager::InstancingVertexShader, NULL, 0);
+	Renderer::GetDeviceContext()->PSSetShader(ShaderManager::InstancingPixelShader, NULL, 0);
+}
+
+void EnemyBullet::UpdateGPUData(InstanceBufferData& data)
+{
+	XMMATRIX trans, world, rot, scale;
+	trans = XMMatrixTranslation(GetPosition().x, GetPosition().y, GetPosition().z);
+	rot = XMMatrixRotationRollPitchYaw(GetRadian().x, GetRadian().y, GetRadian().z);
+	scale = XMMatrixScaling(GetScale().x, GetScale().y, GetScale().z);
+	world = scale * rot * trans;
+	Renderer::SetWorldMatrix(world);
+
+	// 結果をdataに格納
+	XMStoreFloat4x4(&data.WorldMatrix, XMMatrixTranspose(world));
+	// 色設定
+	data.Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	// uv設定->ここ元頂点データちゃんと見てくれるから元々の頂点データのTexCoordがちゃんとuvテクスチャ用の座標になってればおけ
+	data.UVOffset = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+}
 
 void EnemyBullet::Init(Transform trans)
 {
@@ -54,7 +82,7 @@ void EnemyBullet::Update()
 	// コライダの場所更新
 	GetCollider()->Update(GetPosition());
 
-	// プレイヤーとの衝突判定（敵の弾はプレイヤーにのみ当たる）
+	// プレイヤーとの衝突判定
 	std::vector<Player*> players = GetCollider()->GetHitObjectsByType<Player>();
 
 	for (auto& player : players)
@@ -84,8 +112,7 @@ void EnemyBullet::Update()
 		Manager::GetCurrentScene()->AddGameObject<Explosion>(1)->SetPosition(enemy->GetPosition() + Vector3(0.0f, 0.0f, 0.0f));
 		// 敵に当たったら削除
 		SetDestroy(true);
-		// TODO: 敵にダメージを与える処理をここに追加
-		// enemy->TakeDamage(m_BulletDamage);
+		enemy->DecreaseHP(m_BulletDamage);
 		break; // 一つの敵に当たったらループを抜ける
 	}
 
@@ -115,10 +142,10 @@ void EnemyBullet::Draw()
 
 	m_ModelRenderer->Draw();
 
-	// コリジョン描画(デバッグ用)
-	if (!GetCollider())
-	{
-		return;
-	}
-	GetCollider()->DrawCollider();
+	//// コリジョン描画(デバッグ用)
+	//if (!GetCollider())
+	//{
+	//	return;
+	//}
+	//GetCollider()->DrawCollider();
 }

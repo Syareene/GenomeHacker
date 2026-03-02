@@ -11,10 +11,7 @@ public:
 	// ノードの入力タイプ
 	enum InputType
 	{
-		None, // くっつかない	
-		//Square,
-		//Triangle,
-		//Circle,
+		None, // くっつかない
 		Move,
 		Attack,
 		Death,
@@ -44,19 +41,57 @@ public:
 		m_UniqueID = GetNextUniqueID();
 	}
 	virtual ~NodeBase() = default;
-	NodeBase(NodeBase&&) noexcept = default; // ムーブコンストラクタ
-	NodeBase& operator=(NodeBase&&) noexcept = default; // ムーブ代入演算子
+	NodeBase(NodeBase&& Other) noexcept
+		: m_InputTypesTop(std::move(Other.m_InputTypesTop))
+		, m_InputTypesBottom(std::move(Other.m_InputTypesBottom))
+		, m_ChildNodes(std::move(Other.m_ChildNodes))
+		, m_Name(std::move(Other.m_Name))
+		, m_Description(std::move(Other.m_Description))
+		, m_NameFont(std::move(Other.m_NameFont))
+		, m_DescriptionFonts(std::move(Other.m_DescriptionFonts))
+		, m_NodeLocation(Other.m_NodeLocation)
+		, m_MoveManageId(Other.m_MoveManageId)
+		, m_UniqueID(Other.m_UniqueID)
+		, m_ID(Other.m_ID)
+		, m_Keyword(std::move(Other.m_Keyword))
+		, m_CDMax(Other.m_CDMax)
+		, m_CD(Other.m_CD)
+		, m_InstantCastOnDead(Other.m_InstantCastOnDead)
+		, m_IsUpdated(Other.m_IsUpdated)
+	{
+	}
+	NodeBase& operator=(NodeBase&& Other) noexcept
+	{
+		if (this != &Other)
+		{
+			m_InputTypesTop = std::move(Other.m_InputTypesTop);
+			m_InputTypesBottom = std::move(Other.m_InputTypesBottom);
+			m_ChildNodes = std::move(Other.m_ChildNodes);
+			m_Name = std::move(Other.m_Name);
+			m_Description = std::move(Other.m_Description);
+			m_NameFont = std::move(Other.m_NameFont);
+			m_DescriptionFonts = std::move(Other.m_DescriptionFonts);
+			m_NodeLocation = Other.m_NodeLocation;
+			m_MoveManageId = Other.m_MoveManageId;
+			m_UniqueID = Other.m_UniqueID;
+			m_ID = Other.m_ID;
+			m_Keyword = std::move(Other.m_Keyword);
+			m_CDMax = Other.m_CDMax;
+			m_CD = Other.m_CD;
+			m_InstantCastOnDead = Other.m_InstantCastOnDead;
+			m_IsUpdated = Other.m_IsUpdated;
+		}
+		return *this;
+	}
 
 	// これで保存、説明文も一旦単一に変更して複数対応する時にだけvectorに保存しつつ中心posを別で保存、この中身は相対posに変更という形で。
-	// text_typeを元にFontData返す関数欲しいな
-
 	FontData& GetFontDataFromTextType(const TextType& type) const;
 
-
-	// このノード内で追加でくっつけられるノード(数字系のノード等)
-	// このとき、内部にあるノードが先に引っかかるようなコードを組まないとね
-
 	virtual void Init(Transform trans = Transform());
+	virtual void ShowConfigWindow() = 0; // ノード固有のパラメータをセットするデバッグ用ウィンドウを出す関数
+	void ImWindowSettings(); // ウィンドウ作成及びサイズ設定の関数。派生クラスのShowConfigWindow関数の中の最初で呼んでね。
+	void ShowTabInfo(); // どのタブに属しているかをImGuiのWindowに表示する関数
+
 	virtual bool NodeEffect(FieldEnemy* enemy_ptr); // cd管理して終わったならtrueを返す
 	// ノードの処理効果
 	const bool CanAttach(NodeBase* upper_node, NodeBase* lower_node) const;
@@ -106,6 +141,7 @@ protected:
 	// 死亡時に即座に発動するかどうか(順に発動するため間にfalseなものがあったらそれが実行されるまで保留されます)
 	inline void SetInstantCastOnDead(const bool instant) { m_InstantCastOnDead = instant; }
 private:
+	constexpr static Vector2 IMGUI_WINDOW_SIZE = { 300.0f, 200.0f }; // ImGuiのウィンドウサイズ
 	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
 	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }
@@ -123,7 +159,7 @@ private:
 	std::vector<InputType> m_InputTypesTop; // くっつけられる形のリスト(上)
 	std::vector<InputType> m_InputTypesBottom; // このノードに対してくっつけられる形(下)
 	std::vector<std::unique_ptr<NodeBase>> m_ChildNodes; // 内部にくっつけられたノード群->unique_ptrで管理
-	NodeTextData m_Name; // ノードの名前(表示名、いらないかも)
+	NodeTextData m_Name; // ノードの名前(表示名)
 	NodeTextData m_Description; // ノードの説明文群
 	Font m_NameFont;
 	std::vector<Font> m_DescriptionFonts;
