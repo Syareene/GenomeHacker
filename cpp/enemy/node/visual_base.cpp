@@ -64,6 +64,12 @@ void VisualBase::Uninit()
 
 void VisualBase::Update()
 {
+	// 現在のタブと所持しているタブの位置があっていないならクリック判定等をしない
+	if (!IsMatchActiveTab())
+	{
+		return;
+	}
+
 	// プレイヤーが自身の範囲内にてクリックしたかどうかを判定
 	Vector2 startPos = Vector2(GetPosition().x - (GetScale().x * 0.5f), GetPosition().y - (GetScale().y * 0.5f));
 	Vector2 endPos = Vector2(GetPosition().x + (GetScale().x * 0.5f), GetPosition().y + (GetScale().y * 0.5f));
@@ -160,25 +166,7 @@ void VisualBase::Update()
 
 void VisualBase::Draw()
 {
-	DnaScreenScript* dnaScreen = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
-
-
-	// どのタブかを取得->どの"タブ"かがわからねえ
-	// stringとかで返す関数を別途作成だね
-
-	NodeBase::InputType tabType = dnaScreen->GetActiveTabType();
-
-	// node_baseのInputTypeとActiveTabを確認し、該当タブで使用できるかどうかを調べる
-	bool isVisible = false;
-	for (NodeBase::InputType type : m_BaseNodePtr->GetInputTypesTop())
-	{
-		if (type == tabType)
-		{
-			// 使用できるタブの場合は通常通り描画
-			isVisible = true;
-			break;
-		}
-	}
+	bool isVisible = IsMatchActiveTab();
 
 	// 結果に応じて透明度の値を変化
 	if (isVisible)
@@ -213,10 +201,31 @@ void VisualBase::Draw()
 	}
 
 	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
-	if (dnaScreen->GetInfoNode() == this)
+	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
 	{
 		m_BaseNodePtr->ShowConfigWindow();
 	}
+}
+
+bool VisualBase::IsMatchActiveTab()
+{
+	DnaScreenScript* dnaScreen = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
+
+	// どのタブかを取得
+	NodeBase::InputType tabType = dnaScreen->GetActiveTabType();
+
+	// node_baseのInputTypeとActiveTabを確認し、該当タブで使用できるかどうかを調べる
+	bool isVisible = false;
+	for (NodeBase::InputType type : m_BaseNodePtr->GetInputTypesTop())
+	{
+		if (type == tabType)
+		{
+			// 使用できるタブの場合は通常通り描画
+			isVisible = true;
+			break;
+		}
+	}
+	return isVisible;
 }
 
 const FontData& VisualBase::GetFontDataFromTextType(const NodeBase::TextType& type) const
