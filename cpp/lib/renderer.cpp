@@ -478,7 +478,7 @@ void Renderer::SetCameraPosition( XMFLOAT3 position )
 	m_DeviceContext->UpdateSubresource(m_CameraBuffer, 0, NULL, &position, 0, 0);
 }
 
-void Renderer::Draw2D(int texID, Vector3 pos, Vector3 scale)
+void Renderer::Draw2D(int texID, Vector3 pos, Vector3 scale, float alpha)
 {
 	Renderer::GetID2D1DeviceContext()->DrawBitmap
 	(
@@ -488,13 +488,13 @@ void Renderer::Draw2D(int texID, Vector3 pos, Vector3 scale)
 			pos.y - (scale.y * 0.5f),
 			pos.x + (scale.x * 0.5f),
 			pos.y + (scale.y * 0.5f)),
-		1.0f,
+		alpha,
 		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 		D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
 	);
 }
 
-void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale)
+void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale, float alpha)
 {
 	Renderer::GetID2D1DeviceContext()->DrawBitmap
 	(
@@ -504,7 +504,7 @@ void Renderer::Draw2D(int texID, Vector2 pos, Vector2 scale)
 			pos.y - (scale.y * 0.5f),
 			pos.x + (scale.x * 0.5f),
 			pos.y + (scale.y * 0.5f)),
-		1.0f,
+		alpha,
 		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
 		D2D1::RectF(0.0f, 0.0f, 1.0f, 1.0f)
 	);

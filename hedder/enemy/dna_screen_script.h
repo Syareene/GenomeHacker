@@ -72,6 +72,25 @@ public:
 	inline void SetInfoNode(VisualBase* nodePtr) { m_InfoNodePtr = nodePtr; }
 
 	TabVisual* GetActiveTab();
+
+	// どのタブが選択されているかを取得する関数
+	NodeBase::InputType GetActiveTabType()
+	{
+		if (m_AttackVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Attack;
+		}
+		else if (m_MoveVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Move;
+		}
+		else if (m_DeathVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Death;
+		}
+		return NodeBase::InputType::None; // どのタブも選択されていない場合
+	}
+
 	inline TabVisual* GetAttackTabVisual() { return &m_AttackVisual; }
 	inline TabVisual* GetMoveTabVisual() { return &m_MoveVisual; }
 	inline TabVisual* GetDeathTabVisual() { return &m_DeathVisual; }

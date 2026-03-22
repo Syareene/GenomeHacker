@@ -160,8 +160,37 @@ void VisualBase::Update()
 
 void VisualBase::Draw()
 {
-	// 描画
-	Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale());
+	DnaScreenScript* dnaScreen = Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>();
+
+
+	// どのタブかを取得->どの"タブ"かがわからねえ
+	// stringとかで返す関数を別途作成だね
+
+	NodeBase::InputType tabType = dnaScreen->GetActiveTabType();
+
+	// node_baseのInputTypeとActiveTabを確認し、該当タブで使用できるかどうかを調べる
+	bool isVisible = false;
+	for (NodeBase::InputType type : m_BaseNodePtr->GetInputTypesTop())
+	{
+		if (type == tabType)
+		{
+			// 使用できるタブの場合は通常通り描画
+			isVisible = true;
+			break;
+		}
+	}
+
+	// 結果に応じて透明度の値を変化
+	if (isVisible)
+	{
+		// 通常描画
+		Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale(), 1.0f);
+	}
+	else
+	{
+		// 半透明描画
+		Renderer::Draw2D(GetTextureID(), GetPosition(), GetScale(), 0.25f);
+	}
 
 	// フォント描画
 	m_Font.Draw();
@@ -184,7 +213,7 @@ void VisualBase::Draw()
 	}
 
 	// 自身がSetInfoNodeに設定されているならNodeBaseにあるShowConfigWindowを呼ぶ
-	if (Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->GetInfoNode() == this)
+	if (dnaScreen->GetInfoNode() == this)
 	{
 		m_BaseNodePtr->ShowConfigWindow();
 	}
