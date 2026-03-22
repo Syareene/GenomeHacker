@@ -96,6 +96,8 @@ public:
 	inline const int GetNodeBaseIndex() const { return m_NodeBaseIndex; }
 
 private:
+	bool IsMatchActiveTab();
+
 	Font m_Font;
 	std::vector<Font> m_DescriptionFonts;
 	inline bool IsShowDesc() const { return m_HoverTimer > SHOW_DESC_TIME; } // ホバーしてから60フレーム以上経っていたら説明文表示

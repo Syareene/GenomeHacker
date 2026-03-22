@@ -72,6 +72,25 @@ public:
 	inline void SetInfoNode(VisualBase* nodePtr) { m_InfoNodePtr = nodePtr; }
 
 	TabVisual* GetActiveTab();
+
+	// どのタブが選択されているかを取得する関数
+	NodeBase::InputType GetActiveTabType()
+	{
+		if (m_AttackVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Attack;
+		}
+		else if (m_MoveVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Move;
+		}
+		else if (m_DeathVisual.GetIsSelected())
+		{
+			return NodeBase::InputType::Death;
+		}
+		return NodeBase::InputType::None; // どのタブも選択されていない場合
+	}
+
 	inline TabVisual* GetAttackTabVisual() { return &m_AttackVisual; }
 	inline TabVisual* GetMoveTabVisual() { return &m_MoveVisual; }
 	inline TabVisual* GetDeathTabVisual() { return &m_DeathVisual; }
@@ -82,6 +101,40 @@ private:
 	TabVisual m_DeathVisual;
 
 	void GeneratePlayerVisualNodes();
+
+	FontData GetTabFontData(NodeBase::InputType type)
+	{
+		// タブの種類に応じてフォントデータを返す
+
+		// 共通のデータ
+		FontData fontData;
+		fontData.fontSize = 100;
+		fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
+		fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+		fontData.font = DirectWriteCustomFont::GetFontName(0);
+		fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
+		fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+		fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
+		fontData.outlineWidth = 12.0f;
+
+		// タブに応じて色を変更
+		switch (type)
+		{
+			case NodeBase::InputType::Attack:
+				fontData.Color = D2D1::ColorF(D2D1::ColorF::OrangeRed);
+				break;
+			case NodeBase::InputType::Move:
+				fontData.Color = D2D1::ColorF(D2D1::ColorF::ColorF::ForestGreen);
+				break;
+			case NodeBase::InputType::Death:
+				fontData.Color = D2D1::ColorF(D2D1::ColorF::DarkSlateBlue);
+				break;
+			default:
+				fontData.Color = D2D1::ColorF(D2D1::ColorF::White);
+				break;
+		}
+		return fontData;
+	}
 
 	void SelectedAttackTab();
 	void SelectedMoveTab();

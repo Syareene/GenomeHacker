@@ -43,6 +43,8 @@ public:
 	void Draw() override;
 	void SetDisplayText(const std::string& text);
 	void GetDisplayText(std::string& outText) const;
+	void SetFontData(const FontData& font_data) {m_FontData = font_data;}
+	FontData GetFontData() const { return m_FontData; }
 	Vector2 GetWidthHeight() const { return m_WidthHeight; }
 private:
 	Vector2 m_WidthHeight = Vector2(0.0f, 0.0f);

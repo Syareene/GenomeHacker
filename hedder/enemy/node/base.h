@@ -112,6 +112,9 @@ public:
 	inline const int GetMoveManageId() const { return m_MoveManageId; }
 	inline void SetMoveManageId(const int id) { m_MoveManageId = id; }
 	inline const bool GetInstantCastOnDead() const { return m_InstantCastOnDead; }
+
+	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
+	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 protected:
 	// くっつけられるか判定関数
 	inline void AddInputTypeTop(const InputType& type) { m_InputTypesTop.push_back(type); }
@@ -142,8 +145,6 @@ protected:
 	inline void SetInstantCastOnDead(const bool instant) { m_InstantCastOnDead = instant; }
 private:
 	constexpr static Vector2 IMGUI_WINDOW_SIZE = { 300.0f, 200.0f }; // ImGuiのウィンドウサイズ
-	inline const std::vector<InputType>& GetInputTypesTop() const { return m_InputTypesTop; }
-	inline const std::vector<InputType>& GetInputTypesBottom() const { return m_InputTypesBottom; }
 	inline std::vector<std::unique_ptr<NodeBase>>& GetChildNodes() { return m_ChildNodes; }
 	static unsigned int m_UniqueIDCounter;
 	static unsigned int GetNextUniqueID()

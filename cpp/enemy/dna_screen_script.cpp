@@ -245,32 +245,22 @@ void DnaScreenScript::ShowDnaInfo()
 	image->ChangeTexUV(static_cast<float>(m_EnemyBase->GetTextureSplitCount().x), static_cast<float>(m_EnemyBase->GetTextureSplitCount().y), 
 										   static_cast<float>(m_EnemyBase->GetUVPos().x), static_cast<float>(m_EnemyBase->GetUVPos().y), true);
 
-	// 現在のノードを表示
-	fontData.fontSize = 100;
-	fontData.fontWeight = DWRITE_FONT_WEIGHT_ULTRA_BLACK;
-	fontData.textAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
-	fontData.Color = D2D1::ColorF(D2D1::ColorF::LightBlue);
-	fontData.font = DirectWriteCustomFont::GetFontName(0);
-	fontData.shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
-	fontData.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
-	fontData.outlineColor = D2D1::ColorF(D2D1::ColorF::White);
-	fontData.outlineWidth = 12.0f;
-
+	// 現在のノードをテキストで表示
 
 	// 選択されているタブに応じてフォントを生成
 	if(m_AttackVisual.GetIsSelected())
 	{
-		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "攻撃ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), GetTabFontData(NodeBase::InputType::Attack), "攻撃ノード");
 		return;
 	}
 	if(m_MoveVisual.GetIsSelected())
 	{
-		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "移動ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), GetTabFontData(NodeBase::InputType::Move), "移動ノード");
 		return;
 	}
 	if(m_DeathVisual.GetIsSelected())
 	{
-		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), fontData, "死亡ノード");
+		AddChildObject<Font>(0)->Register(Vector2(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT / 8), GetTabFontData(NodeBase::InputType::Death), "死亡ノード");
 		return;
 	}
 }
@@ -340,6 +330,7 @@ void DnaScreenScript::SelectedAttackTab()
 	if (Font* font = GetChildObjectByType<Font>())
 	{
 		font->SetDisplayText("攻撃ノード");
+		font->SetFontData(GetTabFontData(NodeBase::InputType::Attack));
 	}
 	m_AttackVisual.SetIsSelected(true);
 	m_AttackVisual.ModifyNodePos();
@@ -355,6 +346,7 @@ void DnaScreenScript::SelectedMoveTab()
 	if (Font* font = GetChildObjectByType<Font>())
 	{
 		font->SetDisplayText("移動ノード");
+		font->SetFontData(GetTabFontData(NodeBase::InputType::Move));
 	}
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(true);
@@ -370,6 +362,7 @@ void DnaScreenScript::SelectedDeathTab()
 	if (Font* font = GetChildObjectByType<Font>())
 	{
 		font->SetDisplayText("死亡ノード");
+		font->SetFontData(GetTabFontData(NodeBase::InputType::Death));
 	}
 	m_AttackVisual.SetIsSelected(false);
 	m_MoveVisual.SetIsSelected(false);
