@@ -4,7 +4,6 @@
 #include "scene/base_scene.h"
 #include "object/camera.h"
 #include "manager/default_vertex.h"
-//#include "manager/object_manager.h"
 
 unsigned int GameObject::m_NextObjectID = 0; 
 
@@ -257,7 +256,6 @@ void GameObject::SetWorldMatrixOnDraw()
 void GameObject::SetWorldMatrixOnDrawBillboard()
 {
 	Camera* camera = Manager::GetCurrentScene()->GetGameObject<Camera>();
-	//XMMATRIX projection, view;
 
 	// ビューの逆行列(ビルボード描画のため)
 	XMMATRIX invView;

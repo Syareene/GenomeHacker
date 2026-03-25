@@ -70,30 +70,30 @@ void Renderer::Init()
 										&m_DeviceContext );
 
 	// direct2d作成
-		// 1. Direct2D Factory1 を作成
+	// Direct2D Factory1 を作成
 	D2D1_FACTORY_OPTIONS options{};
 #ifdef _DEBUG
 	options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 #endif
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory1), &options, (void**)&m_D2DFactory);
 
-	// 2. Direct3DデバイスからDXGIデバイスを取得
+	// Direct3DデバイスからDXGIデバイスを取得
 	IDXGIDevice* dxgiDevice = nullptr;
 	hr = m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
 
-	// 3. Direct2Dデバイスを作成
+	// Direct2Dデバイスを作成
 	if (SUCCEEDED(hr))
 	{
 		hr = m_D2DFactory->CreateDevice(dxgiDevice, &m_D2DDevice);
 	}
 
-	// 4. Direct2Dデバイスコンテキストを作成
+	// Direct2Dデバイスコンテキストを作成
 	if (SUCCEEDED(hr))
 	{
 		hr = m_D2DDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_D2DDeviceContext);
 	}
 
-	// 5. スワップチェーンのバックバッファからDirect2Dのターゲットビットマップを作成
+	// スワップチェーンのバックバッファからDirect2Dのターゲットビットマップを作成
 	if (SUCCEEDED(hr))
 	{
 		// DPI設定
@@ -119,7 +119,7 @@ void Renderer::Init()
 		}
 	}
 
-	// 6. デバイスコンテキストのターゲットを設定
+	// デバイスコンテキストのターゲットを設定
 	if (SUCCEEDED(hr))
 	{
 		m_D2DDeviceContext->SetTarget(m_D2DTargetBitmap);
@@ -129,34 +129,11 @@ void Renderer::Init()
 	{
 		dxgiDevice->Release();
 	}
-
-	/*
-		// プロパティ設定するためにdpi取得
-		UINT dpi = GetDpiForWindow(GetWindow());
-		FLOAT dpiF = static_cast<FLOAT>(dpi);
-
-		// プロパティ設定
-		D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
-			D2D1_RENDER_TARGET_TYPE_DEFAULT,
-			D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
-			dpiF, dpiF);
-	*/
 	
-
 	// レンダーターゲットビュー作成
 	ID3D11Texture2D* renderTarget{};
 	m_SwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&renderTarget );
 	m_Device->CreateRenderTargetView( renderTarget, NULL, &m_RenderTargetView );
-
-	//// Direct2Dのレンダーターゲット作成
-	//m_DXGISurface->QueryInterface(__uuidof(IDXGISurface), (void**)&m_DXGISurface);
-
-	//m_D2DFactory->CreateDxgiSurfaceRenderTarget(
-	//	m_DXGISurface,
-	//	props, // プロパティ
-	//	&m_D2DRenderTarget
-	//);
-
 
 	renderTarget->Release();
 
@@ -184,11 +161,7 @@ void Renderer::Init()
 	m_Device->CreateDepthStencilView(depthStencile, &depthStencilViewDesc, &m_DepthStencilView);
 	depthStencile->Release();
 
-
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
-
-
-
 
 
 	// ビューポート設定
@@ -334,17 +307,11 @@ void Renderer::Init()
 	light.Diffuse = XMFLOAT4(1.5f, 1.5f, 1.5f, 1.0f);
 	SetLight(light);
 
-
-
 	// マテリアル初期化
 	MATERIAL material{};
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
-
-
-
-
 }
 
 

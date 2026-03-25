@@ -54,9 +54,6 @@ bool MoveRandom::NodeEffect(FieldEnemy* enemy_ptr)
 	// んで実行したらtrueを返す
 
 
-    // パーリンノイズが-1~1のときのプログラムなので
-    // 今は0-1のため色々と留意
-
     // 時間取得
     float time = static_cast<float>(enemy_ptr->GetLiveTime());
 
@@ -79,7 +76,7 @@ bool MoveRandom::NodeEffect(FieldEnemy* enemy_ptr)
     // Z軸用のノイズ(Xとは入力値を十分離す)
     double noiseZ = RandomNumber::GetInstance()->GetPerlinNoise(
         (time * frequency) + enemySeed + nodeOffset,
-        100.0 // Yをずらすだけで全く違う波形になる
+        100.0 // 位置をずらし違う波形にする
     );
 
     // 移動の反映

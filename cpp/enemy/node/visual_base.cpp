@@ -7,11 +7,6 @@
 #include "enemy/dna_screen_script.h"
 #include "lib/mouse.h"
 
-
-// この辺StateでGrabbed管理してるが移行に伴ってvisual_tab側においても良いかも?
-
-
-
 void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* node)
 {
 	// screen_id保存
@@ -31,7 +26,6 @@ void VisualBase::Init(const unsigned int& screen_id, int base_index, NodeBase* n
 	// 説明文部分生成
 	AddDescFont(node->GetDescriptionData());
 
-	// ここどこから座標持ってくるのかはっきりしておくこと(ぶっちゃけ後で整列するから今いらないのかもしれないけど)
 	SetTransform(Transform());
 	SetTextureID(TextureManager::LoadTexture(L"asset\\texture\\debug_sprite.png"));
 
@@ -87,12 +81,6 @@ void VisualBase::Update()
 			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetInfoNode(this);
 			// 掴みノードも設定(対象だけ取る形に)
 			Manager::GetCurrentScene()->GetCurrentState()->GetGameObject<DnaScreenScript>()->SetGrabbingNode(this);
-
-
-			// 変更後は
-			// 押されっぱ(Down=true)なら掴みで動く、この段階でimguiでのウィンドウ表示は確定->対象のノードを変数に保存したほうがいいかも
-			// 離された時に対して動いていないならつかみは解除、guiはそのまま
-			// 離された時にそこそこ動いているならつかみは解除、guiも閉じる、かねぇ。->こっちもそのままでいいかな
 
 			m_HoverTimer = 0; // ホバータイマーリセット
 		}
@@ -276,12 +264,6 @@ void VisualBase::MoveNodeToMouse()
 	// 掴み状態の場合はこの処理が実行、
 	// 掴んでる状態で再度クリックで外す。
 	// 親ノードの場合、子ノードの判定を取らないように子ノードから先に判定をする形となる。
-
-	// また、この形にしかくっつかないとかもあるので該当座標のノードがちゃんとガッチャンコされるかどうかとかもチェックしないといけない
-	// なのでくっつく場所に対しての空のオブジェクト(判定や位置を持っておく)があるとよいのかもしれない
-
-	// これ変数保存部分か取得部分をtemplateのTで取れるようにすればくっつけられる型が判断できるのと
-	// その中(子ノード)に対してgetscaleやposで位置取れるようになるからそれで判定できるね
 
 
 	// 現在dna_edit state上で掴んでいるノードがあるかどうかを確認

@@ -15,12 +15,6 @@
 #include "object/player.h"
 #include "lib/input.h" 
 
-
-
-// panel型を継承したscript
-// 初期化時に属するクラスを勝手に登録する形に
-// あとは全体を管理するスクリプトを記載。
-
 void DnaScreenScript::Init(EnemyBase* base_enemy, const unsigned int& player_id)
 {
 	m_EnemyBase = base_enemy;
@@ -67,9 +61,6 @@ void DnaScreenScript::Uninit()
 	m_DeathVisual.Uninit();
 
 	m_EnemyBase = nullptr;
-
-	// DNAスクリーンの終了処理
-	//Panel::Uninit(); //->Destoryをセットしてたらどのみち終了されるから呼ばない
 }
 
 void DnaScreenScript::Update()
@@ -288,7 +279,7 @@ void DnaScreenScript::HideDnaInfo()
 		child.SetDestroy(true);
 	}
 
-	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)->一時的処理であるかも
+	// 明示的に削除する(次fのupdateでDestroyが呼ばれないため)
 	DeleteChildObject();
 
 }

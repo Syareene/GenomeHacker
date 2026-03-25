@@ -9,11 +9,6 @@
 #include "scene/state/game_base_state.h"
 
 
-// enemyDataのhedder
-#include "enemy/base_data/slime.h"
-#include "enemy/base_data/minotaur.h"
-//#include "enemy/base_data/mage.h"
-
 #include "lib/input.h"
 
 void EnemySpawner::Init()

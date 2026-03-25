@@ -264,11 +264,11 @@ void TabVisual::ApplyMovedResult()
 
 	index = 0;
 
-	// 順序としては、、、
-	// dnaに入った段階でNodeBaseとVisualBaseにidを割り振る(識別用として、元が同じindexからならidはおなじになる) -ok
-	// exit時にこの関数が実行される -ok
-	// NodeBaseのリストをenemy+playerでまとめる - ok
-	// EnemyのVisualのidを元にNodeBaseのリストと突き合わせてindexを修正する -ok
+	// 実行順序としては、、、
+	// dnaに入った段階でNodeBaseとVisualBaseにidを割り振る(識別用として、元が同じindexからならidはおなじになる)
+	// exit時にこの関数が実行される
+	// NodeBaseのリストをenemy+playerでまとめる
+	// EnemyのVisualのidを元にNodeBaseのリストと突き合わせてindexを修正する
 
 	std::unordered_map<std::string, std::unique_ptr<NodeBase>> allNodes;
 
@@ -379,7 +379,6 @@ void TabVisual::ModifyEnemyNodePos(VisualBase* grabPtr)
 		}
 
 		// 掴んでいるノードがある場合は、そのスペースを考慮する
-		// ノードの基準が中心になっているがこれで行くしかないかな、ちらつきそうだし
 		if (!isOverGrabNode && grabPtr)
 		{
 			// 掴んでいるノードが現在のノードよりも上にあるか、

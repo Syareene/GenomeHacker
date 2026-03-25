@@ -131,19 +131,19 @@ void Player::Update()
 	if (Input::GetKeyPress('S'))
 	{
 		SetPosition(GetPosition() + (camera->GetForward() * -PLAYER_MOVE_SPEED));
-		SetRotation(Vector3(GetRotation().x, rotation.y + 180.0f, GetRotation().z)); // yもともとはXM_PI
+		SetRotation(Vector3(GetRotation().x, rotation.y + 180.0f, GetRotation().z));
 	}
 
 	if (Input::GetKeyPress('A'))
 	{
 		SetPosition(GetPosition() + (camera->GetRight() * -PLAYER_MOVE_SPEED));
-		SetRotation(Vector3(GetRotation().x, rotation.y - 90.0f, GetRotation().z)); // yもともとは-XM_PI/2
+		SetRotation(Vector3(GetRotation().x, rotation.y - 90.0f, GetRotation().z));
 	}
 
 	if (Input::GetKeyPress('D'))
 	{
 		SetPosition(GetPosition() + (camera->GetRight() * PLAYER_MOVE_SPEED));
-		SetRotation(Vector3(GetRotation().x, rotation.y + 90.0f, GetRotation().z)); // yもともとはXM_PI/2
+		SetRotation(Vector3(GetRotation().x, rotation.y + 90.0f, GetRotation().z));
 	}
 
 	// コライダの場所更新(これ自動更新になるように変えたいね～～)

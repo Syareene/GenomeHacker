@@ -417,10 +417,9 @@ for (auto& obj : m_Objects)
 			{
 				RenderQueueData req;
 				req.Layer = batch.Layer;
-				req.Depth = 0.0f; // インスタンシング内での深度ソートはZバッファ任せ
+				req.Depth = 0.0f;
 
-				// 描画関数の登録（ラムダ式で値をキャプチャする） ->個別のオブジェクトごとに値を変えたいならここに各オブジェクトのDraw関数を呼ぶ?
-
+				// 描画関数の登録（ラムダ式で値をキャプチャする）
 				ObjectType* activeObj = sortedObjs[batch.Start]; // バッチの最初のオブジェクトを代表として取得
 
 				if constexpr (requires { ObjectType::IS_3D_MODEL; }&& ObjectType::IS_3D_MODEL)
@@ -439,11 +438,8 @@ for (auto& obj : m_Objects)
 							// 頂点バッファ・インデックスバッファの設定
 							UINT stride = sizeof(VERTEX_3D);
 							UINT offset = 0;
-							// インスタンシングデータ(m_InstanceBuffer)もスロット1にバインド
-							//ID3D11Buffer* pBuffers[2] = { modelData->VertexBuffer, m_InstanceBuffer };
-							//UINT strides[2] = { stride, sizeof(typename ObjectType::InstanceBufferData) }; // 構造体名注意
-							//UINT offsets[2] = { 0, 0 };
 
+							// バッファにセット
 							Renderer::GetDeviceContext()->IASetVertexBuffers(0, 1, &modelData->VertexBuffer, &stride, &offset);
 							Renderer::GetDeviceContext()->IASetIndexBuffer(modelData->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 							Renderer::GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -464,7 +460,6 @@ for (auto& obj : m_Objects)
 								}
 
 								// インデックス付きインスタンシング描画
-								// 引数: IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation
 								Renderer::GetDeviceContext()->DrawIndexedInstanced(
 									modelData->SubsetArray[i].IndexNum,
 									batch.Count,
@@ -480,7 +475,6 @@ for (auto& obj : m_Objects)
 					// ラムダでキャプチャ
 					req.DrawCall = [this, batch, activeObj]() {
 						ObjectType::SetPipelineState(); // 各GameObject派生クラスに作成するstatic関数->シェーダーのセット
-						// これ対象が2dの場合はdepth enable/disable切り替え必要
 
 						// バッファ設定
 						UINT stride = sizeof(VERTEX_3D);
@@ -502,7 +496,7 @@ for (auto& obj : m_Objects)
 						material.TextureEnable = true;
 						Renderer::SetMaterial(material); // マテリアルセット(テクスチャを有効化)
 
-						// ストラクチャードバッファ設定(下のvertexbufferからこっちに対してセットしたいね)
+						// ストラクチャードバッファ設定
 						Renderer::GetDeviceContext()->VSSetShaderResources(2, 1, &m_InstanceSRV);
 
 						// まとめて描画
@@ -607,7 +601,6 @@ for (auto& obj : m_Objects)
 	void Draw() override
 	{
 		// とりあえず所有しているオブジェクトを描画
-		// 後にインスタンシングレンダリングに対応する形で
 
 		for(auto& obj : m_Objects)
 		{
