@@ -399,11 +399,11 @@ private:
 		return m_ObjectIDCounter++;
 	}
 	static unsigned int m_ObjectIDCounter;
-	// vector->dequeへ、resize実行されると更新中にイテレーターが無効化されてしまうため	
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects3D;
-	std::vector<std::unique_ptr<IGameObjectManager>> m_Objects2D;
-	std::vector<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
+	// vector->dequeへ、resize実行されると更新中にイテレーターが無効化されてしまうため
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects3D;
+	std::deque<std::unique_ptr<IGameObjectManager>> m_Objects2D;
+	std::deque<std::unique_ptr<ISystemObjectManager>> m_SystemObjects;
 	std::deque<std::string> m_DrawTargetTags; // 描画対象にするタグ
-	static std::vector<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
+	static std::deque<std::unique_ptr<ISystemObjectManager>> m_GlobalSystemObjects;
 	StateManager m_StateManager;
 };
