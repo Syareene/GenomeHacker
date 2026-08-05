@@ -12,13 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # 差分比較を行うため、履歴を取得する (fetch-depth: 0)
           fetch-depth: 0
 
       - name: Check non-UTF-8 BOM in changed .cs files
         shell: pwsh
         run: |
-          # PRのターゲットブランチ（例: main や master）との差分から、追加・変更された .cs ファイルを取得
           $targetBranch = "origin/${{ github.base_ref }}"
           $changedFiles = git diff --name-only --diff-filter=d $targetBranch HEAD -- "*.cs"
 
@@ -34,10 +32,10 @@ jobs:
               $filePath = $filePath.Trim()
               if (-not (Test-Path $filePath)) { continue }
 
-              # ファイル先頭の3バイトを取得
-              $bytes = Get-Content -Encoding Byte -ReadCount 3 -TotalCount 3 -Path $filePath
-              
-              # UTF-8 BOM: 0xEF, 0xBB, 0xBF のチェック
+              # PowerShell Core (pwsh) では -AsByteStream を使用してバイナリ取得
+              $bytes = Get-Content -AsByteStream -ReadCount 3 -TotalCount 3 -Path $filePath
+
+              # UTF-8 BOM: 0xEF (239), 0xBB (187), 0xBF (191) のチェック
               if ($null -eq $bytes -or $bytes.Length -lt 3 -or -not ($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF)) {
                   $nonBomFiles += $filePath
               }
